@@ -1,10 +1,44 @@
 "use client"
 import * as React from "react"
 
-import { Table } from "@/components/table"
+import { DataTableSearch } from "./components/data-table-search"
+import { DataTableTable } from "./components/data-table-table"
+import { DataTableToolbar } from "./components/data-table-toolbar"
+import { DataTableContextProvider } from "./context/data-table-context-provider"
+import { UseDataTableReturn } from "./use-data-table"
 
-const DataTable = () => {
-  return <Table></Table>
+import { clx } from "@/utils/clx"
+import { DataTableFilterMenu } from "./components/data-table-filter-menu"
+import { DataTablePagination } from "./components/data-table-pagination"
+import { DataTableSortingMenu } from "./components/data-table-sorting-menu"
+
+interface DataTableProps<TData> {
+  instance: UseDataTableReturn<TData>
+  children?: React.ReactNode
+  className?: string
 }
+
+const Root = <TData,>({
+  instance,
+  children,
+  className,
+}: DataTableProps<TData>) => {
+  return (
+    <DataTableContextProvider instance={instance}>
+      <div className={clx("relative flex flex-col overflow-hidden", className)}>
+        {children}
+      </div>
+    </DataTableContextProvider>
+  )
+}
+
+const DataTable = Object.assign(Root, {
+  Table: DataTableTable,
+  Toolbar: DataTableToolbar,
+  Search: DataTableSearch,
+  SortingMenu: DataTableSortingMenu,
+  FilterMenu: DataTableFilterMenu,
+  Pagination: DataTablePagination,
+})
 
 export { DataTable }

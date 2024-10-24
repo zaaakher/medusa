@@ -60,7 +60,7 @@ const Header = React.forwardRef<
   <thead
     ref={ref}
     className={clx(
-      "border-ui-border-base txt-compact-small-plus [&_tr:hover]:bg-ui-bg-base border-y",
+      "border-ui-border-base txt-compact-small-plus [&_tr]:bg-ui-bg-subtle [&_tr]:hover:bg-ui-bg-subtle border-y",
       className
     )}
     {...props}
