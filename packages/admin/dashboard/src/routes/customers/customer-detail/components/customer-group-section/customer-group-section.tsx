@@ -35,6 +35,7 @@ type CustomerGroupSectionProps = {
 }
 
 const PAGE_SIZE = 10
+const PREFIX = "cusgr"
 
 export const CustomerGroupSection = ({
   customer,
@@ -44,6 +45,7 @@ export const CustomerGroupSection = ({
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
   const { raw, searchParams } = useCustomerGroupTableQuery({
     pageSize: PAGE_SIZE,
+    prefix: PREFIX,
   })
 
   const { customer_groups, count, isLoading, isError, error } =
@@ -72,6 +74,7 @@ export const CustomerGroupSection = ({
     enablePagination: true,
     enableRowSelection: true,
     pageSize: PAGE_SIZE,
+    prefix: PREFIX,
     rowSelection: {
       state: rowSelection,
       updater: setRowSelection,
@@ -132,6 +135,7 @@ export const CustomerGroupSection = ({
         pageSize={PAGE_SIZE}
         isLoading={isLoading}
         count={count}
+        prefix={PREFIX}
         navigateTo={(row) => `/customer-groups/${row.id}`}
         filters={filters}
         search
