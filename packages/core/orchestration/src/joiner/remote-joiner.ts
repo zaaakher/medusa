@@ -442,14 +442,13 @@ export class RemoteJoiner {
   }> {
     const { expand, pkField, ids, relationship, options } = params
 
-    const isIdsUsingOperatorMap =
-      isObject(ids) && Object.keys(ids).some((key) => !!FilterOperatorMap[key])
-
-    let uniqueIds = isIdsUsingOperatorMap
-      ? ids
-      : Array.isArray(ids)
-      ? ids
-      : [ids].filter((v) => v != null) // rm null or undefined to prevent receiving null or undefined as a value and wrapping it in an array
+    let uniqueIds: unknown[] | undefined
+    if (ids != null) {
+      const isIdsUsingOperatorMap =
+        isObject(ids) &&
+        Object.keys(ids).some((key) => !!FilterOperatorMap[key])
+      uniqueIds = isIdsUsingOperatorMap ? ids : Array.isArray(ids) ? ids : [ids]
+    }
 
     if (uniqueIds && Array.isArray(uniqueIds)) {
       const isCompositeKey = Array.isArray(uniqueIds[0])
