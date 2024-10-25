@@ -4,6 +4,7 @@ import * as React from "react"
 
 import { DropdownMenu } from "@/components/dropdown-menu"
 import { DescendingSorting } from "@medusajs/icons"
+import type { Column } from "@tanstack/react-table"
 import { IconButton } from "../../../components/icon-button"
 import { useDataTableContext } from "../context/use-data-table-context"
 
@@ -23,11 +24,13 @@ const DataTableSortingMenu = () => {
       </DropdownMenu.Trigger>
       <DropdownMenu.Content side="bottom" align="end">
         <DropdownMenu.RadioGroup>
-          {sortableColumns.map((column) => (
-            <DropdownMenu.RadioItem value={column.id} key={column.id}>
-              {column.id}
-            </DropdownMenu.RadioItem>
-          ))}
+          {sortableColumns.map((column) => {
+            return (
+              <DropdownMenu.RadioItem value={column.id} key={column.id}>
+                {getSortLabel(column)}
+              </DropdownMenu.RadioItem>
+            )
+          })}
         </DropdownMenu.RadioGroup>
         <DropdownMenu.Separator />
         <DropdownMenu.RadioGroup>
@@ -39,6 +42,17 @@ const DataTableSortingMenu = () => {
       </DropdownMenu.Content>
     </DropdownMenu>
   )
+}
+
+function getSortLabel(column: Column<any, unknown>) {
+  const meta = column.columnDef.meta
+  let headerValue: string | undefined = undefined
+
+  if (typeof column.columnDef.header === "string") {
+    headerValue = column.columnDef.header
+  }
+
+  return meta?.___sortMetaData?.sortLabel ?? headerValue ?? column.id
 }
 
 export { DataTableSortingMenu }

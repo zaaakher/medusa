@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react"
 import * as React from "react"
 
 import { Container } from "@/components/container"
-import { RowSelectionState } from "@tanstack/react-table"
+import { ColumnSort, RowSelectionState } from "@tanstack/react-table"
 import { Heading } from "../../components/heading"
 import { DataTable } from "./data-table"
 import { useDataTable } from "./use-data-table"
@@ -41,15 +41,39 @@ const data: Person[] = [
   },
 ]
 
-const usePeople = ({ q }: { q?: string }) => {
+const usePeople = ({
+  q,
+  order,
+}: {
+  q?: string
+  order?: { id: string; desc: boolean } | null
+}) => {
   return React.useMemo(() => {
-    return {
-      data: data.filter((person) =>
-        person.name.toLowerCase().includes(q?.toLowerCase() ?? "")
-      ),
-      count: data.length,
+    const filteredData = data.filter((person) =>
+      person.name.toLowerCase().includes(q?.toLowerCase() ?? "")
+    )
+
+    if (!order) {
+      return {
+        data: filteredData,
+        count: filteredData.length,
+      }
     }
-  }, [q])
+
+    const key = order.id as keyof Person
+    const desc = order.desc
+
+    const sortedData = filteredData.sort((a, b) => {
+      if (a[key] < b[key]) return desc ? 1 : -1
+      if (a[key] > b[key]) return order.desc ? -1 : 1
+      return 0
+    })
+
+    return {
+      data: sortedData,
+      count: sortedData.length,
+    }
+  }, [q, order])
 }
 
 const columnHelper = createDataTableColumnHelper<Person>()
@@ -63,10 +87,19 @@ const columns = [
   columnHelper.accessor("email", {
     header: "Email",
     enableSorting: true,
+    sortAscLabel: "A-Z",
+    sortDescLabel: "Z-A",
+    // sortLabel: "Email",
   }),
   columnHelper.accessor("age", {
     header: "Age",
     enableSorting: true,
+    sortAscLabel: "Low to High",
+    sortDescLabel: "High to Low",
+    sortLabel: "Age",
+  }),
+  columnHelper.action({
+    actions: [],
   }),
 ]
 
@@ -96,8 +129,9 @@ const BasicDemo = () => {
   const debouncedSearch = useDebouncedValue(search, 300)
 
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({})
+  const [sorting, setSorting] = React.useState<ColumnSort | null>(null)
 
-  const { data, count } = usePeople({ q: debouncedSearch })
+  const { data, count } = usePeople({ q: debouncedSearch, order: sorting })
 
   const table = useDataTable({
     data,
@@ -106,6 +140,10 @@ const BasicDemo = () => {
     rowSelection: {
       state: rowSelection,
       onRowSelectionChange: setRowSelection,
+    },
+    sorting: {
+      state: sorting,
+      onSortingChange: setSorting,
     },
   })
 

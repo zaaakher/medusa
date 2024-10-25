@@ -1,40 +1,42 @@
 "use client"
 
-import {
-  AccessorColumnDef as AccessorColumnDefTanstack,
-  CellContext,
-  createColumnHelper as createColumnHelperTanstack,
-  DisplayColumnDef,
-} from "@tanstack/react-table"
+import { createColumnHelper as createColumnHelperTanstack } from "@tanstack/react-table"
 import * as React from "react"
+import { DataTableActionCell } from "../components/data-table-action-cell"
 import {
   DataTableSelectCell,
   DataTableSelectHeader,
 } from "../components/data-table-select-cell"
+import {
+  ActionColumnDef,
+  DataTableColumnHelper,
+  SelectColumnDef,
+  SortableColumnDef,
+} from "../types"
 
-type DataTableAction<TData> = {
-  label: string
-  onClick: (ctx: CellContext<TData, unknown>) => void
-}
-
-interface ActionColumnDef<TData>
-  extends Omit<DisplayColumnDef<TData>, "id" | "cell" | "header"> {
-  actions: DataTableAction<TData>[]
-}
-interface SelectColumnDef<TData>
-  extends Omit<DisplayColumnDef<TData>, "id" | "header"> {}
-interface AccessorColumnDef<TData>
-  extends Omit<AccessorColumnDefTanstack<TData>, "id"> {}
-
-const createDataTableColumnHelper = <TData,>() => {
-  const { accessor, display } = createColumnHelperTanstack<TData>()
+const createDataTableColumnHelper = <
+  TData,
+>(): DataTableColumnHelper<TData> => {
+  const { accessor: accessorTanstack, display } =
+    createColumnHelperTanstack<TData>()
 
   return {
-    accessor,
+    accessor: (accessor, column) => {
+      const { sortLabel, sortAscLabel, sortDescLabel, meta, ...rest } =
+        column as any & SortableColumnDef
+
+      const extendedMeta = {
+        ___sortMetaData: { sortLabel, sortAscLabel, sortDescLabel },
+        ...meta,
+      }
+
+      return accessorTanstack(accessor, { ...rest, meta: extendedMeta })
+    },
     display,
     action: (props: ActionColumnDef<TData>) =>
       display({
         id: "action",
+        cell: (ctx) => <DataTableActionCell ctx={ctx} />,
         ...props,
       }),
     select: (props: SelectColumnDef<TData>) =>
@@ -48,5 +50,11 @@ const createDataTableColumnHelper = <TData,>() => {
       }),
   }
 }
+
+const helper = createColumnHelperTanstack()
+
+helper.accessor("name", {
+  meta: {},
+})
 
 export { createDataTableColumnHelper }

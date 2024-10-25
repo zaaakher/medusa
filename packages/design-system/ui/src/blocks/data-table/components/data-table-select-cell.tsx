@@ -13,7 +13,13 @@ const DataTableSelectCell = <TData,>({
   const checked = ctx.row.getIsSelected()
   const onChange = ctx.row.getToggleSelectedHandler()
 
-  return <Checkbox checked={checked} onCheckedChange={onChange} />
+  return (
+    <Checkbox
+      onClick={(e) => e.stopPropagation()}
+      checked={checked}
+      onCheckedChange={onChange}
+    />
+  )
 }
 
 interface DataTableSelectHeaderProps<TData> {
