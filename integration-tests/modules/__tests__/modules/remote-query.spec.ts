@@ -288,7 +288,6 @@ medusaIntegrationTestRunner({
       })
 
       it(`should perform cross module query and apply filters correctly to the correct modules [1]`, async () => {
-        console.log("original product", product.id)
         const { data } = await query.graph({
           entity: "product",
           fields: ["id", "title", "variants.*", "variants.prices.amount"],

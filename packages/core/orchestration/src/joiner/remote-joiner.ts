@@ -449,9 +449,7 @@ export class RemoteJoiner {
       ? ids
       : Array.isArray(ids)
       ? ids
-      : ids
-      ? [ids]
-      : undefined
+      : [ids].filter((v) => v != null) // rm null or undefined to prevent receiving null or undefined as a value and wrapping it in an array
 
     if (uniqueIds && Array.isArray(uniqueIds)) {
       const isCompositeKey = Array.isArray(uniqueIds[0])
