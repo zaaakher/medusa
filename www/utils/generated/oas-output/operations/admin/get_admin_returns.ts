@@ -152,13 +152,13 @@
  *       oneOf:
  *         - type: string
  *           title: region_id
- *           description: The return's region id.
+ *           description: Filter by a region ID to retrieve its associated returns.
  *         - type: array
- *           description: The return's region id.
+ *           description: Filter by region IDs to retrieve their associated returns.
  *           items:
  *             type: string
  *             title: region_id
- *             description: The region id's details.
+ *             description: A region's ID.
  *   - name: q
  *     in: query
  *     description: Search term to filter the return's searchable properties.
@@ -636,13 +636,13 @@
  *       oneOf:
  *         - type: string
  *           title: customer_id
- *           description: The return's customer id.
+ *           description: Filter by a customer ID to retrieve its associated returns.
  *         - type: array
- *           description: The return's customer id.
+ *           description: Filter by customer IDs to retrieve their associated returns.
  *           items:
  *             type: string
  *             title: customer_id
- *             description: The customer id's details.
+ *             description: A customer's ID.
  * security:
  *   - api_token: []
  *   - cookie_auth: []

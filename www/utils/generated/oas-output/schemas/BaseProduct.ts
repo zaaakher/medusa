@@ -107,7 +107,7 @@
  *   thumbnail:
  *     type: string
  *     title: thumbnail
- *     description: The product's thumbnail.
+ *     description: The product's thumbnail URL.
  *   width:
  *     type: number
  *     title: width

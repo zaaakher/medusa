@@ -20,14 +20,14 @@ properties:
     type: array
     description: The category's children.
     items:
-      $ref: ./AdminProductCategory.yaml
+      type: object
   parent_category:
-    $ref: ./AdminProductCategory.yaml
+    type: object
   products:
     type: array
     description: The category's products.
     items:
-      $ref: ./AdminProduct.yaml
+      type: object
   name:
     type: string
     title: name

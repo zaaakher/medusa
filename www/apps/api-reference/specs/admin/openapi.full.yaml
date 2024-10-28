@@ -11427,8 +11427,9 @@ paths:
   /admin/customers/{id}/customer-groups:
     post:
       operationId: PostCustomersIdCustomerGroups
-      summary: Add Customer Group to Customer
-      description: Add a Customer Group to a customer
+      summary: Manage Customer Groups of Customer
+      x-sidebar-summary: Manage Customer Groups
+      description: Manage the customer groups of a customer to add or remove the customer from these groups.
       x-authenticated: true
       parameters:
         - name: id
@@ -11441,8 +11442,8 @@ paths:
           in: query
           description: |-
             Comma-separated fields that should be included in the returned data.
-             * if a field is prefixed with `+` it will be added to the default fields, using `-` will remove it from the default fields.
-             * without prefix it will replace the entire default fields.
+            if a field is prefixed with `+` it will be added to the default fields, using `-` will remove it from the default fields.
+            without prefix it will replace the entire default fields.
           required: false
           schema:
             type: string
@@ -11459,22 +11460,22 @@ paths:
           application/json:
             schema:
               type: object
-              description: SUMMARY
+              description: The customer groups to add or remove the customer from.
               properties:
                 add:
                   type: array
-                  description: The customer's add.
+                  description: The customer groups to add the customer to.
                   items:
                     type: string
                     title: add
-                    description: The add's details.
+                    description: The ID of a customer group to add the customer to.
                 remove:
                   type: array
-                  description: The customer's remove.
+                  description: The customer groups to remove the customer from.
                   items:
                     type: string
                     title: remove
-                    description: The remove's details.
+                    description: The ID of a customer group to remove the customer from.
       x-codeSamples:
         - lang: Shell
           label: cURL
@@ -12475,13 +12476,13 @@ paths:
             oneOf:
               - type: string
                 title: region_id
-                description: The draft order's region id.
+                description: Filter by a region ID to retrieve its associated draft orders.
               - type: array
-                description: The draft order's region id.
+                description: Filter by region IDs to retrieve their associated draft orders.
                 items:
                   type: string
                   title: region_id
-                  description: The region id's details.
+                  description: A region ID.
         - name: q
           in: query
           description: Search term to filter the order's searchable properties.
@@ -12959,13 +12960,13 @@ paths:
             oneOf:
               - type: string
                 title: customer_id
-                description: The draft order's customer id.
+                description: Filter by a customer ID to retrieve their draft orders.
               - type: array
-                description: The draft order's customer id.
+                description: Filter by customer IDs to retrieve their draft orders.
                 items:
                   type: string
                   title: customer_id
-                  description: The customer id's details.
+                  description: A customer ID.
       security:
         - api_token: []
         - cookie_auth: []
@@ -19117,13 +19118,13 @@ paths:
             oneOf:
               - type: string
                 title: region_id
-                description: The order's region id.
+                description: Filter by a region ID to retrieve its associated orders.
               - type: array
-                description: The order's region id.
+                description: Filter by region IDs to retrieve their associated orders.
                 items:
                   type: string
                   title: region_id
-                  description: The region id's details.
+                  description: A region's ID.
         - name: q
           in: query
           description: Search term to filter the order's searchable properties.
@@ -19601,13 +19602,13 @@ paths:
             oneOf:
               - type: string
                 title: customer_id
-                description: The order's customer id.
+                description: Filter by a customer ID to retrieve its associated orders.
               - type: array
-                description: The order's customer id.
+                description: Filter by customer IDs to retrieve their associated orders.
                 items:
                   type: string
                   title: customer_id
-                  description: The customer id's details.
+                  description: A customer's ID.
       security:
         - api_token: []
         - cookie_auth: []
@@ -33555,13 +33556,13 @@ paths:
             oneOf:
               - type: string
                 title: region_id
-                description: The return's region id.
+                description: Filter by a region ID to retrieve its associated returns.
               - type: array
-                description: The return's region id.
+                description: Filter by region IDs to retrieve their associated returns.
                 items:
                   type: string
                   title: region_id
-                  description: The region id's details.
+                  description: A region's ID.
         - name: q
           in: query
           description: Search term to filter the return's searchable properties.
@@ -34039,13 +34040,13 @@ paths:
             oneOf:
               - type: string
                 title: customer_id
-                description: The return's customer id.
+                description: Filter by a customer ID to retrieve its associated returns.
               - type: array
-                description: The return's customer id.
+                description: Filter by customer IDs to retrieve their associated returns.
                 items:
                   type: string
                   title: customer_id
-                  description: The customer id's details.
+                  description: A customer's ID.
       security:
         - api_token: []
         - cookie_auth: []
@@ -56803,7 +56804,7 @@ components:
         thumbnail:
           type: string
           title: thumbnail
-          description: The product's thumbnail.
+          description: The product's thumbnail URL.
         width:
           type: number
           title: width
@@ -56881,9 +56882,9 @@ components:
           type: array
           description: The category's children.
           items:
-            $ref: '#/components/schemas/AdminProductCategory'
+            type: object
         parent_category:
-          $ref: '#/components/schemas/AdminProductCategory'
+          type: object
         products:
           type: array
           description: The category's products.
@@ -58792,19 +58793,8 @@ components:
           title: no_notification
           description: Whether to send the customer notifications when the exchange is updated.
         difference_due:
-          oneOf:
-            - type: string
-              title: difference_due
-              description: The exchange's difference due.
-            - type: number
-              title: difference_due
-              description: The exchange's difference due.
-            - type: string
-              title: difference_due
-              description: The exchange's difference due.
-            - type: number
-              title: difference_due
-              description: The exchange's difference due.
+          type: number
+          title: difference_due
           description: The amount to be exchanged or refunded. If the amount is negative, it must be refunded. If positive, additional payment is required from the customer.
         return:
           $ref: '#/components/schemas/Return'
@@ -59683,19 +59673,8 @@ components:
             - received
             - partially_received
         refund_amount:
-          oneOf:
-            - type: string
-              title: refund_amount
-              description: The return order's refund amount.
-            - type: number
-              title: refund_amount
-              description: The return order's refund amount.
-            - type: string
-              title: refund_amount
-              description: The return order's refund amount.
-            - type: number
-              title: refund_amount
-              description: The return order's refund amount.
+          type: number
+          title: refund_amount
           description: The amount refunded by this return.
         order_id:
           type: string
@@ -68537,7 +68516,7 @@ components:
           description: The customer's phone.
         metadata:
           type: object
-          description: The customer's metadata.
+          description: The customer's metadata, can hold custom key-value pairs.
     UpdateAddress:
       type: object
       description: The details to update in the address.

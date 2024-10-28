@@ -1,8 +1,9 @@
 /**
  * @oas [post] /admin/customers/{id}/customer-groups
  * operationId: PostCustomersIdCustomerGroups
- * summary: Add Customer Group to Customer
- * description: Add a Customer Group to a customer
+ * summary: Manage Customer Groups of Customer
+ * x-sidebar-summary: Manage Customer Groups
+ * description: Manage the customer groups of a customer to add or remove the customer from these groups.
  * x-authenticated: true
  * parameters:
  *   - name: id
@@ -15,8 +16,8 @@
  *     in: query
  *     description: |-
  *       Comma-separated fields that should be included in the returned data.
- *        * if a field is prefixed with `+` it will be added to the default fields, using `-` will remove it from the default fields.
- *        * without prefix it will replace the entire default fields.
+ *       if a field is prefixed with `+` it will be added to the default fields, using `-` will remove it from the default fields.
+ *       without prefix it will replace the entire default fields.
  *     required: false
  *     schema:
  *       type: string
@@ -34,22 +35,22 @@
  *     application/json:
  *       schema:
  *         type: object
- *         description: SUMMARY
+ *         description: The customer groups to add or remove the customer from.
  *         properties:
  *           add:
  *             type: array
- *             description: The customer's add.
+ *             description: The customer groups to add the customer to.
  *             items:
  *               type: string
  *               title: add
- *               description: The add's details.
+ *               description: The ID of a customer group to add the customer to.
  *           remove:
  *             type: array
- *             description: The customer's remove.
+ *             description: The customer groups to remove the customer from.
  *             items:
  *               type: string
  *               title: remove
- *               description: The remove's details.
+ *               description: The ID of a customer group to remove the customer from.
  * x-codeSamples:
  *   - lang: Shell
  *     label: cURL

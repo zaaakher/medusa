@@ -18833,7 +18833,7 @@ components:
         thumbnail:
           type: string
           title: thumbnail
-          description: The product's thumbnail.
+          description: The product's thumbnail URL.
         width:
           type: number
           title: width
@@ -18911,9 +18911,9 @@ components:
           type: array
           description: The category's children.
           items:
-            $ref: '#/components/schemas/AdminProductCategory'
+            type: object
         parent_category:
-          $ref: '#/components/schemas/AdminProductCategory'
+          type: object
         products:
           type: array
           description: The category's products.
@@ -20822,19 +20822,8 @@ components:
           title: no_notification
           description: Whether to send the customer notifications when the exchange is updated.
         difference_due:
-          oneOf:
-            - type: string
-              title: difference_due
-              description: The exchange's difference due.
-            - type: number
-              title: difference_due
-              description: The exchange's difference due.
-            - type: string
-              title: difference_due
-              description: The exchange's difference due.
-            - type: number
-              title: difference_due
-              description: The exchange's difference due.
+          type: number
+          title: difference_due
           description: The amount to be exchanged or refunded. If the amount is negative, it must be refunded. If positive, additional payment is required from the customer.
         return:
           $ref: '#/components/schemas/Return'
@@ -21713,19 +21702,8 @@ components:
             - received
             - partially_received
         refund_amount:
-          oneOf:
-            - type: string
-              title: refund_amount
-              description: The return order's refund amount.
-            - type: number
-              title: refund_amount
-              description: The return order's refund amount.
-            - type: string
-              title: refund_amount
-              description: The return order's refund amount.
-            - type: number
-              title: refund_amount
-              description: The return order's refund amount.
+          type: number
+          title: refund_amount
           description: The amount refunded by this return.
         order_id:
           type: string
@@ -30567,7 +30545,7 @@ components:
           description: The customer's phone.
         metadata:
           type: object
-          description: The customer's metadata.
+          description: The customer's metadata, can hold custom key-value pairs.
     UpdateAddress:
       type: object
       description: The details to update in the address.
