@@ -33,7 +33,7 @@ const createDataTableColumnHelper = <
 
       const extendedMeta = {
         ___sortMetaData: { sortLabel, sortAscLabel, sortDescLabel },
-        ...meta,
+        ...(meta || {}),
       }
 
       return accessorTanstack(accessor, {
@@ -43,10 +43,14 @@ const createDataTableColumnHelper = <
       })
     },
     display,
-    action: (props: ActionColumnDef<TData>) =>
+    action: ({ actions, ...props }: ActionColumnDef<TData>) =>
       display({
         id: "action",
         cell: (ctx) => <DataTableActionCell ctx={ctx} />,
+        meta: {
+          ___actions: actions,
+          ...(props.meta || {}),
+        },
         ...props,
       }),
     select: (props: SelectColumnDef<TData>) =>

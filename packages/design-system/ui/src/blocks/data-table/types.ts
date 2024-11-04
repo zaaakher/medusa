@@ -17,21 +17,15 @@ export type OrderByState<TData extends RowData> = {
   }
 }
 
-// export type FilterState<TData extends RowData> = {
-//   [K in keyof TData]?: {
-//     label: string
-//     value?: TData[K]
-//   }
-// }
-
 type DataTableAction<TData> = {
   label: string
   onClick: (ctx: CellContext<TData, unknown>) => void
+  icon?: React.ReactNode
 }
 
 export interface ActionColumnDef<TData>
-  extends Omit<DisplayColumnDef<TData>, "id" | "cell" | "header"> {
-  actions: DataTableAction<TData>[]
+  extends Pick<DisplayColumnDef<TData>, "meta"> {
+  actions: DataTableAction<TData>[] |  DataTableAction<TData>[][]
 }
 
 export interface SelectColumnDef<TData>
@@ -45,6 +39,10 @@ export type SortableColumnDef = {
 
 export type SortableColumnDefMeta = {
   ___sortMetaData?: SortableColumnDef
+}
+
+export type ActionColumnDefMeta<TData> = {
+  ___actions?: DataTableAction<TData>[] | DataTableAction<TData>[][]
 }
 
 export type DataTableColumnHelper<TData> = {

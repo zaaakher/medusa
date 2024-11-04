@@ -65,7 +65,7 @@ const DataTableSortingMenu = ({ tooltip }: DataTableSortingMenuProps) => {
           </IconButton>
         </DropdownMenu.Trigger>
       </Wrapper>
-      <DropdownMenu.Content side="bottom" align="end">
+      <DropdownMenu.Content side="bottom">
         <DropdownMenu.RadioGroup value={sorting?.id} onValueChange={setKey}>
           {sortableColumns.map((column) => {
             return (

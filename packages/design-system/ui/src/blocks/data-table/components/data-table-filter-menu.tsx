@@ -21,7 +21,7 @@ const DataTableFilterMenu = ({ tooltip }: DataTableFilterMenuProps) => {
           </IconButton>
         </DropdownMenu.Trigger>
       </Wrapper>
-      <DropdownMenu.Content side="bottom" align="end"></DropdownMenu.Content>
+      <DropdownMenu.Content side="bottom"></DropdownMenu.Content>
     </DropdownMenu>
   )
 }

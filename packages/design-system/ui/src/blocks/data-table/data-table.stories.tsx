@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react"
 import * as React from "react"
 
 import { Container } from "@/components/container"
+import { PencilSquare, Trash } from "@medusajs/icons"
 import { ColumnSort, RowSelectionState } from "@tanstack/react-table"
 import { Button } from "../../components/button"
 import { Heading } from "../../components/heading"
@@ -93,7 +94,6 @@ const columns = [
     enableSorting: true,
     sortAscLabel: "A-Z",
     sortDescLabel: "Z-A",
-    // sortLabel: "Email",
   }),
   columnHelper.accessor("age", {
     header: "Age",
@@ -103,7 +103,22 @@ const columns = [
     sortLabel: "Age",
   }),
   columnHelper.action({
-    actions: [],
+    actions: [
+      [
+        {
+          label: "Edit",
+          onClick: () => {},
+          icon: <PencilSquare />,
+        },
+      ],
+      [
+        {
+          label: "Delete",
+          onClick: () => {},
+          icon: <Trash />,
+        },
+      ],
+    ],
   }),
 ]
 
