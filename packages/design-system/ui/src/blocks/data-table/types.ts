@@ -43,6 +43,10 @@ export type SortableColumnDef = {
   sortDescLabel?: string
 }
 
+export type SortableColumnDefMeta = {
+  ___sortMetaData?: SortableColumnDef
+}
+
 export type DataTableColumnHelper<TData> = {
   accessor: <
     TAccessor extends AccessorFn<TData> | DeepKeys<TData>,

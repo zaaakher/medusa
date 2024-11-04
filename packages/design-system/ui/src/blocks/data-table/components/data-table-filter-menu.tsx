@@ -1,13 +1,28 @@
 import * as React from "react"
 
-import { Adjustments } from "@medusajs/icons"
+import { Funnel } from "@medusajs/icons"
+import { DropdownMenu } from "../../../components/dropdown-menu"
 import { IconButton } from "../../../components/icon-button"
+import { Tooltip } from "../../../components/tooltip"
 
-const DataTableFilterMenu = () => {
+interface DataTableFilterMenuProps {
+  tooltip?: string
+}
+
+const DataTableFilterMenu = ({ tooltip }: DataTableFilterMenuProps) => {
+  const Wrapper = tooltip ? Tooltip : React.Fragment
+
   return (
-    <IconButton size="small">
-      <Adjustments />
-    </IconButton>
+    <DropdownMenu>
+      <Wrapper content={tooltip}>
+        <DropdownMenu.Trigger asChild>
+          <IconButton size="small">
+            <Funnel />
+          </IconButton>
+        </DropdownMenu.Trigger>
+      </Wrapper>
+      <DropdownMenu.Content side="bottom" align="end"></DropdownMenu.Content>
+    </DropdownMenu>
   )
 }
 

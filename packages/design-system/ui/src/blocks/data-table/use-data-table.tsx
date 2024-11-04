@@ -39,6 +39,10 @@ interface UseDataTableReturn<TData>
   count: number
   pageIndex: number
   pageSize: number
+  getSorting: () => ColumnSort | null
+  setSorting: (
+    sortingOrUpdater: ColumnSort | ((prev: ColumnSort | null) => ColumnSort)
+  ) => void
 }
 
 const useDataTable = <TData,>({
@@ -81,6 +85,25 @@ const useDataTable = <TData,>({
     manualFiltering: true,
   })
 
+  const getSorting = React.useCallback(() => {
+    return instance.getState().sorting?.[0] ?? null
+  }, [instance])
+
+  const setSorting = React.useCallback(
+    (
+      sortingOrUpdater: ColumnSort | ((prev: ColumnSort | null) => ColumnSort)
+    ) => {
+      const currentSort = instance.getState().sorting?.[0] ?? null
+      const newSorting =
+        typeof sortingOrUpdater === "function"
+          ? sortingOrUpdater(currentSort)
+          : sortingOrUpdater
+
+      instance.setSorting([newSorting])
+    },
+    [instance]
+  )
+
   return {
     // Table
     getHeaderGroups: instance.getHeaderGroups,
@@ -95,6 +118,9 @@ const useDataTable = <TData,>({
     pageIndex: instance.getState().pagination.pageIndex,
     pageSize: instance.getState().pagination.pageSize,
     count,
+    // Sorting
+    getSorting,
+    setSorting,
   }
 }
 

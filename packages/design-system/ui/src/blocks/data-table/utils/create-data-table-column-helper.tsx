@@ -22,15 +22,25 @@ const createDataTableColumnHelper = <
 
   return {
     accessor: (accessor, column) => {
-      const { sortLabel, sortAscLabel, sortDescLabel, meta, ...rest } =
-        column as any & SortableColumnDef
+      const {
+        sortLabel,
+        sortAscLabel,
+        sortDescLabel,
+        meta,
+        enableSorting,
+        ...rest
+      } = column as any & SortableColumnDef
 
       const extendedMeta = {
         ___sortMetaData: { sortLabel, sortAscLabel, sortDescLabel },
         ...meta,
       }
 
-      return accessorTanstack(accessor, { ...rest, meta: extendedMeta })
+      return accessorTanstack(accessor, {
+        ...rest,
+        enableSorting: enableSorting ?? false,
+        meta: extendedMeta,
+      })
     },
     display,
     action: (props: ActionColumnDef<TData>) =>

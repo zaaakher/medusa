@@ -3,7 +3,9 @@ import * as React from "react"
 
 import { Container } from "@/components/container"
 import { ColumnSort, RowSelectionState } from "@tanstack/react-table"
+import { Button } from "../../components/button"
 import { Heading } from "../../components/heading"
+import { TooltipProvider } from "../../components/tooltip"
 import { DataTable } from "./data-table"
 import { useDataTable } from "./use-data-table"
 import { createDataTableColumnHelper } from "./utils/create-data-table-column-helper"
@@ -82,7 +84,9 @@ const columns = [
   columnHelper.select({}),
   columnHelper.accessor("name", {
     header: "Name",
-    enableSorting: false,
+    enableSorting: true,
+    sortAscLabel: "A-Z",
+    sortDescLabel: "Z-A",
   }),
   columnHelper.accessor("email", {
     header: "Email",
@@ -148,25 +152,28 @@ const BasicDemo = () => {
   })
 
   return (
-    <Container className="overflow-hidden p-0">
-      <DataTable instance={table}>
-        <DataTable.Toolbar className="flex items-center justify-between">
-          <Heading>Employees</Heading>
-          <div className="flex items-center gap-2">
-            <DataTable.Search
-              value={search}
-              onValueChange={setSearch}
-              placeholder="Search"
-              autoFocus
-            />
-            <DataTable.FilterMenu />
-            <DataTable.SortingMenu />
-          </div>
-        </DataTable.Toolbar>
-        <DataTable.Table />
-        <DataTable.Pagination />
-      </DataTable>
-    </Container>
+    <TooltipProvider>
+      <Container className="overflow-hidden p-0">
+        <DataTable instance={table}>
+          <DataTable.Toolbar className="flex items-center justify-between">
+            <Heading>Employees</Heading>
+            <div className="flex items-center gap-2">
+              <DataTable.Search
+                value={search}
+                onValueChange={setSearch}
+                placeholder="Search"
+                autoFocus
+              />
+              <DataTable.FilterMenu tooltip="Filter" />
+              <DataTable.SortingMenu tooltip="Sort" />
+              <Button size="small">Create</Button>
+            </div>
+          </DataTable.Toolbar>
+          <DataTable.Table />
+          <DataTable.Pagination />
+        </DataTable>
+      </Container>
+    </TooltipProvider>
   )
 }
 

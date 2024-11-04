@@ -4,6 +4,7 @@ import { Table } from "@/components/table"
 import { flexRender } from "@tanstack/react-table"
 import { clx } from "../../../utils/clx"
 import { useDataTableContext } from "../context/use-data-table-context"
+import { DataTableFilterBar } from "./data-table-filter-bar"
 import { DataTableSortingIcon } from "./data-table-sorting-icon"
 
 const DataTableTable = () => {
@@ -58,68 +59,73 @@ const DataTableTable = () => {
   }, [hoveredRowId, instance])
 
   return (
-    <Table>
-      <Table.Header>
-        {instance.getHeaderGroups().map((headerGroup) => (
-          <Table.Row key={headerGroup.id} className={clx()}>
-            {headerGroup.headers.map((header) => {
-              const canSort = header.column.getCanSort()
-              const sortDirection = header.column.getIsSorted()
-              const sortHandler = header.column.getToggleSortingHandler()
+    <div className="flex flex-col">
+      <DataTableFilterBar />
+      <Table className="overflow-auto">
+        <Table.Header>
+          {instance.getHeaderGroups().map((headerGroup) => (
+            <Table.Row key={headerGroup.id} className={clx()}>
+              {headerGroup.headers.map((header) => {
+                const canSort = header.column.getCanSort()
+                const sortDirection = header.column.getIsSorted()
+                const sortHandler = header.column.getToggleSortingHandler()
 
-              const isActionHeader = header.id === "action"
-              const isSelectHeader = header.id === "select"
-              const isSpecialHeader = isActionHeader || isSelectHeader
+                const isActionHeader = header.id === "action"
+                const isSelectHeader = header.id === "select"
+                const isSpecialHeader = isActionHeader || isSelectHeader
 
-              return (
-                <Table.HeaderCell
-                  key={header.id}
-                  style={{
-                    width: !isSpecialHeader ? `${colWidth}%` : undefined,
-                  }}
-                >
-                  <div
-                    className={clx(
-                      "group flex w-fit cursor-default items-center gap-2",
-                      {
-                        "cursor-pointer": canSort,
-                      }
-                    )}
+                const Wrapper = canSort ? "button" : "div"
+
+                return (
+                  <Table.HeaderCell
+                    key={header.id}
+                    style={{
+                      width: !isSpecialHeader ? `${colWidth}%` : undefined,
+                    }}
                   >
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
-                    {canSort && (
-                      <button type="button" onClick={sortHandler}>
+                    <Wrapper
+                      type={canSort ? "button" : undefined}
+                      onClick={canSort ? sortHandler : undefined}
+                      className={clx(
+                        "group flex w-fit cursor-default items-center gap-2",
+                        {
+                          "cursor-pointer": canSort,
+                        }
+                      )}
+                    >
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                      {canSort && (
                         <DataTableSortingIcon direction={sortDirection} />
-                      </button>
-                    )}
-                  </div>
-                </Table.HeaderCell>
-              )
-            })}
-          </Table.Row>
-        ))}
-      </Table.Header>
-      <Table.Body>
-        {instance.getRowModel().rows.map((row) => {
-          return (
-            <Table.Row
-              key={row.id}
-              onMouseEnter={() => setHoveredRowId(row.id)}
-              onMouseLeave={() => setHoveredRowId(null)}
-            >
-              {row.getVisibleCells().map((cell) => (
-                <Table.Cell key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </Table.Cell>
-              ))}
+                      )}
+                    </Wrapper>
+                  </Table.HeaderCell>
+                )
+              })}
             </Table.Row>
-          )
-        })}
-      </Table.Body>
-    </Table>
+          ))}
+        </Table.Header>
+        <Table.Body>
+          {instance.getRowModel().rows.map((row) => {
+            return (
+              <Table.Row
+                key={row.id}
+                onMouseEnter={() => setHoveredRowId(row.id)}
+                onMouseLeave={() => setHoveredRowId(null)}
+              >
+                {row.getVisibleCells().map((cell) => (
+                  <Table.Cell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </Table.Cell>
+                ))}
+              </Table.Row>
+            )
+          })}
+        </Table.Body>
+      </Table>
+    </div>
   )
 }
 
