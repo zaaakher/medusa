@@ -10,8 +10,11 @@ import {
 import {
   ActionColumnDef,
   DataTableColumnHelper,
+  FilterableColumnDef,
+  FilterableColumnDefMeta,
   SelectColumnDef,
   SortableColumnDef,
+  SortableColumnDefMeta,
 } from "../types"
 
 const createDataTableColumnHelper = <
@@ -26,13 +29,15 @@ const createDataTableColumnHelper = <
         sortLabel,
         sortAscLabel,
         sortDescLabel,
+        filter,
         meta,
         enableSorting,
         ...rest
-      } = column as any & SortableColumnDef
+      } = column as any & SortableColumnDef & FilterableColumnDef
 
-      const extendedMeta = {
+      const extendedMeta: SortableColumnDefMeta & FilterableColumnDefMeta = {
         ___sortMetaData: { sortLabel, sortAscLabel, sortDescLabel },
+        ___filterMetaData: filter,
         ...(meta || {}),
       }
 

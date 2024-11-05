@@ -2,6 +2,7 @@
 
 import { Input } from "@/components/input"
 import * as React from "react"
+import { clx } from "../../../utils/clx"
 
 interface DataTableSearchProps {
   value: string
@@ -14,6 +15,7 @@ interface DataTableSearchProps {
 const DataTableSearch = ({
   value,
   onValueChange,
+  className,
   ...props
 }: DataTableSearchProps) => {
   return (
@@ -22,6 +24,7 @@ const DataTableSearch = ({
       type="search"
       value={value}
       onChange={(e) => onValueChange(e.target.value)}
+      className={clx("w-full flex-1 md:flex-none", className)}
       {...props}
     />
   )

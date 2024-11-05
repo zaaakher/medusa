@@ -1,4 +1,5 @@
 import {
+  ColumnFiltersState,
   type ColumnSort,
   getCoreRowModel,
   type Row,
@@ -9,9 +10,15 @@ import {
   useReactTable,
 } from "@tanstack/react-table"
 import * as React from "react"
+import { DataTableFilter, DataTableSortingState } from "./types"
 
 interface DataTableOptions<TData>
   extends Pick<TableOptions<TData>, "data" | "columns" | "getRowId"> {
+  filters?: DataTableFilter[]
+  filtering?: {
+    state: ColumnFiltersState
+    onFilteringChange: (state: ColumnFiltersState) => void
+  }
   rowSelection?: {
     state: RowSelectionState
     onRowSelectionChange: (state: RowSelectionState) => void
@@ -39,16 +46,21 @@ interface UseDataTableReturn<TData>
   count: number
   pageIndex: number
   pageSize: number
-  getSorting: () => ColumnSort | null
+  getSorting: () => DataTableSortingState | null
   setSorting: (
-    sortingOrUpdater: ColumnSort | ((prev: ColumnSort | null) => ColumnSort)
+    sortingOrUpdater:
+      | DataTableSortingState
+      | ((prev: DataTableSortingState | null) => DataTableSortingState)
   ) => void
+  getFilterOptions: () => DataTableFilter[]
+  getFiltering: () => ColumnFiltersState
 }
 
 const useDataTable = <TData,>({
   count = 0,
   rowSelection,
   sorting,
+  filtering,
   ...options
 }: DataTableOptions<TData>): UseDataTableReturn<TData> => {
   const sortingStateHandler = React.useCallback(
@@ -70,13 +82,26 @@ const useDataTable = <TData,>({
     [rowSelection?.onRowSelectionChange, rowSelection?.state]
   )
 
+  const filteringStateHandler = React.useCallback(
+    () =>
+      filtering?.onFilteringChange
+        ? onFilteringChangeTransformer(
+            filtering.onFilteringChange,
+            filtering.state
+          )
+        : undefined,
+    [filtering?.onFilteringChange, filtering?.state]
+  )
+
   const instance = useReactTable({
     ...options,
     getCoreRowModel: getCoreRowModel(),
     state: {
       rowSelection: rowSelection?.state,
       sorting: sorting?.state ? [sorting.state] : undefined,
+      columnFilters: filtering?.state,
     },
+    onColumnFiltersChange: filteringStateHandler(),
     onRowSelectionChange: rowSelectionStateHandler(),
     onSortingChange: sortingStateHandler(),
     // All data manipulation should be handled manually, likely by a server.
@@ -104,6 +129,14 @@ const useDataTable = <TData,>({
     [instance]
   )
 
+  const getFilterOptions = React.useCallback(() => {
+    return options.filters ?? []
+  }, [options.filters])
+
+  const getFiltering = React.useCallback(() => {
+    return instance.getState().columnFilters ?? []
+  }, [instance])
+
   return {
     // Table
     getHeaderGroups: instance.getHeaderGroups,
@@ -121,6 +154,9 @@ const useDataTable = <TData,>({
     // Sorting
     getSorting,
     setSorting,
+    // Filtering
+    getFilterOptions,
+    getFiltering,
   }
 }
 
@@ -150,6 +186,20 @@ function onRowSelectionChangeTransformer(
         : updaterOrValue
 
     onRowSelectionChange(value)
+  }
+}
+
+function onFilteringChangeTransformer(
+  onFilteringChange: (state: ColumnFiltersState) => void,
+  state?: ColumnFiltersState
+) {
+  return (updaterOrValue: Updater<ColumnFiltersState>) => {
+    const value =
+      typeof updaterOrValue === "function"
+        ? updaterOrValue(state ?? [])
+        : updaterOrValue
+
+    onFilteringChange(value)
   }
 }
 

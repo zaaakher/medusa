@@ -11,6 +11,7 @@ const DataTablePagination = () => {
 
   return (
     <Table.Pagination
+      className="flex-shrink-0"
       canNextPage={instance.getCanNextPage()}
       canPreviousPage={instance.getCanPreviousPage()}
       pageCount={instance.getPageCount()}

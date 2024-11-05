@@ -10,7 +10,7 @@ import { Tooltip } from "../../../components/tooltip"
 import { useDataTableContext } from "../context/use-data-table-context"
 import { SortableColumnDefMeta } from "../types"
 
-interface DataTableSortingMenuProps {
+export interface DataTableSortingMenuProps {
   tooltip?: string
 }
 

@@ -3,13 +3,15 @@ import * as React from "react"
 
 import { Container } from "@/components/container"
 import { PencilSquare, Trash } from "@medusajs/icons"
-import { ColumnSort, RowSelectionState } from "@tanstack/react-table"
+import { RowSelectionState } from "@tanstack/react-table"
 import { Button } from "../../components/button"
 import { Heading } from "../../components/heading"
 import { TooltipProvider } from "../../components/tooltip"
 import { DataTable } from "./data-table"
+import { DataTableSortingState } from "./types"
 import { useDataTable } from "./use-data-table"
 import { createDataTableColumnHelper } from "./utils/create-data-table-column-helper"
+import { createDataTableFilterHelper } from "./utils/create-data-table-filter-helper"
 
 const meta: Meta<typeof DataTable> = {
   title: "Blocks/DataTable",
@@ -24,6 +26,8 @@ type Person = {
   name: string
   email: string
   age: number
+  birthday: Date
+  relationshipStatus: "single" | "married" | "divorced" | "widowed"
 }
 
 const data: Person[] = [
@@ -31,16 +35,50 @@ const data: Person[] = [
     name: "John Doe",
     email: "john.doe@example.com",
     age: 20,
+    birthday: new Date("1990-01-01"),
+    relationshipStatus: "single",
   },
   {
     name: "Jane Doe",
     email: "jane.doe@example.com",
     age: 25,
+    birthday: new Date("1995-04-01"),
+    relationshipStatus: "married",
   },
   {
     name: "John Smith",
     email: "john.smith@example.com",
     age: 30,
+    birthday: new Date("1990-05-01"),
+    relationshipStatus: "divorced",
+  },
+  {
+    name: "Jane Smith",
+    email: "jane.smith@example.com",
+    age: 35,
+    birthday: new Date("1995-06-01"),
+    relationshipStatus: "widowed",
+  },
+  {
+    name: "Mike Doe",
+    email: "mike.doe@example.com",
+    age: 40,
+    birthday: new Date("1990-07-01"),
+    relationshipStatus: "single",
+  },
+  {
+    name: "Emily Smith",
+    email: "emily.smith@example.com",
+    age: 45,
+    birthday: new Date("1995-08-01"),
+    relationshipStatus: "married",
+  },
+  {
+    name: "Sam Doe",
+    email: "sam.doe@example.com",
+    age: 50,
+    birthday: new Date("1990-09-01"),
+    relationshipStatus: "divorced",
   },
 ]
 
@@ -102,6 +140,23 @@ const columns = [
     sortDescLabel: "High to Low",
     sortLabel: "Age",
   }),
+  columnHelper.accessor("birthday", {
+    header: "Birthday",
+    cell: ({ row }) => {
+      return (
+        <div>
+          {row.original.birthday.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
+        </div>
+      )
+    },
+    enableSorting: true,
+    sortAscLabel: "Oldest to Youngest",
+    sortDescLabel: "Youngest to Oldest",
+  }),
   columnHelper.action({
     actions: [
       [
@@ -118,6 +173,36 @@ const columns = [
           icon: <Trash />,
         },
       ],
+    ],
+  }),
+]
+
+const filterHelper = createDataTableFilterHelper<Person>()
+
+const filters = [
+  filterHelper.accessor("name", {
+    label: "Name",
+    type: "text",
+  }),
+  filterHelper.accessor("birthday", {
+    label: "Birthday",
+    type: "date",
+    format: "date",
+    options: [
+      { label: "Today", value: new Date() },
+      { label: "Yesterday", value: new Date(Date.now() - 24 * 60 * 60 * 1000) },
+      {
+        label: "Last Week",
+        value: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+      },
+      {
+        label: "Last Month",
+        value: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+      },
+      {
+        label: "Last Year",
+        value: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000),
+      },
     ],
   }),
 ]
@@ -148,7 +233,9 @@ const BasicDemo = () => {
   const debouncedSearch = useDebouncedValue(search, 300)
 
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({})
-  const [sorting, setSorting] = React.useState<ColumnSort | null>(null)
+  const [sorting, setSorting] = React.useState<DataTableSortingState | null>(
+    null
+  )
 
   const { data, count } = usePeople({ q: debouncedSearch, order: sorting })
 
@@ -156,6 +243,7 @@ const BasicDemo = () => {
     data,
     columns,
     count,
+    filters,
     rowSelection: {
       state: rowSelection,
       onRowSelectionChange: setRowSelection,
@@ -168,11 +256,11 @@ const BasicDemo = () => {
 
   return (
     <TooltipProvider>
-      <Container className="overflow-hidden p-0">
+      <Container className="flex h-full max-h-[500px] flex-col overflow-hidden p-0">
         <DataTable instance={table}>
-          <DataTable.Toolbar className="flex items-center justify-between">
+          <DataTable.Toolbar className="flex flex-col items-start justify-between gap-2 md:flex-row md:items-center">
             <Heading>Employees</Heading>
-            <div className="flex items-center gap-2">
+            <div className="flex w-full items-center gap-2 md:w-auto">
               <DataTable.Search
                 value={search}
                 onValueChange={setSearch}
@@ -181,7 +269,9 @@ const BasicDemo = () => {
               />
               <DataTable.FilterMenu tooltip="Filter" />
               <DataTable.SortingMenu tooltip="Sort" />
-              <Button size="small">Create</Button>
+              <Button size="small" variant="secondary">
+                Create
+              </Button>
             </div>
           </DataTable.Toolbar>
           <DataTable.Table />
