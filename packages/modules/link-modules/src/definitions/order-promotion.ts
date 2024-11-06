@@ -40,6 +40,7 @@ export const OrderPromotion: ModuleJoinerConfig = {
   extends: [
     {
       serviceName: Modules.ORDER,
+      entity: "Order",
       fieldAlias: {
         promotion: "promotion_link.promotion",
       },
@@ -52,6 +53,7 @@ export const OrderPromotion: ModuleJoinerConfig = {
     },
     {
       serviceName: Modules.PROMOTION,
+      entity: "Promotion",
       relationship: {
         serviceName: LINKS.OrderPromotion,
         primaryKey: "promotion_id",
