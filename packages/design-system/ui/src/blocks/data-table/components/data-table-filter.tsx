@@ -1,9 +1,34 @@
 import { XMark } from "@medusajs/icons"
+import { ColumnFilter } from "@tanstack/react-table"
 import * as React from "react"
 import { DropdownMenu } from "../../../components/dropdown-menu"
 import { clx } from "../../../utils/clx"
+import { useDataTableContext } from "../context/use-data-table-context"
 
-const DataTableFilter = () => {
+interface DataTableFilterProps {
+  filter: ColumnFilter
+  label: string
+}
+
+const DataTableFilter = ({ filter, label }: DataTableFilterProps) => {
+  const { instance } = useDataTableContext()
+  const [open, setOpen] = React.useState(filter.value === undefined)
+
+  const onOpenChange = React.useCallback(
+    (open: boolean) => {
+      if (!open && !filter.value) {
+        instance.removeFilter(filter.id)
+      }
+
+      setOpen(open)
+    },
+    [instance, filter.id, filter.value]
+  )
+
+  const removeFilter = React.useCallback(() => {
+    instance.removeFilter(filter.id)
+  }, [instance, filter.id])
+
   return (
     <div
       className={clx(
@@ -11,11 +36,16 @@ const DataTableFilter = () => {
         "[&>*]:txt-compact-small-plus [&>*]:flex [&>*]:items-center [&>*]:justify-center"
       )}
     >
-      <div className="text-ui-fg-muted px-2 py-1">Filter</div>
-      <DataTableFilterMenu label="Value" />
+      <div className="text-ui-fg-muted px-2 py-1">{label}</div>
+      <DataTableFilterMenu
+        label="Value"
+        open={open}
+        onOpenChange={onOpenChange}
+      />
       <button
         type="button"
         className="text-ui-fg-muted hover:bg-ui-bg-base-hover active:bg-ui-bg-base-pressed transition-fg size-7 outline-none"
+        onClick={removeFilter}
       >
         <XMark />
       </button>
@@ -25,11 +55,17 @@ const DataTableFilter = () => {
 
 interface DataTableFilterMenuProps {
   label: string
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }
 
-const DataTableFilterMenu = ({ label }: DataTableFilterMenuProps) => {
+const DataTableFilterMenu = ({
+  label,
+  open,
+  onOpenChange,
+}: DataTableFilterMenuProps) => {
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={onOpenChange}>
       <DropdownMenu.Trigger className="text-ui-fg-subtle hover:bg-ui-bg-base-hover active:bg-ui-bg-base-pressed transition-fg px-2 py-1 outline-none">
         {label}
       </DropdownMenu.Trigger>

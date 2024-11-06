@@ -3,7 +3,7 @@ import * as React from "react"
 
 import { Container } from "@/components/container"
 import { PencilSquare, Trash } from "@medusajs/icons"
-import { RowSelectionState } from "@tanstack/react-table"
+import { ColumnFilter, RowSelectionState } from "@tanstack/react-table"
 import { Button } from "../../components/button"
 import { Heading } from "../../components/heading"
 import { TooltipProvider } from "../../components/tooltip"
@@ -23,6 +23,7 @@ export default meta
 type Story = StoryObj<typeof DataTable>
 
 type Person = {
+  id: string
   name: string
   email: string
   age: number
@@ -32,6 +33,7 @@ type Person = {
 
 const data: Person[] = [
   {
+    id: "1",
     name: "John Doe",
     email: "john.doe@example.com",
     age: 20,
@@ -39,6 +41,7 @@ const data: Person[] = [
     relationshipStatus: "single",
   },
   {
+    id: "2",
     name: "Jane Doe",
     email: "jane.doe@example.com",
     age: 25,
@@ -46,6 +49,7 @@ const data: Person[] = [
     relationshipStatus: "married",
   },
   {
+    id: "3",
     name: "John Smith",
     email: "john.smith@example.com",
     age: 30,
@@ -53,6 +57,7 @@ const data: Person[] = [
     relationshipStatus: "divorced",
   },
   {
+    id: "4",
     name: "Jane Smith",
     email: "jane.smith@example.com",
     age: 35,
@@ -60,6 +65,7 @@ const data: Person[] = [
     relationshipStatus: "widowed",
   },
   {
+    id: "5",
     name: "Mike Doe",
     email: "mike.doe@example.com",
     age: 40,
@@ -67,6 +73,7 @@ const data: Person[] = [
     relationshipStatus: "single",
   },
   {
+    id: "6",
     name: "Emily Smith",
     email: "emily.smith@example.com",
     age: 45,
@@ -74,6 +81,7 @@ const data: Person[] = [
     relationshipStatus: "married",
   },
   {
+    id: "7",
     name: "Sam Doe",
     email: "sam.doe@example.com",
     age: 50,
@@ -236,6 +244,9 @@ const BasicDemo = () => {
   const [sorting, setSorting] = React.useState<DataTableSortingState | null>(
     null
   )
+  const [filtering, setFiltering] = React.useState<
+    Record<string, ColumnFilter>
+  >({})
 
   const { data, count } = usePeople({ q: debouncedSearch, order: sorting })
 
@@ -243,7 +254,12 @@ const BasicDemo = () => {
     data,
     columns,
     count,
+    getRowId: (row) => row.id,
     filters,
+    filtering: {
+      state: filtering,
+      onFilteringChange: setFiltering,
+    },
     rowSelection: {
       state: rowSelection,
       onRowSelectionChange: setRowSelection,

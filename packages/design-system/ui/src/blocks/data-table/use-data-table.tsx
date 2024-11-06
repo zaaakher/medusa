@@ -1,4 +1,5 @@
 import {
+  ColumnFilter,
   ColumnFiltersState,
   type ColumnSort,
   getCoreRowModel,
@@ -16,8 +17,8 @@ interface DataTableOptions<TData>
   extends Pick<TableOptions<TData>, "data" | "columns" | "getRowId"> {
   filters?: DataTableFilter[]
   filtering?: {
-    state: ColumnFiltersState
-    onFilteringChange: (state: ColumnFiltersState) => void
+    state: Record<string, ColumnFilter>
+    onFilteringChange: (state: Record<string, ColumnFilter>) => void
   }
   rowSelection?: {
     state: RowSelectionState
@@ -53,7 +54,11 @@ interface UseDataTableReturn<TData>
       | ((prev: DataTableSortingState | null) => DataTableSortingState)
   ) => void
   getFilterOptions: () => DataTableFilter[]
-  getFiltering: () => ColumnFiltersState
+  getFiltering: () => Record<string, ColumnFilter>
+  addFilter: (filter: ColumnFilter) => void
+  removeFilter: (id: string) => void
+  clearFilters: () => void
+  updateFilter: (filter: ColumnFilter) => void
 }
 
 const useDataTable = <TData,>({
@@ -99,7 +104,7 @@ const useDataTable = <TData,>({
     state: {
       rowSelection: rowSelection?.state,
       sorting: sorting?.state ? [sorting.state] : undefined,
-      columnFilters: filtering?.state,
+      columnFilters: Object.values(filtering?.state ?? {}),
     },
     onColumnFiltersChange: filteringStateHandler(),
     onRowSelectionChange: rowSelectionStateHandler(),
@@ -134,8 +139,36 @@ const useDataTable = <TData,>({
   }, [options.filters])
 
   const getFiltering = React.useCallback(() => {
-    return instance.getState().columnFilters ?? []
+    const state = instance.getState().columnFilters ?? []
+    return Object.fromEntries(state.map((filter) => [filter.id, filter]))
   }, [instance])
+
+  const addFilter = React.useCallback(
+    (filter: ColumnFilter) => {
+      filtering?.onFilteringChange?.({ ...getFiltering(), [filter.id]: filter })
+    },
+    [filtering?.onFilteringChange, getFiltering]
+  )
+
+  const removeFilter = React.useCallback(
+    (id: string) => {
+      const currentFilters = getFiltering()
+      delete currentFilters[id]
+      filtering?.onFilteringChange?.(currentFilters)
+    },
+    [filtering?.onFilteringChange, getFiltering]
+  )
+
+  const clearFilters = React.useCallback(() => {
+    filtering?.onFilteringChange?.({})
+  }, [filtering?.onFilteringChange])
+
+  const updateFilter = React.useCallback(
+    (filter: ColumnFilter) => {
+      addFilter(filter)
+    },
+    [addFilter]
+  )
 
   return {
     // Table
@@ -157,6 +190,10 @@ const useDataTable = <TData,>({
     // Filtering
     getFilterOptions,
     getFiltering,
+    addFilter,
+    removeFilter,
+    clearFilters,
+    updateFilter,
   }
 }
 
@@ -190,16 +227,20 @@ function onRowSelectionChangeTransformer(
 }
 
 function onFilteringChangeTransformer(
-  onFilteringChange: (state: ColumnFiltersState) => void,
-  state?: ColumnFiltersState
+  onFilteringChange: (state: Record<string, ColumnFilter>) => void,
+  state?: Record<string, ColumnFilter>
 ) {
   return (updaterOrValue: Updater<ColumnFiltersState>) => {
     const value =
       typeof updaterOrValue === "function"
-        ? updaterOrValue(state ?? [])
+        ? updaterOrValue(Object.values(state ?? {}))
         : updaterOrValue
 
-    onFilteringChange(value)
+    const transformedValue = Object.fromEntries(
+      value.map((filter) => [filter.id, filter])
+    )
+
+    onFilteringChange(transformedValue)
   }
 }
 

@@ -37,12 +37,12 @@ const DataTableActionCell = <TData,>({
         </IconButton>
       </DropdownMenu.Trigger>
       <DropdownMenu.Content side="bottom">
-        {actions.map((actionOrGroup, index) => {
+        {actions.map((actionOrGroup, idx) => {
           const isArray = Array.isArray(actionOrGroup)
-          const isLast = index === actions.length - 1
+          const isLast = idx === actions.length - 1
 
           return isArray ? (
-            <React.Fragment>
+            <React.Fragment key={idx}>
               {actionOrGroup.map((action) => (
                 <DropdownMenu.Item
                   key={action.label}
