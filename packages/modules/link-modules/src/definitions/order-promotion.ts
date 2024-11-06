@@ -42,7 +42,10 @@ export const OrderPromotion: ModuleJoinerConfig = {
       serviceName: Modules.ORDER,
       entity: "Order",
       fieldAlias: {
-        promotion: "promotion_link.promotion",
+        promotion: {
+          path: "promotion_link.promotion",
+          isList: true,
+        },
       },
       relationship: {
         serviceName: LINKS.OrderPromotion,
