@@ -177,6 +177,15 @@ export function applyStep<
 
       delete localConfig.name
 
+      const handler = createStepHandler.bind(this)({
+        stepName: newStepName,
+        input,
+        invokeFn,
+        compensateFn,
+      })
+
+      wrapAsyncHandler(stepConfig, handler)
+
       this.handlers.set(newStepName, handler)
 
       this.flow.replaceAction(stepConfig.uuid!, newStepName, newConfig)
