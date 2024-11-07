@@ -10,8 +10,6 @@ import {
 import {
   ActionColumnDef,
   DataTableColumnHelper,
-  FilterableColumnDef,
-  FilterableColumnDefMeta,
   SelectColumnDef,
   SortableColumnDef,
   SortableColumnDefMeta,
@@ -29,15 +27,13 @@ const createDataTableColumnHelper = <
         sortLabel,
         sortAscLabel,
         sortDescLabel,
-        filter,
         meta,
         enableSorting,
         ...rest
-      } = column as any & SortableColumnDef & FilterableColumnDef
+      } = column as any & SortableColumnDef
 
-      const extendedMeta: SortableColumnDefMeta & FilterableColumnDefMeta = {
+      const extendedMeta: SortableColumnDefMeta = {
         ___sortMetaData: { sortLabel, sortAscLabel, sortDescLabel },
-        ___filterMetaData: filter,
         ...(meta || {}),
       }
 
@@ -58,14 +54,15 @@ const createDataTableColumnHelper = <
         },
         ...props,
       }),
-    select: (props: SelectColumnDef<TData>) =>
+    select: (props?: SelectColumnDef<TData>) =>
       display({
         id: "select",
-        header: (ctx) => <DataTableSelectHeader ctx={ctx} />,
-        cell: props.cell
+        header: props?.header
+          ? props.header
+          : (ctx) => <DataTableSelectHeader ctx={ctx} />,
+        cell: props?.cell
           ? props.cell
           : (ctx) => <DataTableSelectCell ctx={ctx} />,
-        ...props,
       }),
   }
 }

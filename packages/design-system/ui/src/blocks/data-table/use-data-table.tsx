@@ -11,10 +11,23 @@ import {
   useReactTable,
 } from "@tanstack/react-table"
 import * as React from "react"
-import { DataTableFilter, DataTableSortingState } from "./types"
+import {
+  DataTableEmptyState,
+  DataTableFilter,
+  DataTableSortingState,
+  FilterOption,
+  FilterType,
+} from "./types"
 
 interface DataTableOptions<TData>
   extends Pick<TableOptions<TData>, "data" | "columns" | "getRowId"> {
+  /**
+   * Whether the data for the table is currently being loaded.
+   */
+  isLoading?: boolean
+  /**
+   * The filters which the user can apply to the table.
+   */
   filters?: DataTableFilter[]
   filtering?: {
     state: Record<string, ColumnFilter>
@@ -28,7 +41,11 @@ interface DataTableOptions<TData>
     state: ColumnSort | null
     onSortingChange: (state: ColumnSort) => void
   }
-  onClickRow?: (row: Row<TData>) => void
+  search?: {
+    state: string
+    onSearchChange: (state: string) => void
+  }
+  onRowClick?: (row: Row<TData>) => void
   count?: number
 }
 
@@ -47,18 +64,27 @@ interface UseDataTableReturn<TData>
   count: number
   pageIndex: number
   pageSize: number
+  search: string
+  onSearchChange: (search: string) => void
   getSorting: () => DataTableSortingState | null
   setSorting: (
     sortingOrUpdater:
       | DataTableSortingState
       | ((prev: DataTableSortingState | null) => DataTableSortingState)
   ) => void
-  getFilterOptions: () => DataTableFilter[]
+  getFilters: () => DataTableFilter[]
+  getFilterOptions: <T extends string | Date>(
+    id: string
+  ) => FilterOption<T>[] | null
+  getFilterType: (id: string) => FilterType | null
   getFiltering: () => Record<string, ColumnFilter>
   addFilter: (filter: ColumnFilter) => void
   removeFilter: (id: string) => void
   clearFilters: () => void
   updateFilter: (filter: ColumnFilter) => void
+  emptyState: DataTableEmptyState
+  isLoading: boolean
+  showSkeleton: boolean
 }
 
 const useDataTable = <TData,>({
@@ -66,6 +92,7 @@ const useDataTable = <TData,>({
   rowSelection,
   sorting,
   filtering,
+  onRowClick,
   ...options
 }: DataTableOptions<TData>): UseDataTableReturn<TData> => {
   const sortingStateHandler = React.useCallback(
@@ -134,9 +161,29 @@ const useDataTable = <TData,>({
     [instance]
   )
 
-  const getFilterOptions = React.useCallback(() => {
+  const getFilters = React.useCallback(() => {
     return options.filters ?? []
   }, [options.filters])
+
+  const getFilterOptions = React.useCallback(
+    <T extends string | Date>(id: string) => {
+      const filter = getFilters().find((filter) => filter.id === id)
+
+      if (!filter || filter.type === "text") {
+        return null
+      }
+
+      return filter.options as FilterOption<T>[]
+    },
+    [getFilters]
+  )
+
+  const getFilterType = React.useCallback(
+    (id: string) => {
+      return getFilters().find((filter) => filter.id === id)?.type || null
+    },
+    [getFilters]
+  )
 
   const getFiltering = React.useCallback(() => {
     const state = instance.getState().columnFilters ?? []
@@ -170,6 +217,28 @@ const useDataTable = <TData,>({
     [addFilter]
   )
 
+  const rows = instance.getRowModel().rows
+
+  const emptyState = React.useMemo(() => {
+    const hasRows = rows.length > 0
+    const hasSearch = Boolean(options.search?.state)
+    const hasFilters = Object.keys(filtering?.state ?? {}).length > 0
+
+    if (hasRows) {
+      return DataTableEmptyState.POPULATED
+    }
+
+    if (hasSearch || hasFilters) {
+      return DataTableEmptyState.FILTERED_EMPTY
+    }
+
+    return DataTableEmptyState.EMPTY
+  }, [rows, options.search?.state, filtering?.state])
+
+  const showSkeleton = React.useMemo(() => {
+    return options.isLoading === true && rows.length === 0
+  }, [options.isLoading, rows])
+
   return {
     // Table
     getHeaderGroups: instance.getHeaderGroups,
@@ -184,16 +253,26 @@ const useDataTable = <TData,>({
     pageIndex: instance.getState().pagination.pageIndex,
     pageSize: instance.getState().pagination.pageSize,
     count,
+    // Search
+    search: options.search?.state ?? "",
+    onSearchChange: options.search?.onSearchChange ?? (() => {}),
     // Sorting
     getSorting,
     setSorting,
     // Filtering
+    getFilters,
     getFilterOptions,
+    getFilterType,
     getFiltering,
     addFilter,
     removeFilter,
     clearFilters,
     updateFilter,
+    // Empty State
+    emptyState,
+    // Loading
+    isLoading: options.isLoading ?? false,
+    showSkeleton,
   }
 }
 

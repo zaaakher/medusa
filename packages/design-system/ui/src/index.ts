@@ -1,3 +1,4 @@
+// Components
 export { Alert } from "./components/alert"
 export { Avatar } from "./components/avatar"
 export { Badge } from "./components/badge"
@@ -38,6 +39,9 @@ export { Textarea } from "./components/textarea"
 export { Toast } from "./components/toast"
 export { Toaster } from "./components/toaster"
 export { Tooltip, TooltipProvider } from "./components/tooltip"
+
+// Blocks
+export * from "./blocks/data-table"
 
 // Hooks
 export { usePrompt } from "./hooks/use-prompt"

@@ -3,28 +3,29 @@
 import { Input } from "@/components/input"
 import * as React from "react"
 import { clx } from "../../../utils/clx"
+import { useDataTableContext } from "../context/use-data-table-context"
 
 interface DataTableSearchProps {
-  value: string
-  onValueChange: (value: string) => void
   autoFocus?: boolean
   className?: string
   placeholder?: string
 }
 
-const DataTableSearch = ({
-  value,
-  onValueChange,
-  className,
-  ...props
-}: DataTableSearchProps) => {
+const DataTableSearch = ({ className, ...props }: DataTableSearchProps) => {
+  const { instance } = useDataTableContext()
+
   return (
     <Input
       size="small"
       type="search"
-      value={value}
-      onChange={(e) => onValueChange(e.target.value)}
-      className={clx("w-full flex-1 md:flex-none", className)}
+      value={instance.search}
+      onChange={(e) => instance.onSearchChange(e.target.value)}
+      className={clx(
+        {
+          "pr-[calc(15px+2px+8px)]": instance.isLoading,
+        },
+        className
+      )}
       {...props}
     />
   )

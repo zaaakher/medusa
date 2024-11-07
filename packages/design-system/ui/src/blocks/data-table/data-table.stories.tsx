@@ -31,6 +31,27 @@ type Person = {
   relationshipStatus: "single" | "married" | "divorced" | "widowed"
 }
 
+const useDebouncedValue = (value: string, delay: number) => {
+  const [debouncedValue, setDebouncedValue] = React.useState(value)
+  const timerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  React.useEffect(() => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current)
+    }
+
+    timerRef.current = setTimeout(() => {
+      setDebouncedValue(value)
+    }, delay)
+
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current)
+    }
+  }, [value])
+
+  return debouncedValue
+}
+
 const data: Person[] = [
   {
     id: "1",
@@ -93,42 +114,75 @@ const data: Person[] = [
 const usePeople = ({
   q,
   order,
+  filters,
 }: {
   q?: string
   order?: { id: string; desc: boolean } | null
+  filters?: Record<string, ColumnFilter>
 }) => {
   return React.useMemo(() => {
-    const filteredData = data.filter((person) =>
-      person.name.toLowerCase().includes(q?.toLowerCase() ?? "")
-    )
+    let results = [...data] // Create a copy to avoid mutating original data
 
-    if (!order) {
-      return {
-        data: filteredData,
-        count: filteredData.length,
-      }
+    // Apply free text search
+    if (q) {
+      results = results.filter((person) =>
+        person.name.toLowerCase().includes(q.toLowerCase())
+      )
     }
 
-    const key = order.id as keyof Person
-    const desc = order.desc
+    // Apply filters
+    if (filters && Object.keys(filters).length > 0) {
+      results = results.filter((person) => {
+        return Object.entries(filters).every(([key, filter]) => {
+          if (!filter.value) return true
 
-    const sortedData = filteredData.sort((a, b) => {
-      if (a[key] < b[key]) return desc ? 1 : -1
-      if (a[key] > b[key]) return order.desc ? -1 : 1
-      return 0
-    })
+          const value = person[key as keyof Person]
+
+          if (value instanceof Date && filter.value instanceof Date) {
+            return value.getTime() === filter.value.getTime()
+          }
+
+          if (Array.isArray(filter.value)) {
+            return filter.value.includes(value)
+          }
+
+          return filter.value === value
+        })
+      })
+    }
+
+    // Apply sorting
+    if (order) {
+      const key = order.id as keyof Person
+      const desc = order.desc
+
+      results.sort((a, b) => {
+        const aVal = a[key]
+        const bVal = b[key]
+
+        if (aVal instanceof Date && bVal instanceof Date) {
+          return desc
+            ? bVal.getTime() - aVal.getTime()
+            : aVal.getTime() - bVal.getTime()
+        }
+
+        if (aVal < bVal) return desc ? 1 : -1
+        if (aVal > bVal) return desc ? -1 : 1
+        return 0
+      })
+    }
 
     return {
-      data: sortedData,
-      count: sortedData.length,
+      data: results,
+      count: results.length,
     }
-  }, [q, order])
+  }, [q, order, filters]) // Add filters to dependencies
 }
 
 const columnHelper = createDataTableColumnHelper<Person>()
 
 const columns = [
-  columnHelper.select({}),
+  columnHelper.select(),
   columnHelper.accessor("name", {
     header: "Name",
     enableSorting: true,
@@ -147,6 +201,20 @@ const columns = [
     sortAscLabel: "Low to High",
     sortDescLabel: "High to Low",
     sortLabel: "Age",
+  }),
+  columnHelper.accessor("relationshipStatus", {
+    header: "Relationship Status",
+    cell: ({ row }) => {
+      return (
+        <div>
+          {row.original.relationshipStatus.charAt(0).toUpperCase() +
+            row.original.relationshipStatus.slice(1)}
+        </div>
+      )
+    },
+    enableSorting: true,
+    sortAscLabel: "A-Z",
+    sortDescLabel: "Z-A",
   }),
   columnHelper.accessor("birthday", {
     header: "Birthday",
@@ -213,30 +281,19 @@ const filters = [
       },
     ],
   }),
+  filterHelper.accessor("relationshipStatus", {
+    label: "Relationship Status",
+    type: "select",
+    options: [
+      { label: "Single", value: "single" },
+      { label: "Married", value: "married" },
+      { label: "Divorced", value: "divorced" },
+      { label: "Widowed", value: "widowed" },
+    ],
+  }),
 ]
 
-const useDebouncedValue = (value: string, delay: number) => {
-  const [debouncedValue, setDebouncedValue] = React.useState(value)
-  const timerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
-
-  React.useEffect(() => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current)
-    }
-
-    timerRef.current = setTimeout(() => {
-      setDebouncedValue(value)
-    }, delay)
-
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current)
-    }
-  }, [value])
-
-  return debouncedValue
-}
-
-const BasicDemo = () => {
+const KitchenSinkDemo = () => {
   const [search, setSearch] = React.useState("")
   const debouncedSearch = useDebouncedValue(search, 300)
 
@@ -248,14 +305,23 @@ const BasicDemo = () => {
     Record<string, ColumnFilter>
   >({})
 
-  const { data, count } = usePeople({ q: debouncedSearch, order: sorting })
+  const { data, count } = usePeople({
+    q: debouncedSearch,
+    order: sorting,
+    filters: filtering,
+  })
 
   const table = useDataTable({
     data,
     columns,
     count,
+    isLoading: true,
     getRowId: (row) => row.id,
     filters,
+    search: {
+      state: search,
+      onSearchChange: setSearch,
+    },
     filtering: {
       state: filtering,
       onFilteringChange: setFiltering,
@@ -277,12 +343,7 @@ const BasicDemo = () => {
           <DataTable.Toolbar className="flex flex-col items-start justify-between gap-2 md:flex-row md:items-center">
             <Heading>Employees</Heading>
             <div className="flex w-full items-center gap-2 md:w-auto">
-              <DataTable.Search
-                value={search}
-                onValueChange={setSearch}
-                placeholder="Search"
-                autoFocus
-              />
+              <DataTable.Search placeholder="Search" autoFocus />
               <DataTable.FilterMenu tooltip="Filter" />
               <DataTable.SortingMenu tooltip="Sort" />
               <Button size="small" variant="secondary">
@@ -290,7 +351,19 @@ const BasicDemo = () => {
               </Button>
             </div>
           </DataTable.Toolbar>
-          <DataTable.Table />
+          <DataTable.Table
+            emptyState={{
+              empty: {
+                heading: "No employees",
+                description: "There are no employees to display.",
+              },
+              filtered: {
+                heading: "No results",
+                description:
+                  "No employees match the current filter criteria. Try adjusting your filters.",
+              },
+            }}
+          />
           <DataTable.Pagination />
         </DataTable>
       </Container>
@@ -298,6 +371,6 @@ const BasicDemo = () => {
   )
 }
 
-export const Basic: Story = {
-  render: () => <BasicDemo />,
+export const KitchenSink: Story = {
+  render: () => <KitchenSinkDemo />,
 }

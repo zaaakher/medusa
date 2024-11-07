@@ -16,7 +16,7 @@ const DataTableFilterMenu = ({ tooltip }: DataTableFilterMenuProps) => {
   const enabledFilters = Object.keys(instance.getFiltering())
 
   const filterOptions = instance
-    .getFilterOptions()
+    .getFilters()
     .filter((filter) => !enabledFilters.includes(filter.id))
 
   const Wrapper = tooltip ? Tooltip : React.Fragment
