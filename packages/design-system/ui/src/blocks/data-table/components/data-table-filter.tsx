@@ -7,7 +7,8 @@ import { DropdownMenu } from "@/components/dropdown-menu"
 import { clx } from "@/utils/clx"
 import { XMark } from "@medusajs/icons"
 import { useDataTableContext } from "../context/use-data-table-context"
-import { FilterOption, FilterType } from "../types"
+import { DateComparisonOperator, FilterOption, FilterType } from "../types"
+import { isDateComparisonOperator } from "../utils/is-date-comparison-operator"
 
 interface DataTableFilterProps {
   filter: ColumnFilter
@@ -20,8 +21,6 @@ const DataTableFilter = ({ filter, label }: DataTableFilterProps) => {
 
   const onOpenChange = React.useCallback(
     (open: boolean) => {
-      console.log("open", open, filter.value)
-
       if (
         !open &&
         (!filter.value ||
@@ -45,7 +44,7 @@ const DataTableFilter = ({ filter, label }: DataTableFilterProps) => {
   const value = filter.value
 
   const displayValue = React.useMemo(() => {
-    let displayValue: string | string[] | null = null
+    let displayValue: string | string[] | DateComparisonOperator | null = null
 
     if (typeof value === "string") {
       displayValue = options?.find((o) => o.value === value)?.label ?? null
@@ -58,8 +57,23 @@ const DataTableFilter = ({ filter, label }: DataTableFilterProps) => {
           .join(", ") ?? null
     }
 
-    if (value instanceof Date) {
-      displayValue = options?.find((o) => o.value === value)?.label ?? null
+    if (isDateComparisonOperator(value)) {
+      displayValue =
+        options?.find((o) => {
+          if (!isDateComparisonOperator(o.value)) return false
+
+          // Compare all possible operators
+          return (
+            // Check if both have $gte and they're equal
+            (value.$gte === o.value.$gte || (!value.$gte && !o.value.$gte)) &&
+            // Check if both have $lte and they're equal
+            (value.$lte === o.value.$lte || (!value.$lte && !o.value.$lte)) &&
+            // Check if both have $gt and they're equal
+            (value.$gt === o.value.$gt || (!value.$gt && !o.value.$gt)) &&
+            // Check if both have $lt and they're equal
+            (value.$lt === o.value.$lt || (!value.$lt && !o.value.$lt))
+          )
+        })?.label ?? null
     }
 
     return displayValue
@@ -128,7 +142,7 @@ const DataTableFilter = ({ filter, label }: DataTableFilterProps) => {
               return (
                 <DataTableFilterDateContent
                   filter={filter}
-                  options={options as FilterOption<Date>[]}
+                  options={options as FilterOption<DateComparisonOperator>[]}
                 />
               )
             case "text":
@@ -152,22 +166,48 @@ interface DataTableFilterDropdownProps<T = string | Date> {
 
 type DataTableFilterDateContentProps = {
   filter: ColumnFilter
-  options: FilterOption<Date>[]
+  options: FilterOption<DateComparisonOperator>[]
 }
 
 const DataTableFilterDateContent = ({
   filter,
   options,
 }: DataTableFilterDateContentProps) => {
+  const { instance } = useDataTableContext()
+
+  const currentValue = filter.value as DateComparisonOperator | undefined
+
+  const selectedValue = React.useMemo(() => {
+    if (!currentValue) return undefined
+
+    return JSON.stringify(currentValue)
+  }, [currentValue])
+
+  const onValueChange = React.useCallback(
+    (valueStr: string) => {
+      const value = JSON.parse(valueStr) as DateComparisonOperator
+      instance.updateFilter({ ...filter, value })
+    },
+    [instance, filter]
+  )
+
   return (
     <React.Fragment>
-      {options.map((option, idx) => {
-        return (
-          <DropdownMenu.CheckboxItem key={idx}>
-            {option.label}
-          </DropdownMenu.CheckboxItem>
-        )
-      })}
+      <DropdownMenu.RadioGroup
+        value={selectedValue}
+        onValueChange={onValueChange}
+      >
+        {options.map((option, idx) => {
+          return (
+            <DropdownMenu.RadioItem
+              key={idx}
+              value={JSON.stringify(option.value)}
+            >
+              {option.label}
+            </DropdownMenu.RadioItem>
+          )
+        })}
+      </DropdownMenu.RadioGroup>
     </React.Fragment>
   )
 }

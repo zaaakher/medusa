@@ -20,7 +20,7 @@ type DataTableEmptyStateProps = {
   empty?: EmptyStateContent
 }
 
-interface DataTableTableProps {
+export interface DataTableTableProps {
   emptyState?: DataTableEmptyStateProps
 }
 
@@ -133,7 +133,7 @@ const DataTableTable = ({ emptyState }: DataTableTableProps) => {
                         className={clx("whitespace-nowrap", {
                           "w-[calc(20px+24px+24px)] min-w-[calc(20px+24px+24px)] max-w-[calc(20px+24px+24px)]":
                             isSelectHeader,
-                          "w-[calc(20px+24px)] min-w-[calc(20px+24px)] max-w-[calc(20px+24px)]":
+                          "w-[calc(28px+24px)] min-w-[calc(28px+24px)] max-w-[calc(28px+24px)]":
                             isActionHeader,
                           "after:absolute after:inset-y-0 after:right-0 after:h-full after:w-px after:bg-transparent after:content-['']":
                             isFirstColumn,
@@ -185,7 +185,10 @@ const DataTableTable = ({ emptyState }: DataTableTableProps) => {
                     key={row.id}
                     onMouseEnter={() => setHoveredRowId(row.id)}
                     onMouseLeave={() => setHoveredRowId(null)}
-                    className="group/row last:border-b-0"
+                    onClick={() => instance.onRowClick?.(row)}
+                    className={clx("group/row last:border-b-0", {
+                      "cursor-pointer": !!instance.onRowClick,
+                    })}
                   >
                     {row.getVisibleCells().map((cell, idx) => {
                       const isSelectCell = cell.column.id === "select"
@@ -197,20 +200,23 @@ const DataTableTable = ({ emptyState }: DataTableTableProps) => {
                       return (
                         <Table.Cell
                           key={cell.id}
-                          className={clx("items-stretch whitespace-nowrap", {
-                            "w-[calc(20px+24px+24px)] min-w-[calc(20px+24px+24px)] max-w-[calc(20px+24px+24px)]":
-                              isSelectCell,
-                            "w-[calc(20px+24px)] min-w-[calc(20px+24px)] max-w-[calc(20px+24px)]":
-                              isActionCell,
-                            "bg-ui-bg-base group-hover/row:bg-ui-bg-base-hover transition-fg sticky h-full":
-                              isFirstColumn || isSelectCell,
-                            "after:absolute after:inset-y-0 after:right-0 after:h-full after:w-px after:bg-transparent after:content-['']":
-                              isFirstColumn,
-                            "after:bg-ui-border-base":
-                              showStickyBorder && isFirstColumn,
-                            "left-0": isSelectCell,
-                            "left-[calc(20px+24px+24px)]": isFirstColumn,
-                          })}
+                          className={clx(
+                            "items-stretch truncate whitespace-nowrap",
+                            {
+                              "w-[calc(20px+24px+24px)] min-w-[calc(20px+24px+24px)] max-w-[calc(20px+24px+24px)]":
+                                isSelectCell,
+                              "w-[calc(28px+24px)] min-w-[calc(28px+24px)] max-w-[calc(28px+24px)]":
+                                isActionCell,
+                              "bg-ui-bg-base group-hover/row:bg-ui-bg-base-hover transition-fg sticky h-full":
+                                isFirstColumn || isSelectCell,
+                              "after:absolute after:inset-y-0 after:right-0 after:h-full after:w-px after:bg-transparent after:content-['']":
+                                isFirstColumn,
+                              "after:bg-ui-border-base":
+                                showStickyBorder && isFirstColumn,
+                              "left-0": isSelectCell,
+                              "left-[calc(20px+24px+24px)]": isFirstColumn,
+                            }
+                          )}
                           style={
                             !isSpecialCell
                               ? {

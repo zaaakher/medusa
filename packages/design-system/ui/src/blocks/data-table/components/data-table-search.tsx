@@ -18,7 +18,7 @@ const DataTableSearch = ({ className, ...props }: DataTableSearchProps) => {
     <Input
       size="small"
       type="search"
-      value={instance.search}
+      value={instance.getSearch()}
       onChange={(e) => instance.onSearchChange(e.target.value)}
       className={clx(
         {

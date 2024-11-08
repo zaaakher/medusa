@@ -3,11 +3,13 @@ import type {
   AccessorFnColumnDef,
   AccessorKeyColumnDef,
   CellContext,
+  ColumnFilter,
   ColumnSort,
   DeepKeys,
   DeepValue,
   DisplayColumnDef,
   IdentifiedColumnDef,
+  PaginationState,
   RowData,
   RowSelectionState,
 } from "@tanstack/react-table"
@@ -68,8 +70,12 @@ export interface DataTableColumnHelper<TData> {
   select: (props?: SelectColumnDef<TData>) => DisplayColumnDef<TData, unknown>
 }
 
+interface DataTableColumnFilter extends ColumnFilter {}
+
 export interface DataTableSortingState extends ColumnSort {}
 export interface DataTableRowSelectionState extends RowSelectionState {}
+export interface DataTablePaginationState extends PaginationState {}
+export interface DataTableFilteringState extends Record<string, DataTableColumnFilter> {}
 
 export type FilterType = "text" | "radio" | "select" | "date"
 export type FilterOption<T = string> = {
@@ -99,7 +105,7 @@ export interface SelectFilterProps extends BaseFilterProps {
 export interface DateFilterProps extends BaseFilterProps {
   type: "date"
   format: "date" | "date-time"
-  options: FilterOption<Date>[]
+  options: FilterOption<DateComparisonOperator>[]
 }
 
 export type DataTableFilterProps = TextFilterProps | RadioFilterProps | SelectFilterProps | DateFilterProps
@@ -112,4 +118,31 @@ export enum DataTableEmptyState {
   EMPTY = "EMPTY",
   FILTERED_EMPTY = "FILTERED_EMPTY",
   POPULATED = "POPULATED",
+}
+
+export type DateComparisonOperator = {
+  /**
+   * The filtered date must be greater than or equal to this value.
+   */
+  $gte?: string
+  /**
+   * The filtered date must be less than or equal to this value.
+   */
+  $lte?: string
+  /**
+   * The filtered date must be less than this value.
+   */
+  $lt?: string
+  /**
+   * The filtered date must be greater than this value.
+   */
+  $gt?: string
+}
+
+type CommandAction = (selection: DataTableRowSelectionState) => void | Promise<void>
+
+export interface DataTableCommand {
+  label: string
+  action: CommandAction
+  shortcut: string
 }

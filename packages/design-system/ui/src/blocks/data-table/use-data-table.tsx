@@ -3,7 +3,7 @@ import {
   ColumnFiltersState,
   type ColumnSort,
   getCoreRowModel,
-  type Row,
+  PaginationState,
   type RowSelectionState,
   type SortingState,
   type TableOptions,
@@ -12,9 +12,13 @@ import {
 } from "@tanstack/react-table"
 import * as React from "react"
 import {
+  DataTableCommand,
   DataTableEmptyState,
   DataTableFilter,
+  DataTablePaginationState,
+  DataTableRowSelectionState,
   DataTableSortingState,
+  DateComparisonOperator,
   FilterOption,
   FilterType,
 } from "./types"
@@ -22,31 +26,72 @@ import {
 interface DataTableOptions<TData>
   extends Pick<TableOptions<TData>, "data" | "columns" | "getRowId"> {
   /**
+   * The filters which the user can apply to the table.
+   */
+  filters?: DataTableFilter[]
+  /**
+   * The commands which the user can apply to selected rows.
+   */
+  commands?: DataTableCommand[]
+  /**
    * Whether the data for the table is currently being loaded.
    */
   isLoading?: boolean
   /**
-   * The filters which the user can apply to the table.
+   * The state and callback for the filtering.
    */
-  filters?: DataTableFilter[]
   filtering?: {
     state: Record<string, ColumnFilter>
     onFilteringChange: (state: Record<string, ColumnFilter>) => void
   }
+  /**
+   * The state and callback for the row selection.
+   */
   rowSelection?: {
-    state: RowSelectionState
-    onRowSelectionChange: (state: RowSelectionState) => void
+    state: DataTableRowSelectionState
+    onRowSelectionChange: (state: DataTableRowSelectionState) => void
   }
+  /**
+   * The state and callback for the sorting.
+   */
   sorting?: {
-    state: ColumnSort | null
-    onSortingChange: (state: ColumnSort) => void
+    state: DataTableSortingState | null
+    onSortingChange: (state: DataTableSortingState) => void
   }
+  /**
+   * The state and callback for the search, with optional debounce.
+   */
   search?: {
     state: string
     onSearchChange: (state: string) => void
+    /**
+     * Debounce time in milliseconds for the search callback.
+     * @default 300
+     */
+    debounce?: number
   }
-  onRowClick?: (row: Row<TData>) => void
-  count?: number
+  /**
+   * The state and callback for the pagination.
+   */
+  pagination?: {
+    state: DataTablePaginationState
+    onPaginationChange: (state: DataTablePaginationState) => void
+  }
+  /**
+   * The function to execute when a row is clicked.
+   */
+  onRowClick?: (row: TData) => void
+  /**
+   * The total count of rows. When working with pagination, this will be the total
+   * number of rows available, not the number of rows currently being displayed.
+   */
+  rowCount?: number
+  /**
+   * Whether the page index should be reset the filtering, sorting, or pagination changes.
+   *
+   * @default true
+   */
+  autoResetPageIndex?: boolean
 }
 
 interface UseDataTableReturn<TData>
@@ -61,11 +106,6 @@ interface UseDataTableReturn<TData>
     | "getPageCount"
     | "getAllColumns"
   > {
-  count: number
-  pageIndex: number
-  pageSize: number
-  search: string
-  onSearchChange: (search: string) => void
   getSorting: () => DataTableSortingState | null
   setSorting: (
     sortingOrUpdater:
@@ -73,7 +113,7 @@ interface UseDataTableReturn<TData>
       | ((prev: DataTableSortingState | null) => DataTableSortingState)
   ) => void
   getFilters: () => DataTableFilter[]
-  getFilterOptions: <T extends string | Date>(
+  getFilterOptions: <T extends string | string[] | DateComparisonOperator>(
     id: string
   ) => FilterOption<T>[] | null
   getFilterType: (id: string) => FilterType | null
@@ -82,65 +122,82 @@ interface UseDataTableReturn<TData>
   removeFilter: (id: string) => void
   clearFilters: () => void
   updateFilter: (filter: ColumnFilter) => void
+  getSearch: () => string
+  onSearchChange: (search: string) => void
+  getCommands: () => DataTableCommand[]
+  getRowSelection: () => DataTableRowSelectionState
+  onRowClick?: (row: TData) => void
   emptyState: DataTableEmptyState
   isLoading: boolean
   showSkeleton: boolean
+  pageIndex: number
+  pageSize: number
+  rowCount: number
 }
 
 const useDataTable = <TData,>({
-  count = 0,
+  rowCount = 0,
+  filters,
+  commands,
   rowSelection,
   sorting,
   filtering,
+  pagination,
+  search,
   onRowClick,
+  autoResetPageIndex = true,
   ...options
 }: DataTableOptions<TData>): UseDataTableReturn<TData> => {
-  const sortingStateHandler = React.useCallback(
-    () =>
-      sorting?.onSortingChange
-        ? onSortingChangeTransformer(sorting.onSortingChange, sorting.state)
-        : undefined,
-    [sorting?.onSortingChange, sorting?.state]
-  )
+  const { state: sortingState, onSortingChange } = sorting ?? {}
+  const sortingStateHandler = React.useCallback(() => {
+    return onSortingChange
+      ? onSortingChangeTransformer(onSortingChange, sortingState)
+      : undefined
+  }, [onSortingChange, sortingState])
 
-  const rowSelectionStateHandler = React.useCallback(
-    () =>
-      rowSelection?.onRowSelectionChange
-        ? onRowSelectionChangeTransformer(
-            rowSelection.onRowSelectionChange,
-            rowSelection.state
-          )
-        : undefined,
-    [rowSelection?.onRowSelectionChange, rowSelection?.state]
-  )
+  const { state: rowSelectionState, onRowSelectionChange } = rowSelection ?? {}
+  const rowSelectionStateHandler = React.useCallback(() => {
+    return onRowSelectionChange
+      ? onRowSelectionChangeTransformer(onRowSelectionChange, rowSelectionState)
+      : undefined
+  }, [onRowSelectionChange, rowSelectionState])
 
-  const filteringStateHandler = React.useCallback(
-    () =>
-      filtering?.onFilteringChange
-        ? onFilteringChangeTransformer(
-            filtering.onFilteringChange,
-            filtering.state
-          )
-        : undefined,
-    [filtering?.onFilteringChange, filtering?.state]
-  )
+  const { state: filteringState, onFilteringChange } = filtering ?? {}
+  const filteringStateHandler = React.useCallback(() => {
+    return onFilteringChange
+      ? onFilteringChangeTransformer(onFilteringChange, filteringState)
+      : undefined
+  }, [onFilteringChange, filteringState])
+
+  const { state: paginationState, onPaginationChange } = pagination ?? {}
+  const paginationStateHandler = React.useCallback(() => {
+    return onPaginationChange
+      ? onPaginationChangeTransformer(onPaginationChange, paginationState)
+      : undefined
+  }, [onPaginationChange, paginationState])
 
   const instance = useReactTable({
     ...options,
     getCoreRowModel: getCoreRowModel(),
     state: {
-      rowSelection: rowSelection?.state,
-      sorting: sorting?.state ? [sorting.state] : undefined,
-      columnFilters: Object.values(filtering?.state ?? {}),
+      rowSelection: rowSelectionState,
+      sorting: sortingState ? [sortingState] : undefined,
+      columnFilters: Object.values(filteringState ?? {}),
+      pagination: paginationState,
     },
+    rowCount,
     onColumnFiltersChange: filteringStateHandler(),
     onRowSelectionChange: rowSelectionStateHandler(),
     onSortingChange: sortingStateHandler(),
-    // All data manipulation should be handled manually, likely by a server.
+    onPaginationChange: paginationStateHandler(),
     manualSorting: true,
     manualPagination: true,
     manualFiltering: true,
   })
+
+  const autoResetPageIndexHandler = React.useCallback(() => {
+    return autoResetPageIndex ? () => instance.setPageIndex(0) : undefined
+  }, [autoResetPageIndex, instance])
 
   const getSorting = React.useCallback(() => {
     return instance.getState().sorting?.[0] ?? null
@@ -156,17 +213,18 @@ const useDataTable = <TData,>({
           ? sortingOrUpdater(currentSort)
           : sortingOrUpdater
 
+      autoResetPageIndexHandler()?.()
       instance.setSorting([newSorting])
     },
-    [instance]
+    [instance, autoResetPageIndexHandler]
   )
 
   const getFilters = React.useCallback(() => {
-    return options.filters ?? []
-  }, [options.filters])
+    return filters ?? []
+  }, [filters])
 
   const getFilterOptions = React.useCallback(
-    <T extends string | Date>(id: string) => {
+    <T extends string | string[] | DateComparisonOperator>(id: string) => {
       const filter = getFilters().find((filter) => filter.id === id)
 
       if (!filter || filter.type === "text") {
@@ -192,23 +250,25 @@ const useDataTable = <TData,>({
 
   const addFilter = React.useCallback(
     (filter: ColumnFilter) => {
-      filtering?.onFilteringChange?.({ ...getFiltering(), [filter.id]: filter })
+      autoResetPageIndexHandler()?.()
+      onFilteringChange?.({ ...getFiltering(), [filter.id]: filter })
     },
-    [filtering?.onFilteringChange, getFiltering]
+    [onFilteringChange, getFiltering, autoResetPageIndexHandler]
   )
 
   const removeFilter = React.useCallback(
     (id: string) => {
       const currentFilters = getFiltering()
       delete currentFilters[id]
-      filtering?.onFilteringChange?.(currentFilters)
+      autoResetPageIndexHandler()?.()
+      onFilteringChange?.(currentFilters)
     },
-    [filtering?.onFilteringChange, getFiltering]
+    [onFilteringChange, getFiltering, autoResetPageIndexHandler]
   )
 
   const clearFilters = React.useCallback(() => {
-    filtering?.onFilteringChange?.({})
-  }, [filtering?.onFilteringChange])
+    onFilteringChange?.({})
+  }, [onFilteringChange])
 
   const updateFilter = React.useCallback(
     (filter: ColumnFilter) => {
@@ -217,12 +277,75 @@ const useDataTable = <TData,>({
     [addFilter]
   )
 
+  const { state: searchState, onSearchChange, debounce = 300 } = search ?? {}
+
+  // Local state for immediate UI updates
+  const [localSearch, setLocalSearch] = React.useState(searchState ?? "")
+  const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>()
+
+  // Update local state when prop changes
+  React.useEffect(() => {
+    setLocalSearch(searchState ?? "")
+  }, [searchState])
+
+  const getSearch = React.useCallback(() => {
+    return localSearch
+  }, [localSearch])
+
+  const debouncedSearchChange = React.useMemo(() => {
+    if (!onSearchChange) {
+      return undefined
+    }
+
+    return (value: string) => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+
+      if (debounce <= 0) {
+        autoResetPageIndexHandler()?.()
+        onSearchChange(value)
+        return
+      }
+
+      timeoutRef.current = setTimeout(() => {
+        autoResetPageIndexHandler()?.()
+        onSearchChange(value)
+      }, debounce)
+    }
+  }, [onSearchChange, debounce, autoResetPageIndexHandler])
+
+  // Cleanup timeout
+  React.useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+    }
+  }, [])
+
+  const onSearchChangeHandler = React.useCallback(
+    (search: string) => {
+      setLocalSearch(search) // Update local state immediately
+      debouncedSearchChange?.(search) // Debounce the callback
+    },
+    [debouncedSearchChange]
+  )
+
+  const getCommands = React.useCallback(() => {
+    return commands ?? []
+  }, [commands])
+
+  const getRowSelection = React.useCallback(() => {
+    return instance.getState().rowSelection
+  }, [instance])
+
   const rows = instance.getRowModel().rows
 
   const emptyState = React.useMemo(() => {
     const hasRows = rows.length > 0
-    const hasSearch = Boolean(options.search?.state)
-    const hasFilters = Object.keys(filtering?.state ?? {}).length > 0
+    const hasSearch = Boolean(searchState)
+    const hasFilters = Object.keys(filteringState ?? {}).length > 0
 
     if (hasRows) {
       return DataTableEmptyState.POPULATED
@@ -233,7 +356,7 @@ const useDataTable = <TData,>({
     }
 
     return DataTableEmptyState.EMPTY
-  }, [rows, options.search?.state, filtering?.state])
+  }, [rows, searchState, filteringState])
 
   const showSkeleton = React.useMemo(() => {
     return options.isLoading === true && rows.length === 0
@@ -252,10 +375,10 @@ const useDataTable = <TData,>({
     getPageCount: instance.getPageCount,
     pageIndex: instance.getState().pagination.pageIndex,
     pageSize: instance.getState().pagination.pageSize,
-    count,
+    rowCount,
     // Search
-    search: options.search?.state ?? "",
-    onSearchChange: options.search?.onSearchChange ?? (() => {}),
+    getSearch,
+    onSearchChange: onSearchChangeHandler,
     // Sorting
     getSorting,
     setSorting,
@@ -268,6 +391,11 @@ const useDataTable = <TData,>({
     removeFilter,
     clearFilters,
     updateFilter,
+    // Commands
+    getCommands,
+    getRowSelection,
+    // Handlers
+    onRowClick,
     // Empty State
     emptyState,
     // Loading
@@ -320,6 +448,20 @@ function onFilteringChangeTransformer(
     )
 
     onFilteringChange(transformedValue)
+  }
+}
+
+function onPaginationChangeTransformer(
+  onPaginationChange: (state: PaginationState) => void,
+  state?: PaginationState
+) {
+  return (updaterOrValue: Updater<PaginationState>) => {
+    const value =
+      typeof updaterOrValue === "function"
+        ? updaterOrValue(state ?? { pageIndex: 0, pageSize: 10 })
+        : updaterOrValue
+
+    onPaginationChange(value)
   }
 }
 

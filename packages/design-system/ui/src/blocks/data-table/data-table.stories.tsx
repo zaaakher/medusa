@@ -1,17 +1,24 @@
+import { faker } from "@faker-js/faker"
 import type { Meta, StoryObj } from "@storybook/react"
 import * as React from "react"
 
 import { Container } from "@/components/container"
 import { PencilSquare, Trash } from "@medusajs/icons"
-import { ColumnFilter, RowSelectionState } from "@tanstack/react-table"
+import { ColumnFilter } from "@tanstack/react-table"
 import { Button } from "../../components/button"
 import { Heading } from "../../components/heading"
 import { TooltipProvider } from "../../components/tooltip"
 import { DataTable } from "./data-table"
-import { DataTableSortingState } from "./types"
+import {
+  DataTablePaginationState,
+  DataTableRowSelectionState,
+  DataTableSortingState,
+} from "./types"
 import { useDataTable } from "./use-data-table"
 import { createDataTableColumnHelper } from "./utils/create-data-table-column-helper"
+import { createDataTableCommandHelper } from "./utils/create-data-table-command-helper"
 import { createDataTableFilterHelper } from "./utils/create-data-table-filter-helper"
+import { isDateComparisonOperator } from "./utils/is-date-comparison-operator"
 
 const meta: Meta<typeof DataTable> = {
   title: "Blocks/DataTable",
@@ -22,127 +29,118 @@ export default meta
 
 type Story = StoryObj<typeof DataTable>
 
-type Person = {
+type Employee = {
   id: string
   name: string
   email: string
+  position: string
   age: number
   birthday: Date
   relationshipStatus: "single" | "married" | "divorced" | "widowed"
 }
 
-const useDebouncedValue = (value: string, delay: number) => {
-  const [debouncedValue, setDebouncedValue] = React.useState(value)
-  const timerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
+const generateEmployees = (count: number): Employee[] => {
+  return Array.from({ length: count }, (_, i) => {
+    const age = faker.number.int({ min: 18, max: 65 })
+    const birthday = faker.date.birthdate({
+      mode: "age",
+      min: age,
+      max: age,
+    })
 
-  React.useEffect(() => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current)
+    return {
+      id: i.toString(),
+      name: faker.person.fullName(),
+      email: faker.internet.email(),
+      position: faker.person.jobTitle(),
+      age,
+      birthday,
+      relationshipStatus: faker.helpers.arrayElement([
+        "single",
+        "married",
+        "divorced",
+        "widowed",
+      ]),
     }
-
-    timerRef.current = setTimeout(() => {
-      setDebouncedValue(value)
-    }, delay)
-
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current)
-    }
-  }, [value])
-
-  return debouncedValue
+  })
 }
 
-const data: Person[] = [
-  {
-    id: "1",
-    name: "John Doe",
-    email: "john.doe@example.com",
-    age: 20,
-    birthday: new Date("1990-01-01"),
-    relationshipStatus: "single",
-  },
-  {
-    id: "2",
-    name: "Jane Doe",
-    email: "jane.doe@example.com",
-    age: 25,
-    birthday: new Date("1995-04-01"),
-    relationshipStatus: "married",
-  },
-  {
-    id: "3",
-    name: "John Smith",
-    email: "john.smith@example.com",
-    age: 30,
-    birthday: new Date("1990-05-01"),
-    relationshipStatus: "divorced",
-  },
-  {
-    id: "4",
-    name: "Jane Smith",
-    email: "jane.smith@example.com",
-    age: 35,
-    birthday: new Date("1995-06-01"),
-    relationshipStatus: "widowed",
-  },
-  {
-    id: "5",
-    name: "Mike Doe",
-    email: "mike.doe@example.com",
-    age: 40,
-    birthday: new Date("1990-07-01"),
-    relationshipStatus: "single",
-  },
-  {
-    id: "6",
-    name: "Emily Smith",
-    email: "emily.smith@example.com",
-    age: 45,
-    birthday: new Date("1995-08-01"),
-    relationshipStatus: "married",
-  },
-  {
-    id: "7",
-    name: "Sam Doe",
-    email: "sam.doe@example.com",
-    age: 50,
-    birthday: new Date("1990-09-01"),
-    relationshipStatus: "divorced",
-  },
-]
+const data: Employee[] = generateEmployees(100)
 
 const usePeople = ({
   q,
   order,
   filters,
+  offset,
+  limit,
 }: {
   q?: string
   order?: { id: string; desc: boolean } | null
   filters?: Record<string, ColumnFilter>
+  offset?: number
+  limit?: number
 }) => {
   return React.useMemo(() => {
-    let results = [...data] // Create a copy to avoid mutating original data
+    let results = [...data]
 
-    // Apply free text search
     if (q) {
       results = results.filter((person) =>
         person.name.toLowerCase().includes(q.toLowerCase())
       )
     }
 
-    // Apply filters
     if (filters && Object.keys(filters).length > 0) {
       results = results.filter((person) => {
         return Object.entries(filters).every(([key, filter]) => {
           if (!filter.value) return true
 
-          const value = person[key as keyof Person]
+          const value = person[key as keyof Employee]
 
-          if (value instanceof Date && filter.value instanceof Date) {
-            return value.getTime() === filter.value.getTime()
+          if (filter.id === "birthday") {
+            if (isDateComparisonOperator(filter.value)) {
+              if (!(value instanceof Date)) {
+                return false
+              }
+
+              if (filter.value.$gte) {
+                const compareDate = new Date(filter.value.$gte)
+                if (value < compareDate) {
+                  console.log("$gte: value < compareDate")
+                  return false
+                }
+              }
+
+              if (filter.value.$lte) {
+                const compareDate = new Date(filter.value.$lte)
+                if (value > compareDate) {
+                  console.log("$lte: value > compareDate")
+                  return false
+                }
+              }
+
+              if (filter.value.$gt) {
+                const compareDate = new Date(filter.value.$gt)
+                if (value <= compareDate) {
+                  console.log("$gt: value <= compareDate")
+                  return false
+                }
+              }
+
+              if (filter.value.$lt) {
+                const compareDate = new Date(filter.value.$lt)
+                if (value >= compareDate) {
+                  console.log("$lt: value >= compareDate")
+                  return false
+                }
+              }
+
+              return true
+            }
           }
 
           if (Array.isArray(filter.value)) {
+            if (filter.value.length === 0) return true
+
             return filter.value.includes(value)
           }
 
@@ -153,7 +151,7 @@ const usePeople = ({
 
     // Apply sorting
     if (order) {
-      const key = order.id as keyof Person
+      const key = order.id as keyof Employee
       const desc = order.desc
 
       results.sort((a, b) => {
@@ -172,14 +170,22 @@ const usePeople = ({
       })
     }
 
+    if (offset) {
+      results = results.slice(offset)
+    }
+
+    if (limit) {
+      results = results.slice(0, limit)
+    }
+
     return {
       data: results,
-      count: results.length,
+      count: data.length,
     }
-  }, [q, order, filters]) // Add filters to dependencies
+  }, [q, order, filters, offset, limit]) // Add filters to dependencies
 }
 
-const columnHelper = createDataTableColumnHelper<Person>()
+const columnHelper = createDataTableColumnHelper<Employee>()
 
 const columns = [
   columnHelper.select(),
@@ -194,6 +200,13 @@ const columns = [
     enableSorting: true,
     sortAscLabel: "A-Z",
     sortDescLabel: "Z-A",
+    maxSize: 200,
+  }),
+  columnHelper.accessor("position", {
+    header: "Position",
+    enableSorting: true,
+    sortAscLabel: "A-Z",
+    sortDescLabel: "Z-A",
   }),
   columnHelper.accessor("age", {
     header: "Age",
@@ -201,20 +214,6 @@ const columns = [
     sortAscLabel: "Low to High",
     sortDescLabel: "High to Low",
     sortLabel: "Age",
-  }),
-  columnHelper.accessor("relationshipStatus", {
-    header: "Relationship Status",
-    cell: ({ row }) => {
-      return (
-        <div>
-          {row.original.relationshipStatus.charAt(0).toUpperCase() +
-            row.original.relationshipStatus.slice(1)}
-        </div>
-      )
-    },
-    enableSorting: true,
-    sortAscLabel: "A-Z",
-    sortDescLabel: "Z-A",
   }),
   columnHelper.accessor("birthday", {
     header: "Birthday",
@@ -232,6 +231,20 @@ const columns = [
     enableSorting: true,
     sortAscLabel: "Oldest to Youngest",
     sortDescLabel: "Youngest to Oldest",
+  }),
+  columnHelper.accessor("relationshipStatus", {
+    header: "Relationship Status",
+    cell: ({ row }) => {
+      return (
+        <div>
+          {row.original.relationshipStatus.charAt(0).toUpperCase() +
+            row.original.relationshipStatus.slice(1)}
+        </div>
+      )
+    },
+    enableSorting: true,
+    sortAscLabel: "A-Z",
+    sortDescLabel: "Z-A",
   }),
   columnHelper.action({
     actions: [
@@ -253,31 +266,65 @@ const columns = [
   }),
 ]
 
-const filterHelper = createDataTableFilterHelper<Person>()
+const filterHelper = createDataTableFilterHelper<Employee>()
 
 const filters = [
-  filterHelper.accessor("name", {
-    label: "Name",
-    type: "text",
-  }),
   filterHelper.accessor("birthday", {
     label: "Birthday",
     type: "date",
     format: "date",
     options: [
-      { label: "Today", value: new Date() },
-      { label: "Yesterday", value: new Date(Date.now() - 24 * 60 * 60 * 1000) },
       {
-        label: "Last Week",
-        value: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+        label: "18 - 25 years old",
+        value: {
+          $lte: new Date(
+            new Date().setFullYear(new Date().getFullYear() - 18)
+          ).toISOString(),
+          $gte: new Date(
+            new Date().setFullYear(new Date().getFullYear() - 25)
+          ).toISOString(),
+        },
       },
       {
-        label: "Last Month",
-        value: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+        label: "26 - 35 years old",
+        value: {
+          $lte: new Date(
+            new Date().setFullYear(new Date().getFullYear() - 26)
+          ).toISOString(),
+          $gte: new Date(
+            new Date().setFullYear(new Date().getFullYear() - 35)
+          ).toISOString(),
+        },
       },
       {
-        label: "Last Year",
-        value: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000),
+        label: "36 - 45 years old",
+        value: {
+          $lte: new Date(
+            new Date().setFullYear(new Date().getFullYear() - 36)
+          ).toISOString(),
+          $gte: new Date(
+            new Date().setFullYear(new Date().getFullYear() - 45)
+          ).toISOString(),
+        },
+      },
+      {
+        label: "46 - 55 years old",
+        value: {
+          $lte: new Date(
+            new Date().setFullYear(new Date().getFullYear() - 46)
+          ).toISOString(),
+          $gte: new Date(
+            new Date().setFullYear(new Date().getFullYear() - 55)
+          ).toISOString(),
+        },
+      },
+      {
+        label: "Over 55 years old",
+        value: {
+          $lt: new Date(
+            new Date().setFullYear(new Date().getFullYear() - 55)
+          ).toISOString(),
+        },
       },
     ],
   }),
@@ -293,11 +340,30 @@ const filters = [
   }),
 ]
 
+const commandHelper = createDataTableCommandHelper()
+
+const commands = [
+  commandHelper.command({
+    label: "Archive",
+    action: (selection) => {
+      alert(`Archive ${Object.keys(selection).length} items`)
+    },
+    shortcut: "A",
+  }),
+  commandHelper.command({
+    label: "Delete",
+    action: (selection) => {
+      alert(`Delete ${Object.keys(selection).length} items`)
+    },
+    shortcut: "D",
+  }),
+]
+
 const KitchenSinkDemo = () => {
   const [search, setSearch] = React.useState("")
-  const debouncedSearch = useDebouncedValue(search, 300)
 
-  const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({})
+  const [rowSelection, setRowSelection] =
+    React.useState<DataTableRowSelectionState>({})
   const [sorting, setSorting] = React.useState<DataTableSortingState | null>(
     null
   )
@@ -305,19 +371,30 @@ const KitchenSinkDemo = () => {
     Record<string, ColumnFilter>
   >({})
 
+  const [pagination, setPagination] = React.useState<DataTablePaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  })
+
   const { data, count } = usePeople({
-    q: debouncedSearch,
+    q: search,
     order: sorting,
     filters: filtering,
+    offset: pagination.pageIndex * pagination.pageSize,
+    limit: pagination.pageSize,
   })
 
   const table = useDataTable({
     data,
     columns,
-    count,
+    filters,
+    commands,
+    rowCount: count,
     isLoading: true,
     getRowId: (row) => row.id,
-    filters,
+    onRowClick: (row) => {
+      alert(`Navigate to ${row.id}`)
+    },
     search: {
       state: search,
       onSearchChange: setSearch,
@@ -333,6 +410,10 @@ const KitchenSinkDemo = () => {
     sorting: {
       state: sorting,
       onSortingChange: setSorting,
+    },
+    pagination: {
+      state: pagination,
+      onPaginationChange: setPagination,
     },
   })
 
@@ -365,6 +446,9 @@ const KitchenSinkDemo = () => {
             }}
           />
           <DataTable.Pagination />
+          <DataTable.CommandBar
+            selectedLabel={(count) => `${count} selected`}
+          />
         </DataTable>
       </Container>
     </TooltipProvider>

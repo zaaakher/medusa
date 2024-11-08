@@ -8,6 +8,7 @@ import { DataTableContextProvider } from "./context/data-table-context-provider"
 import { UseDataTableReturn } from "./use-data-table"
 
 import { clx } from "@/utils/clx"
+import { DataTableCommandBar } from "./components/data-table-command-bar"
 import { DataTableFilterMenu } from "./components/data-table-filter-menu"
 import { DataTablePagination } from "./components/data-table-pagination"
 import { DataTableSortingMenu } from "./components/data-table-sorting-menu"
@@ -39,6 +40,7 @@ const DataTable = Object.assign(Root, {
   SortingMenu: DataTableSortingMenu,
   FilterMenu: DataTableFilterMenu,
   Pagination: DataTablePagination,
+  CommandBar: DataTableCommandBar,
 })
 
 export { DataTable }
