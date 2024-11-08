@@ -15,6 +15,7 @@ import {
   DataTableCommand,
   DataTableEmptyState,
   DataTableFilter,
+  DataTableFilteringState,
   DataTablePaginationState,
   DataTableRowSelectionState,
   DataTableSortingState,
@@ -41,8 +42,8 @@ interface DataTableOptions<TData>
    * The state and callback for the filtering.
    */
   filtering?: {
-    state: Record<string, ColumnFilter>
-    onFilteringChange: (state: Record<string, ColumnFilter>) => void
+    state: DataTableFilteringState
+    onFilteringChange: (state: DataTableFilteringState) => void
   }
   /**
    * The state and callback for the row selection.
