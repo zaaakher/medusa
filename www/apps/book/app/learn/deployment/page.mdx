@@ -21,6 +21,10 @@ You can either deploy the Medusa application fully (server with the admin), or d
 
 ## Deploying the Medusa Server
 
+You must deploy the Medusa server before the admin or storefront, as both of them connect to it and won’t work without a deployed Medusa server URL.
+
+![Diagram showcasing how the Medusa server and its associated services would be deployed](https://res.cloudinary.com/dza7lstvk/image/upload/v1708600972/Medusa%20Book/backend_deployment_pgexo3.jpg)
+
 The `npm run build` command will compile your Medusa backend server and create a static bundle for the Admin dashboard. The output is written inside the `.medusa/server` directory, and you can deploy this directory without relying on the original TypeScript source.
 
 Following are the hypothetical steps for creating and running the production build. The actual setup may vary depending upon your deployment host. However, the goal is to follow the following steps and run the production server from within the `.medusa/server` directory.
