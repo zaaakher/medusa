@@ -5,9 +5,11 @@ export * from "./utils/create-data-table-command-helper"
 export * from "./utils/create-data-table-filter-helper"
 
 export type {
-    DataTableCommand, DataTableEmptyState, DataTableFilter, DataTableFilteringState,
-    DataTablePaginationState,
-    DataTableRowSelectionState,
-    DataTableSortingState
+  DataTableCommand,
+  DataTableEmptyState,
+  DataTableFilter,
+  DataTableFilteringState,
+  DataTablePaginationState,
+  DataTableRowSelectionState,
+  DataTableSortingState,
 } from "./types"
-

@@ -141,8 +141,10 @@ const DataTableTable = ({ emptyState }: DataTableTableProps) => {
                             showStickyBorder && isFirstColumn,
                           "bg-ui-bg-subtle sticky":
                             isFirstColumn || isSelectHeader,
-                          "left-0": isSelectHeader,
-                          "left-[calc(20px+24px+24px)]": isFirstColumn,
+                          "left-0":
+                            isSelectHeader || (isFirstColumn && !hasSelect),
+                          "left-[calc(20px+24px+24px)]":
+                            isFirstColumn && hasSelect,
                         })}
                         style={
                           !isSpecialHeader
@@ -213,8 +215,10 @@ const DataTableTable = ({ emptyState }: DataTableTableProps) => {
                                 isFirstColumn,
                               "after:bg-ui-border-base":
                                 showStickyBorder && isFirstColumn,
-                              "left-0": isSelectCell,
-                              "left-[calc(20px+24px+24px)]": isFirstColumn,
+                              "left-0":
+                                isSelectCell || (isFirstColumn && !hasSelect),
+                              "left-[calc(20px+24px+24px)]":
+                                isFirstColumn && hasSelect,
                             }
                           )}
                           style={

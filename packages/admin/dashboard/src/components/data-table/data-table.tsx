@@ -1,21 +1,34 @@
 import {
   Button,
   DataTableCommand,
-  DataTableEmptyState,
   DataTableFilter,
+  DataTableFilteringState,
+  DataTablePaginationState,
+  DataTableSortingState,
   Heading,
   DataTable as Primitive,
   useDataTable,
 } from "@medusajs/ui"
+import { ColumnDef } from "@tanstack/react-table"
+import { useState } from "react"
+import { useSearchParams } from "react-router-dom"
+import { useQueryParams } from "../../hooks/use-query-params"
 
 interface DataTableProps<TData> {
   data?: TData[]
-  columns: any
+  columns: ColumnDef<TData>[]
   filters?: DataTableFilter[]
   commands?: DataTableCommand[]
   rowCount?: number
+  getRowId: (row: TData) => string
   enablePagination?: boolean
-  emptyState?: DataTableEmptyState
+  enableSearch?: boolean
+  autoFocusSearch?: boolean
+  onRowClick?: (row: TData) => void
+  emptyState?: any
+  heading: string
+  prefix?: string
+  pageSize?: number
 }
 
 export const DataTable = <TData,>({
@@ -23,47 +36,209 @@ export const DataTable = <TData,>({
   columns,
   filters,
   commands,
+  getRowId,
   rowCount = 0,
   enablePagination = true,
+  enableSearch = true,
+  autoFocusSearch = false,
+  onRowClick,
+  heading,
+  prefix,
+  pageSize = 10,
+  emptyState,
 }: DataTableProps<TData>) => {
+  const enableFiltering = filters && filters.length > 0
+  const enableCommands = commands && commands.length > 0
+  const enableSorting = columns.some((column) => column.enableSorting)
+
+  const filterIds = filters?.map((f) => f.id) ?? []
+
+  const { offset, order, q, ...filterParams } = useQueryParams(
+    [
+      ...filterIds,
+      ...(enableSorting ? ["order"] : []),
+      ...(enableSearch ? ["q"] : []),
+      ...(enablePagination ? ["offset"] : []),
+    ],
+    prefix
+  )
+  const [_, setSearchParams] = useSearchParams()
+
+  const [search, setSearch] = useState<string>(q ?? "")
+  const handleSearchChange = (value: string) => {
+    setSearch(value)
+    setSearchParams((prev) => {
+      if (value) {
+        prev.set("q", value)
+      } else {
+        prev.delete("q")
+      }
+
+      return prev
+    })
+  }
+
+  const [pagination, setPagination] = useState<DataTablePaginationState>(
+    offset ? parsePaginationState(offset, pageSize) : { pageIndex: 0, pageSize }
+  )
+  const handlePaginationChange = (value: DataTablePaginationState) => {
+    setPagination(value)
+    setSearchParams((prev) => {
+      if (value.pageIndex === 0) {
+        prev.delete("offset")
+      } else {
+        prev.set("offset", transformPaginationState(value).toString())
+      }
+
+      return prev
+    })
+  }
+
+  const [filtering, setFiltering] = useState<DataTableFilteringState>(
+    parseFilterState(filterIds, filterParams)
+  )
+  const handleFilteringChange = (value: DataTableFilteringState) => {
+    setFiltering(value)
+
+    setSearchParams((prev) => {
+      Array.from(prev.keys()).forEach((key) => {
+        if (filterIds.includes(key) && !(key in value)) {
+          prev.delete(key)
+        }
+      })
+
+      Object.entries(value).forEach(([key, filter]) => {
+        if (filterIds.includes(key) && filter.value) {
+          prev.set(key, JSON.stringify(filter.value))
+        }
+      })
+
+      return prev
+    })
+  }
+
+  const [sorting, setSorting] = useState<DataTableSortingState | null>(
+    order ? parseSortingState(order) : null
+  )
+  const handleSortingChange = (value: DataTableSortingState) => {
+    setSorting(value)
+    setSearchParams((prev) => {
+      if (value) {
+        const valueToStore = transformSortingState(value)
+
+        prev.set("order", valueToStore)
+      } else {
+        prev.delete("order")
+      }
+
+      return prev
+    })
+  }
+
   const instance = useDataTable({
     data,
     columns,
     filters,
     commands,
     rowCount,
+    getRowId,
+    onRowClick,
+    pagination: enablePagination
+      ? {
+          state: pagination,
+          onPaginationChange: handlePaginationChange,
+        }
+      : undefined,
+    filtering: enableFiltering
+      ? {
+          state: filtering,
+          onFilteringChange: handleFilteringChange,
+        }
+      : undefined,
+    sorting: enableSorting
+      ? {
+          state: sorting,
+          onSortingChange: handleSortingChange,
+        }
+      : undefined,
+    search: enableSearch
+      ? {
+          state: search,
+          onSearchChange: handleSearchChange,
+        }
+      : undefined,
   })
 
   return (
     <Primitive instance={instance}>
       <Primitive.Toolbar className="flex flex-col items-start justify-between gap-2 md:flex-row md:items-center">
-        <Heading>Employees</Heading>
+        <Heading>{heading}</Heading>
         <div className="flex w-full items-center gap-2 md:w-auto">
-          <Primitive.Search placeholder="Search" autoFocus />
-          <Primitive.FilterMenu tooltip="Filter" />
+          {enableSearch && (
+            <Primitive.Search
+              placeholder="Search"
+              autoFocus={autoFocusSearch}
+            />
+          )}
+          {enableFiltering && <Primitive.FilterMenu tooltip="Filter" />}
           <Primitive.SortingMenu tooltip="Sort" />
           <Button size="small" variant="secondary">
             Create
           </Button>
         </div>
       </Primitive.Toolbar>
-      <Primitive.Table
-        emptyState={{
-          empty: {
-            heading: "No employees",
-            description: "There are no employees to display.",
-          },
-          filtered: {
-            heading: "No results",
-            description:
-              "No employees match the current filter criteria. Try adjusting your filters.",
-          },
-        }}
-      />
+      <Primitive.Table emptyState={emptyState} />
       {enablePagination && <Primitive.Pagination />}
-      {commands && commands.length > 0 && (
+      {enableCommands && (
         <Primitive.CommandBar selectedLabel={(count) => `${count} selected`} />
       )}
     </Primitive>
   )
+}
+
+function transformSortingState(value: DataTableSortingState) {
+  return value.desc ? `-${value.id}` : value.id
+}
+
+function parseSortingState(value: string) {
+  return value.startsWith("-")
+    ? { id: value.slice(1), desc: true }
+    : { id: value, desc: false }
+}
+
+function transformPaginationState(value: DataTablePaginationState) {
+  return value.pageIndex * value.pageSize
+}
+
+function parsePaginationState(value: string, pageSize: number) {
+  const offset = parseInt(value)
+
+  return {
+    pageIndex: Math.floor(offset / pageSize),
+    pageSize,
+  }
+}
+
+function parseFilterState(
+  filterIds: string[],
+  value: Record<string, string | undefined>
+) {
+  if (!value) {
+    return {}
+  }
+
+  const filters: DataTableFilteringState = {}
+
+  for (const id of filterIds) {
+    const filterValue = value[id]
+
+    if (filterValue) {
+      filters[id] = {
+        id,
+        value: JSON.parse(filterValue),
+      }
+    }
+  }
+
+  return filters
 }

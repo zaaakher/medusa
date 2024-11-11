@@ -40,7 +40,7 @@ export const useCustomerGroup = (
 }
 
 export const useCustomerGroups = (
-  query?: Record<string, any>,
+  query?: HttpTypes.AdminGetCustomerGroupsParams,
   options?: Omit<
     UseQueryOptions<
       HttpTypes.AdminGetCustomerGroupsParams,
