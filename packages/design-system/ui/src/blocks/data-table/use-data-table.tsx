@@ -150,27 +150,54 @@ const useDataTable = <TData,>({
   ...options
 }: DataTableOptions<TData>): UseDataTableReturn<TData> => {
   const { state: sortingState, onSortingChange } = sorting ?? {}
+  const { state: rowSelectionState, onRowSelectionChange } = rowSelection ?? {}
+  const { state: filteringState, onFilteringChange } = filtering ?? {}
+  const { state: paginationState, onPaginationChange } = pagination ?? {}
+
+  const autoResetPageIndexHandler = React.useCallback(() => {
+    return autoResetPageIndex
+      ? () =>
+          paginationState &&
+          onPaginationChange?.({ ...paginationState, pageIndex: 0 })
+      : undefined
+  }, [autoResetPageIndex, paginationState, onPaginationChange])
+
   const sortingStateHandler = React.useCallback(() => {
     return onSortingChange
-      ? onSortingChangeTransformer(onSortingChange, sortingState)
+      ? (updaterOrValue: Updater<SortingState>) => {
+          autoResetPageIndexHandler()?.()
+          onSortingChangeTransformer(
+            onSortingChange,
+            sortingState
+          )(updaterOrValue)
+        }
       : undefined
-  }, [onSortingChange, sortingState])
+  }, [onSortingChange, sortingState, autoResetPageIndexHandler])
 
-  const { state: rowSelectionState, onRowSelectionChange } = rowSelection ?? {}
   const rowSelectionStateHandler = React.useCallback(() => {
     return onRowSelectionChange
-      ? onRowSelectionChangeTransformer(onRowSelectionChange, rowSelectionState)
+      ? (updaterOrValue: Updater<RowSelectionState>) => {
+          autoResetPageIndexHandler()?.()
+          onRowSelectionChangeTransformer(
+            onRowSelectionChange,
+            rowSelectionState
+          )(updaterOrValue)
+        }
       : undefined
-  }, [onRowSelectionChange, rowSelectionState])
+  }, [onRowSelectionChange, rowSelectionState, autoResetPageIndexHandler])
 
-  const { state: filteringState, onFilteringChange } = filtering ?? {}
   const filteringStateHandler = React.useCallback(() => {
     return onFilteringChange
-      ? onFilteringChangeTransformer(onFilteringChange, filteringState)
+      ? (updaterOrValue: Updater<ColumnFiltersState>) => {
+          autoResetPageIndexHandler()?.()
+          onFilteringChangeTransformer(
+            onFilteringChange,
+            filteringState
+          )(updaterOrValue)
+        }
       : undefined
-  }, [onFilteringChange, filteringState])
+  }, [onFilteringChange, filteringState, autoResetPageIndexHandler])
 
-  const { state: paginationState, onPaginationChange } = pagination ?? {}
   const paginationStateHandler = React.useCallback(() => {
     return onPaginationChange
       ? onPaginationChangeTransformer(onPaginationChange, paginationState)
@@ -195,10 +222,6 @@ const useDataTable = <TData,>({
     manualPagination: true,
     manualFiltering: true,
   })
-
-  const autoResetPageIndexHandler = React.useCallback(() => {
-    return autoResetPageIndex ? () => instance.setPageIndex(0) : undefined
-  }, [autoResetPageIndex, instance])
 
   const getSorting = React.useCallback(() => {
     return instance.getState().sorting?.[0] ?? null
@@ -251,7 +274,9 @@ const useDataTable = <TData,>({
 
   const addFilter = React.useCallback(
     (filter: ColumnFilter) => {
-      autoResetPageIndexHandler()?.()
+      if (filter.value) {
+        autoResetPageIndexHandler()?.()
+      }
       onFilteringChange?.({ ...getFiltering(), [filter.id]: filter })
     },
     [onFilteringChange, getFiltering, autoResetPageIndexHandler]
@@ -268,8 +293,9 @@ const useDataTable = <TData,>({
   )
 
   const clearFilters = React.useCallback(() => {
+    autoResetPageIndexHandler()?.()
     onFilteringChange?.({})
-  }, [onFilteringChange])
+  }, [onFilteringChange, autoResetPageIndexHandler])
 
   const updateFilter = React.useCallback(
     (filter: ColumnFilter) => {
@@ -280,11 +306,9 @@ const useDataTable = <TData,>({
 
   const { state: searchState, onSearchChange, debounce = 300 } = search ?? {}
 
-  // Local state for immediate UI updates
   const [localSearch, setLocalSearch] = React.useState(searchState ?? "")
   const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>()
 
-  // Update local state when prop changes
   React.useEffect(() => {
     setLocalSearch(searchState ?? "")
   }, [searchState])

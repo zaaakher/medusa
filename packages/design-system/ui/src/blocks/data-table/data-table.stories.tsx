@@ -385,7 +385,7 @@ const KitchenSinkDemo = () => {
   })
 
   const table = useDataTable({
-    data,
+    data: [],
     columns,
     filters,
     commands,

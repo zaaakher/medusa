@@ -2,11 +2,11 @@ import * as React from "react"
 
 import { Table } from "@/components/table"
 import { flexRender } from "@tanstack/react-table"
+import { Skeleton } from "../../../components/skeleton"
 import { Text } from "../../../components/text"
 import { clx } from "../../../utils/clx"
 import { useDataTableContext } from "../context/use-data-table-context"
 import { DataTableEmptyState } from "../types"
-import { DataTableFilterBar } from "./data-table-filter-bar"
 import { DataTableSortingIcon } from "./data-table-sorting-icon"
 
 type EmptyStateContent = {
@@ -36,6 +36,7 @@ const DataTableTable = ({ emptyState }: DataTableTableProps) => {
   const pageIndex = instance.pageIndex
 
   const columns = instance.getAllColumns()
+  const columnCount = columns.length
 
   const hasSelect = columns.find((c) => c.id === "select")
   const hasActions = columns.find((c) => c.id === "action")
@@ -91,9 +92,12 @@ const DataTableTable = ({ emptyState }: DataTableTableProps) => {
     scrollableRef.current?.scroll({ top: 0, left: 0 })
   }, [pageIndex])
 
+  if (instance.showSkeleton) {
+    return <DataTableTableSkeleton rowCount={instance.rowCount} />
+  }
+
   return (
     <div className="flex w-full flex-1 flex-col overflow-hidden">
-      <DataTableFilterBar />
       {instance.emptyState === DataTableEmptyState.POPULATED && (
         <div
           ref={scrollableRef}
@@ -289,6 +293,25 @@ const DataTableEmptyStateDisplay = ({
           description={content?.description}
         />
       )}
+    </div>
+  )
+}
+
+interface DataTableTableSkeletonProps {
+  rowCount: number
+}
+
+const DataTableTableSkeleton = ({ rowCount }: DataTableTableSkeletonProps) => {
+  return (
+    <div className="flex w-full flex-1 flex-col overflow-hidden">
+      <div className="min-h-0 w-full flex-1 overscroll-none border-y">
+        <div className="flex flex-col divide-y">
+          <Skeleton className="h-12 w-full" />
+          {Array.from({ length: rowCount }, (_, i) => i).map((row) => (
+            <Skeleton key={row} className="h-12 w-full rounded-none" />
+          ))}
+        </div>
+      </div>
     </div>
   )
 }

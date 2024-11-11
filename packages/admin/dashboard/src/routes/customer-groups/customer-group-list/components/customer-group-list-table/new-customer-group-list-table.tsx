@@ -60,6 +60,10 @@ export const NewCustomerGroupListTable = () => {
         onRowClick={(row) => {
           navigate(`/customer-groups/${row.id}`)
         }}
+        action={{
+          label: t("actions.create"),
+          to: "/customer-groups/create",
+        }}
         emptyState={{
           empty: {
             heading: "No customer groups",
@@ -164,7 +168,7 @@ const useDateFilterOptions = () => {
       {
         label: "Yesterday",
         value: {
-          $lt: new Date(
+          $gte: new Date(
             startOfDay.getTime() - 24 * 60 * 60 * 1000
           ).toISOString(),
         },
@@ -172,7 +176,7 @@ const useDateFilterOptions = () => {
       {
         label: "Last 7 days",
         value: {
-          $lt: new Date(
+          $gte: new Date(
             startOfDay.getTime() - 7 * 24 * 60 * 60 * 1000
           ).toISOString(),
         },
@@ -180,7 +184,7 @@ const useDateFilterOptions = () => {
       {
         label: "Last 30 days",
         value: {
-          $lt: new Date(
+          $gte: new Date(
             startOfDay.getTime() - 30 * 24 * 60 * 60 * 1000
           ).toISOString(),
         },
@@ -188,7 +192,7 @@ const useDateFilterOptions = () => {
       {
         label: "Last 90 days",
         value: {
-          $lt: new Date(
+          $gte: new Date(
             startOfDay.getTime() - 90 * 24 * 60 * 60 * 1000
           ).toISOString(),
         },

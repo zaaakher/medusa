@@ -10,15 +10,53 @@ import {
   useDataTable,
 } from "@medusajs/ui"
 import { ColumnDef } from "@tanstack/react-table"
-import { useState } from "react"
-import { useSearchParams } from "react-router-dom"
+import { ReactNode, useState } from "react"
+import { useTranslation } from "react-i18next"
+import { Link, useSearchParams } from "react-router-dom"
+
 import { useQueryParams } from "../../hooks/use-query-params"
+import { ActionMenu } from "../common/action-menu"
+
+type DataTableActionProps = {
+  label: string
+  disabled?: boolean
+} & (
+  | {
+      to: string
+    }
+  | {
+      onClick: () => void
+    }
+)
+
+type DataTableActionMenuActionProps = {
+  label: string
+  icon: ReactNode
+  disabled?: boolean
+} & (
+  | {
+      to: string
+    }
+  | {
+      onClick: () => void
+    }
+)
+
+type DataTableActionMenuGroupProps = {
+  actions: DataTableActionMenuActionProps[]
+}
+
+type DataTableActionMenuProps = {
+  groups: DataTableActionMenuGroupProps[]
+}
 
 interface DataTableProps<TData> {
   data?: TData[]
   columns: ColumnDef<TData>[]
   filters?: DataTableFilter[]
   commands?: DataTableCommand[]
+  action?: DataTableActionProps
+  actionMenu?: DataTableActionMenuProps
   rowCount?: number
   getRowId: (row: TData) => string
   enablePagination?: boolean
@@ -36,6 +74,8 @@ export const DataTable = <TData,>({
   columns,
   filters,
   commands,
+  action,
+  actionMenu,
   getRowId,
   rowCount = 0,
   enablePagination = true,
@@ -135,6 +175,9 @@ export const DataTable = <TData,>({
     })
   }
 
+  const { pagination: paginationTranslations, toolbar: toolbarTranslations } =
+    useDataTableTranslations()
+
   const instance = useDataTable({
     data,
     columns,
@@ -171,7 +214,10 @@ export const DataTable = <TData,>({
 
   return (
     <Primitive instance={instance}>
-      <Primitive.Toolbar className="flex flex-col items-start justify-between gap-2 md:flex-row md:items-center">
+      <Primitive.Toolbar
+        className="flex flex-col items-start justify-between gap-2 md:flex-row md:items-center"
+        translations={toolbarTranslations}
+      >
         <Heading>{heading}</Heading>
         <div className="flex w-full items-center gap-2 md:w-auto">
           {enableSearch && (
@@ -182,13 +228,14 @@ export const DataTable = <TData,>({
           )}
           {enableFiltering && <Primitive.FilterMenu tooltip="Filter" />}
           <Primitive.SortingMenu tooltip="Sort" />
-          <Button size="small" variant="secondary">
-            Create
-          </Button>
+          {actionMenu && <ActionMenu variant="primary" {...actionMenu} />}
+          {action && <DataTableAction {...action} />}
         </div>
       </Primitive.Toolbar>
       <Primitive.Table emptyState={emptyState} />
-      {enablePagination && <Primitive.Pagination />}
+      {enablePagination && (
+        <Primitive.Pagination translations={paginationTranslations} />
+      )}
       {enableCommands && (
         <Primitive.CommandBar selectedLabel={(count) => `${count} selected`} />
       )}
@@ -241,4 +288,52 @@ function parseFilterState(
   }
 
   return filters
+}
+
+const useDataTableTranslations = () => {
+  const { t } = useTranslation()
+
+  const paginationTranslations = {
+    of: t("general.of"),
+    results: t("general.results"),
+    pages: t("general.pages"),
+    prev: t("general.prev"),
+    next: t("general.next"),
+  }
+
+  const toolbarTranslations = {
+    clearAll: t("actions.clearAll"),
+  }
+
+  return {
+    pagination: paginationTranslations,
+    toolbar: toolbarTranslations,
+  }
+}
+
+const DataTableAction = ({
+  label,
+  disabled,
+  ...props
+}: DataTableActionProps) => {
+  const buttonProps = {
+    size: "small" as const,
+    disabled: disabled ?? false,
+    type: "button" as const,
+    variant: "secondary" as const,
+  }
+
+  if ("to" in props) {
+    return (
+      <Button {...buttonProps} asChild>
+        <Link to={props.to}>{label}</Link>
+      </Button>
+    )
+  }
+
+  return (
+    <Button {...buttonProps} onClick={props.onClick}>
+      {label}
+    </Button>
+  )
 }

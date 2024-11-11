@@ -6,6 +6,7 @@ import { DropdownMenu } from "@/components/dropdown-menu"
 import { ArrowDownMini, ArrowUpMini, DescendingSorting } from "@medusajs/icons"
 import type { Column } from "@tanstack/react-table"
 import { IconButton } from "../../../components/icon-button"
+import { Skeleton } from "../../../components/skeleton"
 import { Tooltip } from "../../../components/tooltip"
 import { useDataTableContext } from "../context/use-data-table-context"
 import { SortableColumnDefMeta } from "../types"
@@ -52,6 +53,10 @@ const DataTableSortingMenu = ({ tooltip }: DataTableSortingMenuProps) => {
     }
 
     return null
+  }
+
+  if (instance.showSkeleton) {
+    return <DataTableSortingMenuSkeleton />
   }
 
   const Wrapper = tooltip ? Tooltip : React.Fragment
@@ -137,6 +142,10 @@ function getSortDescriptor(
     case "desc":
       return meta?.___sortMetaData?.sortDescLabel ?? "Z-A"
   }
+}
+
+const DataTableSortingMenuSkeleton = () => {
+  return <Skeleton className="size-7" />
 }
 
 export { DataTableSortingMenu }

@@ -2,6 +2,7 @@
 
 import { Input } from "@/components/input"
 import * as React from "react"
+import { Skeleton } from "../../../components/skeleton"
 import { clx } from "../../../utils/clx"
 import { useDataTableContext } from "../context/use-data-table-context"
 
@@ -13,6 +14,10 @@ interface DataTableSearchProps {
 
 const DataTableSearch = ({ className, ...props }: DataTableSearchProps) => {
   const { instance } = useDataTableContext()
+
+  if (instance.showSkeleton) {
+    return <DataTableSearchSkeleton />
+  }
 
   return (
     <Input
@@ -29,6 +34,10 @@ const DataTableSearch = ({ className, ...props }: DataTableSearchProps) => {
       {...props}
     />
   )
+}
+
+const DataTableSearchSkeleton = () => {
+  return <Skeleton className="h-7 w-[128px]" />
 }
 
 export { DataTableSearch }

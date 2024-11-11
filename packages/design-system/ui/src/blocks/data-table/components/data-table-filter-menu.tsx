@@ -3,6 +3,7 @@ import * as React from "react"
 import { Funnel } from "@medusajs/icons"
 import { DropdownMenu } from "../../../components/dropdown-menu"
 import { IconButton } from "../../../components/icon-button"
+import { Skeleton } from "../../../components/skeleton"
 import { Tooltip } from "../../../components/tooltip"
 import { useDataTableContext } from "../context/use-data-table-context"
 
@@ -20,6 +21,10 @@ const DataTableFilterMenu = ({ tooltip }: DataTableFilterMenuProps) => {
     .filter((filter) => !enabledFilters.includes(filter.id))
 
   const Wrapper = tooltip ? Tooltip : React.Fragment
+
+  if (instance.showSkeleton) {
+    return <DataTableFilterMenuSkeleton />
+  }
 
   return (
     <DropdownMenu>
@@ -44,6 +49,10 @@ const DataTableFilterMenu = ({ tooltip }: DataTableFilterMenuProps) => {
       </DropdownMenu.Content>
     </DropdownMenu>
   )
+}
+
+const DataTableFilterMenuSkeleton = () => {
+  return <Skeleton className="size-7" />
 }
 
 export { DataTableFilterMenu }

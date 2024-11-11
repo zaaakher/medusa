@@ -1,17 +1,17 @@
 "use client"
 import * as React from "react"
 
+import { clx } from "@/utils/clx"
+
+import { DataTableCommandBar } from "./components/data-table-command-bar"
+import { DataTableFilterMenu } from "./components/data-table-filter-menu"
+import { DataTablePagination } from "./components/data-table-pagination"
 import { DataTableSearch } from "./components/data-table-search"
+import { DataTableSortingMenu } from "./components/data-table-sorting-menu"
 import { DataTableTable } from "./components/data-table-table"
 import { DataTableToolbar } from "./components/data-table-toolbar"
 import { DataTableContextProvider } from "./context/data-table-context-provider"
 import { UseDataTableReturn } from "./use-data-table"
-
-import { clx } from "@/utils/clx"
-import { DataTableCommandBar } from "./components/data-table-command-bar"
-import { DataTableFilterMenu } from "./components/data-table-filter-menu"
-import { DataTablePagination } from "./components/data-table-pagination"
-import { DataTableSortingMenu } from "./components/data-table-sorting-menu"
 
 interface DataTableProps<TData> {
   instance: UseDataTableReturn<TData>
@@ -44,3 +44,4 @@ const DataTable = Object.assign(Root, {
 })
 
 export { DataTable }
+export type { DataTableProps }

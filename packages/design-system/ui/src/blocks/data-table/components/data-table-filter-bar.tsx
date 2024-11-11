@@ -4,10 +4,17 @@ import { ColumnFilter } from "@tanstack/react-table"
 import * as React from "react"
 
 import { Button } from "@/components/button"
+import { Skeleton } from "@/components/skeleton"
 import { useDataTableContext } from "../context/use-data-table-context"
 import { DataTableFilter } from "./data-table-filter"
 
-const DataTableFilterBar = () => {
+interface DataTableFilterBarProps {
+  clearAllFiltersLabel?: string
+}
+
+const DataTableFilterBar = ({
+  clearAllFiltersLabel = "Clear all",
+}: DataTableFilterBarProps) => {
   const { instance } = useDataTableContext()
 
   const filterState = instance.getFiltering()
@@ -27,8 +34,14 @@ const DataTableFilterBar = () => {
     instance.clearFilters()
   }, [instance])
 
-  if (Object.keys(filterState).length === 0) {
+  const filterCount = Object.keys(filterState).length
+
+  if (filterCount === 0) {
     return null
+  }
+
+  if (instance.showSkeleton) {
+    return <DataTableFilterBarSkeleton filterCount={filterCount} />
   }
 
   return (
@@ -40,7 +53,7 @@ const DataTableFilterBar = () => {
           label={getFilterLabel(filter)}
         />
       ))}
-      {Object.keys(filterState).length > 0 ? (
+      {filterCount > 0 ? (
         <Button
           variant="transparent"
           size="small"
@@ -48,9 +61,24 @@ const DataTableFilterBar = () => {
           type="button"
           onClick={clearFilters}
         >
-          Clear all
+          {clearAllFiltersLabel}
         </Button>
       ) : null}
+    </div>
+  )
+}
+
+const DataTableFilterBarSkeleton = ({
+  filterCount,
+}: {
+  filterCount: number
+}) => {
+  return (
+    <div className="bg-ui-bg-subtle flex w-full flex-nowrap items-center gap-2 overflow-x-auto border-t px-6 py-2 md:flex-wrap">
+      {Array.from({ length: filterCount }).map((_, index) => (
+        <Skeleton key={index} className="h-7 w-[180px]" />
+      ))}
+      {filterCount > 0 ? <Skeleton className="h-7 w-[66px]" /> : null}
     </div>
   )
 }

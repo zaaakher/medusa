@@ -4,6 +4,7 @@ import * as React from "react"
 
 import { Table } from "@/components/table"
 
+import { Skeleton } from "../../../components/skeleton"
 import { useDataTableContext } from "../context/use-data-table-context"
 
 interface DataTablePaginationProps {
@@ -12,6 +13,10 @@ interface DataTablePaginationProps {
 
 const DataTablePagination = ({ translations }: DataTablePaginationProps) => {
   const { instance } = useDataTableContext()
+
+  if (instance.showSkeleton) {
+    return <DataTablePaginationSkeleton />
+  }
 
   return (
     <Table.Pagination
@@ -26,6 +31,21 @@ const DataTablePagination = ({ translations }: DataTablePaginationProps) => {
       pageIndex={instance.pageIndex}
       pageSize={instance.pageSize}
     />
+  )
+}
+
+const DataTablePaginationSkeleton = () => {
+  return (
+    <div>
+      <div className="flex items-center justify-between p-4">
+        <Skeleton className="h-7 w-[138px]" />
+        <div className="flex items-center gap-x-2">
+          <Skeleton className="h-7 w-24" />
+          <Skeleton className="h-7 w-11" />
+          <Skeleton className="h-7 w-11" />
+        </div>
+      </div>
+    </div>
   )
 }
 
