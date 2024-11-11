@@ -409,12 +409,12 @@ export const sidebar = numberSidebarItems(
             {
               type: "link",
               path: "/learn/advanced-development/workflows/variable-manipulation",
-              title: "Variable Manipulation",
+              title: "Transform Variables",
             },
             {
               type: "link",
               path: "/learn/advanced-development/workflows/conditions",
-              title: "Using Conditions",
+              title: "When-Then Conditions",
             },
             {
               type: "link",
