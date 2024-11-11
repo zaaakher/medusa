@@ -1,6 +1,6 @@
 "use client"
 
-import { XMark } from "@medusajs/icons"
+import { EllipseMiniSolid, XMark } from "@medusajs/icons"
 import { ColumnFilter } from "@tanstack/react-table"
 import * as React from "react"
 
@@ -154,7 +154,25 @@ type DataTableFilterDateContentProps = {
   options: FilterOption<DateComparisonOperator>[]
 } & Pick<DateFilterProps, "format" | "rangeOptionLabel" | "disableRangeOption">
 
-const CUSTOM_OPTION_VALUE = "custom"
+function getIsCustomOptionSelected(
+  options: FilterOption<DateComparisonOperator>[],
+  value: DateComparisonOperator | undefined
+) {
+  if (!value) {
+    return false
+  }
+
+  const stringifiedValue = JSON.stringify(value)
+  const stringifiedOptions = options.map((option) =>
+    JSON.stringify(option.value)
+  )
+
+  if (stringifiedOptions.includes(stringifiedValue)) {
+    return false
+  }
+
+  return value.$gte || value.$lte
+}
 
 const DataTableFilterDateContent = ({
   filter,
@@ -163,10 +181,12 @@ const DataTableFilterDateContent = ({
   rangeOptionLabel = "Custom",
   disableRangeOption = false,
 }: DataTableFilterDateContentProps) => {
-  const [showCustom, setShowCustom] = React.useState(true)
+  const currentValue = filter.value as DateComparisonOperator | undefined
   const { instance } = useDataTableContext()
 
-  const currentValue = filter.value as DateComparisonOperator | undefined
+  const [showCustom, setShowCustom] = React.useState(
+    getIsCustomOptionSelected(options, currentValue)
+  )
 
   const selectedValue = React.useMemo(() => {
     if (!currentValue) {
@@ -180,6 +200,16 @@ const DataTableFilterDateContent = ({
     (valueStr: string) => {
       const value = JSON.parse(valueStr) as DateComparisonOperator
       instance.updateFilter({ ...filter, value })
+    },
+    [instance, filter]
+  )
+
+  const handleSelectCustom = React.useCallback(
+    (event: Event) => {
+      event.preventDefault()
+
+      setShowCustom(true)
+      instance.updateFilter({ ...filter, value: undefined })
     },
     [instance, filter]
   )
@@ -225,17 +255,15 @@ const DataTableFilterDateContent = ({
         })}
       </DropdownMenu.RadioGroup>
       {!disableRangeOption && (
-        <DropdownMenu.RadioGroup
-          value={`${showCustom}`}
-          onValueChange={(value) => setShowCustom(value === "true")}
+        <DropdownMenu.Item
+          onSelect={handleSelectCustom}
+          className="flex items-center gap-2"
         >
-          <DropdownMenu.RadioItem
-            value={"true"}
-            onSelect={(e) => e.preventDefault()}
-          >
-            {rangeOptionLabel}
-          </DropdownMenu.RadioItem>
-        </DropdownMenu.RadioGroup>
+          <div className="flex size-[15px] items-center justify-center">
+            {showCustom && <EllipseMiniSolid />}
+          </div>
+          <span>{rangeOptionLabel}</span>
+        </DropdownMenu.Item>
       )}
       {!disableRangeOption && showCustom && (
         <React.Fragment>

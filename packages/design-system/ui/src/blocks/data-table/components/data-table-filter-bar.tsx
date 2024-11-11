@@ -1,6 +1,5 @@
 "use client"
 
-import { ColumnFilter } from "@tanstack/react-table"
 import * as React from "react"
 
 import { Button } from "@/components/button"
@@ -19,17 +18,6 @@ const DataTableFilterBar = ({
 
   const filterState = instance.getFiltering()
 
-  const getFilterLabel = React.useCallback(
-    (filter: ColumnFilter) => {
-      const filterOptions = instance.getFilters()
-      const filterOption = filterOptions.find(
-        (option) => option.id === filter.id
-      )
-      return filterOption?.label ?? filter.id
-    },
-    [instance]
-  )
-
   const clearFilters = React.useCallback(() => {
     instance.clearFilters()
   }, [instance])
@@ -47,11 +35,7 @@ const DataTableFilterBar = ({
   return (
     <div className="bg-ui-bg-subtle flex w-full flex-nowrap items-center gap-2 overflow-x-auto border-t px-6 py-2 md:flex-wrap">
       {Object.values(filterState).map((filter) => (
-        <DataTableFilter
-          key={filter.id}
-          filter={filter}
-          label={getFilterLabel(filter)}
-        />
+        <DataTableFilter key={filter.id} filter={filter} />
       ))}
       {filterCount > 0 ? (
         <Button
