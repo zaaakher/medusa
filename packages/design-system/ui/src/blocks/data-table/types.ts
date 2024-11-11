@@ -27,12 +27,12 @@ type DataTableAction<TData> = {
   icon?: React.ReactNode
 }
 
-export interface ActionColumnDef<TData>
+export interface DataTableActionColumnDef<TData>
   extends Pick<DisplayColumnDef<TData>, "meta"> {
   actions: DataTableAction<TData>[] |  DataTableAction<TData>[][]
 }
 
-export interface SelectColumnDef<TData>
+export interface DataTableSelectColumnDef<TData>
   extends Pick<DisplayColumnDef<TData>, "cell" | "header"> {}
 
 export type SortableColumnDef = {
@@ -49,6 +49,32 @@ export type ActionColumnDefMeta<TData> = {
   ___actions?: DataTableAction<TData>[] | DataTableAction<TData>[][]
 }
 
+export type DataTableColumnSizing = {
+  /**
+   * The maximum size of the column.
+   */
+  maxSize?: number
+  /**
+   * The minimum size of the column.
+   */
+  minSize?: number
+  /**
+   * The size of the column.
+   */
+}
+
+export interface DataTableColumnDef extends DataTableColumnSizing {
+  /**
+   * Whether the column is sortable.
+   * @default false
+   */
+  enableSorting?: boolean
+}
+
+export interface DataTableDisplayColumnDef extends DataTableColumnSizing {
+  id: string
+}
+
 export interface DataTableColumnHelper<TData> {
   accessor: <
     TAccessor extends AccessorFn<TData> | DeepKeys<TData>,
@@ -60,14 +86,14 @@ export interface DataTableColumnHelper<TData> {
   >(
     accessor: TAccessor,
     column: TAccessor extends AccessorFn<TData>
-      ? DisplayColumnDef<TData, TValue> & SortableColumnDef
-      : IdentifiedColumnDef<TData, TValue> & SortableColumnDef
+      ? Pick<DisplayColumnDef<TData, TValue>, "meta" | "header" | "cell"> & DataTableColumnDef & SortableColumnDef
+      : Pick<IdentifiedColumnDef<TData, TValue>, "id" | "meta" | "header" | "cell"> & DataTableColumnDef & SortableColumnDef
   ) => TAccessor extends AccessorFn<TData>
     ? AccessorFnColumnDef<TData, TValue>
     : AccessorKeyColumnDef<TData, TValue>
-  display: (column: DisplayColumnDef<TData>) => DisplayColumnDef<TData, unknown>
-  action: (props: ActionColumnDef<TData>) => DisplayColumnDef<TData, unknown>
-  select: (props?: SelectColumnDef<TData>) => DisplayColumnDef<TData, unknown>
+  display: (column: Pick<DisplayColumnDef<TData>, "meta" | "header" | "cell"> & DataTableDisplayColumnDef) => DisplayColumnDef<TData, unknown>
+  action: (props: DataTableActionColumnDef<TData>) => DisplayColumnDef<TData, unknown>
+  select: (props?: DataTableSelectColumnDef<TData>) => DisplayColumnDef<TData, unknown>
 }
 
 interface DataTableColumnFilter extends ColumnFilter {}

@@ -8,9 +8,9 @@ import {
   DataTableSelectHeader,
 } from "../components/data-table-select-cell"
 import {
-  ActionColumnDef,
+  DataTableActionColumnDef,
   DataTableColumnHelper,
-  SelectColumnDef,
+  DataTableSelectColumnDef,
   SortableColumnDef,
   SortableColumnDefMeta,
 } from "../types"
@@ -44,7 +44,7 @@ const createDataTableColumnHelper = <
       })
     },
     display,
-    action: ({ actions, ...props }: ActionColumnDef<TData>) =>
+    action: ({ actions, ...props }: DataTableActionColumnDef<TData>) =>
       display({
         id: "action",
         cell: (ctx) => <DataTableActionCell ctx={ctx} />,
@@ -54,7 +54,7 @@ const createDataTableColumnHelper = <
         },
         ...props,
       }),
-    select: (props?: SelectColumnDef<TData>) =>
+    select: (props?: DataTableSelectColumnDef<TData>) =>
       display({
         id: "select",
         header: props?.header
