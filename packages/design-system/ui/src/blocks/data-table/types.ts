@@ -118,7 +118,13 @@ export interface SelectFilterProps extends BaseFilterProps {
 
 export interface DateFilterProps extends BaseFilterProps {
   type: "date"
-  format: "date" | "date-time"
+  /**
+   * The format of the date.
+   * @default "date"
+   */
+  format?: "date" | "date-time"
+  rangeOptionLabel?: string
+  disableRangeOption?: boolean
   options: FilterOption<DateComparisonOperator>[]
 }
 

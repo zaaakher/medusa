@@ -390,7 +390,6 @@ const KitchenSinkDemo = () => {
     filters,
     commands,
     rowCount: count,
-    isLoading: true,
     getRowId: (row) => row.id,
     onRowClick: (row) => {
       alert(`Navigate to ${row.id}`)

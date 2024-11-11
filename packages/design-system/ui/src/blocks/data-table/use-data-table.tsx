@@ -21,7 +21,6 @@ import {
   DataTableSortingState,
   DateComparisonOperator,
   FilterOption,
-  FilterType,
 } from "./types"
 
 interface DataTableOptions<TData>
@@ -117,7 +116,7 @@ interface UseDataTableReturn<TData>
   getFilterOptions: <T extends string | string[] | DateComparisonOperator>(
     id: string
   ) => FilterOption<T>[] | null
-  getFilterType: (id: string) => FilterType | null
+  getFilterMeta: (id: string) => DataTableFilter | null
   getFiltering: () => Record<string, ColumnFilter>
   addFilter: (filter: ColumnFilter) => void
   removeFilter: (id: string) => void
@@ -260,9 +259,9 @@ const useDataTable = <TData,>({
     [getFilters]
   )
 
-  const getFilterType = React.useCallback(
+  const getFilterMeta = React.useCallback(
     (id: string) => {
-      return getFilters().find((filter) => filter.id === id)?.type || null
+      return getFilters().find((filter) => filter.id === id) || null
     },
     [getFilters]
   )
@@ -410,7 +409,7 @@ const useDataTable = <TData,>({
     // Filtering
     getFilters,
     getFilterOptions,
-    getFilterType,
+    getFilterMeta,
     getFiltering,
     addFilter,
     removeFilter,

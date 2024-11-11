@@ -7,16 +7,16 @@ import * as React from "react"
 import { DropdownMenu } from "@/components/dropdown-menu"
 import { clx } from "@/utils/clx"
 
+import { DatePicker } from "../../../components/date-picker"
 import { useDataTableContext } from "../context/use-data-table-context"
-import { DateComparisonOperator, FilterOption } from "../types"
+import { DateComparisonOperator, DateFilterProps, FilterOption } from "../types"
 import { isDateComparisonOperator } from "../utils/is-date-comparison-operator"
 
 interface DataTableFilterProps {
   filter: ColumnFilter
-  label: string
 }
 
-const DataTableFilter = ({ filter, label }: DataTableFilterProps) => {
+const DataTableFilter = ({ filter }: DataTableFilterProps) => {
   const { instance } = useDataTableContext()
   const [open, setOpen] = React.useState(filter.value === undefined)
 
@@ -39,8 +39,8 @@ const DataTableFilter = ({ filter, label }: DataTableFilterProps) => {
     instance.removeFilter(filter.id)
   }, [instance, filter.id])
 
-  const options = instance.getFilterOptions(filter.id)
-  const type = instance.getFilterType(filter.id)
+  const meta = instance.getFilterMeta(filter.id)
+  const { id, type, options, label, ...rest } = meta ?? {}
 
   const value = filter.value
 
@@ -61,15 +61,10 @@ const DataTableFilter = ({ filter, label }: DataTableFilterProps) => {
             return false
           }
 
-          // Compare all possible operators
           return (
-            // Check if both have $gte and they're equal
             (value.$gte === o.value.$gte || (!value.$gte && !o.value.$gte)) &&
-            // Check if both have $lte and they're equal
             (value.$lte === o.value.$lte || (!value.$lte && !o.value.$lte)) &&
-            // Check if both have $gt and they're equal
             (value.$gt === o.value.$gt || (!value.$gt && !o.value.$gt)) &&
-            // Check if both have $lt and they're equal
             (value.$lt === o.value.$lt || (!value.$lt && !o.value.$lt))
           )
         })?.label ?? null
@@ -78,7 +73,7 @@ const DataTableFilter = ({ filter, label }: DataTableFilterProps) => {
     return displayValue
   }, [value, options])
 
-  if (!type) {
+  if (!meta) {
     return null
   }
 
@@ -96,7 +91,7 @@ const DataTableFilter = ({ filter, label }: DataTableFilterProps) => {
       >
         {displayValue && (
           <div className="text-ui-fg-muted whitespace-nowrap px-2 py-1">
-            {label}
+            {label || id}
           </div>
         )}
         <DropdownMenu.Trigger
@@ -107,7 +102,7 @@ const DataTableFilter = ({ filter, label }: DataTableFilterProps) => {
             }
           )}
         >
-          {displayValue || label}
+          {displayValue || label || id}
         </DropdownMenu.Trigger>
 
         {displayValue && (
@@ -142,6 +137,7 @@ const DataTableFilter = ({ filter, label }: DataTableFilterProps) => {
                 <DataTableFilterDateContent
                   filter={filter}
                   options={options as FilterOption<DateComparisonOperator>[]}
+                  {...rest}
                 />
               )
             default:
@@ -156,18 +152,26 @@ const DataTableFilter = ({ filter, label }: DataTableFilterProps) => {
 type DataTableFilterDateContentProps = {
   filter: ColumnFilter
   options: FilterOption<DateComparisonOperator>[]
-}
+} & Pick<DateFilterProps, "format" | "rangeOptionLabel" | "disableRangeOption">
+
+const CUSTOM_OPTION_VALUE = "custom"
 
 const DataTableFilterDateContent = ({
   filter,
   options,
+  format = "date",
+  rangeOptionLabel = "Custom",
+  disableRangeOption = false,
 }: DataTableFilterDateContentProps) => {
+  const [showCustom, setShowCustom] = React.useState(true)
   const { instance } = useDataTableContext()
 
   const currentValue = filter.value as DateComparisonOperator | undefined
 
   const selectedValue = React.useMemo(() => {
-    if (!currentValue) return undefined
+    if (!currentValue) {
+      return undefined
+    }
 
     return JSON.stringify(currentValue)
   }, [currentValue])
@@ -179,6 +183,29 @@ const DataTableFilterDateContent = ({
     },
     [instance, filter]
   )
+
+  const onCustomValueChange = React.useCallback(
+    (input: "$gte" | "$lte", value: Date | null) => {
+      const newCurrentValue = { ...currentValue }
+      newCurrentValue[input] = value ? value.toISOString() : undefined
+      instance.updateFilter({ ...filter, value: newCurrentValue })
+    },
+    [instance, filter]
+  )
+
+  const granularity = format === "date-time" ? "minute" : "day"
+
+  const maxDate = currentValue?.$lte
+    ? granularity === "minute"
+      ? new Date(currentValue.$lte)
+      : new Date(new Date(currentValue.$lte).setHours(23, 59, 59, 999))
+    : undefined
+
+  const minDate = currentValue?.$gte
+    ? granularity === "minute"
+      ? new Date(currentValue.$gte)
+      : new Date(new Date(currentValue.$gte).setHours(0, 0, 0, 0))
+    : undefined
 
   return (
     <React.Fragment>
@@ -197,6 +224,38 @@ const DataTableFilterDateContent = ({
           )
         })}
       </DropdownMenu.RadioGroup>
+      {!disableRangeOption && (
+        <DropdownMenu.RadioGroup
+          value={`${showCustom}`}
+          onValueChange={(value) => setShowCustom(value === "true")}
+        >
+          <DropdownMenu.RadioItem
+            value={"true"}
+            onSelect={(e) => e.preventDefault()}
+          >
+            {rangeOptionLabel}
+          </DropdownMenu.RadioItem>
+        </DropdownMenu.RadioGroup>
+      )}
+      {!disableRangeOption && showCustom && (
+        <React.Fragment>
+          <DropdownMenu.Separator />
+          <div className="flex flex-col gap-2">
+            <DatePicker
+              granularity={granularity}
+              value={currentValue?.$gte ? new Date(currentValue.$gte) : null}
+              onChange={(value) => onCustomValueChange("$gte", value)}
+              maxValue={maxDate}
+            />
+            <DatePicker
+              granularity={granularity}
+              value={currentValue?.$lte ? new Date(currentValue.$lte) : null}
+              onChange={(value) => onCustomValueChange("$lte", value)}
+              minValue={minDate}
+            />
+          </div>
+        </React.Fragment>
+      )}
     </React.Fragment>
   )
 }
