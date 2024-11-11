@@ -1,3 +1,5 @@
+"use client"
+
 import { Checkbox } from "@/components/checkbox"
 import { CheckedState } from "@radix-ui/react-checkbox"
 import { CellContext, HeaderContext } from "@tanstack/react-table"
@@ -41,3 +43,4 @@ const DataTableSelectHeader = <TData,>({
 }
 
 export { DataTableSelectCell, DataTableSelectHeader }
+export type { DataTableSelectCellProps, DataTableSelectHeaderProps }

@@ -84,3 +84,4 @@ const DataTableFilterBarSkeleton = ({
 }
 
 export { DataTableFilterBar }
+export type { DataTableFilterBarProps }

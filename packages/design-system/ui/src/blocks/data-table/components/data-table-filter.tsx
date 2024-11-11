@@ -1,13 +1,14 @@
 "use client"
 
+import { XMark } from "@medusajs/icons"
 import { ColumnFilter } from "@tanstack/react-table"
 import * as React from "react"
 
 import { DropdownMenu } from "@/components/dropdown-menu"
 import { clx } from "@/utils/clx"
-import { XMark } from "@medusajs/icons"
+
 import { useDataTableContext } from "../context/use-data-table-context"
-import { DateComparisonOperator, FilterOption, FilterType } from "../types"
+import { DateComparisonOperator, FilterOption } from "../types"
 import { isDateComparisonOperator } from "../utils/is-date-comparison-operator"
 
 interface DataTableFilterProps {
@@ -44,11 +45,7 @@ const DataTableFilter = ({ filter, label }: DataTableFilterProps) => {
   const value = filter.value
 
   const displayValue = React.useMemo(() => {
-    let displayValue: string | string[] | DateComparisonOperator | null = null
-
-    if (typeof value === "string") {
-      displayValue = options?.find((o) => o.value === value)?.label ?? null
-    }
+    let displayValue: string | null = null
 
     if (Array.isArray(value)) {
       displayValue =
@@ -60,7 +57,9 @@ const DataTableFilter = ({ filter, label }: DataTableFilterProps) => {
     if (isDateComparisonOperator(value)) {
       displayValue =
         options?.find((o) => {
-          if (!isDateComparisonOperator(o.value)) return false
+          if (!isDateComparisonOperator(o.value)) {
+            return false
+          }
 
           // Compare all possible operators
           return (
@@ -145,8 +144,6 @@ const DataTableFilter = ({ filter, label }: DataTableFilterProps) => {
                   options={options as FilterOption<DateComparisonOperator>[]}
                 />
               )
-            case "text":
-              return <DataTableFilterTextContent filter={filter} />
             default:
               return null
           }
@@ -154,14 +151,6 @@ const DataTableFilter = ({ filter, label }: DataTableFilterProps) => {
       </DropdownMenu.Content>
     </DropdownMenu>
   )
-}
-
-interface DataTableFilterDropdownProps<T = string | Date> {
-  filter: ColumnFilter
-  options: FilterOption<T>[] | null
-  type: FilterType
-  open: boolean
-  onOpenChange: (open: boolean) => void
 }
 
 type DataTableFilterDateContentProps = {
@@ -210,16 +199,6 @@ const DataTableFilterDateContent = ({
       </DropdownMenu.RadioGroup>
     </React.Fragment>
   )
-}
-
-type DataTableFilterTextContentProps = {
-  filter: ColumnFilter
-}
-
-const DataTableFilterTextContent = ({
-  filter,
-}: DataTableFilterTextContentProps) => {
-  return <DropdownMenu.RadioGroup></DropdownMenu.RadioGroup>
 }
 
 type DataTableFilterSelectContentProps = {
@@ -310,3 +289,4 @@ const DataTableFilterRadioContent = ({
 }
 
 export { DataTableFilter }
+export type { DataTableFilterProps }

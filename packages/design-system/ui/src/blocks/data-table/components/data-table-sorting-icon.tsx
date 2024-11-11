@@ -1,3 +1,5 @@
+"use client"
+
 import { clx } from "@/utils/clx"
 import type { SortDirection } from "@tanstack/react-table"
 import * as React from "react"
@@ -40,3 +42,4 @@ const DataTableSortingIcon = ({ direction }: SortingIconProps) => {
 }
 
 export { DataTableSortingIcon }
+export type { SortingIconProps }

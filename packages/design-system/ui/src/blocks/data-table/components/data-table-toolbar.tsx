@@ -1,5 +1,6 @@
 import { clx } from "@/utils/clx"
 import * as React from "react"
+
 import { DataTableFilterBar } from "./data-table-filter-bar"
 
 interface DataTableToolbarTranslations {

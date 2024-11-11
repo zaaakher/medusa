@@ -1,26 +1,22 @@
+"use client"
+
 import * as React from "react"
 
 import { Table } from "@/components/table"
 import { flexRender } from "@tanstack/react-table"
+
 import { Skeleton } from "../../../components/skeleton"
 import { Text } from "../../../components/text"
 import { clx } from "../../../utils/clx"
 import { useDataTableContext } from "../context/use-data-table-context"
-import { DataTableEmptyState } from "../types"
+import {
+  DataTableEmptyState,
+  DataTableEmptyStateContent,
+  DataTableEmptyStateProps,
+} from "../types"
 import { DataTableSortingIcon } from "./data-table-sorting-icon"
 
-type EmptyStateContent = {
-  heading?: string
-  description?: string
-  custom?: React.ReactNode
-}
-
-type DataTableEmptyStateProps = {
-  filtered?: EmptyStateContent
-  empty?: EmptyStateContent
-}
-
-export interface DataTableTableProps {
+interface DataTableTableProps {
   emptyState?: DataTableEmptyStateProps
 }
 
@@ -36,7 +32,6 @@ const DataTableTable = ({ emptyState }: DataTableTableProps) => {
   const pageIndex = instance.pageIndex
 
   const columns = instance.getAllColumns()
-  const columnCount = columns.length
 
   const hasSelect = columns.find((c) => c.id === "select")
   const hasActions = columns.find((c) => c.id === "action")
@@ -265,7 +260,7 @@ interface DataTableEmptyStateDisplayProps {
 const DefaultEmptyStateContent = ({
   heading,
   description,
-}: EmptyStateContent) => (
+}: DataTableEmptyStateContent) => (
   <div className="flex size-full flex-col items-center justify-center gap-2">
     <Text size="base" weight="plus">
       {heading}
@@ -327,3 +322,4 @@ function getIsEditableElementFocused() {
 }
 
 export { DataTableTable }
+export type { DataTableEmptyStateProps, DataTableTableProps }

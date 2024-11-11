@@ -316,6 +316,12 @@
       "greaterThanLabel": "greater than {{value}}",
       "andLabel": "and"
     },
+    "sorting": {
+      "alphabeticallyAsc": "A to Z",
+      "alphabeticallyDesc": "Z to A",
+      "dateAsc": "Newest first",
+      "dateDesc": "Oldest first"
+    },
     "addFilter": "Add filter"
   },
   "errorBoundary": {
@@ -863,6 +869,16 @@
   "customerGroups": {
     "domain": "Customer Groups",
     "subtitle": "Organize customers into groups. Groups can have different promotions and prices.",
+    "list": {
+      "empty": {
+        "heading": "No customer groups",
+        "description": "There are no customer groups to display."
+      },
+      "filtered": {
+        "heading": "No results",
+        "description": "No customer groups match the current filter criteria."
+      }
+    },
     "create": {
       "header": "Create Customer Group",
       "hint": "Create a new customer group to segment your customers.",

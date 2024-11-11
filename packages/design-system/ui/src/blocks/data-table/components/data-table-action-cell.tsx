@@ -8,7 +8,7 @@ import { DropdownMenu } from "../../../components/dropdown-menu"
 import { IconButton } from "../../../components/icon-button"
 import { ActionColumnDefMeta } from "../types"
 
-type DataTableActionCellProps<TData> = {
+interface DataTableActionCellProps<TData> {
   ctx: CellContext<TData, unknown>
 }
 
@@ -72,3 +72,4 @@ const DataTableActionCell = <TData,>({
 }
 
 export { DataTableActionCell }
+export type { DataTableActionCellProps }

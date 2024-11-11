@@ -7,6 +7,8 @@ export * from "./utils/create-data-table-filter-helper"
 export type {
   DataTableCommand,
   DataTableEmptyState,
+  DataTableEmptyStateContent,
+  DataTableEmptyStateProps,
   DataTableFilter,
   DataTableFilteringState,
   DataTablePaginationState,

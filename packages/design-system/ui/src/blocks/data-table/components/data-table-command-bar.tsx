@@ -5,13 +5,11 @@ import * as React from "react"
 import { CommandBar } from "@/components/command-bar"
 import { useDataTableContext } from "../context/use-data-table-context"
 
-export interface DataTableCommandBarProps {
+interface DataTableCommandBarProps {
   selectedLabel?: ((count: number) => string) | string
 }
 
-export const DataTableCommandBar = ({
-  selectedLabel,
-}: DataTableCommandBarProps) => {
+const DataTableCommandBar = ({ selectedLabel }: DataTableCommandBarProps) => {
   const { instance } = useDataTableContext()
 
   const commands = instance.getCommands()
@@ -57,3 +55,6 @@ export const DataTableCommandBar = ({
     </CommandBar>
   )
 }
+
+export { DataTableCommandBar }
+export type { DataTableCommandBarProps }

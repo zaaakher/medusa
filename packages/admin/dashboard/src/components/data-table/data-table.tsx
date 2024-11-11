@@ -91,7 +91,7 @@ export const DataTable = <TData,>({
   const enableCommands = commands && commands.length > 0
   const enableSorting = columns.some((column) => column.enableSorting)
 
-  const filterIds = filters?.map((f) => f.id) ?? []
+  const filterIds = filters?.map((f) => getQueryParamKey(f.id, prefix)) ?? []
 
   const { offset, order, q, ...filterParams } = useQueryParams(
     [
@@ -109,9 +109,9 @@ export const DataTable = <TData,>({
     setSearch(value)
     setSearchParams((prev) => {
       if (value) {
-        prev.set("q", value)
+        prev.set(getQueryParamKey("q", prefix), value)
       } else {
-        prev.delete("q")
+        prev.delete(getQueryParamKey("q", prefix))
       }
 
       return prev
@@ -125,9 +125,12 @@ export const DataTable = <TData,>({
     setPagination(value)
     setSearchParams((prev) => {
       if (value.pageIndex === 0) {
-        prev.delete("offset")
+        prev.delete(getQueryParamKey("offset", prefix))
       } else {
-        prev.set("offset", transformPaginationState(value).toString())
+        prev.set(
+          getQueryParamKey("offset", prefix),
+          transformPaginationState(value).toString()
+        )
       }
 
       return prev
@@ -149,7 +152,7 @@ export const DataTable = <TData,>({
 
       Object.entries(value).forEach(([key, filter]) => {
         if (filterIds.includes(key) && filter.value) {
-          prev.set(key, JSON.stringify(filter.value))
+          prev.set(getQueryParamKey(key, prefix), JSON.stringify(filter.value))
         }
       })
 
@@ -166,9 +169,9 @@ export const DataTable = <TData,>({
       if (value) {
         const valueToStore = transformSortingState(value)
 
-        prev.set("order", valueToStore)
+        prev.set(getQueryParamKey("order", prefix), valueToStore)
       } else {
-        prev.delete("order")
+        prev.delete(getQueryParamKey("order", prefix))
       }
 
       return prev
@@ -288,6 +291,10 @@ function parseFilterState(
   }
 
   return filters
+}
+
+function getQueryParamKey(key: string, prefix?: string) {
+  return prefix ? `${prefix}_${key}` : key
 }
 
 const useDataTableTranslations = () => {

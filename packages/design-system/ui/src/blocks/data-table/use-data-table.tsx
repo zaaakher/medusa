@@ -251,7 +251,7 @@ const useDataTable = <TData,>({
     <T extends string | string[] | DateComparisonOperator>(id: string) => {
       const filter = getFilters().find((filter) => filter.id === id)
 
-      if (!filter || filter.type === "text") {
+      if (!filter) {
         return null
       }
 

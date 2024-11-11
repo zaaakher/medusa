@@ -1,17 +1,18 @@
 "use client"
 
+import { ArrowDownMini, ArrowUpMini, DescendingSorting } from "@medusajs/icons"
+import type { Column } from "@tanstack/react-table"
 import * as React from "react"
 
 import { DropdownMenu } from "@/components/dropdown-menu"
-import { ArrowDownMini, ArrowUpMini, DescendingSorting } from "@medusajs/icons"
-import type { Column } from "@tanstack/react-table"
+
 import { IconButton } from "../../../components/icon-button"
 import { Skeleton } from "../../../components/skeleton"
 import { Tooltip } from "../../../components/tooltip"
 import { useDataTableContext } from "../context/use-data-table-context"
 import { SortableColumnDefMeta } from "../types"
 
-export interface DataTableSortingMenuProps {
+interface DataTableSortingMenuProps {
   tooltip?: string
 }
 
@@ -149,3 +150,4 @@ const DataTableSortingMenuSkeleton = () => {
 }
 
 export { DataTableSortingMenu }
+export type { DataTableSortingMenuProps }

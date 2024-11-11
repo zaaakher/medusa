@@ -7,7 +7,7 @@ import { Skeleton } from "../../../components/skeleton"
 import { Tooltip } from "../../../components/tooltip"
 import { useDataTableContext } from "../context/use-data-table-context"
 
-export interface DataTableFilterMenuProps {
+interface DataTableFilterMenuProps {
   tooltip?: string
 }
 
@@ -56,3 +56,4 @@ const DataTableFilterMenuSkeleton = () => {
 }
 
 export { DataTableFilterMenu }
+export type { DataTableFilterMenuProps }

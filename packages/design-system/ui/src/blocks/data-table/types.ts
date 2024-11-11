@@ -10,16 +10,8 @@ import type {
   DisplayColumnDef,
   IdentifiedColumnDef,
   PaginationState,
-  RowData,
-  RowSelectionState,
+  RowSelectionState
 } from "@tanstack/react-table"
-
-export type OrderByState<TData extends RowData> = {
-  [K in keyof TData]?: {
-    label: string
-    value?: TData[K]
-  }
-}
 
 type DataTableAction<TData> = {
   label: string
@@ -103,7 +95,7 @@ export interface DataTableRowSelectionState extends RowSelectionState {}
 export interface DataTablePaginationState extends PaginationState {}
 export interface DataTableFilteringState extends Record<string, DataTableColumnFilter> {}
 
-export type FilterType = "text" | "radio" | "select" | "date"
+export type FilterType =  "radio" | "select" | "date"
 export type FilterOption<T = string> = {
   label: string
   value: T
@@ -112,10 +104,6 @@ export type FilterOption<T = string> = {
 interface BaseFilterProps {
   type: FilterType
   label: string
-}
-
-export interface TextFilterProps extends BaseFilterProps {
-  type: "text"
 }
 
 export interface RadioFilterProps extends BaseFilterProps {
@@ -134,7 +122,7 @@ export interface DateFilterProps extends BaseFilterProps {
   options: FilterOption<DateComparisonOperator>[]
 }
 
-export type DataTableFilterProps = TextFilterProps | RadioFilterProps | SelectFilterProps | DateFilterProps
+export type DataTableFilterProps = RadioFilterProps | SelectFilterProps | DateFilterProps
 
 export type DataTableFilter<T extends DataTableFilterProps = DataTableFilterProps> = T & {
   id: string
@@ -171,4 +159,15 @@ export interface DataTableCommand {
   label: string
   action: CommandAction
   shortcut: string
+}
+
+export type DataTableEmptyStateContent = {
+  heading?: string
+  description?: string
+  custom?: React.ReactNode
+}
+
+export type DataTableEmptyStateProps = {
+  filtered?: DataTableEmptyStateContent
+  empty?: DataTableEmptyStateContent
 }
