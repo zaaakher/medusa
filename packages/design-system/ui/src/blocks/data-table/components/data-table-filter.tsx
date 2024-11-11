@@ -204,7 +204,7 @@ const DataTableFilterDateContent = ({
     [instance, filter]
   )
 
-  const handleSelectCustom = React.useCallback(
+  const onSelectCustom = React.useCallback(
     (event: Event) => {
       event.preventDefault()
 
@@ -256,7 +256,7 @@ const DataTableFilterDateContent = ({
       </DropdownMenu.RadioGroup>
       {!disableRangeOption && (
         <DropdownMenu.Item
-          onSelect={handleSelectCustom}
+          onSelect={onSelectCustom}
           className="flex items-center gap-2"
         >
           <div className="flex size-[15px] items-center justify-center">
