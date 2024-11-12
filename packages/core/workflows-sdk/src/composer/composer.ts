@@ -31,7 +31,11 @@ type ComposerFunction<TData, TResult, THooks> = (
  * This is a temporary backward compatible layer in order to provide the same API as the old create workflow function.
  * In the future it wont be necessary to have the ability to pass the container to `MyWorkflow(container).run(...)` but instead directly `MyWorkflow.run({ ..., container })`
  */
-type BackwardCompatibleWorkflowRunner<TData, TResult, THooks extends any[]> = {
+export type BackwardCompatibleWorkflowRunner<
+  TData,
+  TResult,
+  THooks extends any[]
+> = {
   <TDataOverride = undefined, TResultOverride = undefined>(
     container?: MedusaContainer
   ): WorkflowRunner<
