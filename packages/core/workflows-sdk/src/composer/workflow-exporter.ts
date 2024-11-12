@@ -1,10 +1,4 @@
-import {
-  Context,
-  IEventBusModuleService,
-  LoadedModule,
-  Logger,
-  MedusaContainer,
-} from "@medusajs/types"
+import { MedusaModule } from "@medusajs/modules-sdk"
 import {
   DistributedTransactionEvents,
   DistributedTransactionType,
@@ -13,15 +7,20 @@ import {
   TransactionState,
 } from "@medusajs/orchestration"
 import {
+  Context,
+  IEventBusModuleService,
+  LoadedModule,
+  Logger,
+  MedusaContainer,
+} from "@medusajs/types"
+import {
   ContainerRegistrationKeys,
   isPresent,
   MedusaContextType,
   Modules,
 } from "@medusajs/utils"
-import { ulid } from "ulid"
 import { EOL } from "os"
-import { MedusaModule } from "@medusajs/modules-sdk"
-import { resolveValue } from "./helpers"
+import { ulid } from "ulid"
 import {
   FlowCancelOptions,
   FlowRegisterStepFailureOptions,
@@ -29,10 +28,10 @@ import {
   FlowRunOptions,
   WorkflowResult,
 } from "../helper"
+import { resolveValue } from "./helpers"
 
 export type LocalWorkflowExecutionOptions = {
   defaultResult?: string | Symbol
-  dataPreparation?: (data: any) => Promise<unknown>
   options?: {
     wrappedInput?: boolean
     sourcePath?: string
@@ -131,16 +130,23 @@ export class WorkflowExporter<TData = unknown, TResult = unknown> {
     const isCancelled =
       isCancel && transaction.getState() === TransactionState.REVERTED
 
+    const isRegisterStepFailure =
+      method === this.#executionWrapper.registerStepFailure &&
+      transaction.getState() === TransactionState.REVERTED
+
+    let thrownError = null
+
     if (
-      !isCancelled &&
       failedStatus.includes(transaction.getState()) &&
-      throwOnError
+      !isCancelled &&
+      !isRegisterStepFailure
     ) {
-      /*const errorMessage = errors
-        ?.map((err) => `${err.error?.message}${EOL}${err.error?.stack}`)
-        ?.join(`${EOL}`)*/
       const firstError = errors?.[0]?.error ?? new Error("Unknown error")
-      throw firstError
+      thrownError = firstError
+
+      if (throwOnError) {
+        throw firstError
+      }
     }
 
     let result
@@ -148,6 +154,8 @@ export class WorkflowExporter<TData = unknown, TResult = unknown> {
       result = resolveValue(resultFrom, transaction.getContext())
       if (result instanceof Promise) {
         result = await result.catch((e) => {
+          thrownError = e
+
           if (throwOnError) {
             throw e
           }
@@ -164,6 +172,7 @@ export class WorkflowExporter<TData = unknown, TResult = unknown> {
       errors,
       transaction,
       result,
+      thrownError,
     }
   }
 
@@ -264,8 +273,7 @@ export class WorkflowExporter<TData = unknown, TResult = unknown> {
       TResultOverride extends undefined ? TResult : TResultOverride
     >
   > {
-    const { defaultResult, dataPreparation } =
-      this.#localWorkflowExecutionOptions
+    const { defaultResult } = this.#localWorkflowExecutionOptions
 
     const resultFrom_ = resultFrom ?? defaultResult
     const throwOnError_ = throwOnError ?? true
@@ -280,22 +288,6 @@ export class WorkflowExporter<TData = unknown, TResult = unknown> {
     context.eventGroupId ??= ulid()
 
     let input_ = input
-    if (typeof dataPreparation === "function") {
-      try {
-        const copyInput = input ? JSON.parse(JSON.stringify(input)) : input
-        input_ = (await dataPreparation(copyInput)) as any
-      } catch (err) {
-        if (throwOnError_) {
-          throw new Error(
-            `Data preparation failed: ${err.message}${EOL}${err.stack}`
-          )
-        }
-        return {
-          errors: [err],
-        } as WorkflowResult<any>
-      }
-    }
-
     return await this.#executeAction(
       this.#executionWrapper.run,
       {
