@@ -227,20 +227,34 @@ export const DataTable = <TData,>({
         className="flex flex-col items-start justify-between gap-2 md:flex-row md:items-center"
         translations={toolbarTranslations}
       >
-        <Heading>{heading}</Heading>
-        <div className="flex w-full items-center gap-2 md:w-auto">
+        <div className="flex w-full items-center justify-between">
+          <Heading>{heading}</Heading>
+          <div className="flex items-center justify-end gap-x-2 md:hidden">
+            {enableFiltering && (
+              <Primitive.FilterMenu tooltip={t("filters.filterLabel")} />
+            )}
+            <Primitive.SortingMenu tooltip={t("filters.sortLabel")} />
+            {actionMenu && <ActionMenu variant="primary" {...actionMenu} />}
+            {action && <DataTableAction {...action} />}
+          </div>
+        </div>
+        <div className="flex w-full items-center gap-2 md:justify-end">
           {enableSearch && (
-            <Primitive.Search
-              placeholder={t("filters.searchLabel")}
-              autoFocus={autoFocusSearch}
-            />
+            <div className="w-full md:w-auto">
+              <Primitive.Search
+                placeholder={t("filters.searchLabel")}
+                autoFocus={autoFocusSearch}
+              />
+            </div>
           )}
-          {enableFiltering && (
-            <Primitive.FilterMenu tooltip={t("filters.filterLabel")} />
-          )}
-          <Primitive.SortingMenu tooltip={t("filters.sortLabel")} />
-          {actionMenu && <ActionMenu variant="primary" {...actionMenu} />}
-          {action && <DataTableAction {...action} />}
+          <div className="hidden items-center gap-x-2 md:flex">
+            {enableFiltering && (
+              <Primitive.FilterMenu tooltip={t("filters.filterLabel")} />
+            )}
+            <Primitive.SortingMenu tooltip={t("filters.sortLabel")} />
+            {actionMenu && <ActionMenu variant="primary" {...actionMenu} />}
+            {action && <DataTableAction {...action} />}
+          </div>
         </div>
       </Primitive.Toolbar>
       <Primitive.Table emptyState={emptyState} />
