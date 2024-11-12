@@ -15,67 +15,76 @@ import {
   DALUtils,
   generateEntityId,
   kebabCase,
+  model,
   Searchable,
 } from "@medusajs/framework/utils"
 import Product from "./product"
 
 const collectionHandleIndexName = "IDX_collection_handle_unique"
-const collectionHandleIndexStatement = createPsqlIndexStatementHelper({
-  name: collectionHandleIndexName,
-  tableName: "product_collection",
-  columns: ["handle"],
-  unique: true,
-  where: "deleted_at IS NULL",
-})
+// const collectionHandleIndexStatement = createPsqlIndexStatementHelper({
+//   name: collectionHandleIndexName,
+//   tableName: "product_collection",
+//   columns: ["handle"],
+//   unique: true,
+//   where: "deleted_at IS NULL",
+// })
 
-collectionHandleIndexStatement.MikroORMIndex()
-@Entity({ tableName: "product_collection" })
-@Filter(DALUtils.mikroOrmSoftDeletableFilterOptions)
+const ProductCollectionDML = model
+  .define("ProductCollection", {
+    id: model.id().primaryKey(),
+    title: model.text().searchable(),
+    handle: model.text().nullable(),
+    metadata: model.json().nullable(),
+    products: model.hasMany(() => Product),
+  })
+  .indexes([
+    {
+      name: collectionHandleIndexName,
+      on: ["handle"],
+      unique: true,
+      where: "deleted_at IS NULL",
+    },
+  ])
+
+// collectionHandleIndexStatement.MikroORMIndex()
+// @Entity({ tableName: "product_collection" })
+// @Filter(DALUtils.mikroOrmSoftDeletableFilterOptions)
 class ProductCollection {
-  @PrimaryKey({ columnType: "text" })
-  id!: string
-
-  @Searchable()
-  @Property({ columnType: "text" })
-  title: string
-
-  @Property({ columnType: "text" })
-  handle?: string
-
-  @OneToMany(() => Product, (product) => product.collection)
-  products = new Collection<Product>(this)
-
-  @Property({ columnType: "jsonb", nullable: true })
-  metadata?: Record<string, unknown> | null
-
-  @Property({
-    onCreate: () => new Date(),
-    columnType: "timestamptz",
-    defaultRaw: "now()",
-  })
-  created_at: Date
-
-  @Property({
-    onCreate: () => new Date(),
-    onUpdate: () => new Date(),
-    columnType: "timestamptz",
-    defaultRaw: "now()",
-  })
-  updated_at: Date
-
-  @Index({ name: "IDX_product_collection_deleted_at" })
-  @Property({ columnType: "timestamptz", nullable: true })
-  deleted_at?: Date
-
-  @OnInit()
-  @BeforeCreate()
-  onInit() {
-    this.id = generateEntityId(this.id, "pcol")
-
-    if (!this.handle && this.title) {
-      this.handle = kebabCase(this.title)
-    }
-  }
+  // @PrimaryKey({ columnType: "text" })
+  // id!: string
+  // @Searchable()
+  // @Property({ columnType: "text" })
+  // title: string
+  // @Property({ columnType: "text" })
+  // handle?: string
+  // @OneToMany(() => Product, (product) => product.collection)
+  // products = new Collection<Product>(this)
+  // @Property({ columnType: "jsonb", nullable: true })
+  // metadata?: Record<string, unknown> | null
+  // @Property({
+  //   onCreate: () => new Date(),
+  //   columnType: "timestamptz",
+  //   defaultRaw: "now()",
+  // })
+  // created_at: Date
+  // @Property({
+  //   onCreate: () => new Date(),
+  //   onUpdate: () => new Date(),
+  //   columnType: "timestamptz",
+  //   defaultRaw: "now()",
+  // })
+  // updated_at: Date
+  // @Index({ name: "IDX_product_collection_deleted_at" })
+  // @Property({ columnType: "timestamptz", nullable: true })
+  // deleted_at?: Date
+  // @OnInit()
+  // @BeforeCreate()
+  // onInit() {
+  //   this.id = generateEntityId(this.id, "pcol")
+  //   if (!this.handle && this.title) {
+  //     this.handle = kebabCase(this.title)
+  //   }
+  // }
 }
 
-export default ProductCollection
+export default ProductCollectionDML
