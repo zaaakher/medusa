@@ -768,26 +768,10 @@ describe("Workflow composer", function () {
         throw new Error("An error occured in step 4.")
       })
 
-      const step1 = createStep(
-        "step1",
-        mockStep1Fn as unknown as StepFunction<never, StepResponse<string>>,
-        step1CompensationFn
-      )
-      const step2 = createStep(
-        "step2",
-        mockStep2Fn as unknown as StepFunction<never, StepResponse<string>>,
-        step2CompensationFn
-      )
-      const step3 = createStep(
-        "step3",
-        mockStep3Fn as unknown as StepFunction<never, StepResponse<string>>,
-        step3CompensationFn
-      )
-      const step4 = createStep(
-        "step4",
-        mockStep4Fn as unknown as StepFunction<never, never>,
-        step4CompensationFn
-      )
+      const step1 = createStep("step1", mockStep1Fn as any, step1CompensationFn)
+      const step2 = createStep("step2", mockStep2Fn as any, step2CompensationFn)
+      const step3 = createStep("step3", mockStep3Fn as any, step3CompensationFn)
+      const step4 = createStep("step4", mockStep4Fn as any, step4CompensationFn)
 
       const workflow = createWorkflow("workflow1", function (input) {
         const [step1Res] = parallelize(step1(), step2(), step3(), step4())
@@ -839,21 +823,9 @@ describe("Workflow composer", function () {
         throw new Error("An error occured in step 4.")
       })
 
-      const step1 = createStep(
-        "step1",
-        mockStep1Fn as unknown as StepFunction<never, StepResponse<string>>,
-        step1CompensationFn
-      )
-      const step2 = createStep(
-        "step2",
-        mockStep2Fn as unknown as StepFunction<never, StepResponse<string>>,
-        step2CompensationFn
-      )
-      const step3 = createStep(
-        "step3",
-        mockStep3Fn as unknown as StepFunction<never, StepResponse<string>>,
-        step3CompensationFn
-      )
+      const step1 = createStep("step1", mockStep1Fn as any, step1CompensationFn)
+      const step2 = createStep("step2", mockStep2Fn as any, step2CompensationFn)
+      const step3 = createStep("step3", mockStep3Fn as any, step3CompensationFn)
       const step4 = createStep(
         "step4",
         mockStep4Fn as unknown as StepFunction<never, never>,
@@ -1857,21 +1829,9 @@ describe("Workflow composer", function () {
         throw new Error("An error occured in step 4.")
       })
 
-      const step1 = createStep(
-        "step1",
-        mockStep1Fn as unknown as StepFunction<never, StepResponse<string>>,
-        step1CompensationFn
-      )
-      const step2 = createStep(
-        "step2",
-        mockStep2Fn as unknown as StepFunction<never, StepResponse<string>>,
-        step2CompensationFn
-      )
-      const step3 = createStep(
-        "step3",
-        mockStep3Fn as unknown as StepFunction<never, StepResponse<string>>,
-        step3CompensationFn
-      )
+      const step1 = createStep("step1", mockStep1Fn as any, step1CompensationFn)
+      const step2 = createStep("step2", mockStep2Fn as any, step2CompensationFn)
+      const step3 = createStep("step3", mockStep3Fn as any, step3CompensationFn)
       const step4 = createStep(
         "step4",
         mockStep4Fn as unknown as StepFunction<never, never>,
@@ -1928,21 +1888,9 @@ describe("Workflow composer", function () {
         throw new Error("An error occured in step 4.")
       })
 
-      const step1 = createStep(
-        "step1",
-        mockStep1Fn as unknown as StepFunction<never, StepResponse<string>>,
-        step1CompensationFn
-      )
-      const step2 = createStep(
-        "step2",
-        mockStep2Fn as unknown as StepFunction<never, StepResponse<string>>,
-        step2CompensationFn
-      )
-      const step3 = createStep(
-        "step3",
-        mockStep3Fn as unknown as StepFunction<never, StepResponse<string>>,
-        step3CompensationFn
-      )
+      const step1 = createStep("step1", mockStep1Fn as any, step1CompensationFn)
+      const step2 = createStep("step2", mockStep2Fn as any, step2CompensationFn)
+      const step3 = createStep("step3", mockStep3Fn as any, step3CompensationFn)
       const step4 = createStep(
         "step4",
         mockStep4Fn as unknown as StepFunction<never, never>,
