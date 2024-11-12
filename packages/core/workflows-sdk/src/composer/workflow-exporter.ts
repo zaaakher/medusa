@@ -1,6 +1,7 @@
 import {
   Context,
   IEventBusModuleService,
+  LoadedModule,
   Logger,
   MedusaContainer,
 } from "@medusajs/types"
@@ -39,8 +40,8 @@ export type LocalWorkflowExecutionOptions = {
 }
 
 export class WorkflowExporter<TData = unknown, TResult = unknown> {
-  #localWorkflow: LocalWorkflow
-  #localWorkflowExecutionOptions: LocalWorkflowExecutionOptions
+  readonly #localWorkflow: LocalWorkflow
+  readonly #localWorkflowExecutionOptions: LocalWorkflowExecutionOptions
   #executionWrapper: {
     run: LocalWorkflow["run"]
     registerStepSuccess: LocalWorkflow["registerStepSuccess"]
@@ -85,18 +86,21 @@ export class WorkflowExporter<TData = unknown, TResult = unknown> {
   ) {
     const flow = this.#localWorkflow
 
-    if (!container) {
-      const container_ = flow.container as MedusaContainer
+    let container_: MedusaContainer | LoadedModule[] | undefined = container
 
-      if (!container_ || !isPresent(container_?.registrations)) {
-        container = MedusaModule.getLoadedModules().map(
+    if (!container_) {
+      if (
+        !container_ ||
+        !isPresent((flow.container as MedusaContainer)?.registrations)
+      ) {
+        container_ = MedusaModule.getLoadedModules().map(
           (mod) => Object.values(mod)[0]
         )
       }
     }
 
-    if (container) {
-      flow.container = container
+    if (container_) {
+      flow.container = container_
     }
 
     const { eventGroupId, parentStepIdempotencyKey } = context
