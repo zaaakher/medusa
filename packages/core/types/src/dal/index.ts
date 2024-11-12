@@ -23,7 +23,7 @@ export interface BaseFilterable<T> {
 /**
  * The options to apply when retrieving an item.
  */
-export interface OptionsQuery<T, P extends string = never> {
+export interface OptionsQuery<T> {
   /**
    * Relations to populate in the retrieved items.
    */
@@ -73,7 +73,7 @@ export type FindOptions<T = any> = {
   /**
    * The options to apply when retrieving the items.
    */
-  options?: OptionsQuery<InferEntityType<T>, any>
+  options?: OptionsQuery<InferEntityType<T>>
 }
 
 /**
