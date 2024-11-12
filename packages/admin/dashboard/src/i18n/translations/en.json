@@ -297,6 +297,9 @@
     }
   },
   "filters": {
+    "sortLabel": "Sort",
+    "filterLabel": "Filter",
+    "searchLabel": "Search",
     "date": {
       "today": "Today",
       "lastSevenDays": "Last 7 days",

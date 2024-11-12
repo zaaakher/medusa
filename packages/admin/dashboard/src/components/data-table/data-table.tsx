@@ -87,6 +87,8 @@ export const DataTable = <TData,>({
   pageSize = 10,
   emptyState,
 }: DataTableProps<TData>) => {
+  const { t } = useTranslation()
+
   const enableFiltering = filters && filters.length > 0
   const enableCommands = commands && commands.length > 0
   const enableSorting = columns.some((column) => column.enableSorting)
@@ -229,12 +231,14 @@ export const DataTable = <TData,>({
         <div className="flex w-full items-center gap-2 md:w-auto">
           {enableSearch && (
             <Primitive.Search
-              placeholder="Search"
+              placeholder={t("filters.searchLabel")}
               autoFocus={autoFocusSearch}
             />
           )}
-          {enableFiltering && <Primitive.FilterMenu tooltip="Filter" />}
-          <Primitive.SortingMenu tooltip="Sort" />
+          {enableFiltering && (
+            <Primitive.FilterMenu tooltip={t("filters.filterLabel")} />
+          )}
+          <Primitive.SortingMenu tooltip={t("filters.sortLabel")} />
           {actionMenu && <ActionMenu variant="primary" {...actionMenu} />}
           {action && <DataTableAction {...action} />}
         </div>

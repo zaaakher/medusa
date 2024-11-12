@@ -1216,6 +1216,15 @@
     "filters": {
       "type": "object",
       "properties": {
+        "sortLabel": {
+          "type": "string"
+        },
+        "filterLabel": {
+          "type": "string"
+        },
+        "searchLabel": {
+          "type": "string"
+        },
         "date": {
           "type": "object",
           "properties": {
@@ -1329,6 +1338,9 @@
         }
       },
       "required": [
+        "sortLabel",
+        "filterLabel",
+        "searchLabel",
         "date",
         "compare",
         "sorting",
