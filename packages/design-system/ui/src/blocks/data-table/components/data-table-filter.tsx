@@ -8,6 +8,7 @@ import { DropdownMenu } from "@/components/dropdown-menu"
 import { clx } from "@/utils/clx"
 
 import { DatePicker } from "../../../components/date-picker"
+import { Label } from "../../../components/label"
 import { useDataTableContext } from "../context/use-data-table-context"
 import { DateComparisonOperator, DateFilterProps, FilterOption } from "../types"
 import { isDateComparisonOperator } from "../utils/is-date-comparison-operator"
@@ -16,9 +17,20 @@ interface DataTableFilterProps {
   filter: ColumnFilter
 }
 
+const DEFAULT_FORMAT_DATE_VALUE = (d: Date) =>
+  d.toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  })
+const DEFAULT_RANGE_OPTION_LABEL = "Custom"
+const DEFAULT_RANGE_OPTION_START_LABEL = "Starting"
+const DEFAULT_RANGE_OPTION_END_LABEL = "Ending"
+
 const DataTableFilter = ({ filter }: DataTableFilterProps) => {
   const { instance } = useDataTableContext()
   const [open, setOpen] = React.useState(filter.value === undefined)
+  const [isCustom, setIsCustom] = React.useState(false)
 
   const onOpenChange = React.useCallback(
     (open: boolean) => {
@@ -62,12 +74,37 @@ const DataTableFilter = ({ filter }: DataTableFilterProps) => {
           }
 
           return (
+            !isCustom &&
             (value.$gte === o.value.$gte || (!value.$gte && !o.value.$gte)) &&
             (value.$lte === o.value.$lte || (!value.$lte && !o.value.$lte)) &&
             (value.$gt === o.value.$gt || (!value.$gt && !o.value.$gt)) &&
             (value.$lt === o.value.$lt || (!value.$lt && !o.value.$lt))
           )
         })?.label ?? null
+
+      if (!displayValue && isDateFilterProps(meta)) {
+        const formatDateValue = meta.formatDateValue
+          ? meta.formatDateValue
+          : DEFAULT_FORMAT_DATE_VALUE
+
+        if (value.$gte && !value.$lte) {
+          displayValue = `${
+            meta.rangeOptionStartLabel || DEFAULT_RANGE_OPTION_START_LABEL
+          } ${formatDateValue(new Date(value.$gte))}`
+        }
+
+        if (value.$lte && !value.$gte) {
+          displayValue = `${
+            meta.rangeOptionEndLabel || DEFAULT_RANGE_OPTION_END_LABEL
+          } ${formatDateValue(new Date(value.$lte))}`
+        }
+
+        if (value.$gte && value.$lte) {
+          displayValue = `${formatDateValue(
+            new Date(value.$gte)
+          )} - ${formatDateValue(new Date(value.$lte))}`
+        }
+      }
     }
 
     return displayValue
@@ -137,6 +174,7 @@ const DataTableFilter = ({ filter }: DataTableFilterProps) => {
                 <DataTableFilterDateContent
                   filter={filter}
                   options={options as FilterOption<DateComparisonOperator>[]}
+                  setIsCustom={setIsCustom}
                   {...rest}
                 />
               )
@@ -152,7 +190,15 @@ const DataTableFilter = ({ filter }: DataTableFilterProps) => {
 type DataTableFilterDateContentProps = {
   filter: ColumnFilter
   options: FilterOption<DateComparisonOperator>[]
-} & Pick<DateFilterProps, "format" | "rangeOptionLabel" | "disableRangeOption">
+  setIsCustom: (isCustom: boolean) => void
+} & Pick<
+  DateFilterProps,
+  | "format"
+  | "rangeOptionLabel"
+  | "disableRangeOption"
+  | "rangeOptionStartLabel"
+  | "rangeOptionEndLabel"
+>
 
 function getIsCustomOptionSelected(
   options: FilterOption<DateComparisonOperator>[],
@@ -171,15 +217,18 @@ function getIsCustomOptionSelected(
     return false
   }
 
-  return value.$gte || value.$lte
+  return !!value.$gte || !!value.$lte
 }
 
 const DataTableFilterDateContent = ({
   filter,
   options,
   format = "date",
-  rangeOptionLabel = "Custom",
+  rangeOptionLabel = DEFAULT_RANGE_OPTION_LABEL,
+  rangeOptionStartLabel = DEFAULT_RANGE_OPTION_START_LABEL,
+  rangeOptionEndLabel = DEFAULT_RANGE_OPTION_END_LABEL,
   disableRangeOption = false,
+  setIsCustom,
 }: DataTableFilterDateContentProps) => {
   const currentValue = filter.value as DateComparisonOperator | undefined
   const { instance } = useDataTableContext()
@@ -188,13 +237,17 @@ const DataTableFilterDateContent = ({
     getIsCustomOptionSelected(options, currentValue)
   )
 
+  React.useEffect(() => {
+    setIsCustom(showCustom)
+  }, [showCustom])
+
   const selectedValue = React.useMemo(() => {
-    if (!currentValue) {
+    if (!currentValue || showCustom) {
       return undefined
     }
 
     return JSON.stringify(currentValue)
-  }, [currentValue])
+  }, [currentValue, showCustom])
 
   const onValueChange = React.useCallback(
     (valueStr: string) => {
@@ -268,19 +321,31 @@ const DataTableFilterDateContent = ({
       {!disableRangeOption && showCustom && (
         <React.Fragment>
           <DropdownMenu.Separator />
-          <div className="flex flex-col gap-2">
-            <DatePicker
-              granularity={granularity}
-              value={currentValue?.$gte ? new Date(currentValue.$gte) : null}
-              onChange={(value) => onCustomValueChange("$gte", value)}
-              maxValue={maxDate}
-            />
-            <DatePicker
-              granularity={granularity}
-              value={currentValue?.$lte ? new Date(currentValue.$lte) : null}
-              onChange={(value) => onCustomValueChange("$lte", value)}
-              minValue={minDate}
-            />
+          <div className="flex flex-col gap-2 px-2 pb-3 pt-1">
+            <div className="flex flex-col gap-1">
+              <Label id="custom-start-date-label" size="xsmall" weight="plus">
+                {rangeOptionStartLabel}
+              </Label>
+              <DatePicker
+                aria-labelledby="custom-start-date-label"
+                granularity={granularity}
+                value={currentValue?.$gte ? new Date(currentValue.$gte) : null}
+                onChange={(value) => onCustomValueChange("$gte", value)}
+                maxValue={maxDate}
+              />
+            </div>
+            <div className="flex flex-col gap-1">
+              <Label id="custom-end-date-label" size="xsmall" weight="plus">
+                {rangeOptionEndLabel}
+              </Label>
+              <DatePicker
+                aria-labelledby="custom-end-date-label"
+                granularity={granularity}
+                value={currentValue?.$lte ? new Date(currentValue.$lte) : null}
+                onChange={(value) => onCustomValueChange("$lte", value)}
+                minValue={minDate}
+              />
+            </div>
           </div>
         </React.Fragment>
       )}
@@ -373,6 +438,14 @@ const DataTableFilterRadioContent = ({
       })}
     </DropdownMenu.RadioGroup>
   )
+}
+
+function isDateFilterProps(props?: unknown | null): props is DateFilterProps {
+  if (!props) {
+    return false
+  }
+
+  return (props as DateFilterProps).type === "date"
 }
 
 export { DataTableFilter }

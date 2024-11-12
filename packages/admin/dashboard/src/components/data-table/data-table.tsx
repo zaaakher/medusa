@@ -91,7 +91,8 @@ export const DataTable = <TData,>({
   const enableCommands = commands && commands.length > 0
   const enableSorting = columns.some((column) => column.enableSorting)
 
-  const filterIds = filters?.map((f) => getQueryParamKey(f.id, prefix)) ?? []
+  const filterIds = filters?.map((f) => f.id) ?? []
+  const prefixedFilterIds = filterIds.map((id) => getQueryParamKey(id, prefix))
 
   const { offset, order, q, ...filterParams } = useQueryParams(
     [
@@ -145,13 +146,16 @@ export const DataTable = <TData,>({
 
     setSearchParams((prev) => {
       Array.from(prev.keys()).forEach((key) => {
-        if (filterIds.includes(key) && !(key in value)) {
+        if (prefixedFilterIds.includes(key) && !(key in value)) {
           prev.delete(key)
         }
       })
 
       Object.entries(value).forEach(([key, filter]) => {
-        if (filterIds.includes(key) && filter.value) {
+        if (
+          prefixedFilterIds.includes(getQueryParamKey(key, prefix)) &&
+          filter.value
+        ) {
           prev.set(getQueryParamKey(key, prefix), JSON.stringify(filter.value))
         }
       })

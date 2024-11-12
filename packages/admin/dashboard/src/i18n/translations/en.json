@@ -305,7 +305,9 @@
       "lastTwelveMonths": "Last 12 months",
       "custom": "Custom",
       "from": "From",
-      "to": "To"
+      "to": "To",
+      "starting": "Starting",
+      "ending": "Ending"
     },
     "compare": {
       "lessThan": "Less than",

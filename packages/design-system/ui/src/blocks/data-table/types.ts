@@ -124,7 +124,10 @@ export interface DateFilterProps extends BaseFilterProps {
    */
   format?: "date" | "date-time"
   rangeOptionLabel?: string
+  rangeOptionStartLabel?: string
+  rangeOptionEndLabel?: string
   disableRangeOption?: boolean
+  formatDateValue?: (value: Date) => string
   options: FilterOption<DateComparisonOperator>[]
 }
 

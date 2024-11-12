@@ -215,6 +215,7 @@ const useDateFilterOptions = () => {
 
 const useFilters = () => {
   const { t } = useTranslation()
+  const { getFullDate } = useDate()
   const dateFilterOptions = useDateFilterOptions()
 
   return useMemo(() => {
@@ -223,14 +224,22 @@ const useFilters = () => {
         type: "date",
         label: t("fields.createdAt"),
         format: "date",
+        formatDateValue: (date) => getFullDate({ date }),
+        rangeOptionStartLabel: t("filters.date.starting"),
+        rangeOptionEndLabel: t("filters.date.ending"),
+        rangeOptionLabel: t("filters.date.custom"),
         options: dateFilterOptions,
       }),
       filterHelper.accessor("updated_at", {
         type: "date",
         label: t("fields.updatedAt"),
         format: "date",
+        rangeOptionStartLabel: t("filters.date.starting"),
+        rangeOptionEndLabel: t("filters.date.ending"),
+        rangeOptionLabel: t("filters.date.custom"),
+        formatDateValue: (date) => getFullDate({ date }),
         options: dateFilterOptions,
       }),
     ]
-  }, [t, dateFilterOptions])
+  }, [t, dateFilterOptions, getFullDate])
 }

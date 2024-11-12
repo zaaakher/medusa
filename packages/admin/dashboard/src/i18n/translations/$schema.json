@@ -1242,6 +1242,12 @@
             },
             "to": {
               "type": "string"
+            },
+            "starting": {
+              "type": "string"
+            },
+            "ending": {
+              "type": "string"
             }
           },
           "required": [
@@ -1252,7 +1258,9 @@
             "lastTwelveMonths",
             "custom",
             "from",
-            "to"
+            "to",
+            "starting",
+            "ending"
           ],
           "additionalProperties": false
         },
