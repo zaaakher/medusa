@@ -140,7 +140,9 @@ export type InferForeignKeys<Schema extends DMLSchema> = {
       : never
     : never]: Schema[K] extends { type: infer Type }
     ? Type extends RelationshipTypes
-      ? string
+      ? Schema[K]["$dataType"] extends IDmlEntity<any, any> | null
+        ? true
+        : false
       : never
     : never
 }

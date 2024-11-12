@@ -355,12 +355,14 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
   async create(
     data: ProductTypes.CreateProductCategoryDTO[],
     context: Context = {}
-  ): Promise<ProductCategory[]> {
+  ): Promise<InferEntityType<typeof ProductCategory>[]> {
     const manager = super.getActiveManager<SqlEntityManager>(context)
 
     const categories = await Promise.all(
       data.map(async (entry, i) => {
-        const categoryData: Partial<ProductCategory> = { ...entry }
+        const categoryData: Partial<InferEntityType<typeof ProductCategory>> = {
+          ...entry,
+        }
         const siblingsCount = await manager.count(ProductCategory.name, {
           parent_category_id: categoryData?.parent_category_id || null,
         })
@@ -381,7 +383,7 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
 
         if (parentCategoryId) {
           const parentCategory = await manager.findOne(
-            ProductCategory,
+            ProductCategory.name,
             parentCategoryId
           )
 
@@ -450,7 +452,7 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
             categoryData.mpath = ""
           } else {
             const newParentCategory = await manager.findOne(
-              ProductCategory,
+              ProductCategory.name,
               categoryData.parent_category_id
             )
             if (!newParentCategory) {
@@ -566,7 +568,7 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
 
     if (originalSibling.rank < updatedSibling.rank) {
       const siblings = await manager.find(
-        ProductCategory,
+        ProductCategory.name,
         {
           parent_category_id: originalSibling.parent_category_id,
           rank: { $gt: originalSibling.rank, $lte: updatedSibling.rank },
@@ -582,7 +584,7 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
       manager.persist(updatedSiblings)
     } else {
       const siblings = await manager.find(
-        ProductCategory,
+        ProductCategory.name,
         {
           parent_category_id: originalSibling.parent_category_id,
           rank: { $gte: updatedSibling.rank, $lt: originalSibling.rank },
