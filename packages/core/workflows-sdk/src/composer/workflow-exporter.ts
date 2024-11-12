@@ -13,13 +13,6 @@ import {
   TransactionState,
 } from "@medusajs/orchestration"
 import {
-  FlowCancelOptions,
-  FlowRegisterStepFailureOptions,
-  FlowRegisterStepSuccessOptions,
-  FlowRunOptions,
-  WorkflowResult,
-} from "../helper"
-import {
   ContainerRegistrationKeys,
   isPresent,
   MedusaContextType,
@@ -27,8 +20,15 @@ import {
 } from "@medusajs/utils"
 import { ulid } from "ulid"
 import { EOL } from "os"
-import { resolveValue } from "../utils/composer"
 import { MedusaModule } from "@medusajs/modules-sdk"
+import { resolveValue } from "./helpers"
+import {
+  FlowCancelOptions,
+  FlowRegisterStepFailureOptions,
+  FlowRegisterStepSuccessOptions,
+  FlowRunOptions,
+  WorkflowResult,
+} from "../helper"
 
 export type LocalWorkflowExecutionOptions = {
   defaultResult?: string | Symbol

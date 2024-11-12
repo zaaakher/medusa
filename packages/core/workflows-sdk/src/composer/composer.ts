@@ -7,16 +7,6 @@ import {
   isString,
   OrchestrationUtils,
 } from "@medusajs/utils"
-import {
-  createStep,
-  CreateWorkflowComposerContext,
-  ReturnWorkflow,
-  StepFunction,
-  StepResponse,
-  WorkflowData,
-  WorkflowResponse,
-} from "../utils/composer"
-import { proxify } from "../utils/composer/helpers/proxy"
 import { ExportedWorkflow } from "../helper"
 import { ulid } from "ulid"
 import {
@@ -24,6 +14,13 @@ import {
   WorkflowExporter,
 } from "./workflow-exporter"
 import { MedusaContainer } from "@medusajs/types"
+import {
+  CreateWorkflowComposerContext,
+  ReturnWorkflow,
+  StepFunction,
+  WorkflowData,
+} from "./type"
+import { createStep, proxify, StepResponse, WorkflowResponse } from "./helpers"
 
 type WorkflowComposerConfig = { name: string } & TransactionModelOptions
 type ComposerFunction<TData, TResult, THooks> = (
@@ -34,8 +31,14 @@ type ComposerFunction<TData, TResult, THooks> = (
  * This is a temporary backward compatible layer in order to provide the same API as the old create workflow function.
  * In the future it wont be necessary to have the ability to pass the container to `MyWorkflow(container).run(...)` but instead directly `MyWorkflow.run({ ..., container })`
  */
-type BackawrdCompatibleWorkflowRunner<TData, TResult, THooks extends any[]> = {
-  (container?: MedusaContainer): WorkflowRunner<TData, TResult, THooks>
+type BackwardCompatibleWorkflowRunner<TData, TResult, THooks extends any[]> = {
+  <TDataOverride = undefined, TResultOverride = undefined>(
+    container?: MedusaContainer
+  ): WorkflowRunner<
+    TDataOverride extends undefined ? TData : TDataOverride,
+    TResultOverride extends undefined ? TResult : TResultOverride,
+    THooks
+  >
   run: WorkflowRunner<TData, TResult, THooks>["run"]
   runAsStep: WorkflowRunner<TData, TResult, THooks>["runAsStep"]
   getName: WorkflowRunner<TData, TResult, THooks>["getName"]
@@ -220,7 +223,7 @@ export class Composer {
     return this.#context
   }
 
-  get workflowRunner(): BackawrdCompatibleWorkflowRunner<any, any, any> {
+  get workflowRunner(): BackwardCompatibleWorkflowRunner<any, any, any> {
     // TODO: Once we are ready to get read of the backward compatibility layer we can remove this and return directly the runner such as `return this.#workflowRunner`
     const runner = (container?: MedusaContainer) => {
       if (container) {
@@ -330,7 +333,7 @@ export class Composer {
   static createWorkflow<TData, TResult, THooks extends any[]>(
     config: WorkflowComposerConfig,
     composerFunction: ComposerFunction<TData, TResult, THooks>
-  ): BackawrdCompatibleWorkflowRunner<TData, TResult, THooks>
+  ): BackwardCompatibleWorkflowRunner<TData, TResult, THooks>
 
   /**
    * Create a new workflow and execute the composer function to prepare the workflow
@@ -342,7 +345,7 @@ export class Composer {
   static createWorkflow<TData, TResult, THooks extends any[]>(
     config: string,
     composerFunction: ComposerFunction<TData, TResult, THooks>
-  ): BackawrdCompatibleWorkflowRunner<TData, TResult, THooks>
+  ): BackwardCompatibleWorkflowRunner<TData, TResult, THooks>
 
   /**
    * Create a new workflow and execute the composer function to prepare the workflow
@@ -355,7 +358,7 @@ export class Composer {
   static createWorkflow<TData, TResult, THooks extends any[]>(
     nameOrConfig: string | WorkflowComposerConfig,
     composerFunction: ComposerFunction<TData, TResult, THooks>
-  ): BackawrdCompatibleWorkflowRunner<TData, TResult, THooks> {
+  ): BackwardCompatibleWorkflowRunner<TData, TResult, THooks> {
     const name = isString(nameOrConfig) ? nameOrConfig : nameOrConfig.name
     const options = isString(nameOrConfig) ? {} : nameOrConfig
 
@@ -366,7 +369,7 @@ export class Composer {
 export const createWorkflow = function <TData, TResult, THooks extends any[]>(
   nameOrConfig: string | WorkflowComposerConfig,
   composerFunction: ComposerFunction<TData, TResult, THooks>
-): BackawrdCompatibleWorkflowRunner<TData, TResult, THooks> {
+): BackwardCompatibleWorkflowRunner<TData, TResult, THooks> {
   const name = isString(nameOrConfig) ? nameOrConfig : nameOrConfig.name
   const options = isString(nameOrConfig) ? {} : nameOrConfig
 
