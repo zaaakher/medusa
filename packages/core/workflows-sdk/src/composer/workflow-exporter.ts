@@ -267,9 +267,9 @@ export class WorkflowExporter<TData = unknown, TResult = unknown> {
     const { defaultResult, dataPreparation } =
       this.#localWorkflowExecutionOptions
 
-    resultFrom ??= defaultResult
-    throwOnError ??= true
-    logOnError ??= false
+    const resultFrom_ = resultFrom ?? defaultResult
+    const throwOnError_ = throwOnError ?? true
+    const logOnError_ = logOnError ?? false
 
     const context = {
       ...outerContext,
@@ -279,12 +279,13 @@ export class WorkflowExporter<TData = unknown, TResult = unknown> {
     context.transactionId ??= ulid()
     context.eventGroupId ??= ulid()
 
+    let input_ = input
     if (typeof dataPreparation === "function") {
       try {
         const copyInput = input ? JSON.parse(JSON.stringify(input)) : input
-        input = (await dataPreparation(copyInput)) as any
+        input_ = (await dataPreparation(copyInput)) as any
       } catch (err) {
-        if (throwOnError) {
+        if (throwOnError_) {
           throw new Error(
             `Data preparation failed: ${err.message}${EOL}${err.stack}`
           )
@@ -298,13 +299,13 @@ export class WorkflowExporter<TData = unknown, TResult = unknown> {
     return await this.#executeAction(
       this.#executionWrapper.run,
       {
-        throwOnError,
-        resultFrom,
-        logOnError,
+        throwOnError: throwOnError_,
+        resultFrom: resultFrom_,
+        logOnError: logOnError_,
         container,
       },
       context.transactionId,
-      input,
+      input_,
       context,
       events
     )
@@ -326,12 +327,12 @@ export class WorkflowExporter<TData = unknown, TResult = unknown> {
   ) {
     const { defaultResult } = this.#localWorkflowExecutionOptions
 
-    idempotencyKey ??= ""
-    resultFrom ??= defaultResult
-    throwOnError ??= true
-    logOnError ??= false
+    const idempotencyKey_ = idempotencyKey ?? ""
+    const resultFrom_ = resultFrom ?? defaultResult
+    const throwOnError_ = throwOnError ?? true
+    const logOnError_ = logOnError ?? false
 
-    const [, transactionId] = idempotencyKey.split(":")
+    const [, transactionId] = idempotencyKey_.split(":")
     const context = {
       ...outerContext,
       transactionId,
@@ -343,12 +344,12 @@ export class WorkflowExporter<TData = unknown, TResult = unknown> {
     return await this.#executeAction(
       this.#executionWrapper.registerStepSuccess,
       {
-        throwOnError,
-        resultFrom,
-        logOnError,
+        throwOnError: throwOnError_,
+        resultFrom: resultFrom_,
+        logOnError: logOnError_,
         container,
       },
-      idempotencyKey,
+      idempotencyKey_,
       response,
       context,
       events
@@ -371,12 +372,12 @@ export class WorkflowExporter<TData = unknown, TResult = unknown> {
   ) {
     const { defaultResult } = this.#localWorkflowExecutionOptions
 
-    idempotencyKey ??= ""
-    resultFrom ??= defaultResult
-    throwOnError ??= true
-    logOnError ??= false
+    const idempotencyKey_ = idempotencyKey ?? ""
+    const resultFrom_ = resultFrom ?? defaultResult
+    const throwOnError_ = throwOnError ?? true
+    const logOnError_ = logOnError ?? false
 
-    const [, transactionId] = idempotencyKey.split(":")
+    const [, transactionId] = idempotencyKey_.split(":")
     const context = {
       ...outerContext,
       transactionId,
@@ -388,9 +389,9 @@ export class WorkflowExporter<TData = unknown, TResult = unknown> {
     return await this.#executeAction(
       this.#executionWrapper.registerStepFailure,
       {
-        throwOnError,
-        resultFrom,
-        logOnError,
+        throwOnError: throwOnError_,
+        resultFrom: resultFrom_,
+        logOnError: logOnError_,
         container,
       },
       idempotencyKey,
@@ -409,8 +410,8 @@ export class WorkflowExporter<TData = unknown, TResult = unknown> {
     events,
     container,
   }: FlowCancelOptions = {}) {
-    throwOnError ??= true
-    logOnError ??= false
+    const throwOnError_ = throwOnError ?? true
+    const logOnError_ = logOnError ?? false
 
     const context = {
       ...outerContext,
@@ -423,10 +424,10 @@ export class WorkflowExporter<TData = unknown, TResult = unknown> {
     return await this.#executeAction(
       this.#executionWrapper.cancel,
       {
-        throwOnError,
+        throwOnError: throwOnError_,
         resultFrom: undefined,
         isCancel: true,
-        logOnError,
+        logOnError: logOnError_,
         container,
       },
       transaction ?? transactionId!,

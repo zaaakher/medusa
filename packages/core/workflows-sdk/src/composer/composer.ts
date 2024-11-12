@@ -8,14 +8,16 @@ import {
   OrchestrationUtils,
 } from "@medusajs/utils"
 import {
+  createStep,
   CreateWorkflowComposerContext,
   ReturnWorkflow,
   StepFunction,
+  StepResponse,
   WorkflowData,
-} from "../utils/composer/type"
+  WorkflowResponse,
+} from "../utils/composer"
 import { proxify } from "../utils/composer/helpers/proxy"
 import { ExportedWorkflow } from "../helper"
-import { createStep, StepResponse, WorkflowResponse } from "../utils/composer"
 import { ulid } from "ulid"
 import {
   LocalWorkflowExecutionOptions,
@@ -127,7 +129,7 @@ export class WorkflowRunner<TData, TResult, THooks extends any[]> {
 
         return
       },
-      async (transaction, { container }) => {
+      async (transaction) => {
         if (!transaction) {
           return
         }
@@ -219,7 +221,7 @@ export class Composer {
   }
 
   get workflowRunner(): BackawrdCompatibleWorkflowRunner<any, any, any> {
-    // TODO: Once we are read
+    // TODO: Once we are ready to get read of the backward compatibility layer we can remove this and return directly the runner such as `return this.#workflowRunner`
     const runner = (container?: MedusaContainer) => {
       if (container) {
         this.#workflowRunner.container = container
