@@ -6,12 +6,7 @@ import {
   ProductTypes,
 } from "@medusajs/framework/types"
 import { DALUtils, isDefined, MedusaError } from "@medusajs/framework/utils"
-import {
-  FilterQuery as MikroFilterQuery,
-  FindOptions,
-  FindOptions as MikroOptions,
-  LoadStrategy,
-} from "@mikro-orm/core"
+import { FindOptions, LoadStrategy } from "@mikro-orm/core"
 import { SqlEntityManager } from "@mikro-orm/postgresql"
 import { ProductCategory } from "@models"
 import { UpdateCategoryInput } from "@types"
@@ -82,7 +77,7 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
       ProductCategory.name,
       findOptions_.where,
       { ...findOptions_.options } as any // TODO
-    )) as InferEntityType<typeof ProductCategory>[]
+    )) as unknown as InferEntityType<typeof ProductCategory>[]
 
     if (
       !transformOptions.includeDescendantsTree &&
@@ -175,7 +170,7 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
 
     delete where.id
     delete where.mpath
-    delete where["parent_category_id"] // TODO: Dml should include foreign keys
+    delete where.parent_category_id
 
     const categoriesInTree = await this.serialize<
       InferEntityType<typeof ProductCategory>[]
@@ -194,7 +189,7 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
 
     const populateChildren = (category, level = 0) => {
       const categories = categoriesInTree.filter(
-        (child) => child['parent_category_id'] === category.id // TODO: Dml should include foreign keys
+        (child) => child.parent_category_id === category.id
       )
 
       if (include.descendants) {
@@ -240,9 +235,9 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
 
     const [productCategories, count] = (await manager.findAndCount(
       ProductCategory.name,
-      findOptions_.where as MikroFilterQuery<ProductCategory>,
-      findOptions_.options as MikroOptions<ProductCategory>
-    )) as [InferEntityType<typeof ProductCategory>[], number]
+      findOptions_.where,
+      findOptions_.options as any
+    )) as unknown as [InferEntityType<typeof ProductCategory>[], number]
 
     if (
       !transformOptions.includeDescendantsTree &&
