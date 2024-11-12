@@ -47,12 +47,6 @@ const DataTableSortingMenu = ({ tooltip }: DataTableSortingMenuProps) => {
   )
 
   if (!sortableColumns.length) {
-    if (process.env.NODE_ENV === "development") {
-      console.warn(
-        "No sortable columns found. If you intended to sort the table, you need to set the `enableSorting` option to `true` on at least one column."
-      )
-    }
-
     return null
   }
 

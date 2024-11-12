@@ -149,9 +149,9 @@ const useDataTable = <TData,>({
   ...options
 }: DataTableOptions<TData>): UseDataTableReturn<TData> => {
   const { state: sortingState, onSortingChange } = sorting ?? {}
-  const { state: rowSelectionState, onRowSelectionChange } = rowSelection ?? {}
   const { state: filteringState, onFilteringChange } = filtering ?? {}
   const { state: paginationState, onPaginationChange } = pagination ?? {}
+  const { state: rowSelectionState, onRowSelectionChange } = rowSelection ?? {}
 
   const autoResetPageIndexHandler = React.useCallback(() => {
     return autoResetPageIndex
@@ -207,7 +207,7 @@ const useDataTable = <TData,>({
     ...options,
     getCoreRowModel: getCoreRowModel(),
     state: {
-      rowSelection: rowSelectionState,
+      rowSelection: rowSelectionState ?? {},
       sorting: sortingState ? [sortingState] : undefined,
       columnFilters: Object.values(filteringState ?? {}),
       pagination: paginationState,

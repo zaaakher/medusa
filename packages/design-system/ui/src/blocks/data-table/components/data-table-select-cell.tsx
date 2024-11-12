@@ -39,7 +39,13 @@ const DataTableSelectHeader = <TData,>({
     ctx.table.toggleAllPageRowsSelected(!!checked)
   }
 
-  return <Checkbox checked={checked} onCheckedChange={onChange} />
+  return (
+    <Checkbox
+      onClick={(e) => e.stopPropagation()}
+      checked={checked}
+      onCheckedChange={onChange}
+    />
+  )
 }
 
 export { DataTableSelectCell, DataTableSelectHeader }

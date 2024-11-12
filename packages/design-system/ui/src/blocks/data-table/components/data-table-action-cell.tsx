@@ -21,11 +21,6 @@ const DataTableActionCell = <TData,>({
   const actions = meta?.___actions
 
   if (!actions) {
-    if (process.env.NODE_ENV === "development") {
-      console.warn(
-        "DataTableActionCell: No actions found for column. Ensure the column is defined with the `action` helper."
-      )
-    }
     return null
   }
 
@@ -46,7 +41,10 @@ const DataTableActionCell = <TData,>({
               {actionOrGroup.map((action) => (
                 <DropdownMenu.Item
                   key={action.label}
-                  onClick={() => action.onClick(ctx)}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    action.onClick(ctx)
+                  }}
                   className="[&>svg]:text-ui-fg-subtle flex items-center gap-2"
                 >
                   {action.icon}
@@ -58,7 +56,10 @@ const DataTableActionCell = <TData,>({
           ) : (
             <DropdownMenu.Item
               key={actionOrGroup.label}
-              onClick={() => actionOrGroup.onClick(ctx)}
+              onClick={(e) => {
+                e.stopPropagation()
+                actionOrGroup.onClick(ctx)
+              }}
               className="[&>svg]:text-ui-fg-subtle flex items-center gap-2"
             >
               {actionOrGroup.icon}

@@ -4,15 +4,20 @@ import {
   Container,
   createDataTableColumnHelper,
   createDataTableFilterHelper,
+  toast,
+  usePrompt,
 } from "@medusajs/ui"
 import { keepPreviousData } from "@tanstack/react-query"
 import { ColumnDef } from "@tanstack/react-table"
-import { useMemo } from "react"
+import { useCallback, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 
 import { DataTable } from "../../../../../components/data-table"
-import { useCustomerGroups } from "../../../../../hooks/api"
+import {
+  useCustomerGroups,
+  useDeleteCustomerGroupLazy,
+} from "../../../../../hooks/api"
 import { useDate } from "../../../../../hooks/use-date"
 import { useQueryParams } from "../../../../../hooks/use-query-params"
 
@@ -83,8 +88,43 @@ const columnHelper = createDataTableColumnHelper<HttpTypes.AdminCustomerGroup>()
 
 const useColumns = () => {
   const { t } = useTranslation()
-  const navigate = useNavigate()
   const { getFullDate } = useDate()
+  const navigate = useNavigate()
+  const prompt = usePrompt()
+
+  const { mutateAsync: deleteCustomerGroup } = useDeleteCustomerGroupLazy()
+
+  const handleDeleteCustomerGroup = useCallback(
+    async ({ id, name }: { id: string; name: string }) => {
+      const res = await prompt({
+        title: t("customerGroups.delete.title"),
+        description: t("customerGroups.delete.description", {
+          name,
+        }),
+        verificationText: name,
+        verificationInstruction: t("general.typeToConfirm"),
+        confirmText: t("actions.delete"),
+        cancelText: t("actions.cancel"),
+      })
+
+      if (!res) {
+        return
+      }
+
+      await deleteCustomerGroup(
+        { id },
+        {
+          onSuccess: () => {
+            toast.success(t("customerGroups.delete.successToast", { name }))
+          },
+          onError: (e) => {
+            toast.error(e.message)
+          },
+        }
+      )
+    },
+    [t, prompt, deleteCustomerGroup]
+  )
 
   return useMemo(() => {
     return [
@@ -148,14 +188,17 @@ const useColumns = () => {
               icon: <Trash />,
               label: t("actions.delete"),
               onClick: (row) => {
-                navigate(`/customer-groups/${row.row.original.id}`)
+                handleDeleteCustomerGroup({
+                  id: row.row.original.id,
+                  name: row.row.original.name ?? "",
+                })
               },
             },
           ],
         ],
       }),
     ] as ColumnDef<HttpTypes.AdminCustomerGroup>[]
-  }, [t, navigate, getFullDate])
+  }, [t, navigate, getFullDate, handleDeleteCustomerGroup])
 }
 
 const filterHelper = createDataTableFilterHelper<HttpTypes.AdminCustomerGroup>()
