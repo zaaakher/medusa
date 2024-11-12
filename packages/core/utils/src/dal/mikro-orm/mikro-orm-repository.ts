@@ -3,6 +3,7 @@ import {
   Context,
   DAL,
   FilterQuery,
+  InferEntityType,
   FilterQuery as InternalFilterQuery,
   PerformedActions,
   RepositoryService,
@@ -36,8 +37,9 @@ import {
 import { dbErrorMapper } from "./db-error-mapper"
 import { mikroOrmSerializer } from "./mikro-orm-serializer"
 import { mikroOrmUpdateDeletedAtRecursively } from "./utils"
+import { DmlEntity, toMikroORMEntity } from "../../dml"
 
-export class MikroOrmBase<T = any> {
+export class MikroOrmBase {
   readonly manager_: any
 
   protected constructor({ manager }) {
@@ -91,9 +93,11 @@ export class MikroOrmBase<T = any> {
  */
 
 export class MikroOrmBaseRepository<T extends object = object>
-  extends MikroOrmBase<T>
+  extends MikroOrmBase
   implements RepositoryService<T>
 {
+  entity: EntityClass<InferEntityType<T>>
+
   constructor(...args: any[]) {
     // @ts-ignore
     super(...arguments)
@@ -245,13 +249,13 @@ export class MikroOrmBaseRepository<T extends object = object>
 
     findOptions.where = {
       $and: [findOptions.where, { $or: retrieveConstraintsToApply(q) }],
-    } as unknown as DAL.FilterQuery<T & { q?: string }>
+    } as unknown as DAL.FindOptions<T & { q?: string }>["where"]
   }
 }
 
 export class MikroOrmBaseTreeRepository<
   T extends object = object
-> extends MikroOrmBase<T> {
+> extends MikroOrmBase {
   constructor() {
     // @ts-ignore
     super(...arguments)
@@ -286,12 +290,18 @@ export class MikroOrmBaseTreeRepository<
   }
 }
 
-export function mikroOrmBaseRepositoryFactory<T extends object = object>(
-  entity: any
+export function mikroOrmBaseRepositoryFactory<T extends object>(
+  entity: T
 ): {
   new ({ manager }: { manager: any }): MikroOrmBaseRepository<T>
 } {
+  const mikroOrmEntity = (
+    DmlEntity.isDmlEntity(entity) ? toMikroORMEntity(entity) : entity
+  ) as EntityClass<InferEntityType<T>>
+
   class MikroOrmAbstractBaseRepository_ extends MikroOrmBaseRepository<T> {
+    entity = mikroOrmEntity
+
     // @ts-ignore
     constructor(...args: any[]) {
       // @ts-ignore
@@ -315,7 +325,10 @@ export function mikroOrmBaseRepositoryFactory<T extends object = object>(
       })
     }
 
-    async create(data: any[], context?: Context): Promise<T[]> {
+    async create(
+      data: any[],
+      context?: Context
+    ): Promise<InferEntityType<T>[]> {
       const manager = this.getActiveManager<EntityManager>(context)
 
       const entities = data.map((data_) => {
@@ -327,7 +340,7 @@ export function mikroOrmBaseRepositoryFactory<T extends object = object>(
 
       manager.persist(entities)
 
-      return entities
+      return entities as InferEntityType<T>[]
     }
 
     /**
@@ -350,7 +363,7 @@ export function mikroOrmBaseRepositoryFactory<T extends object = object>(
       const relations = manager
         .getDriver()
         .getMetadata()
-        .get(entity.name).relations
+        .get(this.entity.name).relations
 
       // In case an empty array is provided for a collection relation of type m:n, this relation needs to be init in order to be
       // able to perform an application cascade action.
@@ -477,8 +490,9 @@ export function mikroOrmBaseRepositoryFactory<T extends object = object>(
     async upsert(data: any[], context: Context = {}): Promise<T[]> {
       const manager = this.getActiveManager<EntityManager>(context)
 
-      const primaryKeys =
-        MikroOrmAbstractBaseRepository_.retrievePrimaryKeys(entity)
+      const primaryKeys = MikroOrmAbstractBaseRepository_.retrievePrimaryKeys(
+        this.entity
+      )
 
       let primaryKeysCriteria: { [key: string]: any }[] = []
       if (primaryKeys.length === 1) {
@@ -542,7 +556,7 @@ export function mikroOrmBaseRepositoryFactory<T extends object = object>(
           const updatedType = manager.assign(existingEntity, data_)
           updatedEntities.push(updatedType)
         } else {
-          const newEntity = manager.create<T>(entity, data_)
+          const newEntity = manager.create<T>(this.entity, data_)
           createdEntities.push(newEntity)
         }
       })
@@ -593,7 +607,7 @@ export function mikroOrmBaseRepositoryFactory<T extends object = object>(
       const allRelations = manager
         .getDriver()
         .getMetadata()
-        .get(entity.name).relations
+        .get(this.entity.name).relations
 
       const nonexistentRelations = arrayDifference(
         (config.relations as any) ?? [],
@@ -624,7 +638,11 @@ export function mikroOrmBaseRepositoryFactory<T extends object = object>(
           )
         })
 
-        const mainEntity = this.getEntityWithId(manager, entity.name, entryCopy)
+        const mainEntity = this.getEntityWithId(
+          manager,
+          this.entity.name,
+          entryCopy
+        )
         reconstructedResponse.push({ ...mainEntity, ...reconstructedEntry })
         originalDataMap.set(mainEntity.id, entry)
 
@@ -634,7 +652,7 @@ export function mikroOrmBaseRepositoryFactory<T extends object = object>(
       let {
         orderedEntities: upsertedTopLevelEntities,
         performedActions: performedActions_,
-      } = await this.upsertMany_(manager, entity.name, toUpsert)
+      } = await this.upsertMany_(manager, this.entity.name, toUpsert)
 
       this.mergePerformedActions(performedActions, performedActions_)
 
@@ -999,8 +1017,9 @@ export function mikroOrmBaseRepositoryFactory<T extends object = object>(
         | (FilterQuery<T> & BaseFilterable<FilterQuery<T>>)
         | (FilterQuery<T> & BaseFilterable<FilterQuery<T>>)[]
     ) {
-      const primaryKeys =
-        MikroOrmAbstractBaseRepository_.retrievePrimaryKeys(entity)
+      const primaryKeys = MikroOrmAbstractBaseRepository_.retrievePrimaryKeys(
+        this.entity
+      )
 
       const filterArray = Array.isArray(filters) ? filters : [filters]
       const normalizedFilters: FilterQuery = {
