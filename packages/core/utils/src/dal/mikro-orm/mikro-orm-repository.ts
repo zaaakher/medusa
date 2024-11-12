@@ -270,7 +270,7 @@ export class MikroOrmBaseRepository<const T extends object>
 }
 
 export class MikroOrmBaseTreeRepository<
-  T extends object = object
+  const T extends object = object
 > extends MikroOrmBase {
   constructor() {
     // @ts-ignore
@@ -281,7 +281,7 @@ export class MikroOrmBaseTreeRepository<
     options?: DAL.FindOptions,
     transformOptions?: RepositoryTransformOptions,
     context?: Context
-  ): Promise<T[]> {
+  ): Promise<InferRepositoryReturnType<T>[]> {
     throw new Error("Method not implemented.")
   }
 
@@ -289,15 +289,21 @@ export class MikroOrmBaseTreeRepository<
     options?: DAL.FindOptions,
     transformOptions?: RepositoryTransformOptions,
     context?: Context
-  ): Promise<[T[], number]> {
+  ): Promise<[InferRepositoryReturnType<T>[], number]> {
     throw new Error("Method not implemented.")
   }
 
-  create(data: unknown[], context?: Context): Promise<T[]> {
+  create(
+    data: unknown[],
+    context?: Context
+  ): Promise<InferRepositoryReturnType<T>[]> {
     throw new Error("Method not implemented.")
   }
 
-  update(data: unknown[], context?: Context): Promise<T[]> {
+  update(
+    data: unknown[],
+    context?: Context
+  ): Promise<InferRepositoryReturnType<T>[]> {
     throw new Error("Method not implemented.")
   }
 

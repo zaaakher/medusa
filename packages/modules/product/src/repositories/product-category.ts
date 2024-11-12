@@ -1,12 +1,14 @@
 import {
   Context,
   DAL,
+  InferEntityType,
   ProductCategoryTransformOptions,
   ProductTypes,
 } from "@medusajs/framework/types"
 import { DALUtils, isDefined, MedusaError } from "@medusajs/framework/utils"
 import {
   FilterQuery as MikroFilterQuery,
+  FindOptions,
   FindOptions as MikroOptions,
   LoadStrategy,
 } from "@mikro-orm/core"
@@ -15,9 +17,11 @@ import { ProductCategory } from "@models"
 import { UpdateCategoryInput } from "@types"
 
 // eslint-disable-next-line max-len
-export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeRepository<ProductCategory> {
+export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeRepository<
+  typeof ProductCategory
+> {
   buildFindOptions(
-    findOptions: DAL.FindOptions<ProductCategory> = { where: {} },
+    findOptions: DAL.FindOptions<typeof ProductCategory> = { where: {} },
     familyOptions: ProductCategoryTransformOptions = {}
   ) {
     const findOptions_ = { ...findOptions }
@@ -67,18 +71,18 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
   }
 
   async find(
-    findOptions: DAL.FindOptions<ProductCategory> = { where: {} },
+    findOptions: DAL.FindOptions<typeof ProductCategory> = { where: {} },
     transformOptions: ProductCategoryTransformOptions = {},
     context: Context = {}
-  ): Promise<ProductCategory[]> {
+  ): Promise<InferEntityType<typeof ProductCategory>[]> {
     const manager = super.getActiveManager<SqlEntityManager>(context)
     const findOptions_ = this.buildFindOptions(findOptions, transformOptions)
 
-    const productCategories = await manager.find(
-      ProductCategory,
-      findOptions_.where as MikroFilterQuery<ProductCategory>,
-      { ...findOptions_.options } as MikroOptions<ProductCategory>
-    )
+    const productCategories = (await manager.find(
+      ProductCategory.name,
+      findOptions_.where,
+      { ...findOptions_.options } as any // TODO
+    )) as InferEntityType<typeof ProductCategory>[]
 
     if (
       !transformOptions.includeDescendantsTree &&
@@ -100,7 +104,9 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
     return this.sortCategoriesByRank(categoriesTree)
   }
 
-  sortCategoriesByRank(categories: ProductCategory[]): ProductCategory[] {
+  sortCategoriesByRank(
+    categories: InferEntityType<typeof ProductCategory>[]
+  ): InferEntityType<typeof ProductCategory>[] {
     const sortedCategories = categories.sort((a, b) => a.rank - b.rank)
 
     for (const category of sortedCategories) {
@@ -120,10 +126,10 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
       descendants?: boolean
       ancestors?: boolean
     },
-    productCategories: ProductCategory[],
-    findOptions: DAL.FindOptions<ProductCategory> = { where: {} },
+    productCategories: InferEntityType<typeof ProductCategory>[],
+    findOptions: DAL.FindOptions<typeof ProductCategory> = { where: {} },
     context: Context = {}
-  ): Promise<ProductCategory[]> {
+  ): Promise<InferEntityType<typeof ProductCategory>[]> {
     const manager = super.getActiveManager<SqlEntityManager>(context)
 
     // We dont want to get the relations as we will fetch all the categories and build the tree manually
@@ -165,15 +171,15 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
       ...findOptions.options,
       limit: undefined,
       offset: 0,
-    } as MikroOptions<ProductCategory>
+    } as FindOptions<any>
 
     delete where.id
     delete where.mpath
-    delete where.parent_category_id
+    delete where["parent_category_id"] // TODO: Dml should include foreign keys
 
-    const categoriesInTree = await this.serialize<ProductCategory[]>(
-      await manager.find(ProductCategory, where, options)
-    )
+    const categoriesInTree = await this.serialize<
+      InferEntityType<typeof ProductCategory>[]
+    >(await manager.find(ProductCategory.name, where, options))
 
     const categoriesById = new Map(categoriesInTree.map((cat) => [cat.id, cat]))
 
@@ -188,7 +194,7 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
 
     const populateChildren = (category, level = 0) => {
       const categories = categoriesInTree.filter(
-        (child) => child.parent_category_id === category.id
+        (child) => child['parent_category_id'] === category.id // TODO: Dml should include foreign keys
       )
 
       if (include.descendants) {
@@ -225,18 +231,18 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
   }
 
   async findAndCount(
-    findOptions: DAL.FindOptions<ProductCategory> = { where: {} },
+    findOptions: DAL.FindOptions<typeof ProductCategory> = { where: {} },
     transformOptions: ProductCategoryTransformOptions = {},
     context: Context = {}
-  ): Promise<[ProductCategory[], number]> {
+  ): Promise<[InferEntityType<typeof ProductCategory>[], number]> {
     const manager = super.getActiveManager<SqlEntityManager>(context)
     const findOptions_ = this.buildFindOptions(findOptions, transformOptions)
 
-    const [productCategories, count] = await manager.findAndCount(
-      ProductCategory,
+    const [productCategories, count] = (await manager.findAndCount(
+      ProductCategory.name,
       findOptions_.where as MikroFilterQuery<ProductCategory>,
       findOptions_.options as MikroOptions<ProductCategory>
-    )
+    )) as [InferEntityType<typeof ProductCategory>[], number]
 
     if (
       !transformOptions.includeDescendantsTree &&
@@ -261,21 +267,23 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
   async delete(ids: string[], context: Context = {}): Promise<void> {
     const manager = super.getActiveManager<SqlEntityManager>(context)
     await this.baseDelete(ids, context)
-    await manager.nativeDelete(ProductCategory, { id: ids }, {})
+    await manager.nativeDelete(ProductCategory.name, { id: ids }, {})
   }
 
   async softDelete(
     ids: string[],
     context: Context = {}
-  ): Promise<[ProductCategory[], Record<string, unknown[]>]> {
+  ): Promise<
+    [InferEntityType<typeof ProductCategory>[], Record<string, unknown[]>]
+  > {
     const manager = super.getActiveManager<SqlEntityManager>(context)
     await this.baseDelete(ids, context)
 
     const categories = await Promise.all(
       ids.map(async (id) => {
-        const productCategory = await manager.findOne(ProductCategory, {
+        const productCategory = (await manager.findOne(ProductCategory.name, {
           id,
-        })
+        })) as InferEntityType<typeof ProductCategory>
 
         if (!productCategory) {
           throw new MedusaError(
@@ -296,13 +304,18 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
   async restore(
     ids: string[],
     context: Context = {}
-  ): Promise<[ProductCategory[], Record<string, unknown[]>]> {
+  ): Promise<
+    [InferEntityType<typeof ProductCategory>[], Record<string, unknown[]>]
+  > {
     const manager = super.getActiveManager<SqlEntityManager>(context)
     const categories = await Promise.all(
       ids.map(async (id) => {
-        const productCategory = await manager.findOneOrFail(ProductCategory, {
-          id,
-        })
+        const productCategory = (await manager.findOneOrFail(
+          ProductCategory.name,
+          {
+            id,
+          }
+        )) as InferEntityType<typeof ProductCategory>
         manager.assign(productCategory, { deleted_at: null })
         return productCategory
       })
@@ -317,13 +330,13 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
 
     await Promise.all(
       ids.map(async (id) => {
-        const productCategory = await manager.findOne(
-          ProductCategory,
+        const productCategory = (await manager.findOne(
+          ProductCategory.name,
           { id },
           {
             populate: ["category_children"],
-          }
-        )
+          } as any // TODO
+        )) as InferEntityType<typeof ProductCategory>
 
         if (!productCategory) {
           throw new MedusaError(
@@ -353,7 +366,7 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
     const categories = await Promise.all(
       data.map(async (entry, i) => {
         const categoryData: Partial<ProductCategory> = { ...entry }
-        const siblingsCount = await manager.count(ProductCategory, {
+        const siblingsCount = await manager.count(ProductCategory.name, {
           parent_category_id: categoryData?.parent_category_id || null,
         })
 
@@ -387,7 +400,10 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
           categoryData.mpath = parentCategory.mpath
         }
 
-        return manager.create(ProductCategory, categoryData as ProductCategory)
+        return manager.create(
+          ProductCategory.name,
+          categoryData as ProductCategory
+        )
       })
     )
 
@@ -403,7 +419,7 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
     const categories = await Promise.all(
       data.map(async (entry, i) => {
         const categoryData: Partial<ProductCategory> = { ...entry }
-        const productCategory = await manager.findOne(ProductCategory, {
+        const productCategory = await manager.findOne(ProductCategory.name, {
           id: categoryData.id,
         })
 
@@ -452,7 +468,7 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
           }
 
           // Rerank the siblings in the new parent
-          const siblingsCount = await manager.count(ProductCategory, {
+          const siblingsCount = await manager.count(ProductCategory.name, {
             parent_category_id: categoryData.parent_category_id,
           })
 
@@ -479,7 +495,7 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
           return productCategory
           // If only the rank changed, we need to rerank all siblings.
         } else if (isDefined(categoryData.rank)) {
-          const siblingsCount = await manager.count(ProductCategory, {
+          const siblingsCount = await manager.count(ProductCategory.name, {
             parent_category_id: productCategory.parent_category_id,
           })
 
@@ -514,7 +530,7 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
     manager: SqlEntityManager,
     removedSibling: Partial<ProductCategory>
   ) {
-    const affectedSiblings = await manager.find(ProductCategory, {
+    const affectedSiblings = await manager.find(ProductCategory.name, {
       parent_category_id: removedSibling.parent_category_id,
       rank: { $gt: removedSibling.rank },
     })
@@ -531,7 +547,7 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
     manager: SqlEntityManager,
     addedSibling: Partial<ProductCategory>
   ) {
-    const affectedSiblings = await manager.find(ProductCategory, {
+    const affectedSiblings = await manager.find(ProductCategory.name, {
       parent_category_id: addedSibling.parent_category_id,
       rank: { $gte: addedSibling.rank },
     })
