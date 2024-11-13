@@ -15,7 +15,9 @@ const ProductTagDML = model
     id: model.id().primaryKey(),
     value: model.text().searchable(),
     metadata: model.json().nullable(),
-    product: model.manyToMany(() => Product),
+    product: model.manyToMany(() => Product, {
+      mappedBy: "tags",
+    }),
   })
   .indexes([
     {

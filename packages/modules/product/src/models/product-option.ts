@@ -16,8 +16,12 @@ const ProductOptionDML = model
     id: model.id().primaryKey(),
     title: model.text().searchable(),
     metadata: model.json().nullable(),
-    product: model.belongsTo(() => Product),
-    values: model.hasMany(() => ProductOptionValue),
+    product: model.belongsTo(() => Product, {
+      mappedBy: "options",
+    }),
+    values: model.hasMany(() => ProductOptionValue, {
+      mappedBy: "option",
+    }),
   })
   .cascades({
     delete: ["values"],

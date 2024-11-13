@@ -30,12 +30,14 @@ const ProductCategoryDML = model
     is_internal: model.boolean().default(false),
     rank: model.number().default(0),
     metadata: model.json().nullable(),
-    parent_category: model.belongsTo(() => ProductCategoryDML).nullable(),
-    category_children: model
+    parent_category: model
       .belongsTo(() => ProductCategoryDML, {
-        mappedBy: "parent_category",
+        mappedBy: "category_children",
       })
       .nullable(),
+    category_children: model.hasMany(() => ProductCategoryDML, {
+      mappedBy: "parent_category",
+    }),
     products: model.manyToMany(() => Product),
   })
   .indexes([

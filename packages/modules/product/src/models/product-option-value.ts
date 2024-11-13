@@ -15,8 +15,14 @@ const ProductOptionValueDML = model
     id: model.id().primaryKey(),
     value: model.text(),
     metadata: model.json().nullable(),
-    option: model.belongsTo(() => ProductOption).nullable(),
-    variants: model.manyToMany(() => ProductVariant),
+    option: model
+      .belongsTo(() => ProductOption, {
+        mappedBy: "values",
+      })
+      .nullable(),
+    variants: model.manyToMany(() => ProductVariant, {
+      mappedBy: "options",
+    }),
   })
   .indexes([
     {

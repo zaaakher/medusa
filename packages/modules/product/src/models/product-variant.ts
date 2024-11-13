@@ -66,9 +66,14 @@ const ProductVariantDML = model
     width: model.number().nullable(),
     metadata: model.json().nullable(),
     variant_rank: model.number().default(0).nullable(),
-    product: model.belongsTo(() => Product).nullable(),
+    product: model
+      .belongsTo(() => Product, {
+        mappedBy: "variants",
+      })
+      .nullable(),
     options: model.manyToMany(() => ProductOptionValue, {
       pivotTable: "product_variant_option",
+      mappedBy: "variants",
     }),
   })
   .indexes([

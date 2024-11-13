@@ -57,16 +57,28 @@ export const ProductDML = model
     discountable: model.boolean().default(true),
     external_id: model.text().nullable(),
     metadata: model.json().nullable(),
-    variants: model.hasMany(() => ProductVariant),
+    variants: model.hasMany(() => ProductVariant, {
+      mappedBy: "product",
+    }),
     type: model.belongsTo(() => ProductType).nullable(),
-    tags: model.manyToMany(() => ProductTag),
-    options: model.hasMany(() => ProductOption),
+    tags: model.manyToMany(() => ProductTag, {
+      mappedBy: "product",
+    }),
+    options: model.hasMany(() => ProductOption, {
+      mappedBy: "product",
+    }),
     images: model.manyToMany(() => ProductImage, {
       pivotTable: "product_images",
+      mappedBy: "products",
     }),
-    collection: model.belongsTo(() => ProductCollection).nullable(),
+    collection: model
+      .belongsTo(() => ProductCollection, {
+        mappedBy: "products",
+      })
+      .nullable(),
     categories: model.manyToMany(() => ProductCategory, {
       pivotTable: "product_category_product",
+      mappedBy: "products",
     }),
   })
   .cascades({

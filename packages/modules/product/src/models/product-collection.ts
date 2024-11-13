@@ -16,7 +16,9 @@ const ProductCollectionDML = model
     title: model.text().searchable(),
     handle: model.text().nullable(),
     metadata: model.json().nullable(),
-    products: model.hasMany(() => Product),
+    products: model.hasMany(() => Product, {
+      mappedBy: "collection",
+    }),
   })
   .indexes([
     {
