@@ -584,7 +584,9 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
     }
 
     if (originalSibling.rank < updatedSibling.rank) {
-      const siblings = await manager.find(
+      const siblings = await manager.find<
+        InferEntityType<typeof ProductCategory>
+      >(
         ProductCategory.name,
         {
           parent_category_id: originalSibling.parent_category_id,
@@ -600,7 +602,9 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
 
       manager.persist(updatedSiblings)
     } else {
-      const siblings = await manager.find(
+      const siblings = await manager.find<
+        InferEntityType<typeof ProductCategory>
+      >(
         ProductCategory.name,
         {
           parent_category_id: originalSibling.parent_category_id,
