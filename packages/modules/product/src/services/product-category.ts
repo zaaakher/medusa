@@ -2,6 +2,7 @@ import {
   Context,
   DAL,
   FindConfig,
+  InferEntityType,
   ProductTypes,
 } from "@medusajs/framework/types"
 import {
@@ -33,7 +34,7 @@ export default class ProductCategoryService {
     productCategoryId: string,
     config: FindConfig<ProductTypes.ProductCategoryDTO> = {},
     @MedusaContext() sharedContext: Context = {}
-  ): Promise<typeof ProductCategory> {
+  ): Promise<InferEntityType<typeof ProductCategory>> {
     if (!isDefined(productCategoryId)) {
       throw new MedusaError(
         MedusaError.Types.NOT_FOUND,
@@ -41,7 +42,7 @@ export default class ProductCategoryService {
       )
     }
 
-    const queryOptions = ModulesSdkUtils.buildQuery<typeof ProductCategory>(
+    const queryOptions = ModulesSdkUtils.buildQuery(
       {
         id: productCategoryId,
       },
@@ -67,7 +68,7 @@ export default class ProductCategoryService {
       )
     }
 
-    return productCategories[0] as typeof ProductCategory
+    return productCategories[0]
   }
 
   @InjectManager("productCategoryRepository_")
@@ -75,7 +76,7 @@ export default class ProductCategoryService {
     filters: ProductTypes.FilterableProductCategoryProps = {},
     config: FindConfig<ProductTypes.ProductCategoryDTO> = {},
     @MedusaContext() sharedContext: Context = {}
-  ): Promise<(typeof ProductCategory)[]> {
+  ): Promise<InferEntityType<typeof ProductCategory>[]> {
     const transformOptions = {
       includeDescendantsTree: filters?.include_descendants_tree || false,
       includeAncestorsTree: filters?.include_ancestors_tree || false,
@@ -94,17 +95,14 @@ export default class ProductCategoryService {
       delete filters.q
     }
 
-    const queryOptions = ModulesSdkUtils.buildQuery<typeof ProductCategory>(
-      filters,
-      config
-    )
+    const queryOptions = ModulesSdkUtils.buildQuery(filters, config)
     queryOptions.where ??= {}
 
-    return (await this.productCategoryRepository_.find(
+    return await this.productCategoryRepository_.find(
       queryOptions,
       transformOptions,
       sharedContext
-    )) as (typeof ProductCategory)[]
+    )
   }
 
   @InjectManager("productCategoryRepository_")
@@ -112,7 +110,7 @@ export default class ProductCategoryService {
     filters: ProductTypes.FilterableProductCategoryProps = {},
     config: FindConfig<ProductTypes.ProductCategoryDTO> = {},
     @MedusaContext() sharedContext: Context = {}
-  ): Promise<[(typeof ProductCategory)[], number]> {
+  ): Promise<[InferEntityType<typeof ProductCategory>[], number]> {
     const transformOptions = {
       includeDescendantsTree: filters?.include_descendants_tree || false,
       includeAncestorsTree: filters?.include_ancestors_tree || false,
@@ -131,37 +129,34 @@ export default class ProductCategoryService {
       delete filters.q
     }
 
-    const queryOptions = ModulesSdkUtils.buildQuery<typeof ProductCategory>(
-      filters,
-      config
-    )
+    const queryOptions = ModulesSdkUtils.buildQuery(filters, config)
     queryOptions.where ??= {}
 
-    return (await this.productCategoryRepository_.findAndCount(
+    return await this.productCategoryRepository_.findAndCount(
       queryOptions,
       transformOptions,
       sharedContext
-    )) as [(typeof ProductCategory)[], number]
+    )
   }
 
   @InjectTransactionManager("productCategoryRepository_")
   async create(
     data: ProductTypes.CreateProductCategoryDTO[],
     @MedusaContext() sharedContext: Context = {}
-  ): Promise<(typeof ProductCategory)[]> {
-    return (await (
+  ): Promise<InferEntityType<typeof ProductCategory>[]> {
+    return await (
       this.productCategoryRepository_ as unknown as ProductCategoryRepository
-    ).create(data, sharedContext)) as (typeof ProductCategory)[]
+    ).create(data, sharedContext)
   }
 
   @InjectTransactionManager("productCategoryRepository_")
   async update(
     data: UpdateCategoryInput[],
     @MedusaContext() sharedContext: Context = {}
-  ): Promise<(typeof ProductCategory)[]> {
-    return (await (
+  ): Promise<InferEntityType<typeof ProductCategory>[]> {
+    return await (
       this.productCategoryRepository_ as unknown as ProductCategoryRepository
-    ).update(data, sharedContext)) as (typeof ProductCategory)[]
+    ).update(data, sharedContext)
   }
 
   @InjectTransactionManager("productCategoryRepository_")
