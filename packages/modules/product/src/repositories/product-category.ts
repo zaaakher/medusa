@@ -73,11 +73,13 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
     const manager = super.getActiveManager<SqlEntityManager>(context)
     const findOptions_ = this.buildFindOptions(findOptions, transformOptions)
 
-    const productCategories = (await manager.find(
+    const productCategories = await manager.find<
+      InferEntityType<typeof ProductCategory>
+    >(
       ProductCategory.name,
       findOptions_.where,
       { ...findOptions_.options } as any // TODO
-    )) as unknown as InferEntityType<typeof ProductCategory>[]
+    )
 
     if (
       !transformOptions.includeDescendantsTree &&
@@ -276,9 +278,11 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
 
     const categories = await Promise.all(
       ids.map(async (id) => {
-        const productCategory = (await manager.findOne(ProductCategory.name, {
+        const productCategory = await manager.findOne<
+          InferEntityType<typeof ProductCategory>
+        >(ProductCategory.name, {
           id,
-        })) as InferEntityType<typeof ProductCategory>
+        })
 
         if (!productCategory) {
           throw new MedusaError(
@@ -305,12 +309,11 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
     const manager = super.getActiveManager<SqlEntityManager>(context)
     const categories = await Promise.all(
       ids.map(async (id) => {
-        const productCategory = (await manager.findOneOrFail(
-          ProductCategory.name,
-          {
-            id,
-          }
-        )) as InferEntityType<typeof ProductCategory>
+        const productCategory = await manager.findOneOrFail<
+          InferEntityType<typeof ProductCategory>
+        >(ProductCategory.name, {
+          id,
+        })
         manager.assign(productCategory, { deleted_at: null })
         return productCategory
       })
@@ -325,13 +328,15 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
 
     await Promise.all(
       ids.map(async (id) => {
-        const productCategory = (await manager.findOne(
+        const productCategory = await manager.findOne<
+          InferEntityType<typeof ProductCategory>
+        >(
           ProductCategory.name,
           { id },
           {
             populate: ["category_children"],
           } as any // TODO
-        )) as InferEntityType<typeof ProductCategory>
+        )
 
         if (!productCategory) {
           throw new MedusaError(
@@ -382,10 +387,9 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
           categoryData.parent_category_id ?? categoryData.parent_category?.id
 
         if (parentCategoryId) {
-          const parentCategory = await manager.findOne(
-            ProductCategory.name,
-            parentCategoryId
-          )
+          const parentCategory = await manager.findOne<
+            InferEntityType<typeof ProductCategory>
+          >(ProductCategory.name, parentCategoryId)
 
           if (!parentCategory) {
             throw new MedusaError(
@@ -397,9 +401,9 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
           categoryData.mpath = parentCategory.mpath
         }
 
-        return manager.create(
+        return manager.create<InferEntityType<typeof ProductCategory>>(
           ProductCategory.name,
-          categoryData as ProductCategory
+          categoryData as unknown as InferEntityType<typeof ProductCategory>
         )
       })
     )
@@ -411,12 +415,16 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
   async update(
     data: UpdateCategoryInput[],
     context: Context = {}
-  ): Promise<ProductCategory[]> {
+  ): Promise<InferEntityType<typeof ProductCategory>[]> {
     const manager = super.getActiveManager<SqlEntityManager>(context)
     const categories = await Promise.all(
       data.map(async (entry, i) => {
-        const categoryData: Partial<ProductCategory> = { ...entry }
-        const productCategory = await manager.findOne(ProductCategory.name, {
+        const categoryData: Partial<InferEntityType<typeof ProductCategory>> = {
+          ...entry,
+        }
+        const productCategory = await manager.findOne<
+          InferEntityType<typeof ProductCategory>
+        >(ProductCategory.name, {
           id: categoryData.id,
         })
 
@@ -451,10 +459,9 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
           if (categoryData.parent_category_id === null) {
             categoryData.mpath = ""
           } else {
-            const newParentCategory = await manager.findOne(
-              ProductCategory.name,
-              categoryData.parent_category_id
-            )
+            const newParentCategory = await manager.findOne<
+              InferEntityType<typeof ProductCategory>
+            >(ProductCategory.name, categoryData.parent_category_id)
             if (!newParentCategory) {
               throw new MedusaError(
                 MedusaError.Types.INVALID_ARGUMENT,
@@ -504,7 +511,9 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
           await this.rerankAllSiblings(
             manager,
             productCategory,
-            categoryData as ProductCategory
+            categoryData as Partial<InferEntityType<typeof ProductCategory>> & {
+              rank: number
+            }
           )
         }
 
@@ -525,9 +534,11 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
 
   protected async rerankSiblingsAfterDeletion(
     manager: SqlEntityManager,
-    removedSibling: Partial<ProductCategory>
+    removedSibling: Partial<InferEntityType<typeof ProductCategory>>
   ) {
-    const affectedSiblings = await manager.find(ProductCategory.name, {
+    const affectedSiblings = await manager.find<
+      InferEntityType<typeof ProductCategory>
+    >(ProductCategory.name, {
       parent_category_id: removedSibling.parent_category_id,
       rank: { $gt: removedSibling.rank },
     })
@@ -542,9 +553,11 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
 
   protected async rerankSiblingsAfterCreation(
     manager: SqlEntityManager,
-    addedSibling: Partial<ProductCategory>
+    addedSibling: Partial<InferEntityType<typeof ProductCategory>>
   ) {
-    const affectedSiblings = await manager.find(ProductCategory.name, {
+    const affectedSiblings = await manager.find<
+      InferEntityType<typeof ProductCategory>
+    >(ProductCategory.name, {
       parent_category_id: addedSibling.parent_category_id,
       rank: { $gte: addedSibling.rank },
     })
@@ -559,8 +572,12 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
 
   protected async rerankAllSiblings(
     manager: SqlEntityManager,
-    originalSibling: Partial<ProductCategory> & { rank: number },
-    updatedSibling: Partial<ProductCategory> & { rank: number }
+    originalSibling: Partial<InferEntityType<typeof ProductCategory>> & {
+      rank: number
+    },
+    updatedSibling: Partial<InferEntityType<typeof ProductCategory>> & {
+      rank: number
+    }
   ) {
     if (originalSibling.rank === updatedSibling.rank) {
       return
