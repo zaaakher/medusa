@@ -992,12 +992,14 @@ describe("Entity builder", () => {
       })
 
       const User = toMikroORMEntity(user)
-      expectTypeOf(new User()).toMatchTypeOf<{
+      expectTypeOf(new User()).toEqualTypeOf<{
         id: number
         username: string
         email: string
         role: "moderator" | "admin" | "guest"
         deleted_at: Date | null
+        created_at: Date
+        updated_at: Date
       }>()
 
       const metaData = MetadataStorage.getMetadataFromDecorator(User)
@@ -3505,7 +3507,6 @@ describe("Entity builder", () => {
           email: string
           isVerified: boolean
           deleted_at: Date | null
-          user_id: string
           user: {
             id: number
             username: string
@@ -3513,12 +3514,12 @@ describe("Entity builder", () => {
           }
         }
       }>()
+      expectTypeOf(new User().email.user_id).toEqualTypeOf<string>()
 
       expectTypeOf(new Email()).toMatchTypeOf<{
         email: string
         isVerified: boolean
         deleted_at: Date | null
-        user_id: string
         user: {
           id: number
           username: string
@@ -3530,6 +3531,7 @@ describe("Entity builder", () => {
           }
         }
       }>()
+      expectTypeOf(new Email().user_id).toEqualTypeOf<string>()
 
       const metaData = MetadataStorage.getMetadataFromDecorator(User)
       expect(metaData.className).toEqual("User")
@@ -3702,18 +3704,17 @@ describe("Entity builder", () => {
         email: {
           email: string
           isVerified: boolean
-          user_id: string | null
           user: {
             id: number
             username: string
           } | null
         }
       }>()
+      expectTypeOf(new User().email.user_id).toEqualTypeOf<string | null>()
 
       expectTypeOf(new Email()).toMatchTypeOf<{
         email: string
         isVerified: boolean
-        user_id: string | null
         user: {
           id: number
           username: string
@@ -3723,6 +3724,7 @@ describe("Entity builder", () => {
           }
         } | null
       }>()
+      expectTypeOf(new Email().user_id).toEqualTypeOf<string | null>()
 
       const metaData = MetadataStorage.getMetadataFromDecorator(User)
       expect(metaData.className).toEqual("User")

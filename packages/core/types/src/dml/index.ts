@@ -140,16 +140,12 @@ export interface EntityConstructor<Props> extends Function {
  * Internal separation of the foreign keys retrieval to not have to repeat this loop many times in the type below
  */
 export type GetSchemaForeignKeys<Schema extends DMLSchema> = {
-  [K in keyof Schema as Schema[K] extends { type: infer Type }
-    ? Type extends "belongsTo"
-      ? `${K & string}_id`
-      : never
-    : never]: Schema[K] extends { type: infer Type }
-    ? Type extends "belongsTo"
-      ? IsNullableRelation<Schema[K]["$dataType"]> extends true
-        ? string | null
-        : string
-      : never
+  [K in keyof Schema as Schema[K] extends { type: "belongsTo" }
+    ? `${K & string}_id`
+    : never]: Schema[K] extends { type: "belongsTo" }
+    ? null extends Schema[K]["$dataType"]
+      ? string | null
+      : string
     : never
 }
 
