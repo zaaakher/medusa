@@ -137,9 +137,10 @@ export interface EntityConstructor<Props> extends Function {
 }
 
 /**
- * Internal separation of the foreign keys retrieval to not have to repeat this loop many times in the type below
+ * From a IDmlEntity, infer the foreign keys name and type for
+ * "belongsTo" relation meaning "hasOne" and "ManyToOne"
  */
-export type GetSchemaForeignKeys<Schema extends DMLSchema> = {
+export type InferForeignKeys<Schema extends DMLSchema> = {
   [K in keyof Schema as Schema[K] extends { type: "belongsTo" }
     ? `${K & string}_id`
     : never]: Schema[K] extends { type: "belongsTo" }
@@ -148,13 +149,6 @@ export type GetSchemaForeignKeys<Schema extends DMLSchema> = {
       : string
     : never
 }
-
-/**
- * From a IDmlEntity, infer the foreign keys name and type for
- * "belongsTo" relation meaning "hasOne" and "ManyToOne"
- */
-export type InferForeignKeys<Schema extends DMLSchema> =
-  GetSchemaForeignKeys<Schema> extends never ? {} : GetSchemaForeignKeys<Schema>
 
 /**
  * Infer fields for a belongsTo relationship
