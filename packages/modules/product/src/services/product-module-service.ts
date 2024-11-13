@@ -105,29 +105,29 @@ export default class ProductModuleService
 {
   protected baseRepository_: DAL.RepositoryService
   protected readonly productService_: ModulesSdkTypes.IMedusaInternalService<
-    typeof Product
+    InferEntityType<typeof Product>
   >
   protected readonly productVariantService_: ModulesSdkTypes.IMedusaInternalService<
-    typeof ProductVariant
+    InferEntityType<typeof ProductVariant>
   >
   protected readonly productCategoryService_: ProductCategoryService
   protected readonly productTagService_: ModulesSdkTypes.IMedusaInternalService<
-    typeof ProductTag
+    InferEntityType<typeof ProductTag>
   >
   protected readonly productCollectionService_: ModulesSdkTypes.IMedusaInternalService<
-    typeof ProductCollection
+    InferEntityType<typeof ProductCollection>
   >
   protected readonly productImageService_: ModulesSdkTypes.IMedusaInternalService<
-    typeof ProductImage
+    InferEntityType<typeof ProductImage>
   >
   protected readonly productTypeService_: ModulesSdkTypes.IMedusaInternalService<
-    typeof ProductType
+    InferEntityType<typeof ProductType>
   >
   protected readonly productOptionService_: ModulesSdkTypes.IMedusaInternalService<
-    typeof ProductOption
+    InferEntityType<typeof ProductOption>
   >
   protected readonly productOptionValueService_: ModulesSdkTypes.IMedusaInternalService<
-    typeof ProductOptionValue
+    InferEntityType<typeof ProductOptionValue>
   >
   protected readonly eventBusModuleService_?: IEventBusModuleService
 
