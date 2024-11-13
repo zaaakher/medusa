@@ -93,7 +93,7 @@ export class MikroOrmBase {
  * related ones.
  */
 
-export class MikroOrmBaseRepository<const T extends object>
+export class MikroOrmBaseRepository<const T extends object = object>
   extends MikroOrmBase
   implements RepositoryService<T>
 {
