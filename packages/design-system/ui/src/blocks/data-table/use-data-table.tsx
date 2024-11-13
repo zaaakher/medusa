@@ -80,7 +80,10 @@ interface DataTableOptions<TData>
   /**
    * The function to execute when a row is clicked.
    */
-  onRowClick?: (row: TData) => void
+  onRowClick?: (
+    event: React.MouseEvent<HTMLTableRowElement, MouseEvent>,
+    row: TData
+  ) => void
   /**
    * The total count of rows. When working with pagination, this will be the total
    * number of rows available, not the number of rows currently being displayed.
@@ -126,7 +129,10 @@ interface UseDataTableReturn<TData>
   onSearchChange: (search: string) => void
   getCommands: () => DataTableCommand[]
   getRowSelection: () => DataTableRowSelectionState
-  onRowClick?: (row: TData) => void
+  onRowClick?: (
+    event: React.MouseEvent<HTMLTableRowElement, MouseEvent>,
+    row: TData
+  ) => void
   emptyState: DataTableEmptyState
   isLoading: boolean
   showSkeleton: boolean

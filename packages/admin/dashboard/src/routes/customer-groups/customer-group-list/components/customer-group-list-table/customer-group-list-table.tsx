@@ -24,17 +24,18 @@ import { useDate } from "../../../../../hooks/use-date"
 import { useQueryParams } from "../../../../../hooks/use-query-params"
 
 const PAGE_SIZE = 10
-const PREFIX = "c"
 
 export const CustomerGroupListTable = () => {
   const { t } = useTranslation()
-  const navigate = useNavigate()
   const { getWidgets } = useDashboardExtension()
 
-  const { q, order, offset, created_at, updated_at } = useQueryParams(
-    ["q", "order", "offset", "created_at", "updated_at"],
-    PREFIX
-  )
+  const { q, order, offset, created_at, updated_at } = useQueryParams([
+    "q",
+    "order",
+    "offset",
+    "created_at",
+    "updated_at",
+  ])
 
   const columns = useColumns()
   const filters = useFilters()
@@ -74,9 +75,7 @@ export const CustomerGroupListTable = () => {
           heading={t("customerGroups.domain")}
           rowCount={count}
           getRowId={(row) => row.id}
-          onRowClick={(row) => {
-            navigate(`/customer-groups/${row.id}`)
-          }}
+          rowHref={(row) => `/customer-groups/${row.id}`}
           action={{
             label: t("actions.create"),
             to: "/customer-groups/create",
@@ -92,7 +91,6 @@ export const CustomerGroupListTable = () => {
             },
           }}
           pageSize={PAGE_SIZE}
-          prefix={PREFIX}
           isLoading={isPending}
         />
       </Container>

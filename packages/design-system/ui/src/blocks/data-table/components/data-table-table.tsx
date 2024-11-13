@@ -186,7 +186,7 @@ const DataTableTable = ({ emptyState }: DataTableTableProps) => {
                     key={row.id}
                     onMouseEnter={() => setHoveredRowId(row.id)}
                     onMouseLeave={() => setHoveredRowId(null)}
-                    onClick={() => instance.onRowClick?.(row)}
+                    onClick={(e) => instance.onRowClick?.(e, row)}
                     className={clx("group/row last:border-b-0", {
                       "cursor-pointer": !!instance.onRowClick,
                     })}

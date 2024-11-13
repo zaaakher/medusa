@@ -1,18 +1,20 @@
 import {
   Button,
   DataTableCommand,
+  DataTableEmptyStateProps,
   DataTableFilter,
   DataTableFilteringState,
   DataTablePaginationState,
+  DataTableRowSelectionState,
   DataTableSortingState,
   Heading,
   DataTable as Primitive,
   useDataTable,
 } from "@medusajs/ui"
 import { ColumnDef } from "@tanstack/react-table"
-import { ReactNode, useState } from "react"
+import React, { ReactNode, useCallback, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { Link, useSearchParams } from "react-router-dom"
+import { Link, useNavigate, useSearchParams } from "react-router-dom"
 
 import { useQueryParams } from "../../hooks/use-query-params"
 import { ActionMenu } from "../common/action-menu"
@@ -62,12 +64,16 @@ interface DataTableProps<TData> {
   enablePagination?: boolean
   enableSearch?: boolean
   autoFocusSearch?: boolean
-  onRowClick?: (row: TData) => void
-  emptyState?: any
+  rowHref?: (row: TData) => string
+  emptyState?: DataTableEmptyStateProps
   heading: string
   prefix?: string
   pageSize?: number
   isLoading?: boolean
+  rowSelection?: {
+    state: DataTableRowSelectionState
+    onRowSelectionChange: (value: DataTableRowSelectionState) => void
+  }
 }
 
 export const DataTable = <TData,>({
@@ -82,11 +88,12 @@ export const DataTable = <TData,>({
   enablePagination = true,
   enableSearch = true,
   autoFocusSearch = false,
-  onRowClick,
+  rowHref,
   heading,
   prefix,
   pageSize = 10,
   emptyState,
+  rowSelection,
   isLoading = false,
 }: DataTableProps<TData>) => {
   const { t } = useTranslation()
@@ -189,6 +196,31 @@ export const DataTable = <TData,>({
   const { pagination: paginationTranslations, toolbar: toolbarTranslations } =
     useDataTableTranslations()
 
+  const navigate = useNavigate()
+
+  const onRowClick = useCallback(
+    (event: React.MouseEvent<HTMLTableRowElement, MouseEvent>, row: TData) => {
+      if (!rowHref) {
+        return
+      }
+
+      const href = rowHref(row)
+
+      if (event.metaKey || event.ctrlKey || event.button === 1) {
+        window.open(href, "_blank", "noreferrer")
+        return
+      }
+
+      if (event.shiftKey) {
+        window.open(href)
+        return
+      }
+
+      navigate(href)
+    },
+    [navigate, rowHref]
+  )
+
   const instance = useDataTable({
     data,
     columns,
@@ -196,7 +228,7 @@ export const DataTable = <TData,>({
     commands,
     rowCount,
     getRowId,
-    onRowClick,
+    onRowClick: rowHref ? onRowClick : undefined,
     pagination: enablePagination
       ? {
           state: pagination,
@@ -221,6 +253,7 @@ export const DataTable = <TData,>({
           onSearchChange: handleSearchChange,
         }
       : undefined,
+    rowSelection,
     isLoading,
   })
 
