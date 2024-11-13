@@ -105,7 +105,6 @@ const usePeople = ({
               if (filter.value.$gte) {
                 const compareDate = new Date(filter.value.$gte)
                 if (value < compareDate) {
-                  console.log("$gte: value < compareDate")
                   return false
                 }
               }
@@ -113,7 +112,6 @@ const usePeople = ({
               if (filter.value.$lte) {
                 const compareDate = new Date(filter.value.$lte)
                 if (value > compareDate) {
-                  console.log("$lte: value > compareDate")
                   return false
                 }
               }
@@ -121,7 +119,6 @@ const usePeople = ({
               if (filter.value.$gt) {
                 const compareDate = new Date(filter.value.$gt)
                 if (value <= compareDate) {
-                  console.log("$gt: value <= compareDate")
                   return false
                 }
               }
@@ -129,7 +126,6 @@ const usePeople = ({
               if (filter.value.$lt) {
                 const compareDate = new Date(filter.value.$lt)
                 if (value >= compareDate) {
-                  console.log("$lt: value >= compareDate")
                   return false
                 }
               }
@@ -418,7 +414,7 @@ const KitchenSinkDemo = () => {
 
   return (
     <TooltipProvider>
-      <Container className="flex h-full max-h-[500px] flex-col overflow-hidden p-0">
+      <Container className="flex flex-col overflow-hidden p-0">
         <DataTable instance={table}>
           <DataTable.Toolbar className="flex flex-col items-start justify-between gap-2 md:flex-row md:items-center">
             <Heading>Employees</Heading>

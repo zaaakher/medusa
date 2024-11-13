@@ -14,6 +14,8 @@ import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 
 import { DataTable } from "../../../../../components/data-table"
+import { SingleColumnPage } from "../../../../../components/layout/pages"
+import { useDashboardExtension } from "../../../../../extensions"
 import {
   useCustomerGroups,
   useDeleteCustomerGroupLazy,
@@ -27,6 +29,7 @@ const PREFIX = "c"
 export const CustomerGroupListTable = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const { getWidgets } = useDashboardExtension()
 
   const { q, order, offset, created_at, updated_at } = useQueryParams(
     ["q", "order", "offset", "created_at", "updated_at"],
@@ -36,51 +39,64 @@ export const CustomerGroupListTable = () => {
   const columns = useColumns()
   const filters = useFilters()
 
-  const { customer_groups, count } = useCustomerGroups(
-    {
-      q,
-      order,
-      offset: offset ? parseInt(offset) : undefined,
-      limit: PAGE_SIZE,
-      created_at: created_at ? JSON.parse(created_at) : undefined,
-      updated_at: updated_at ? JSON.parse(updated_at) : undefined,
-      fields: "id,name,created_at,updated_at,customers.id",
-    },
-    {
-      placeholderData: keepPreviousData,
-    }
-  )
+  const { customer_groups, count, isPending, isError, error } =
+    useCustomerGroups(
+      {
+        q,
+        order,
+        offset: offset ? parseInt(offset) : undefined,
+        limit: PAGE_SIZE,
+        created_at: created_at ? JSON.parse(created_at) : undefined,
+        updated_at: updated_at ? JSON.parse(updated_at) : undefined,
+        fields: "id,name,created_at,updated_at,customers.id",
+      },
+      {
+        placeholderData: keepPreviousData,
+      }
+    )
+
+  if (isError) {
+    throw error
+  }
 
   return (
-    <Container className="overflow-hidden p-0">
-      <DataTable
-        data={customer_groups}
-        columns={columns}
-        filters={filters}
-        heading={t("customerGroups.domain")}
-        rowCount={count}
-        getRowId={(row) => row.id}
-        onRowClick={(row) => {
-          navigate(`/customer-groups/${row.id}`)
-        }}
-        action={{
-          label: t("actions.create"),
-          to: "/customer-groups/create",
-        }}
-        emptyState={{
-          empty: {
-            heading: t("customerGroups.list.empty.heading"),
-            description: t("customerGroups.list.empty.description"),
-          },
-          filtered: {
-            heading: t("customerGroups.list.filtered.heading"),
-            description: t("customerGroups.list.filtered.description"),
-          },
-        }}
-        pageSize={PAGE_SIZE}
-        prefix={PREFIX}
-      />
-    </Container>
+    <SingleColumnPage
+      widgets={{
+        before: getWidgets("customer_group.list.before"),
+        after: getWidgets("customer_group.list.after"),
+      }}
+    >
+      <Container className="overflow-hidden p-0">
+        <DataTable
+          data={customer_groups}
+          columns={columns}
+          filters={filters}
+          heading={t("customerGroups.domain")}
+          rowCount={count}
+          getRowId={(row) => row.id}
+          onRowClick={(row) => {
+            navigate(`/customer-groups/${row.id}`)
+          }}
+          action={{
+            label: t("actions.create"),
+            to: "/customer-groups/create",
+          }}
+          emptyState={{
+            empty: {
+              heading: t("customerGroups.list.empty.heading"),
+              description: t("customerGroups.list.empty.description"),
+            },
+            filtered: {
+              heading: t("customerGroups.list.filtered.heading"),
+              description: t("customerGroups.list.filtered.description"),
+            },
+          }}
+          pageSize={PAGE_SIZE}
+          prefix={PREFIX}
+          isLoading={isPending}
+        />
+      </Container>
+    </SingleColumnPage>
   )
 }
 

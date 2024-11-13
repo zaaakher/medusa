@@ -146,6 +146,7 @@ const useDataTable = <TData,>({
   search,
   onRowClick,
   autoResetPageIndex = true,
+  isLoading = false,
   ...options
 }: DataTableOptions<TData>): UseDataTableReturn<TData> => {
   const { state: sortingState, onSortingChange } = sorting ?? {}
@@ -383,8 +384,8 @@ const useDataTable = <TData,>({
   }, [rows, searchState, filteringState])
 
   const showSkeleton = React.useMemo(() => {
-    return options.isLoading === true && rows.length === 0
-  }, [options.isLoading, rows])
+    return isLoading === true && rows.length === 0
+  }, [isLoading, rows])
 
   return {
     // Table
@@ -423,7 +424,7 @@ const useDataTable = <TData,>({
     // Empty State
     emptyState,
     // Loading
-    isLoading: options.isLoading ?? false,
+    isLoading,
     showSkeleton,
   }
 }

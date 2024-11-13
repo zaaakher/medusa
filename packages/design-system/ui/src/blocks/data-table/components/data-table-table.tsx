@@ -88,7 +88,7 @@ const DataTableTable = ({ emptyState }: DataTableTableProps) => {
   }, [pageIndex])
 
   if (instance.showSkeleton) {
-    return <DataTableTableSkeleton rowCount={instance.rowCount} />
+    return <DataTableTableSkeleton pageSize={instance.pageSize} />
   }
 
   return (
@@ -293,16 +293,18 @@ const DataTableEmptyStateDisplay = ({
 }
 
 interface DataTableTableSkeletonProps {
-  rowCount: number
+  pageSize?: number
 }
 
-const DataTableTableSkeleton = ({ rowCount }: DataTableTableSkeletonProps) => {
+const DataTableTableSkeleton = ({
+  pageSize = 10,
+}: DataTableTableSkeletonProps) => {
   return (
     <div className="flex w-full flex-1 flex-col overflow-hidden">
       <div className="min-h-0 w-full flex-1 overscroll-none border-y">
         <div className="flex flex-col divide-y">
           <Skeleton className="h-12 w-full" />
-          {Array.from({ length: rowCount }, (_, i) => i).map((row) => (
+          {Array.from({ length: pageSize }, (_, i) => i).map((row) => (
             <Skeleton key={row} className="h-12 w-full rounded-none" />
           ))}
         </div>

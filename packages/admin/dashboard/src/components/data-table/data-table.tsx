@@ -67,6 +67,7 @@ interface DataTableProps<TData> {
   heading: string
   prefix?: string
   pageSize?: number
+  isLoading?: boolean
 }
 
 export const DataTable = <TData,>({
@@ -86,6 +87,7 @@ export const DataTable = <TData,>({
   prefix,
   pageSize = 10,
   emptyState,
+  isLoading = false,
 }: DataTableProps<TData>) => {
   const { t } = useTranslation()
 
@@ -219,6 +221,7 @@ export const DataTable = <TData,>({
           onSearchChange: handleSearchChange,
         }
       : undefined,
+    isLoading,
   })
 
   return (
