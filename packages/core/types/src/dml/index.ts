@@ -56,6 +56,13 @@ export type RelationshipTypes =
   | "manyToMany"
 
 /**
+ * Return true if the relationship is nullable
+ */
+export type IsNullableRelation<T> = T extends () => IDmlEntity<any, any> | null
+  ? true
+  : false
+
+/**
  * The meta-data returned by the property parse method
  */
 export type PropertyMetadata = {
@@ -130,22 +137,28 @@ export interface EntityConstructor<Props> extends Function {
 }
 
 /**
- * From a IDmlEntity, infer the foreign keys name and type for
- * "belongsTo" relation meaning "hasOne" and "ManyToOne"
+ * Internal separation of the foreign keys retrieval to not have to repeat this loop many times in the type below
  */
-export type InferForeignKeys<Schema extends DMLSchema> = {
+export type GetSchemaForeignKeys<Schema extends DMLSchema> = {
   [K in keyof Schema as Schema[K] extends { type: infer Type }
-    ? Type extends RelationshipTypes
+    ? Type extends "belongsTo"
       ? `${K & string}_id`
       : never
     : never]: Schema[K] extends { type: infer Type }
-    ? Type extends RelationshipTypes
-      ? Schema[K]["$dataType"] extends IDmlEntity<any, any> | null
+    ? Type extends "belongsTo"
+      ? IsNullableRelation<Schema[K]["$dataType"]> extends true
         ? string | null
         : string
       : never
     : never
 }
+
+/**
+ * From a IDmlEntity, infer the foreign keys name and type for
+ * "belongsTo" relation meaning "hasOne" and "ManyToOne"
+ */
+export type InferForeignKeys<Schema extends DMLSchema> =
+  GetSchemaForeignKeys<Schema> extends never ? {} : GetSchemaForeignKeys<Schema>
 
 /**
  * Infer fields for a belongsTo relationship
