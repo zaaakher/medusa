@@ -450,6 +450,7 @@ export function defineManyToManyRelationship(
   }
 
   ManyToMany({
+    owner: !!relationship.options.pivotTable, // TODO: need clarification and discussion in order to infer it differently instead
     entity: relatedModelName,
     ...(pivotTableName
       ? {
