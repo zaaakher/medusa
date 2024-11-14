@@ -34,12 +34,18 @@ export const requestOrderTransferValidationStep = createStep(
     customer: CustomerDTO
   }) {
     throwIfOrderIsCancelled({ order })
-    // TODO: throw if order change is active
 
     if (!customer.has_account) {
       throw new MedusaError(
         MedusaError.Types.INVALID_DATA,
         `Cannot transfer order: ${order.id} to a guest customer account: ${customer.email}`
+      )
+    }
+
+    if (order.customer_id === customer.id) {
+      throw new MedusaError(
+        MedusaError.Types.INVALID_DATA,
+        `Order: ${order.id} already belongs to customer: ${customer.id}`
       )
     }
   }
@@ -56,7 +62,7 @@ export const requestOrderTransferWorkflow = createWorkflow(
   ): WorkflowResponse<OrderPreviewDTO> {
     const order: OrderDTO = useRemoteQueryStep({
       entry_point: "orders",
-      fields: ["id", "email", "status"],
+      fields: ["id", "email", "status", "customer_id"],
       variables: { id: input.orderId },
       list: false,
       throw_if_key_not_found: true,
