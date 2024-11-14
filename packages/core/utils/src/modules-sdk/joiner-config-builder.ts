@@ -342,11 +342,22 @@ export function buildLinkableKeysFromMikroOrmObjects(
 export function buildLinkConfigFromModelObjects<
   const ServiceName extends string,
   const T extends Record<string, IDmlEntity<any, any>>
->(serviceName: ServiceName, models: T): InfersLinksConfig<ServiceName, T> {
+>(
+  serviceName: ServiceName,
+  models: T,
+  linkableKeys: Record<string, string> = {}
+): InfersLinksConfig<ServiceName, T> {
+  // In case some models have been provided to a custom joiner config, the linkable will be limited
+  // to that set of models. We dont want to expose models that should not be linkable.
+  const linkableModels = Object.values(linkableKeys)
   const linkConfig = {} as InfersLinksConfig<ServiceName, T>
 
   for (const model of Object.values(models) ?? []) {
-    if (!DmlEntity.isDmlEntity(model)) {
+    if (
+      !DmlEntity.isDmlEntity(model) ||
+      (linkableModels.length &&
+        !linkableModels.includes(upperCaseFirst(model.name)))
+    ) {
       continue
     }
 

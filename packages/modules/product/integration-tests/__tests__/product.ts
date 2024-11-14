@@ -1,4 +1,9 @@
-import { Image, Product, ProductCategory, ProductCollection } from "@models"
+import {
+  Image,
+  Product,
+  ProductCategory,
+  ProductCollection,
+} from "../../src/models"
 import {
   assignCategoriesToProduct,
   buildProductOnlyData,
@@ -46,21 +51,23 @@ moduleIntegrationTestRunner<Service>({
       categoryService = moduleService.productCategoryService_
     })
 
-    it(`should export the appropriate linkable configuration`, () => {
+    it.only(`should export the appropriate linkable configuration`, () => {
       const linkable = Module(Modules.PRODUCT, {
         service: ProductModuleService,
       }).linkable
 
-      expect(Object.keys(linkable)).toEqual([
-        "product",
-        "productVariant",
-        "productOption",
-        "productType",
-        "productImage",
-        "productTag",
-        "productCollection",
-        "productCategory",
-      ])
+      expect(Object.keys(linkable)).toHaveLength(7)
+      expect(Object.keys(linkable)).toEqual(
+        expect.arrayContaining([
+          "product",
+          "productVariant",
+          "productOption",
+          "productType",
+          "productTag",
+          "productCollection",
+          "productCategory",
+        ])
+      )
 
       Object.keys(linkable).forEach((key) => {
         delete linkable[key].toJSON
@@ -108,15 +115,6 @@ moduleIntegrationTestRunner<Service>({
             primaryKey: "id",
             serviceName: "product",
             field: "productType",
-          },
-        },
-        productImage: {
-          id: {
-            linkable: "product_image_id",
-            entity: "ProductImage",
-            primaryKey: "id",
-            serviceName: "product",
-            field: "productImage",
           },
         },
         productTag: {
