@@ -12,7 +12,7 @@ const tagValueIndexName = "IDX_tag_value_unique"
 
 const ProductTag = model
   .define(
-    { tableName: "product_tags", name: "ProductTag" },
+    { tableName: "product_tag", name: "ProductTag" },
     {
       id: model.id().primaryKey(),
       value: model.text().searchable(),

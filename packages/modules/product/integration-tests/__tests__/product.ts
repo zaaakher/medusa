@@ -165,6 +165,7 @@ moduleIntegrationTestRunner<Service>({
           productOne = testManager.create(toMikroORMEntity(Product), {
             id: "product-1",
             title: "product 1",
+            handle: "product-1",
             status: ProductStatus.PUBLISHED,
           })
 
@@ -258,6 +259,7 @@ moduleIntegrationTestRunner<Service>({
           productOne = testManager.create(toMikroORMEntity(Product), {
             id: "product-1",
             title: "product 1",
+            handle: "product-1",
             status: ProductStatus.PUBLISHED,
           })
 
@@ -565,10 +567,12 @@ moduleIntegrationTestRunner<Service>({
             {
               id: "test-1",
               title: "col 1",
+              handle: "col-1",
             },
             {
               id: "test-2",
               title: "col 2",
+              handle: "col-2",
             },
           ]
 

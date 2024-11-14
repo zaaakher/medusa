@@ -1,6 +1,6 @@
 import { Product } from "@models"
 
-import { DALUtils } from "@medusajs/framework/utils"
+import { DALUtils, toHandle } from "@medusajs/framework/utils"
 import { Context, DAL } from "@medusajs/framework/types"
 import { SqlEntityManager } from "@mikro-orm/postgresql"
 
@@ -15,7 +15,12 @@ export class ProductRepository extends DALUtils.mikroOrmBaseRepositoryFactory(
 
   // TODO: temporary fix until the DML support something like default on create for the handle as the example
   async create(data: any[], context: Context = {}) {
-    return await super.create(data, context)
+    return await super.create(
+      data.map((row) => {
+        return { handle: toHandle(row.title), ...row }
+      }),
+      context
+    )
   }
 
   /**

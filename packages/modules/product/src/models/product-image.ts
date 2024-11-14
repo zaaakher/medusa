@@ -11,12 +11,15 @@ const imageUrlIndexName = "IDX_product_image_url"
 // })
 
 const ProductImage = model
-  .define("ProductImage", {
-    id: model.id().primaryKey(),
-    url: model.text(),
-    metadata: model.json().nullable(),
-    products: model.manyToMany(() => Product),
-  })
+  .define(
+    { tableName: "image", name: "ProductImage" },
+    {
+      id: model.id().primaryKey(),
+      url: model.text(),
+      metadata: model.json().nullable(),
+      products: model.manyToMany(() => Product),
+    }
+  )
   .indexes([
     {
       name: imageUrlIndexName,

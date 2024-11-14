@@ -10,6 +10,7 @@ import {
 } from "@models"
 
 import ProductOption from "../../../src/models/product-option"
+import { InferEntityType } from "@medusajs/types"
 
 export * from "./data/create-product"
 
@@ -24,7 +25,7 @@ export async function createProductAndTags(
   }[]
 ) {
   const products: any[] = data.map((productData) => {
-    return manager.create(Product, productData)
+    return manager.create(toMikroORMEntity(Product), productData)
   })
 
   await manager.persistAndFlush(products)
@@ -42,7 +43,7 @@ export async function createProductAndTypes(
   }[]
 ) {
   const products: any[] = data.map((productData) => {
-    return manager.create(Product, productData)
+    return manager.create(toMikroORMEntity(Product), productData)
   })
 
   await manager.persistAndFlush(products)
@@ -55,7 +56,7 @@ export async function createProductVariants(
   data: any[]
 ) {
   const variants: any[] = data.map((variantsData) => {
-    return manager.create(ProductVariant, variantsData)
+    return manager.create(toMikroORMEntity(ProductVariant), variantsData)
   })
 
   await manager.persistAndFlush(variants)
@@ -72,7 +73,7 @@ export async function createCollections(
   }[]
 ) {
   const collections: any[] = collectionData.map((collectionData) => {
-    return manager.create(ProductCollection, collectionData)
+    return manager.create(toMikroORMEntity(ProductCollection), collectionData)
   })
 
   await manager.persistAndFlush(collections)
@@ -135,8 +136,8 @@ export async function createImages(
 
 export async function assignCategoriesToProduct(
   manager: SqlEntityManager,
-  product: Product,
-  categories: ProductCategory[]
+  product: InferEntityType<Product>,
+  categories: InferEntityType<ProductCategory>[]
 ) {
   product.categories.add(categories)
 
