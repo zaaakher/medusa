@@ -31,6 +31,7 @@ export const requestOrderTransferValidationStep = createStep(
     // TODO: throw if order change is active
 
     if (!customer.has_account) {
+      // TODO: throw
     }
   }
 )
@@ -58,7 +59,7 @@ export const requestOrderTransferWorkflow = createWorkflow(
       variables: { id: input.customerId },
       list: false,
       throw_if_key_not_found: true,
-    })
+    }).config({ name: "customer-query" })
 
     requestOrderTransferValidationStep({ order, customer })
 
@@ -95,13 +96,16 @@ export const requestOrderTransferWorkflow = createWorkflow(
       input: actionInput,
     })
 
-    updateOrderChangesStep([
+    const updateOrderChangeInput = transform({ input }, ({ input }) => [
       {
         id: change.id,
         status: OrderChangeStatus.REQUESTED,
         requested_by: input.loggedInUser,
+        requested_at: new Date(),
       },
     ])
+
+    updateOrderChangesStep(updateOrderChangeInput)
 
     return new WorkflowResponse(previewOrderChangeStep(input.orderId))
   }

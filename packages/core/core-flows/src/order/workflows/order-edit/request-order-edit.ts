@@ -8,6 +8,7 @@ import {
   WorkflowResponse,
   createStep,
   createWorkflow,
+  transform,
 } from "@medusajs/framework/workflows-sdk"
 import { useRemoteQueryStep } from "../../../common"
 import { previewOrderChangeStep } from "../../steps"
@@ -74,14 +75,19 @@ export const requestOrderEditRequestWorkflow = createWorkflow(
       orderChange,
     })
 
-    updateOrderChangesStep([
-      {
-        id: orderChange.id,
-        status: OrderChangeStatus.REQUESTED,
-        requested_at: new Date(),
-        requested_by: input.requested_by,
-      },
-    ])
+    const updateOrderInput = transform(
+      { input, orderChange },
+      ({ input, orderChange }) => [
+        {
+          id: orderChange.id,
+          status: OrderChangeStatus.REQUESTED,
+          requested_at: new Date(),
+          requested_by: input.requested_by,
+        },
+      ]
+    )
+
+    updateOrderChangesStep(updateOrderInput)
 
     createOrUpdateOrderPaymentCollectionWorkflow.runAsStep({
       input: {
