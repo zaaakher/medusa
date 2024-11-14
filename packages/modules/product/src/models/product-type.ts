@@ -15,7 +15,9 @@ const ProductTypeDML = model
     id: model.id().primaryKey(),
     value: model.text().searchable(),
     metadata: model.json().nullable(),
-    product: model.hasMany(() => Product),
+    product: model.hasMany(() => Product, {
+      mappedBy: "type",
+    }),
   })
   .indexes([
     {

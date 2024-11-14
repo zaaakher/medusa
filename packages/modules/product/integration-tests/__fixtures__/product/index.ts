@@ -1,4 +1,4 @@
-import { ProductStatus } from "@medusajs/framework/utils"
+import { ProductStatus, toMikroORMEntity } from "@medusajs/framework/utils"
 import { SqlEntityManager } from "@mikro-orm/postgresql"
 import {
   Image,
@@ -88,7 +88,7 @@ export async function createTypes(
   }[]
 ) {
   const types: any[] = typesData.map((typesData) => {
-    return manager.create(ProductType, typesData)
+    return manager.create(toMikroORMEntity(ProductType), typesData)
   })
 
   await manager.persistAndFlush(types)
@@ -112,7 +112,7 @@ export async function createOptions(
   }[]
 ) {
   const options: any[] = optionsData.map((option) => {
-    return manager.create(ProductOption, option)
+    return manager.create(toMikroORMEntity(ProductOption), option)
   })
 
   await manager.persistAndFlush(options)
@@ -125,7 +125,7 @@ export async function createImages(
   imagesData: string[]
 ) {
   const images: any[] = imagesData.map((img) => {
-    return manager.create(Image, { url: img })
+    return manager.create(toMikroORMEntity(Image), { url: img })
   })
 
   await manager.persistAndFlush(images)

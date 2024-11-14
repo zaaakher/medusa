@@ -34,7 +34,7 @@ const productCollectionIndexName = "IDX_product_collection_id"
 //   where: "deleted_at IS NULL",
 // })
 
-export const ProductDML = model
+const ProductDML = model
   .define("Product", {
     id: model.id().primaryKey(),
     title: model.text().searchable(),
@@ -60,7 +60,11 @@ export const ProductDML = model
     variants: model.hasMany(() => ProductVariant, {
       mappedBy: "product",
     }),
-    type: model.belongsTo(() => ProductType).nullable(),
+    type: model
+      .belongsTo(() => ProductType, {
+        mappedBy: "product",
+      })
+      .nullable(),
     tags: model.manyToMany(() => ProductTag, {
       mappedBy: "product",
     }),
