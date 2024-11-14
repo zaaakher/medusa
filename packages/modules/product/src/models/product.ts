@@ -66,7 +66,7 @@ const ProductDML = model
       })
       .nullable(),
     tags: model.manyToMany(() => ProductTag, {
-      mappedBy: "product",
+      mappedBy: "products",
     }),
     options: model.hasMany(() => ProductOption, {
       mappedBy: "product",

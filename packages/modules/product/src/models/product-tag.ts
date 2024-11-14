@@ -11,14 +11,17 @@ const tagValueIndexName = "IDX_tag_value_unique"
 // })
 
 const ProductTagDML = model
-  .define("ProductTag", {
-    id: model.id().primaryKey(),
-    value: model.text().searchable(),
-    metadata: model.json().nullable(),
-    product: model.manyToMany(() => Product, {
-      mappedBy: "tags",
-    }),
-  })
+  .define(
+    { tableName: "product_tags", name: "ProductTag" },
+    {
+      id: model.id().primaryKey(),
+      value: model.text().searchable(),
+      metadata: model.json().nullable(),
+      products: model.manyToMany(() => Product, {
+        mappedBy: "tags",
+      }),
+    }
+  )
   .indexes([
     {
       name: tagValueIndexName,
