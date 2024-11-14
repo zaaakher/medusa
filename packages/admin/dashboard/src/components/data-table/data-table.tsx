@@ -212,7 +212,7 @@ export const DataTable = <TData,>({
       }
 
       if (event.shiftKey) {
-        window.open(href)
+        window.open(href, undefined, "noreferrer")
         return
       }
 
