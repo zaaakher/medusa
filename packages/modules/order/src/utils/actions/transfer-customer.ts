@@ -12,13 +12,13 @@ OrderChangeProcessing.registerActionType(ChangeActionType.TRANSFER_CUSTOMER, {
       action,
       options
     )
-    currentOrder.customer_id = action.details.reference
+    currentOrder.customer_id = action.reference_id
   },
   validate({ action }) {
-    if (!action.details.reference) {
+    if (!action.reference_id) {
       throw new MedusaError(
         MedusaError.Types.INVALID_DATA,
-        "Reference required."
+        "Reference to customer ID is required"
       )
     }
   },

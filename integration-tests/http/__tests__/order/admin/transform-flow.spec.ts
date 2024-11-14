@@ -67,6 +67,35 @@ medusaIntegrationTestRunner({
             }),
           })
         )
+
+        const orderChangesResult = (
+          await api.get(`/admin/orders/${order.id}/changes`, adminHeaders)
+        ).data.order_changes
+
+        expect(orderChangesResult.length).toEqual(1)
+        expect(orderChangesResult[0]).toEqual(
+          expect.objectContaining({
+            change_type: "transfer",
+            status: "requested",
+            requested_by: user.id,
+            created_by: user.id,
+            confirmed_by: null,
+            confirmed_at: null,
+            declined_by: null,
+            actions: expect.arrayContaining([
+              expect.objectContaining({
+                version: 2,
+                action: "TRANSFER_CUSTOMER",
+                reference: "customer",
+                reference_id: customer.id,
+                details: expect.objectContaining({
+                  token: expect.any(String),
+                  original_email: "tony@stark-industries.com",
+                }),
+              }),
+            ]),
+          })
+        )
       })
     })
   },

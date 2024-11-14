@@ -7,6 +7,7 @@ import {
   transform,
 } from "@medusajs/framework/workflows-sdk"
 import { CustomerDTO, OrderPreviewDTO } from "@medusajs/types"
+import { v4 as uid } from "uuid"
 
 import { useRemoteQueryStep } from "../../../common"
 import { createOrderChangeStep } from "../../steps/create-order-change"
@@ -83,10 +84,11 @@ export const requestOrderTransferWorkflow = createWorkflow(
           order_id: input.orderId,
           action: ChangeActionType.TRANSFER_CUSTOMER,
           version: change.version,
+          reference: "customer",
+          reference_id: input.customerId,
           details: {
-            // token,
-            reference: input.customerId,
-            originalEmail: order.email,
+            token: uid(),
+            original_email: order.email,
           },
         },
       ]
@@ -96,14 +98,17 @@ export const requestOrderTransferWorkflow = createWorkflow(
       input: actionInput,
     })
 
-    const updateOrderChangeInput = transform({ input }, ({ input }) => [
-      {
-        id: change.id,
-        status: OrderChangeStatus.REQUESTED,
-        requested_by: input.loggedInUser,
-        requested_at: new Date(),
-      },
-    ])
+    const updateOrderChangeInput = transform(
+      { input, change },
+      ({ input, change }) => [
+        {
+          id: change.id,
+          status: OrderChangeStatus.REQUESTED,
+          requested_by: input.loggedInUser,
+          requested_at: new Date(),
+        },
+      ]
+    )
 
     updateOrderChangesStep(updateOrderChangeInput)
 
