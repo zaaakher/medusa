@@ -13,7 +13,11 @@ import { useRemoteQueryStep } from "../../../common"
 import { createOrderChangeStep } from "../../steps/create-order-change"
 import { throwIfOrderIsCancelled } from "../../utils/order-validation"
 import { createOrderChangeActionsWorkflow } from "../create-order-change-actions"
-import { ChangeActionType, OrderChangeStatus } from "@medusajs/utils"
+import {
+  ChangeActionType,
+  MedusaError,
+  OrderChangeStatus,
+} from "@medusajs/utils"
 import { previewOrderChangeStep, updateOrderChangesStep } from "../../steps"
 
 /**
@@ -32,7 +36,10 @@ export const requestOrderTransferValidationStep = createStep(
     // TODO: throw if order change is active
 
     if (!customer.has_account) {
-      // TODO: throw
+      throw new MedusaError(
+        MedusaError.Types.INVALID_DATA,
+        `Cannot transfer order: ${order.id} to a guest customer account: ${customer.email}`
+      )
     }
   }
 )
