@@ -9,7 +9,7 @@ import {
 import { CustomerDTO, OrderPreviewDTO } from "@medusajs/types"
 import { v4 as uid } from "uuid"
 
-import { useRemoteQueryStep } from "../../../common"
+import { emitEventStep, useRemoteQueryStep } from "../../../common"
 import { createOrderChangeStep } from "../../steps/create-order-change"
 import { throwIfOrderIsCancelled } from "../../utils/order-validation"
 import { createOrderChangeActionsWorkflow } from "../create-order-change-actions"
@@ -17,6 +17,7 @@ import {
   ChangeActionType,
   MedusaError,
   OrderChangeStatus,
+  OrderWorkflowEvents,
 } from "@medusajs/utils"
 import { previewOrderChangeStep, updateOrderChangesStep } from "../../steps"
 
@@ -118,6 +119,11 @@ export const requestOrderTransferWorkflow = createWorkflow(
     )
 
     updateOrderChangesStep(updateOrderChangeInput)
+
+    emitEventStep({
+      eventName: OrderWorkflowEvents.TRANSFER_REQUESTED,
+      data: { id: input.orderId },
+    })
 
     return new WorkflowResponse(previewOrderChangeStep(input.orderId))
   }
