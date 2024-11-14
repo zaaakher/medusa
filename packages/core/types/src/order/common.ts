@@ -24,6 +24,7 @@ export type ChangeActionType =
   | "SHIP_ITEM"
   | "WRITE_OFF_ITEM"
   | "REINSTATE_ITEM"
+  | "TRANSFER_CUSTOMER"
 
 export type OrderChangeStatus =
   | "confirmed"
