@@ -10,7 +10,7 @@ const typeValueIndexName = "IDX_type_value_unique"
 //   where: "deleted_at IS NULL",
 // })
 
-const ProductTypeDML = model
+const ProductType = model
   .define("ProductType", {
     id: model.id().primaryKey(),
     value: model.text().searchable(),
@@ -62,4 +62,4 @@ const ProductTypeDML = model
 // }
 // }
 
-export default ProductTypeDML
+export default ProductType

@@ -10,7 +10,7 @@ const imageUrlIndexName = "IDX_product_image_url"
 //   where: "deleted_at IS NULL",
 // })
 
-const ProductImageDML = model
+const ProductImage = model
   .define("ProductImage", {
     id: model.id().primaryKey(),
     url: model.text(),
@@ -64,4 +64,4 @@ const ProductImageDML = model
 // }
 // }
 
-export default ProductImageDML
+export default ProductImage

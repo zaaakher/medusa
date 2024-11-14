@@ -13,6 +13,11 @@ export class ProductRepository extends DALUtils.mikroOrmBaseRepositoryFactory(
     super(...arguments)
   }
 
+  // TODO: temporary fix until the DML support something like default on create for the handle as the example
+  async create(data: any[], context: Context = {}) {
+    return await super.create(data, context)
+  }
+
   /**
    * In order to be able to have a strict not in categories, and prevent a product
    * to be return in the case it also belongs to other categories, we need to

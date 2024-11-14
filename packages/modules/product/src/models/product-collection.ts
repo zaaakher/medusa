@@ -10,7 +10,7 @@ const collectionHandleIndexName = "IDX_collection_handle_unique"
 //   where: "deleted_at IS NULL",
 // })
 
-const ProductCollectionDML = model
+const ProductCollection = model
   .define("ProductCollection", {
     id: model.id().primaryKey(),
     title: model.text().searchable(),
@@ -70,4 +70,4 @@ const ProductCollectionDML = model
 // }
 // }
 
-export default ProductCollectionDML
+export default ProductCollection

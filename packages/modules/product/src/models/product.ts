@@ -34,7 +34,7 @@ const productCollectionIndexName = "IDX_product_collection_id"
 //   where: "deleted_at IS NULL",
 // })
 
-const ProductDML = model
+const Product = model
   .define("Product", {
     id: model.id().primaryKey(),
     title: model.text().searchable(),
@@ -242,5 +242,5 @@ const ProductDML = model
 // }
 // }
 
-export default ProductDML
+export default Product
 // export default Product

@@ -46,7 +46,7 @@ const variantProductIdIndexName = "IDX_product_variant_product_id"
 //   where: "deleted_at IS NULL",
 // })
 
-const ProductVariantDML = model
+const ProductVariant = model
   .define("ProductVariant", {
     id: model.id().primaryKey(),
     title: model.text().searchable(),
@@ -206,5 +206,5 @@ const ProductVariantDML = model
 // }
 // }
 
-export default ProductVariantDML
+export default ProductVariant
 // export default ProductVariant

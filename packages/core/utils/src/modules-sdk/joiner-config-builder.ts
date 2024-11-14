@@ -353,15 +353,17 @@ export function buildLinkConfigFromModelObjects<
   const linkConfig = {} as InfersLinksConfig<ServiceName, T>
 
   for (const model of Object.values(models) ?? []) {
+    const classLikeModelName = upperCaseFirst(model.name)
+
     if (
       !DmlEntity.isDmlEntity(model) ||
-      (linkableModels.length &&
-        !linkableModels.includes(upperCaseFirst(model.name)))
+      (linkableModels.length && !linkableModels.includes(classLikeModelName))
     ) {
       continue
     }
 
     const schema = model.schema
+
     // @ts-ignore
     const modelLinkConfig = (linkConfig[lowerCaseFirst(model.name)] ??= {
       toJSON: function () {
@@ -389,8 +391,41 @@ export function buildLinkConfigFromModelObjects<
           primaryKey: property,
           serviceName,
           field: lowerCaseFirst(model.name),
-          entity: upperCaseFirst(model.name),
+          entity: classLikeModelName,
         }
+      }
+    }
+
+    // Merge existing custom linkable keys configuration
+    const linkableKeysPerModel = Object.entries(linkableKeys).reduce(
+      (acc, [key, entityName]) => {
+        acc[entityName] ??= []
+        acc[entityName].push(key)
+        return acc
+      },
+      {}
+    )
+
+    for (const linkableKey of linkableKeysPerModel[classLikeModelName] ?? []) {
+      const snakeCasedModelName = camelToSnakeCase(toCamelCase(model.name))
+
+      // Linkable keys by default are prepared with snake cased model name _id
+      // So to be able to compare only the property we have to remove the first part
+      const inferredReferenceProperty = linkableKey.replace(
+        `${snakeCasedModelName}_`,
+        ""
+      )
+
+      if (modelLinkConfig[inferredReferenceProperty]) {
+        continue
+      }
+
+      modelLinkConfig[linkableKey] = {
+        linkable: linkableKey,
+        primaryKey: linkableKey,
+        serviceName,
+        field: lowerCaseFirst(model.name),
+        entity: upperCaseFirst(model.name),
       }
     }
   }

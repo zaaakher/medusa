@@ -10,7 +10,7 @@ const optionValueOptionIdIndexName = "IDX_option_value_option_id_unique"
 //   where: "deleted_at IS NULL",
 // })
 
-const ProductOptionValueDML = model
+const ProductOptionValue = model
   .define("ProductOptionValue", {
     id: model.id().primaryKey(),
     value: model.text(),
@@ -82,4 +82,4 @@ const ProductOptionValueDML = model
 // }
 // }
 
-export default ProductOptionValueDML
+export default ProductOptionValue

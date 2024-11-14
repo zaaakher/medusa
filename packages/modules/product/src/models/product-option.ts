@@ -11,7 +11,7 @@ const optionProductIdTitleIndexName = "IDX_option_product_id_title_unique"
 //   where: "deleted_at IS NULL",
 // })
 
-const ProductOptionDML = model
+const ProductOption = model
   .define("ProductOption", {
     id: model.id().primaryKey(),
     title: model.text().searchable(),
@@ -87,4 +87,4 @@ const ProductOptionDML = model
 // }
 // }
 
-export default ProductOptionDML
+export default ProductOption

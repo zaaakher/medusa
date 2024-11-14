@@ -10,7 +10,7 @@ const tagValueIndexName = "IDX_tag_value_unique"
 //   where: "deleted_at IS NULL",
 // })
 
-const ProductTagDML = model
+const ProductTag = model
   .define(
     { tableName: "product_tags", name: "ProductTag" },
     {
@@ -67,4 +67,4 @@ const ProductTagDML = model
 // }
 // }
 
-export default ProductTagDML
+export default ProductTag

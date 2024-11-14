@@ -19,7 +19,7 @@ const categoryMpathIndexName = "IDX_product_category_path"
 //   where: "deleted_at IS NULL",
 // })
 
-const ProductCategoryDML = model
+const ProductCategory = model
   .define("ProductCategory", {
     id: model.id().primaryKey(),
     name: model.text().searchable(),
@@ -31,11 +31,11 @@ const ProductCategoryDML = model
     rank: model.number().default(0),
     metadata: model.json().nullable(),
     parent_category: model
-      .belongsTo(() => ProductCategoryDML, {
+      .belongsTo(() => ProductCategory, {
         mappedBy: "category_children",
       })
       .nullable(),
-    category_children: model.hasMany(() => ProductCategoryDML, {
+    category_children: model.hasMany(() => ProductCategory, {
       mappedBy: "parent_category",
     }),
     products: model.manyToMany(() => Product),
@@ -134,4 +134,4 @@ const ProductCategoryDML = model
 // }
 // }
 
-export default ProductCategoryDML
+export default ProductCategory
