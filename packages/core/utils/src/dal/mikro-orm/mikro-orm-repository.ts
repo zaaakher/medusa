@@ -38,7 +38,7 @@ import {
 import { dbErrorMapper } from "./db-error-mapper"
 import { mikroOrmSerializer } from "./mikro-orm-serializer"
 import { mikroOrmUpdateDeletedAtRecursively } from "./utils"
-import { DmlEntity, toMikroORMEntity } from "../../dml"
+import { toMikroORMEntity } from "../../dml"
 
 export class MikroOrmBase {
   readonly manager_: any
@@ -317,9 +317,9 @@ export function mikroOrmBaseRepositoryFactory<const T extends object>(
 ): {
   new ({ manager }: { manager: any }): MikroOrmBaseRepository<T>
 } {
-  const mikroOrmEntity = (
-    DmlEntity.isDmlEntity(entity) ? toMikroORMEntity(entity) : entity
-  ) as EntityClass<InferEntityType<T>>
+  const mikroOrmEntity = toMikroORMEntity(entity) as EntityClass<
+    InferEntityType<T>
+  >
 
   class MikroOrmAbstractBaseRepository_ extends MikroOrmBaseRepository<T> {
     entity = mikroOrmEntity
@@ -482,7 +482,7 @@ export function mikroOrmBaseRepositoryFactory<const T extends object>(
       })
 
       return (await manager.find(
-        entity as EntityName<T>,
+        this.entity as EntityName<T>,
         findOptions_.where as MikroFilterQuery<T>,
         findOptions_.options as MikroOptions<T>
       )) as InferRepositoryReturnType<T>[]
