@@ -2,6 +2,8 @@ import { medusaIntegrationTestRunner } from "@medusajs/test-utils"
 import {
   adminHeaders,
   createAdminUser,
+  generatePublishableKey,
+  generateStoreHeaders,
 } from "../../../../helpers/create-admin-user"
 import { createOrderSeeder } from "../../fixtures/order"
 
@@ -17,16 +19,30 @@ medusaIntegrationTestRunner({
       const container = getContainer()
 
       user = (await createAdminUser(dbConnection, adminHeaders, container)).user
+      const publishableKey = await generatePublishableKey(container)
+      const storeHeaders = generateStoreHeaders({ publishableKey })
+
       const seeders = await createOrderSeeder({ api, container })
+
+      const registeredCustomerToken = (
+        await api.post("/auth/customer/emailpass/register", {
+          email: "test@email.com",
+          password: "password",
+        })
+      ).data.token
 
       customer = (
         await api.post(
-          "/admin/customers",
+          "/store/customers",
           {
-            first_name: "john",
-            email: "john@medusajs.com",
+            email: "test@email.com",
           },
-          adminHeaders
+          {
+            headers: {
+              Authorization: `Bearer ${registeredCustomerToken}`,
+              ...storeHeaders.headers,
+            },
+          }
         )
       ).data.customer
 
@@ -94,6 +110,37 @@ medusaIntegrationTestRunner({
                 }),
               }),
             ]),
+          })
+        )
+      })
+
+      it("should fail to request order transfer to a guest customer", async () => {
+        const customer = (
+          await api.post(
+            "/admin/customers",
+            {
+              first_name: "guest",
+              email: "guest@medusajs.com",
+            },
+            adminHeaders
+          )
+        ).data.customer
+
+        const err = await api
+          .post(
+            `/admin/orders/${order.id}/transfer`,
+            {
+              customer_id: customer.id,
+            },
+            adminHeaders
+          )
+          .catch((e) => e)
+
+        expect(err.response.status).toBe(400)
+        expect(err.response.data).toEqual(
+          expect.objectContaining({
+            type: "invalid_data",
+            message: `Cannot transfer order: ${order.id} to a guest customer account: guest@medusajs.com`,
           })
         )
       })
