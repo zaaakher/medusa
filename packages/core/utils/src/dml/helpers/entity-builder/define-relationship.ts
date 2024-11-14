@@ -27,6 +27,57 @@ type Context = {
   MANY_TO_MANY_TRACKED_RELATIONS: Record<string, boolean>
 }
 
+function retrieveOtherSideRelationship({
+  relationship,
+  relatedEntity,
+  relatedModelName,
+  entity,
+}: {
+  relationship: RelationshipMetadata
+  relatedEntity: DmlEntity<
+    Record<string, PropertyType<any> | RelationshipType<any>>,
+    any
+  >
+  relatedModelName: string
+  entity: DmlEntity<any, any>
+}) {
+  if (relationship.mappedBy) {
+    return relatedEntity.parse().schema[
+      relationship.mappedBy
+    ] as RelationshipType<any>
+  }
+
+  /**
+   * Since we don't have the information about the other side of the
+   * relationship, we will try to find all the other side many to many that refers to the current entity.
+   * If there is any, we will try to find if at least one of them has a mappedBy.
+   */
+  const potentialOtherSide = Object.entries(relatedEntity.schema)
+    .filter(([, propConfig]) => DmlManyToMany.isManyToMany(propConfig))
+    .find(([prop, propConfig]) => {
+      const parsedProp = propConfig.parse(prop) as RelationshipMetadata
+
+      const relatedEntity =
+        typeof parsedProp.entity === "function"
+          ? parsedProp.entity()
+          : undefined
+
+      if (!relatedEntity) {
+        throw new Error(
+          `Invalid relationship reference for "${relatedModelName}.${prop}". Make sure to define the relationship using a factory function`
+        )
+      }
+
+      return (
+        parsedProp.mappedBy === relationship.name &&
+        parseEntityName(relatedEntity).modelName ===
+          parseEntityName(entity).modelName
+      )
+    }) as unknown as [string, RelationshipType<any>]
+
+  return potentialOtherSide?.[1]
+}
+
 /**
  * Validates a many to many relationship without mappedBy and checks if the other side of the relationship is defined and possesses mappedBy.
  * @param MikroORMEntity
@@ -39,6 +90,7 @@ function validateManyToManyRelationshipWithoutMappedBy({
   relationship,
   relatedEntity,
   relatedModelName,
+  entity,
 }: {
   MikroORMEntity: EntityConstructor<any>
   relationship: RelationshipMetadata
@@ -47,42 +99,23 @@ function validateManyToManyRelationshipWithoutMappedBy({
     any
   >
   relatedModelName: string
+  entity: DmlEntity<any, any>
 }) {
   /**
    * Since we don't have the information about the other side of the
    * relationship, we will try to find all the other side many to many that refers to the current entity.
    * If there is any, we will try to find if at least one of them has a mappedBy.
    */
-  const potentialOtherSides = Object.entries(relatedEntity.schema)
-    .filter(([, propConfig]) => DmlManyToMany.isManyToMany(propConfig))
-    .filter(([prop, propConfig]) => {
-      const parsedProp = propConfig.parse(prop) as RelationshipMetadata
-      const relatedEntity =
-        typeof parsedProp.entity === "function"
-          ? parsedProp.entity()
-          : undefined
+  const potentialOtherSide = retrieveOtherSideRelationship({
+    relationship,
+    relatedEntity,
+    relatedModelName,
+    entity,
+  })
 
-      if (!relatedEntity) {
-        throw new Error(
-          `Invalid relationship reference for "${relatedModelName}.${prop}". Make sure to define the relationship using a factory function`
-        )
-      }
-
-      return parseEntityName(relatedEntity).modelName === MikroORMEntity.name
-    }) as unknown as [string, RelationshipType<any>][]
-
-  if (potentialOtherSides.length) {
-    const hasMappedBy = potentialOtherSides.some(
-      ([, propConfig]) => !!propConfig.parse("").mappedBy
-    )
-    if (!hasMappedBy) {
-      throw new Error(
-        `Invalid relationship reference for "${MikroORMEntity.name}.${relationship.name}". "mappedBy" should be defined on one side or the other.`
-      )
-    }
-  } else {
+  if (!potentialOtherSide) {
     throw new Error(
-      `Invalid relationship reference for "${MikroORMEntity.name}.${relationship.name}". The other side of the relationship is missing.`
+      `Invalid relationship reference for "${MikroORMEntity.name}.${relationship.name}". "mappedBy" should be defined on one side or the other.`
     )
   }
 }
@@ -289,6 +322,7 @@ export function defineBelongsToRelationship(
  */
 export function defineManyToManyRelationship(
   MikroORMEntity: EntityConstructor<any>,
+  entity: DmlEntity<any, any>,
   relationship: RelationshipMetadata,
   relatedEntity: DmlEntity<
     Record<string, PropertyType<any> | RelationshipType<any>>,
@@ -296,27 +330,41 @@ export function defineManyToManyRelationship(
   >,
   {
     relatedModelName,
+    relatedTableName,
     pgSchema,
-  }: { relatedModelName: string; pgSchema: string | undefined },
+  }: {
+    relatedModelName: string
+    pgSchema: string | undefined
+    relatedTableName: string
+  },
   { MANY_TO_MANY_TRACKED_RELATIONS }: Context
 ) {
   let mappedBy = relationship.mappedBy
   let inversedBy: undefined | string
   let pivotEntityName: undefined | string
   let pivotTableName: undefined | string
+  let joinColumn: undefined | string = relationship.options.joinColumn
+  let inverseJoinColumn: undefined | string =
+    relationship.options.inverseJoinColumn
+
+  const otherSideRelationship = retrieveOtherSideRelationship({
+    relationship,
+    relatedEntity,
+    relatedModelName,
+    entity,
+  })
 
   /**
    * Validating other side of relationship when mapped by is defined
    */
   if (mappedBy) {
-    const otherSideRelation = relatedEntity.parse().schema[mappedBy]
-    if (!otherSideRelation) {
+    if (!otherSideRelationship) {
       throw new Error(
         `Missing property "${mappedBy}" on "${relatedModelName}" entity. Make sure to define it as a relationship`
       )
     }
 
-    if (!DmlManyToMany.isManyToMany(otherSideRelation)) {
+    if (!DmlManyToMany.isManyToMany(otherSideRelationship)) {
       throw new Error(
         `Invalid relationship reference for "${mappedBy}" on "${relatedModelName}" entity. Make sure to define a manyToMany relationship`
       )
@@ -330,7 +378,7 @@ export function defineManyToManyRelationship(
      * - Otherwise, we will track ourselves as the owner.
      */
     if (
-      otherSideRelation.parse(mappedBy).mappedBy &&
+      otherSideRelationship.parse(mappedBy).mappedBy &&
       MANY_TO_MANY_TRACKED_RELATIONS[`${relatedModelName}.${mappedBy}`]
     ) {
       inversedBy = mappedBy
@@ -346,6 +394,7 @@ export function defineManyToManyRelationship(
       relationship,
       relatedEntity,
       relatedModelName,
+      entity,
     })
   }
 
@@ -371,6 +420,7 @@ export function defineManyToManyRelationship(
   }
 
   if (!pivotEntityName) {
+    const { tableName } = parseEntityName(entity)
     /**
      * Pivot table name is created as follows (when not explicitly provided)
      *
@@ -381,15 +431,22 @@ export function defineManyToManyRelationship(
      */
     pivotTableName =
       relationship.options.pivotTable ??
-      [MikroORMEntity.name, relatedModelName]
+      otherSideRelationship.parse("").options.pivotTable ??
+      [tableName, relatedTableName]
         .sort()
         .map((token, index) => {
           if (index === 1) {
-            return pluralize(camelToSnakeCase(token))
+            return pluralize(token)
           }
-          return camelToSnakeCase(token)
+          return token
         })
         .join("_")
+  }
+
+  if (!joinColumn || !inverseJoinColumn) {
+    const otherSideRelationshipOptions = otherSideRelationship.parse("").options
+    joinColumn ??= otherSideRelationshipOptions.joinColumn
+    inverseJoinColumn ??= otherSideRelationshipOptions.inverseJoinColumn
   }
 
   ManyToMany({
@@ -404,6 +461,8 @@ export function defineManyToManyRelationship(
     ...(pivotEntityName ? { pivotEntity: pivotEntityName } : {}),
     ...(mappedBy ? { mappedBy: mappedBy as any } : {}),
     ...(inversedBy ? { inversedBy: inversedBy as any } : {}),
+    ...(joinColumn ? { joinColumn } : {}),
+    ...(inverseJoinColumn ? { inverseJoinColumn } : {}),
   })(MikroORMEntity.prototype, relationship.name)
 }
 
@@ -412,6 +471,7 @@ export function defineManyToManyRelationship(
  */
 export function defineRelationship(
   MikroORMEntity: EntityConstructor<any>,
+  entity: DmlEntity<any, any>,
   relationship: RelationshipMetadata,
   cascades: EntityCascades<string[]>,
   context: Context
@@ -482,6 +542,7 @@ export function defineRelationship(
     case "manyToMany":
       defineManyToManyRelationship(
         MikroORMEntity,
+        entity,
         relationship,
         relatedEntity,
         relatedEntityInfo,

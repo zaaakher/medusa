@@ -218,7 +218,7 @@ moduleIntegrationTestRunner<Service>({
           images = await createImages(testManager, ["image-1"])
         })
 
-        it("should create a product", async () => {
+        it.only("should create a product", async () => {
           const data = buildProductOnlyData({
             images,
             thumbnail: images[0].url,

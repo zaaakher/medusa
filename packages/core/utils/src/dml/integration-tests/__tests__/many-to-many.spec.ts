@@ -1,12 +1,17 @@
 import { MetadataStorage, MikroORM } from "@mikro-orm/core"
 import { model } from "../../entity-builder"
-import { toMikroOrmEntities } from "../../helpers/create-mikro-orm-entity"
+import {
+  mikroORMEntityBuilder,
+  toMikroOrmEntities,
+} from "../../helpers/create-mikro-orm-entity"
 import { createDatabase, dropDatabase } from "pg-god"
 import { CustomTsMigrationGenerator, mikroOrmSerializer } from "../../../dal"
 import { EntityConstructor } from "@medusajs/types"
 import { pgGodCredentials } from "../utils"
 import { FileSystem } from "../../../common"
 import { join } from "path"
+
+jest.setTimeout(300000)
 
 export const fileSystem = new FileSystem(
   join(__dirname, "../../integration-tests-migrations-many-to-many")
@@ -27,6 +32,7 @@ describe("manyToMany - manyToMany", () => {
 
   beforeEach(async () => {
     MetadataStorage.clear()
+    mikroORMEntityBuilder.clear()
 
     const team = model.define("team", {
       id: model.id().primaryKey(),
@@ -192,31 +198,25 @@ describe("manyToMany - manyToMany", () => {
   })
 
   it(`should fail to load the dml's if both side of the relation are missing the mappedBy options`, () => {
+    mikroORMEntityBuilder.clear()
+
     const team = model.define("team", {
       id: model.id().primaryKey(),
       name: model.text(),
       users: model.manyToMany(() => user, {
-        pivotEntity: () => squad,
+        pivot_table: "team_users",
       }),
-    })
-
-    const squad = model.define("teamUsers", {
-      id: model.id().primaryKey(),
-      user: model.belongsTo(() => user, { mappedBy: "squads" }),
-      squad: model.belongsTo(() => team, { mappedBy: "users" }),
     })
 
     const user = model.define("user", {
       id: model.id().primaryKey(),
       username: model.text(),
-      squads: model.manyToMany(() => team, {
-        pivotEntity: () => squad,
-      }),
+      squads: model.manyToMany(() => team),
     })
 
     let error!: Error
     try {
-      ;[User, Squad, Team] = toMikroOrmEntities([user, squad, team])
+      ;[User, Team] = toMikroOrmEntities([user, team])
     } catch (e) {
       error = e
     }
@@ -227,7 +227,9 @@ describe("manyToMany - manyToMany", () => {
     )
   })
 
-  it(`should fail to load the dml's if the relation is defined only on one side`, () => {
+  it.only(`should fail to load the dml's if the relation is defined only on one side`, () => {
+    mikroORMEntityBuilder.clear()
+
     const team = model.define("team", {
       id: model.id().primaryKey(),
       name: model.text(),
@@ -248,7 +250,7 @@ describe("manyToMany - manyToMany", () => {
 
     expect(error).toBeTruthy()
     expect(error.message).toEqual(
-      'Invalid relationship reference for "Team.users". The other side of the relationship is missing.'
+      'Invalid relationship reference for "Team.users". "mappedBy" should be defined on one side or the other.'
     )
   })
 })

@@ -86,7 +86,7 @@ function createMikrORMEntity() {
         applyIndexes(MikroORMEntity, tableName, field)
         applySearchable(MikroORMEntity, field)
       } else {
-        defineRelationship(MikroORMEntity, field, cascades, context)
+        defineRelationship(MikroORMEntity, entity, field, cascades, context)
       }
     })
 

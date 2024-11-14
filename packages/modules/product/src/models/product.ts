@@ -74,6 +74,8 @@ const Product = model
     images: model.manyToMany(() => ProductImage, {
       pivotTable: "product_images",
       mappedBy: "products",
+      joinColumn: "product_id",
+      inverseJoinColumn: "image_id",
     }),
     collection: model
       .belongsTo(() => ProductCollection, {
