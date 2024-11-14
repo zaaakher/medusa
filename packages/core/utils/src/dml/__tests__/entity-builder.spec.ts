@@ -4,14 +4,15 @@ import { DmlEntity } from "../entity"
 import { model } from "../entity-builder"
 import { DuplicateIdPropertyError } from "../errors"
 import {
-  createMikrORMEntity,
-  toMikroOrmEntities,
   toMikroORMEntity,
+  toMikroOrmEntities,
+  mikroORMEntityBuilder,
 } from "../helpers/create-mikro-orm-entity"
 
 describe("Entity builder", () => {
   beforeEach(() => {
     MetadataStorage.clear()
+    mikroORMEntityBuilder.clear()
   })
 
   const defaultColumnMetadata = {
@@ -3514,7 +3515,11 @@ describe("Entity builder", () => {
           }
         }
       }>()
-      expectTypeOf(new User().email.user_id).toEqualTypeOf<string>()
+
+      const userInstance = new User()
+      expectTypeOf<
+        (typeof userInstance)["email"]["user_id"]
+      >().toEqualTypeOf<string>()
 
       expectTypeOf(new Email()).toMatchTypeOf<{
         email: string
@@ -3710,7 +3715,11 @@ describe("Entity builder", () => {
           } | null
         }
       }>()
-      expectTypeOf(new User().email.user_id).toEqualTypeOf<string | null>()
+
+      const userInstance = new User()
+      expectTypeOf<(typeof userInstance)["email"]["user_id"]>().toEqualTypeOf<
+        string | null
+      >()
 
       expectTypeOf(new Email()).toMatchTypeOf<{
         email: string
@@ -5299,9 +5308,8 @@ describe("Entity builder", () => {
         teams: model.manyToMany(() => team, { mappedBy: "users" }),
       })
 
-      const entityBuilder = createMikrORMEntity()
-      const Team = entityBuilder(team)
-      const User = entityBuilder(user)
+      const Team = toMikroORMEntity(team)
+      const User = toMikroORMEntity(user)
 
       expectTypeOf(new User()).toMatchTypeOf<{
         id: number
@@ -5489,9 +5497,8 @@ describe("Entity builder", () => {
         teams: model.manyToMany(() => team, { mappedBy: "users" }),
       })
 
-      const entityBuilder = createMikrORMEntity()
-      const Team = entityBuilder(team)
-      const User = entityBuilder(user)
+      const Team = toMikroORMEntity(team)
+      const User = toMikroORMEntity(user)
 
       expectTypeOf(new User()).toMatchTypeOf<{
         id: number
