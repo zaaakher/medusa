@@ -24,6 +24,25 @@ export type OrderEditRequestWorkflowInput = {
   requested_by?: string
 }
 
+function getOrderChangesData({
+  input,
+  orderChange,
+}: {
+  input: { requested_by?: string }
+  orderChange: { id: string }
+}) {
+  return transform({ input, orderChange }, ({ input, orderChange }) => {
+    return [
+      {
+        id: orderChange.id,
+        status: OrderChangeStatus.REQUESTED,
+        requested_at: new Date(),
+        requested_by: input.requested_by,
+      },
+    ]
+  })
+}
+
 /**
  * This step validates that a order edit can be requested.
  */
@@ -75,19 +94,8 @@ export const requestOrderEditRequestWorkflow = createWorkflow(
       orderChange,
     })
 
-    const updateOrderInput = transform(
-      { input, orderChange },
-      ({ input, orderChange }) => [
-        {
-          id: orderChange.id,
-          status: OrderChangeStatus.REQUESTED,
-          requested_at: new Date(),
-          requested_by: input.requested_by,
-        },
-      ]
-    )
-
-    updateOrderChangesStep(updateOrderInput)
+    const updateOrderChangesData = getOrderChangesData({ input, orderChange })
+    updateOrderChangesStep(updateOrderChangesData)
 
     createOrUpdateOrderPaymentCollectionWorkflow.runAsStep({
       input: {
