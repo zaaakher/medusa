@@ -3,9 +3,9 @@ import {
   Context,
   DAL,
   FilterQuery,
-  FilterQuery as InternalFilterQuery,
   InferEntityType,
   InferRepositoryReturnType,
+  FilterQuery as InternalFilterQuery,
   PerformedActions,
   RepositoryService,
   RepositoryTransformOptions,
@@ -17,11 +17,10 @@ import {
   EntityName,
   EntityProperty,
   EntitySchema,
+  LoadStrategy,
   FilterQuery as MikroFilterQuery,
   FindOptions as MikroOptions,
-  LoadStrategy,
   ReferenceType,
-  RequiredEntityData,
 } from "@mikro-orm/core"
 import { SqlEntityManager } from "@mikro-orm/postgresql"
 import {
@@ -30,6 +29,7 @@ import {
   MedusaError,
   promiseAll,
 } from "../../common"
+import { toMikroORMEntity } from "../../dml"
 import { buildQuery } from "../../modules-sdk/build-query"
 import {
   getSoftDeletedCascadedEntitiesIdsMappedBy,
@@ -38,7 +38,6 @@ import {
 import { dbErrorMapper } from "./db-error-mapper"
 import { mikroOrmSerializer } from "./mikro-orm-serializer"
 import { mikroOrmUpdateDeletedAtRecursively } from "./utils"
-import { toMikroORMEntity } from "../../dml"
 
 export class MikroOrmBase {
   readonly manager_: any
@@ -354,10 +353,7 @@ export function mikroOrmBaseRepositoryFactory<const T extends object>(
       const manager = this.getActiveManager<EntityManager>(context)
 
       const entities = data.map((data_) => {
-        return manager.create(
-          entity as EntityName<T>,
-          data_ as RequiredEntityData<T>
-        )
+        return manager.create(this.entity, data_)
       })
 
       manager.persist(entities)
@@ -453,7 +449,7 @@ export function mikroOrmBaseRepositoryFactory<const T extends object>(
       context?: Context
     ): Promise<void> {
       const manager = this.getActiveManager<EntityManager>(context)
-      await manager.nativeDelete<T>(entity as EntityName<T>, filters as any)
+      await manager.nativeDelete<T>(this.entity, filters)
     }
 
     async find(
@@ -506,8 +502,8 @@ export function mikroOrmBaseRepositoryFactory<const T extends object>(
       })
 
       return (await manager.findAndCount(
-        entity as EntityName<T>,
-        findOptions_.where as MikroFilterQuery<T>,
+        this.entity,
+        findOptions_.where,
         findOptions_.options as MikroOptions<T>
       )) as [InferRepositoryReturnType<T>[], number]
     }

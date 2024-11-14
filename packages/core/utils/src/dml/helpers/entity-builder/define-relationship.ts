@@ -381,7 +381,7 @@ export function defineManyToManyRelationship(
      */
     pivotTableName =
       relationship.options.pivotTable ??
-      [MikroORMEntity.name.toLowerCase(), relatedModelName.toLowerCase()]
+      [MikroORMEntity.name, relatedModelName]
         .sort()
         .map((token, index) => {
           if (index === 1) {
