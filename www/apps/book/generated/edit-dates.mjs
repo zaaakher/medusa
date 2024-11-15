@@ -56,7 +56,7 @@ export const generatedEditDates = {
   "app/learn/advanced-development/api-routes/http-methods/page.mdx": "2024-09-11T10:43:33.169Z",
   "app/learn/advanced-development/admin/tips/page.mdx": "2024-10-07T12:50:36.335Z",
   "app/learn/advanced-development/api-routes/cors/page.mdx": "2024-09-30T08:43:53.121Z",
-  "app/learn/advanced-development/admin/ui-routes/page.mdx": "2024-10-07T12:52:37.509Z",
+  "app/learn/advanced-development/admin/ui-routes/page.mdx": "2024-11-14T15:29:22.901Z",
   "app/learn/advanced-development/api-routes/middlewares/page.mdx": "2024-09-11T10:45:31.861Z",
   "app/learn/advanced-development/modules/isolation/page.mdx": "2024-07-04T17:26:03+03:00",
   "app/learn/advanced-development/data-models/configure-properties/page.mdx": "2024-09-30T08:43:53.122Z",
