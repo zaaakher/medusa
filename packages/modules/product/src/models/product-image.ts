@@ -63,7 +63,7 @@ class ProductImage {
   @ManyToMany({
     entity: () => Product,
     pivotEntity: () => ProductImageProduct,
-    mappedBy: "images"
+    mappedBy: "images",
   })
   products = new Collection<Rel<Product>>(this)
 

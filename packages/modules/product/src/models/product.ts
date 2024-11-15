@@ -168,11 +168,10 @@ class Product {
   })
   tags = new Collection<ProductTag>(this)
 
-  @ManyToMany({
+  @ManyToMany(() => ProductImage, "products", {
+    owner: true,
     entity: () => ProductImage,
     pivotEntity: () => ProductImageProduct,
-    fixedOrder: true,
-    fixedOrderColumn: "rank",
   })
   images = new Collection<Rel<ProductImage>>(this)
 

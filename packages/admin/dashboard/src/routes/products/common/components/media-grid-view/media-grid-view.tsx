@@ -32,12 +32,14 @@ interface MediaView {
 
 interface MediaGridProps {
   media: MediaView[]
+  setMedia: (media: MediaView[]) => void
   selection: Record<string, boolean>
   onCheckedChange: (id: string) => (value: boolean) => void
 }
 
 export const MediaGrid = ({
   media,
+  setMedia,
   selection,
   onCheckedChange,
 }: MediaGridProps) => {
