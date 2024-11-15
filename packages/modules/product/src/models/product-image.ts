@@ -14,7 +14,7 @@ const ProductImage = model
   .define(
     { tableName: "image", name: "ProductImage" },
     {
-      id: model.id().primaryKey(),
+      id: model.id({ prefix: "img" }).primaryKey(),
       url: model.text(),
       metadata: model.json().nullable(),
       products: model.manyToMany(() => Product),

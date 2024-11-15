@@ -12,7 +12,7 @@ const optionValueOptionIdIndexName = "IDX_option_value_option_id_unique"
 
 const ProductOptionValue = model
   .define("ProductOptionValue", {
-    id: model.id().primaryKey(),
+    id: model.id({ prefix: "optval" }).primaryKey(),
     value: model.text(),
     metadata: model.json().nullable(),
     option: model

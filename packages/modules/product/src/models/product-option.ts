@@ -13,7 +13,7 @@ const optionProductIdTitleIndexName = "IDX_option_product_id_title_unique"
 
 const ProductOption = model
   .define("ProductOption", {
-    id: model.id().primaryKey(),
+    id: model.id({ prefix: "opt" }).primaryKey(),
     title: model.text().searchable(),
     metadata: model.json().nullable(),
     product: model.belongsTo(() => Product, {

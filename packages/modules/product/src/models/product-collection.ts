@@ -12,7 +12,7 @@ const collectionHandleIndexName = "IDX_collection_handle_unique"
 
 const ProductCollection = model
   .define("ProductCollection", {
-    id: model.id().primaryKey(),
+    id: model.id({ prefix: "pcol" }).primaryKey(),
     title: model.text().searchable(),
     handle: model.text().nullable(),
     metadata: model.json().nullable(),

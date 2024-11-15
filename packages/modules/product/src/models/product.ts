@@ -36,7 +36,7 @@ const productCollectionIndexName = "IDX_product_collection_id"
 
 const Product = model
   .define("Product", {
-    id: model.id().primaryKey(),
+    id: model.id({ prefix: "prod" }).primaryKey(),
     title: model.text().searchable(),
     handle: model.text().nullable(), // TODO: provide a way to compute a value if not provided (default maybe)
     subtitle: model.text().searchable().nullable(),

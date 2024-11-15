@@ -12,7 +12,7 @@ const typeValueIndexName = "IDX_type_value_unique"
 
 const ProductType = model
   .define("ProductType", {
-    id: model.id().primaryKey(),
+    id: model.id({ prefix: "ptyp" }).primaryKey(),
     value: model.text().searchable(),
     metadata: model.json().nullable(),
     product: model.hasMany(() => Product, {

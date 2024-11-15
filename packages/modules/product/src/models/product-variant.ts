@@ -48,7 +48,7 @@ const variantProductIdIndexName = "IDX_product_variant_product_id"
 
 const ProductVariant = model
   .define("ProductVariant", {
-    id: model.id().primaryKey(),
+    id: model.id({ prefix: "variant" }).primaryKey(),
     title: model.text().searchable(),
     sku: model.text().searchable().nullable(),
     barcode: model.text().searchable().nullable(),

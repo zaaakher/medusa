@@ -21,7 +21,7 @@ const categoryMpathIndexName = "IDX_product_category_path"
 
 const ProductCategory = model
   .define("ProductCategory", {
-    id: model.id().primaryKey(),
+    id: model.id({ prefix: "pcat" }).primaryKey(),
     name: model.text().searchable(),
     description: model.text().searchable().default(""),
     handle: model.text().searchable(),

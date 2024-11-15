@@ -14,7 +14,7 @@ const ProductTag = model
   .define(
     { tableName: "product_tag", name: "ProductTag" },
     {
-      id: model.id().primaryKey(),
+      id: model.id({ prefix: "ptag" }).primaryKey(),
       value: model.text().searchable(),
       metadata: model.json().nullable(),
       products: model.manyToMany(() => Product),
