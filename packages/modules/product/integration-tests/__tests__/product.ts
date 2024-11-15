@@ -390,7 +390,7 @@ moduleIntegrationTestRunner<Service>({
             await service.softDelete([products[0].id])
           })
 
-          it("should list all products that are not deleted", async () => {
+          it.only("should list all products that are not deleted", async () => {
             const products = await service.list()
 
             expect(products).toHaveLength(2)

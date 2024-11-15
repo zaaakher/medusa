@@ -67,6 +67,7 @@ const Product = model
       .nullable(),
     tags: model.manyToMany(() => ProductTag, {
       mappedBy: "products",
+      pivot_table: "product_tags",
     }),
     options: model.hasMany(() => ProductOption, {
       mappedBy: "product",
