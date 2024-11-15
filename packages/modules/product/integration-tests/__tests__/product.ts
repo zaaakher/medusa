@@ -762,7 +762,7 @@ moduleIntegrationTestRunner<Service>({
           images = await createImages(testManager, ["image-1"])
         })
 
-        it.only("should soft delete a product", async () => {
+        it("should soft delete a product", async () => {
           const data = buildProductOnlyData({
             images,
             thumbnail: images[0].url,

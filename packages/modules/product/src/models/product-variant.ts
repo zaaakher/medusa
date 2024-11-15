@@ -74,6 +74,8 @@ const ProductVariant = model
     options: model.manyToMany(() => ProductOptionValue, {
       pivotTable: "product_variant_option",
       mappedBy: "variants",
+      joinColumn: "variant_id",
+      inverseJoinColumn: "option_value_id",
     }),
   })
   .indexes([
