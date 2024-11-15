@@ -63,17 +63,17 @@ moduleIntegrationTestRunner<Service>({
       }).linkable
 
       expect(Object.keys(linkable)).toHaveLength(7)
-      expect(Object.keys(linkable)).toEqual(
-        expect.arrayContaining([
-          "product",
-          "productVariant",
-          "productOption",
-          "productType",
-          "productTag",
-          "productCollection",
-          "productCategory",
-        ])
-      )
+      expect(Object.keys(linkable)).toEqual([
+        "product",
+        "productVariant",
+        "productOption",
+        "productOptionValue",
+        "productType",
+        "productImage",
+        "productTag",
+        "productCollection",
+        "productCategory",
+      ])
 
       Object.keys(linkable).forEach((key) => {
         delete linkable[key].toJSON
@@ -112,6 +112,15 @@ moduleIntegrationTestRunner<Service>({
             primaryKey: "id",
             serviceName: "product",
             field: "productOption",
+          },
+        },
+        productOptionValue: {
+          id: {
+            linkable: "product_option_value_id",
+            entity: "ProductOptionValue",
+            primaryKey: "id",
+            serviceName: "product",
+            field: "productOptionValue",
           },
         },
         productType: {
