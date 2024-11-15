@@ -1,5 +1,24 @@
+import {
+  closestCenter,
+  DndContext,
+  DragEndEvent,
+  DragStartEvent,
+  KeyboardSensor,
+  PointerSensor,
+  UniqueIdentifier,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core"
+import {
+  arrayMove,
+  rectSortingStrategy,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+} from "@dnd-kit/sortable"
+import { CSS } from "@dnd-kit/utilities"
 import { CheckMini, Spinner, ThumbnailBadge } from "@medusajs/icons"
-import { Tooltip, clx } from "@medusajs/ui"
+import { clx, Tooltip } from "@medusajs/ui"
 import { AnimatePresence, motion } from "framer-motion"
 import { useCallback, useState } from "react"
 import { useTranslation } from "react-i18next"
@@ -22,21 +41,57 @@ export const MediaGrid = ({
   selection,
   onCheckedChange,
 }: MediaGridProps) => {
+  const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null)
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  )
+
+  const handleDragStart = (event: DragStartEvent) => {
+    setActiveId(event.active.id)
+  }
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    setActiveId(null)
+    const { active, over } = event
+
+    if (active.id !== over.id) {
+      setItems((items) => {
+        const oldIndex = items.indexOf(active.id)
+        const newIndex = items.indexOf(over.id)
+
+        return arrayMove(items, oldIndex, newIndex)
+      })
+    }
+  }
+
   return (
-    <div className="bg-ui-bg-subtle size-full overflow-auto">
-      <div className="grid h-fit auto-rows-auto grid-cols-4 gap-6 p-6">
-        {media.map((m) => {
-          return (
-            <MediaGridItem
-              onCheckedChange={onCheckedChange(m.id!)}
-              checked={!!selection[m.id!]}
-              key={m.field_id}
-              media={m}
-            />
-          )
-        })}
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
+      onDragStart={handleDragStart}
+    >
+      <div className="bg-ui-bg-subtle size-full overflow-auto">
+        <div className="grid h-fit auto-rows-auto grid-cols-4 gap-6 p-6">
+          <SortableContext items={media} strategy={rectSortingStrategy}>
+            {media.map((m) => {
+              return (
+                <MediaGridItem
+                  onCheckedChange={onCheckedChange(m.id!)}
+                  checked={!!selection[m.id!]}
+                  key={m.field_id}
+                  media={m}
+                />
+              )
+            })}
+          </SortableContext>
+        </div>
       </div>
-    </div>
+    </DndContext>
   )
 }
 
@@ -59,11 +114,27 @@ const MediaGridItem = ({
     onCheckedChange(!checked)
   }, [checked, onCheckedChange])
 
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: media.field_id })
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  }
+
   return (
-    <button
-      type="button"
-      onClick={handleToggle}
+    <div
       className="shadow-elevation-card-rest hover:shadow-elevation-card-hover focus-visible:shadow-borders-focus bg-ui-bg-subtle-hover group relative aspect-square h-auto max-w-full overflow-hidden rounded-lg outline-none"
+      style={style}
+      ref={setNodeRef}
+      {...attributes}
+      {...listeners}
     >
       {media.isThumbnail && (
         <div className="absolute left-2 top-2">
@@ -120,6 +191,6 @@ const MediaGridItem = ({
         alt=""
         className="size-full object-cover object-center"
       />
-    </button>
+    </div>
   )
 }
