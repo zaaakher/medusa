@@ -1,4 +1,4 @@
-import { Cascade, Entity, ManyToOne, PrimaryKey, Property, Rel } from "@mikro-orm/core"
+import { Cascade, Entity, ManyToOne, PrimaryKey, PrimaryKeyProp, Property, Rel } from "@mikro-orm/core"
 import Product from "./product"
 import ProductImage from "./product-image"
 
@@ -30,4 +30,6 @@ export class ProductImageProduct {
 
   @Property({ columnType: "integer", default: 0 })
   rank: number
+
+  [PrimaryKeyProp]?: ["product", "image"]
 }
