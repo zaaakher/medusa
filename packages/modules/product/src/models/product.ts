@@ -1,4 +1,4 @@
-import { model, ProductUtils } from "@medusajs/framework/utils"
+import { model, ProductUtils, toHandle } from "@medusajs/framework/utils"
 import ProductCategory from "./product-category"
 import ProductCollection from "./product-collection"
 import ProductImage from "./product-image"
@@ -90,6 +90,11 @@ const Product = model
   })
   .cascades({
     delete: ["variants", "options"],
+  })
+  .hooks({
+    creating: (product) => {
+      product.handle ??= product.title ? toHandle(product.title) : null
+    },
   })
   .indexes([
     {

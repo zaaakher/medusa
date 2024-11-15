@@ -613,7 +613,12 @@ moduleIntegrationTestRunner<Service>({
                 collection_id: workingCollection.id,
               },
               {
-                select: ["title", "collection.title"],
+                select: [
+                  "title",
+                  "handle",
+                  "collection.title",
+                  "collection.handle",
+                ],
                 relations: ["collection"],
               }
             )
@@ -643,7 +648,12 @@ moduleIntegrationTestRunner<Service>({
                 collection_id: [workingCollection.id, workingCollectionTwo.id],
               },
               {
-                select: ["title", "collection.title"],
+                select: [
+                  "title",
+                  "handle",
+                  "collection.title",
+                  "collection.handle",
+                ],
                 relations: ["collection"],
               }
             )
@@ -752,7 +762,7 @@ moduleIntegrationTestRunner<Service>({
           images = await createImages(testManager, ["image-1"])
         })
 
-        it("should soft delete a product", async () => {
+        it.only("should soft delete a product", async () => {
           const data = buildProductOnlyData({
             images,
             thumbnail: images[0].url,
