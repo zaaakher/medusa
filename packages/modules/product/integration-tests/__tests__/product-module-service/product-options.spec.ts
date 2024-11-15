@@ -204,7 +204,7 @@ moduleIntegrationTestRunner<IProductModuleService>({
 
         it("should return requested attributes when requested through config", async () => {
           const option = await service.retrieveProductOption(optionOne.id, {
-            select: ["id", "product.title"],
+            select: ["id", "product.handle", "product.title"],
             relations: ["product"],
           })
 

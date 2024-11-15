@@ -26,6 +26,11 @@ const ProductOption = model
   .cascades({
     delete: ["values"],
   })
+  .hooks({
+    creating(productOption) {
+      productOption.product_id ??= productOption.product?.id ?? null
+    },
+  })
   .indexes([
     {
       name: optionProductIdTitleIndexName,

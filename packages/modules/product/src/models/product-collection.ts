@@ -1,4 +1,4 @@
-import { model } from "@medusajs/framework/utils"
+import { kebabCase, model } from "@medusajs/framework/utils"
 import Product from "./product"
 
 const collectionHandleIndexName = "IDX_collection_handle_unique"
@@ -19,6 +19,13 @@ const ProductCollection = model
     products: model.hasMany(() => Product, {
       mappedBy: "collection",
     }),
+  })
+  .hooks({
+    creating(productCollection) {
+      productCollection.handle ??= productCollection.title
+        ? kebabCase(productCollection.title)
+        : null
+    },
   })
   .indexes([
     {
