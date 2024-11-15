@@ -4,15 +4,9 @@ import { setActionReference } from "../set-action-reference"
 
 OrderChangeProcessing.registerActionType(ChangeActionType.TRANSFER_CUSTOMER, {
   operation({ action, currentOrder, options }) {
-    setActionReference(
-      {
-        id: action.reference,
-        order_id: currentOrder.id,
-      },
-      action,
-      options
-    )
     currentOrder.customer_id = action.reference_id
+
+    setActionReference(currentOrder, action, options)
   },
   validate({ action }) {
     if (!action.reference_id) {

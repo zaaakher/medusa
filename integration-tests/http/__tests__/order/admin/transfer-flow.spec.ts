@@ -81,6 +81,18 @@ medusaIntegrationTestRunner({
               status: "requested",
               requested_by: user.id,
             }),
+            actions: expect.arrayContaining([
+              expect.objectContaining({
+                version: 2,
+                action: "TRANSFER_CUSTOMER",
+                reference: "customer",
+                reference_id: customer.id,
+                details: expect.objectContaining({
+                  token: expect.any(String),
+                  original_email: "tony@stark-industries.com",
+                }),
+              }),
+            ]),
           })
         )
 
@@ -112,6 +124,23 @@ medusaIntegrationTestRunner({
             ]),
           })
         )
+
+        // confirms the transfer
+        await api.post(
+          `/admin/orders/${order.id}/transfer/confirm`,
+          {},
+          adminHeaders
+        )
+
+        const finalOrderResult = (
+          await api.get(
+            `/admin/orders/${order.id}?fields=+customer_id,+email`,
+            adminHeaders
+          )
+        ).data.order
+
+        expect(finalOrderResult.email).toEqual("tony@stark-industries.com")
+        expect(finalOrderResult.customer_id).toEqual(customer.id)
       })
 
       it("should fail to request order transfer to a guest customer", async () => {
