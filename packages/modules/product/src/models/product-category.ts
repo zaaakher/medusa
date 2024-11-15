@@ -38,7 +38,9 @@ const ProductCategory = model
     category_children: model.hasMany(() => ProductCategory, {
       mappedBy: "parent_category",
     }),
-    products: model.manyToMany(() => Product),
+    products: model.manyToMany(() => Product, {
+      mappedBy: "categories",
+    }),
   })
   .hooks({
     creating: (productCategory) => {
