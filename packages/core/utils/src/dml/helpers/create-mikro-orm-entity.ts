@@ -6,8 +6,8 @@ import type {
   Infer,
   PropertyType,
 } from "@medusajs/types"
-import { Entity, Filter } from "@mikro-orm/core"
-
+import { BeforeCreate, Entity, Filter } from "@mikro-orm/core"
+import { camelToSnakeCase } from "../../common"
 import { mikroOrmSoftDeletableFilterOptions } from "../../dal"
 import { DmlEntity } from "../entity"
 import { DuplicateIdPropertyError } from "../errors"
@@ -52,6 +52,7 @@ function createMikrORMEntity() {
       cascades,
       indexes: entityIndexes = [],
       params,
+      hooks = {},
     } = entity.parse()
 
     const { modelName, tableName } = parseEntityName(entity)
@@ -103,6 +104,23 @@ function createMikrORMEntity() {
     })
 
     applyEntityIndexes(MikroORMEntity, tableName, entityIndexes)
+
+    /**
+     * @experimental
+     * TODO: Write RFC about this, for now it is unstable and should be moved
+     * to `applyHooks`
+     */
+    for (const [hookName, hook] of Object.entries(hooks)) {
+      if (hookName === "creating") {
+        const hookMethodName = "beforeCreate_" + camelToSnakeCase(modelName)
+        const hookWrapper = function (this: MikroORMEntity) {
+          return hook(this as any)
+        }
+
+        MikroORMEntity.prototype[hookMethodName] = hookWrapper
+        BeforeCreate()(MikroORMEntity.prototype, hookMethodName)
+      }
+    }
 
     /**
      * Converting class to a MikroORM entity

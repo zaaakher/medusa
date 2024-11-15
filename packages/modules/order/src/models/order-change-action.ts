@@ -42,16 +42,15 @@ const _OrderChangeAction = model
       })
       .nullable(),
   })
-  /*
-  //@ts-expect-error
-  .addHook(function (this: any) {
-    this.order_id ??= this.order_change.order_id
-    this.return_id ??= this.order_change.return_id
-    this.claim_id ??= this.order_change.claim_id
-    this.exchange_id ??= this.order_change.exchange_id
-    this.version ??= this.order_change.version
+  .hooks({
+    creating: (entity: any) => {
+      entity.order_id ??= entity.order_change.order_id
+      entity.return_id ??= entity.order_change.return_id
+      entity.claim_id ??= entity.order_change.claim_id
+      entity.exchange_id ??= entity.order_change.exchange_id
+      entity.version ??= entity.order_change.version
+    },
   })
-    */
   .indexes([
     {
       name: "IDX_order_change_action_order_change_id",

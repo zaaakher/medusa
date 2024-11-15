@@ -6,21 +6,25 @@ import {
   IDmlEntity,
   IDmlEntityConfig,
   InferDmlEntityNameFromConfig,
+  InferSchemaFields,
   QueryCondition,
 } from "@medusajs/types"
 import { isObject, isString, toCamelCase } from "../common"
-import {
-  DMLSchemaDefaults,
-  DMLSchemaWithBigNumber,
-} from "./helpers/entity-builder"
 import { transformIndexWhere } from "./helpers/entity-builder/build-indexes"
+import { DMLSchemaWithBigNumber } from "./helpers/entity-builder/create-big-number-properties"
+import { DMLSchemaDefaults } from "./helpers/entity-builder/create-default-properties"
 import { BelongsTo } from "./relations/belongs-to"
 
 const IsDmlEntity = Symbol.for("isDmlEntity")
 
 /**
- * Compose the Schema with bigNumbers and the defaults
+ * @experimental
+ * need to be moved after RFV
  */
+type Hooks<Schema extends DMLSchema, TConfig extends IDmlEntityConfig> = {
+  creating?: (entity: InferSchemaFields<Schema>) => void
+}
+
 export type DMLEntitySchemaBuilder<Schema extends DMLSchema> =
   DMLSchemaWithBigNumber<Schema> & DMLSchemaDefaults & Schema
 
@@ -85,6 +89,13 @@ export class DmlEntity<
   #cascades: EntityCascades<string[]> = {}
   #indexes: EntityIndex<Schema>[] = []
 
+  /**
+   * @experimental
+   * TODO: Write RFC about this, for now it is unstable and mainly
+   * for test purposes
+   */
+  #hooks: Hooks<Schema, TConfig> = {}
+
   constructor(nameOrConfig: TConfig, schema: Schema) {
     const { name, tableName, disableSoftDeleteFilter } =
       extractEntityConfig(nameOrConfig)
@@ -117,6 +128,7 @@ export class DmlEntity<
     cascades: EntityCascades<string[]>
     indexes: EntityIndex<Schema>[]
     params: Record<string, unknown>
+    hooks: Hooks<Schema, TConfig>
   } {
     return {
       name: this.name,
@@ -125,6 +137,7 @@ export class DmlEntity<
       cascades: this.#cascades,
       indexes: this.#indexes,
       params: this.#params,
+      hooks: this.#hooks,
     }
   }
 
@@ -254,6 +267,18 @@ export class DmlEntity<
     }
 
     this.#indexes = indexes as EntityIndex<Schema>[]
+    return this
+  }
+
+  /**
+   * @experimental
+   * TODO: Write RFC about this, for now it is unstable and mainly
+   * for test purposes
+   * @param hooks
+   * @returns
+   */
+  hooks(hooks: Hooks<Schema, TConfig>): this {
+    this.#hooks = hooks
     return this
   }
 }
