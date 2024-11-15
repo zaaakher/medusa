@@ -27,7 +27,7 @@ type Context = {
   MANY_TO_MANY_TRACKED_RELATIONS: Record<string, boolean>
 }
 
-function retrieveOtherSideRelationship({
+function retrieveOtherSideRelationshipMAnyToMany({
   relationship,
   relatedEntity,
   relatedModelName,
@@ -106,7 +106,7 @@ function validateManyToManyRelationshipWithoutMappedBy({
    * relationship, we will try to find all the other side many to many that refers to the current entity.
    * If there is any, we will try to find if at least one of them has a mappedBy.
    */
-  const potentialOtherSide = retrieveOtherSideRelationship({
+  const potentialOtherSide = retrieveOtherSideRelationshipMAnyToMany({
     relationship,
     relatedEntity,
     relatedModelName,
@@ -228,7 +228,7 @@ export function defineBelongsToRelationship(
       }
 
       this[relationship.name] ??= this[foreignKeyName]
-      this[foreignKeyName] ??= this[relationship.name]?.id
+      this[foreignKeyName] ??= this[relationship.name]?.id ?? null
     }
 
     /**
@@ -255,7 +255,6 @@ export function defineBelongsToRelationship(
       nullable: relationship.nullable,
       onDelete: shouldCascade ? "cascade" : undefined,
     })(MikroORMEntity.prototype, foreignKeyName)
-    ForeignKey()(MikroORMEntity.prototype, foreignKeyName)
 
     if (DmlManyToMany.isManyToMany(otherSideRelation)) {
       Property({
@@ -347,7 +346,7 @@ export function defineManyToManyRelationship(
   let inverseJoinColumn: undefined | string =
     relationship.options.inverseJoinColumn
 
-  const otherSideRelationship = retrieveOtherSideRelationship({
+  const otherSideRelationship = retrieveOtherSideRelationshipMAnyToMany({
     relationship,
     relatedEntity,
     relatedModelName,

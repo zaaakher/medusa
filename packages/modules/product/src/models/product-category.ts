@@ -40,6 +40,16 @@ const ProductCategory = model
     }),
     products: model.manyToMany(() => Product),
   })
+  .hooks({
+    creating: (productCategory) => {
+      productCategory.mpath = `${
+        productCategory.mpath ? productCategory.mpath + "." : ""
+      }${productCategory.id}`
+    },
+  })
+  .cascades({
+    delete: ["category_children"],
+  })
   .indexes([
     {
       name: categoryMpathIndexName,

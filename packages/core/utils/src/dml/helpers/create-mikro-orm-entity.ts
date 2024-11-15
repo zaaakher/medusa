@@ -6,7 +6,7 @@ import type {
   Infer,
   PropertyType,
 } from "@medusajs/types"
-import { Entity, Filter } from "@mikro-orm/core"
+import { BeforeCreate, Entity, Filter } from "@mikro-orm/core"
 import { mikroOrmSoftDeletableFilterOptions } from "../../dal"
 import { DmlEntity } from "../entity"
 import { IdProperty } from "../properties/id"
@@ -16,6 +16,7 @@ import { applySearchable } from "./entity-builder/apply-searchable"
 import { parseEntityName } from "./entity-builder/parse-entity-name"
 import { defineRelationship } from "./entity-builder/define-relationship"
 import { applyEntityIndexes, applyIndexes } from "./mikro-orm/apply-indexes"
+import { camelToSnakeCase } from "../../common"
 
 /**
  * Factory function to create the mikro orm entity builder. The return
@@ -46,7 +47,12 @@ function createMikrORMEntity() {
   function createEntity<T extends DmlEntity<any, any>>(entity: T): Infer<T> {
     class MikroORMEntity {}
 
-    const { schema, cascades, indexes: entityIndexes = [] } = entity.parse()
+    const {
+      schema,
+      cascades,
+      indexes: entityIndexes = [],
+      hooks = {},
+    } = entity.parse()
     const { modelName, tableName } = parseEntityName(entity)
     if (ENTITIES[modelName]) {
       return ENTITIES[modelName] as Infer<T>
@@ -91,6 +97,23 @@ function createMikrORMEntity() {
     })
 
     applyEntityIndexes(MikroORMEntity, tableName, entityIndexes)
+
+    /**
+     * @experimental
+     * TODO: Write RFC about this, for now it is unstable and should be moved
+     * to `applyHooks`
+     */
+    for (const [hookName, hook] of Object.entries(hooks)) {
+      if (hookName === "creating") {
+        const hookMethodName = "beforeCreate_" + camelToSnakeCase(modelName)
+        const hookWrapper = function (this: MikroORMEntity) {
+          return hook(this as any)
+        }
+
+        MikroORMEntity.prototype[hookMethodName] = hookWrapper
+        BeforeCreate()(MikroORMEntity.prototype, hookMethodName)
+      }
+    }
 
     /**
      * Converting class to a MikroORM entity

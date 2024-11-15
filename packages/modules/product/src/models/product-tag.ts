@@ -17,9 +17,7 @@ const ProductTag = model
       id: model.id().primaryKey(),
       value: model.text().searchable(),
       metadata: model.json().nullable(),
-      products: model.manyToMany(() => Product, {
-        mappedBy: "tags",
-      }),
+      products: model.manyToMany(() => Product),
     }
   )
   .indexes([

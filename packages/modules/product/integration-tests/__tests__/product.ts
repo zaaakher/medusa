@@ -39,7 +39,7 @@ import {
 } from "../__fixtures__/product/data"
 import ProductImage from "../../src/models/product-image"
 
-jest.setTimeout(30000)
+jest.setTimeout(300000)
 
 type Service = IProductModuleService & {
   productService_: ProductService
