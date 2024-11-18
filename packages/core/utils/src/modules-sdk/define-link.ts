@@ -442,6 +442,7 @@ ${serviceBObj.module}: {
       extends: [
         {
           serviceName: serviceAObj.module,
+          entity: serviceAObj.entity,
           fieldAlias: buildFieldAlias({
             property: serviceBObj.isList ? pluralize(aliasB) : aliasB,
             path: aliasB + "_link." + aliasB,
@@ -459,6 +460,7 @@ ${serviceBObj.module}: {
         },
         {
           serviceName: serviceBObj.module,
+          entity: serviceBObj.entity,
           fieldAlias: buildFieldAlias({
             property: serviceAObj.isList ? pluralize(aliasA) : aliasA,
             path: aliasA + "_link." + aliasA,
