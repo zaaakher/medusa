@@ -5,18 +5,18 @@ import {
   InternalModuleDeclaration,
   ModuleJoinerConfig,
   ModulesSdkTypes,
-  ProductTypes
+  ProductTypes,
 } from "@medusajs/framework/types"
 import {
+  Image as ProductImage,
   Product,
   ProductCategory,
   ProductCollection,
-  Image as ProductImage,
   ProductOption,
   ProductOptionValue,
   ProductTag,
   ProductType,
-  ProductVariant
+  ProductVariant,
 } from "@models"
 import { ProductCategoryService } from "@services"
 
