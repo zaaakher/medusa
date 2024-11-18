@@ -139,6 +139,16 @@ export const EditProductMediaForm = ({ product }: ProductMediaViewProps) => {
     setSelection({})
   }
 
+  const onSwapPositions = (
+    callback: (items: typeof fields) => typeof fields
+  ) => {
+    const newFields = callback(fields)
+
+    newFields.forEach((field, index) => {
+      update(index, field)
+    })
+  }
+
   const selectionCount = Object.keys(selection).length
 
   return (
@@ -162,6 +172,7 @@ export const EditProductMediaForm = ({ product }: ProductMediaViewProps) => {
               media={fields}
               onCheckedChange={handleCheckedChange}
               selection={selection}
+              onSwapPositions={onSwapPositions}
             />
             <div className="bg-ui-bg-base overflow-auto border-b px-6 py-4 lg:border-b-0 lg:border-l">
               <UploadMediaFormItem form={form} append={append} />

@@ -1,8 +1,11 @@
 import {
   closestCenter,
+  defaultDropAnimationSideEffects,
   DndContext,
   DragEndEvent,
+  DragOverlay,
   DragStartEvent,
+  DropAnimation,
   KeyboardSensor,
   PointerSensor,
   UniqueIdentifier,
@@ -17,9 +20,8 @@ import {
   useSortable,
 } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
-import { CheckMini, Spinner, ThumbnailBadge } from "@medusajs/icons"
-import { clx, Tooltip } from "@medusajs/ui"
-import { AnimatePresence, motion } from "framer-motion"
+import { ThumbnailBadge } from "@medusajs/icons"
+import { Checkbox, clx, Tooltip } from "@medusajs/ui"
 import { useCallback, useState } from "react"
 import { useTranslation } from "react-i18next"
 
@@ -32,14 +34,24 @@ interface MediaView {
 
 interface MediaGridProps {
   media: MediaView[]
-  setMedia: (media: MediaView[]) => void
+  onSwapPositions: (callback: (items: MediaView[]) => MediaView[]) => void
   selection: Record<string, boolean>
   onCheckedChange: (id: string) => (value: boolean) => void
 }
 
+const dropAnimationConfig: DropAnimation = {
+  sideEffects: defaultDropAnimationSideEffects({
+    styles: {
+      active: {
+        opacity: "0.4",
+      },
+    },
+  }),
+}
+
 export const MediaGrid = ({
   media,
-  setMedia,
+  onSwapPositions,
   selection,
   onCheckedChange,
 }: MediaGridProps) => {
@@ -60,10 +72,10 @@ export const MediaGrid = ({
     setActiveId(null)
     const { active, over } = event
 
-    if (active.id !== over.id) {
-      setItems((items) => {
-        const oldIndex = items.indexOf(active.id)
-        const newIndex = items.indexOf(over.id)
+    if (active.id !== over?.id) {
+      onSwapPositions((items) => {
+        const oldIndex = items.findIndex((item) => item.field_id === active.id)
+        const newIndex = items.findIndex((item) => item.field_id === over?.id)
 
         return arrayMove(items, oldIndex, newIndex)
       })
@@ -79,7 +91,10 @@ export const MediaGrid = ({
     >
       <div className="bg-ui-bg-subtle size-full overflow-auto">
         <div className="grid h-fit auto-rows-auto grid-cols-4 gap-6 p-6">
-          <SortableContext items={media} strategy={rectSortingStrategy}>
+          <SortableContext
+            items={media.map((m) => m.field_id)}
+            strategy={rectSortingStrategy}
+          >
             {media.map((m) => {
               return (
                 <MediaGridItem
@@ -91,6 +106,16 @@ export const MediaGrid = ({
               )
             })}
           </SortableContext>
+          <DragOverlay dropAnimation={dropAnimationConfig}>
+            {activeId ? (
+              <MediaGridItemOverlay
+                media={media.find((m) => m.field_id === activeId)!}
+                checked={
+                  !!selection[media.find((m) => m.field_id === activeId)!.id!]
+                }
+              />
+            ) : null}
+          </DragOverlay>
         </div>
       </div>
     </DndContext>
@@ -108,13 +133,15 @@ const MediaGridItem = ({
   checked,
   onCheckedChange,
 }: MediaGridItemProps) => {
-  const [isLoading, setIsLoading] = useState(true)
-
   const { t } = useTranslation()
 
-  const handleToggle = useCallback(() => {
-    onCheckedChange(!checked)
-  }, [checked, onCheckedChange])
+  const handleToggle = useCallback(
+    (value: boolean) => {
+      console.log("value", value)
+      onCheckedChange(value)
+    },
+    [onCheckedChange]
+  )
 
   const {
     attributes,
@@ -135,8 +162,6 @@ const MediaGridItem = ({
       className="shadow-elevation-card-rest hover:shadow-elevation-card-hover focus-visible:shadow-borders-focus bg-ui-bg-subtle-hover group relative aspect-square h-auto max-w-full overflow-hidden rounded-lg outline-none"
       style={style}
       ref={setNodeRef}
-      {...attributes}
-      {...listeners}
     >
       {media.isThumbnail && (
         <div className="absolute left-2 top-2">
@@ -146,50 +171,57 @@ const MediaGridItem = ({
         </div>
       )}
       <div
-        className={clx(
-          "transition-fg absolute right-2 top-2 opacity-0 group-focus-within:opacity-100 group-hover:opacity-100 group-focus:opacity-100",
-          {
-            "opacity-100": checked,
-          }
-        )}
+        className="absolute inset-0 outline-none"
+        {...attributes}
+        {...listeners}
+      />
+      <div
+        className={clx("transition-fg absolute right-2 top-2 opacity-0", {
+          "group-focus-within:opacity-100 group-hover:opacity-100 group-focus:opacity-100":
+            !isDragging && !checked,
+          "opacity-100": checked,
+        })}
       >
-        <div
-          className={clx(
-            "group relative inline-flex h-4 w-4 items-center justify-center outline-none "
-          )}
-        >
-          <div
-            className={clx(
-              "text-ui-fg-on-inverted bg-ui-bg-component shadow-borders-base [&_path]:shadow-details-contrast-on-bg-interactive group-disabled:text-ui-fg-disabled group-disabled:!bg-ui-bg-disabled group-disabled:!shadow-borders-base transition-fg h-[14px] w-[14px] rounded-[3px]",
-              {
-                "bg-ui-bg-interactive group-hover:bg-ui-bg-interactive shadow-borders-interactive-with-shadow":
-                  checked,
-              }
-            )}
-          >
-            {checked && (
-              <div className="absolute inset-0">
-                <CheckMini />
-              </div>
-            )}
-          </div>
-        </div>
+        <Checkbox
+          onClick={(e) => {
+            e.stopPropagation()
+          }}
+          checked={checked}
+          onCheckedChange={handleToggle}
+        />
       </div>
-      <AnimatePresence>
-        {isLoading && (
-          <motion.div
-            initial={{ opacity: 1 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0, transition: { duration: 0.5 } }}
-            className="bg-ui-bg-subtle-hover absolute inset-0 flex items-center justify-center"
-          >
-            <Spinner className="text-ui-fg-subtle animate-spin" />
-          </motion.div>
-        )}
-      </AnimatePresence>
       <img
         src={media.url}
-        onLoad={() => setIsLoading(false)}
+        alt=""
+        className="size-full object-cover object-center"
+      />
+    </div>
+  )
+}
+
+export const MediaGridItemOverlay = ({
+  media,
+  checked,
+}: {
+  media: MediaView
+  checked: boolean
+}) => {
+  return (
+    <div className="shadow-elevation-card-rest hover:shadow-elevation-card-hover focus-visible:shadow-borders-focus bg-ui-bg-subtle-hover group relative aspect-square h-auto max-w-full overflow-hidden rounded-lg outline-none">
+      {media.isThumbnail && (
+        <div className="absolute left-2 top-2">
+          <ThumbnailBadge />
+        </div>
+      )}
+      <div
+        className={clx("transition-fg absolute right-2 top-2 opacity-0", {
+          "opacity-100": checked,
+        })}
+      >
+        <Checkbox checked={checked} />
+      </div>
+      <img
+        src={media.url}
         alt=""
         className="size-full object-cover object-center"
       />

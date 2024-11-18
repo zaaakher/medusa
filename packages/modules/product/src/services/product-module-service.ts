@@ -1,6 +1,7 @@
 import {
   Context,
   DAL,
+  FindConfig,
   IEventBusModuleService,
   InternalModuleDeclaration,
   ModuleJoinerConfig,
@@ -8,10 +9,11 @@ import {
   ProductTypes,
 } from "@medusajs/framework/types"
 import {
-  Image as ProductImage,
   Product,
   ProductCategory,
   ProductCollection,
+  Image as ProductImage,
+  ProductImageProduct,
   ProductOption,
   ProductOptionValue,
   ProductTag,
@@ -58,6 +60,7 @@ type InjectedDependencies = {
   productCategoryService: ProductCategoryService
   productCollectionService: ModulesSdkTypes.IMedusaInternalService<any>
   productImageService: ModulesSdkTypes.IMedusaInternalService<any>
+  productImageProductService: ModulesSdkTypes.IMedusaInternalService<any>
   productTypeService: ModulesSdkTypes.IMedusaInternalService<any>
   productOptionService: ModulesSdkTypes.IMedusaInternalService<any>
   productOptionValueService: ModulesSdkTypes.IMedusaInternalService<any>
@@ -90,6 +93,9 @@ export default class ProductModuleService
     ProductVariant: {
       dto: ProductTypes.ProductVariantDTO
     }
+    ProductImageProduct: {
+      dto: ProductTypes.ProductImageProductDTO
+    }
   }>({
     Product,
     ProductCategory,
@@ -99,6 +105,7 @@ export default class ProductModuleService
     ProductTag,
     ProductType,
     ProductVariant,
+    ProductImageProduct,
   })
   implements ProductTypes.IProductModuleService
 {
@@ -109,6 +116,7 @@ export default class ProductModuleService
   protected readonly productTagService_: ModulesSdkTypes.IMedusaInternalService<ProductTag>
   protected readonly productCollectionService_: ModulesSdkTypes.IMedusaInternalService<ProductCollection>
   protected readonly productImageService_: ModulesSdkTypes.IMedusaInternalService<ProductImage>
+  protected readonly productImageProductService_: ModulesSdkTypes.IMedusaInternalService<ProductImageProduct>
   protected readonly productTypeService_: ModulesSdkTypes.IMedusaInternalService<ProductType>
   protected readonly productOptionService_: ModulesSdkTypes.IMedusaInternalService<ProductOption>
   protected readonly productOptionValueService_: ModulesSdkTypes.IMedusaInternalService<ProductOptionValue>
@@ -123,6 +131,7 @@ export default class ProductModuleService
       productCategoryService,
       productCollectionService,
       productImageService,
+      productImageProductService,
       productTypeService,
       productOptionService,
       productOptionValueService,
@@ -141,6 +150,7 @@ export default class ProductModuleService
     this.productCategoryService_ = productCategoryService
     this.productCollectionService_ = productCollectionService
     this.productImageService_ = productImageService
+    this.productImageProductService_ = productImageProductService
     this.productTypeService_ = productTypeService
     this.productOptionService_ = productOptionService
     this.productOptionValueService_ = productOptionValueService
@@ -149,6 +159,35 @@ export default class ProductModuleService
 
   __joinerConfig(): ModuleJoinerConfig {
     return joinerConfig
+  }
+
+  // @ts-expect-error
+  async retrieveProduct(
+    productId: string,
+    config?: FindConfig<ProductTypes.ProductDTO>,
+    sharedContext?: Context
+  ): Promise<ProductTypes.ProductDTO> {
+    const product = await this.productService_.retrieve(
+      productId,
+      config,
+      sharedContext
+    )
+
+    const productImageProducts = await this.productImageProductService_.list(
+      { product_id: productId },
+      {},
+      sharedContext
+    )
+
+    if (productImageProducts.length) {
+      throw new Error(
+        `product ${productId} has images with ranks ${productImageProducts
+          .map((p) => `${p.rank}`)
+          .join(", ")}`
+      )
+    }
+
+    return await this.baseRepository_.serialize<ProductTypes.ProductDTO>(product)
   }
 
   // @ts-ignore

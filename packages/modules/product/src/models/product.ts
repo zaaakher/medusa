@@ -11,7 +11,6 @@ import {
   OnInit,
   PrimaryKey,
   Property,
-  Rel,
 } from "@mikro-orm/core"
 
 import {
@@ -25,7 +24,6 @@ import {
 import ProductCategory from "./product-category"
 import ProductCollection from "./product-collection"
 import ProductImage from "./product-image"
-import { ProductImageProduct } from "./product-image-product"
 import ProductOption from "./product-option"
 import ProductTag from "./product-tag"
 import ProductType from "./product-type"
@@ -170,10 +168,11 @@ class Product {
 
   @ManyToMany(() => ProductImage, "products", {
     owner: true,
-    entity: () => ProductImage,
-    pivotEntity: () => ProductImageProduct,
+    pivotTable: "product_images",
+    joinColumn: "product_id",
+    inverseJoinColumn: "image_id",
   })
-  images = new Collection<Rel<ProductImage>>(this)
+  images = new Collection<ProductImage>(this)
 
   @ManyToMany(() => ProductCategory, "products", {
     owner: true,
