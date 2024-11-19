@@ -18,11 +18,11 @@ import {
   ProductType,
 } from "@models"
 
-import { UpdateProductInput } from "@types"
 import {
   MockEventBusService,
   moduleIntegrationTestRunner,
 } from "@medusajs/test-utils"
+import { UpdateProductInput } from "@types"
 import {
   buildProductAndRelationsData,
   createCollections,
