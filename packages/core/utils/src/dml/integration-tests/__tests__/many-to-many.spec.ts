@@ -1,3 +1,4 @@
+import { join } from "path"
 import { MetadataStorage, MikroORM } from "@mikro-orm/core"
 import { model } from "../../entity-builder"
 import {
@@ -9,7 +10,6 @@ import { CustomTsMigrationGenerator, mikroOrmSerializer } from "../../../dal"
 import { EntityConstructor } from "@medusajs/types"
 import { pgGodCredentials } from "../utils"
 import { FileSystem } from "../../../common"
-import { join } from "path"
 
 jest.setTimeout(300000)
 
@@ -227,7 +227,7 @@ describe("manyToMany - manyToMany", () => {
     )
   })
 
-  it.only(`should fail to load the dml's if the relation is defined only on one side`, () => {
+  it(`should fail to load the dml's if the relation is defined only on one side`, () => {
     mikroORMEntityBuilder.clear()
 
     const team = model.define("team", {

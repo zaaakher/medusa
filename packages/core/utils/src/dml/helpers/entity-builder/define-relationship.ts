@@ -15,13 +15,13 @@ import {
   Property,
   rel,
 } from "@mikro-orm/core"
+import { DmlEntity } from "../../entity"
+import { HasOne } from "../../relations/has-one"
+import { HasMany } from "../../relations/has-many"
+import { parseEntityName } from "./parse-entity-name"
 import { camelToSnakeCase, pluralize } from "../../../common"
 import { ForeignKey } from "../../../dal/mikro-orm/decorators/foreign-key"
-import { DmlEntity } from "../../entity"
-import { HasMany } from "../../relations/has-many"
-import { HasOne } from "../../relations/has-one"
 import { ManyToMany as DmlManyToMany } from "../../relations/many-to-many"
-import { parseEntityName } from "./parse-entity-name"
 
 type Context = {
   MANY_TO_MANY_TRACKED_RELATIONS: Record<string, boolean>
@@ -479,7 +479,7 @@ export function defineManyToManyRelationship(
       : {}),
     ...(pivotEntityName ? { pivotEntity: pivotEntityName } : {}),
     ...(mappedBy ? { mappedBy: mappedBy as any } : {}),
-    ...(inversedBy ? { inversedBy: inversedBy as any } : {}),
+    ...(inversedBy ? { mappedBy: inversedBy as any } : {}),
     ...(joinColumn ? { joinColumn } : {}),
     ...(inverseJoinColumn ? { inverseJoinColumn } : {}),
   })(MikroORMEntity.prototype, relationship.name)
