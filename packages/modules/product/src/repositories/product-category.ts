@@ -6,7 +6,13 @@ import {
   ProductTypes,
 } from "@medusajs/framework/types"
 import { DALUtils, isDefined, MedusaError } from "@medusajs/framework/utils"
-import { FindOptions, LoadStrategy } from "@mikro-orm/core"
+import {
+  EntityDTO,
+  LoadStrategy,
+  FilterQuery as MikroFilterQuery,
+  FindOptions as MikroOptions,
+  RequiredEntityData,
+} from "@mikro-orm/core"
 import { SqlEntityManager } from "@mikro-orm/postgresql"
 import { ProductCategory } from "@models"
 import { UpdateCategoryInput } from "@types"
@@ -127,17 +133,21 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
     findOptions: DAL.FindOptions<typeof ProductCategory> = { where: {} },
     context: Context = {}
   ): Promise<InferEntityType<typeof ProductCategory>[]> {
+    const { serialize = true } = findOptions
+    delete findOptions.serialize
+
     const manager = super.getActiveManager<SqlEntityManager>(context)
 
     // We dont want to get the relations as we will fetch all the categories and build the tree manually
     let relationIndex =
-      findOptions.options?.populate?.indexOf("parent_category")
+      findOptions.options?.populate?.indexOf("parent_category") ?? -1
     const shouldPopulateParent = relationIndex !== -1
     if (shouldPopulateParent && include.ancestors) {
       findOptions.options!.populate!.splice(relationIndex as number, 1)
     }
 
-    relationIndex = findOptions.options?.populate?.indexOf("category_children")
+    relationIndex =
+      findOptions.options?.populate?.indexOf("category_children") ?? -1
     const shouldPopulateChildren = relationIndex !== -1
 
     if (shouldPopulateChildren && include.descendants) {
@@ -174,9 +184,11 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
     delete where.mpath
     delete where.parent_category_id
 
-    const categoriesInTree = await this.serialize<
-      InferEntityType<typeof ProductCategory>[]
-    >(await manager.find(ProductCategory.name, where, options))
+    const categoriesInTree = serialize
+      ? await this.serialize<InferEntityType<typeof ProductCategory>[]>(
+          await manager.find(ProductCategory, where, options)
+        )
+      : await manager.find(ProductCategory, where, options)
 
     const categoriesById = new Map(categoriesInTree.map((cat) => [cat.id, cat]))
 
@@ -426,7 +438,7 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
           InferEntityType<typeof ProductCategory>
         >(ProductCategory.name, {
           id: categoryData.id,
-        })
+        })) as ProductCategory
 
         if (!productCategory) {
           throw new MedusaError(
@@ -459,16 +471,61 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
           if (categoryData.parent_category_id === null) {
             categoryData.mpath = ""
           } else {
+            productCategory = (
+              await this.buildProductCategoriesWithTree(
+                {
+                  descendants: true,
+                },
+                [productCategory],
+                {
+                  where: { id: productCategory.id },
+                  serialize: false,
+                },
+                context
+              )
+            )[0]
+
             const newParentCategory = await manager.findOne<
               InferEntityType<typeof ProductCategory>
-            >(ProductCategory.name, categoryData.parent_category_id)
+            >(
+              ProductCategory,
+              categoryData.parent_category_id
+            )
+
             if (!newParentCategory) {
               throw new MedusaError(
                 MedusaError.Types.INVALID_ARGUMENT,
                 `Parent category with id: '${categoryData.parent_category_id}' does not exist`
               )
             }
-            categoryData.mpath = `${newParentCategory.mpath}.${productCategory.id}`
+
+            const categoryDataChildren =
+              categoryData.category_children?.flatMap(
+                (child) => child.category_children ?? []
+              )
+
+            const categoryDataChildrenMap = new Map(
+              categoryDataChildren?.map((child) => [child.id, child])
+            )
+
+            function updateMpathRecursively(
+              category: ProductCategory,
+              newBaseMpath: string
+            ) {
+              const newMpath = `${newBaseMpath}.${category.id}`
+              category.mpath = newMpath
+              for (let child of category.category_children) {
+                child = manager.getReference(ProductCategory, child.id)
+                manager.assign(
+                  child,
+                  categoryDataChildrenMap.get(child.id) ?? {}
+                )
+                updateMpathRecursively(child, newMpath)
+              }
+            }
+
+            updateMpathRecursively(productCategory!, newParentCategory.mpath!)
+            // categoryData.mpath = `${newParentCategory.mpath}.${productCategory.id}`
           }
 
           // Rerank the siblings in the new parent

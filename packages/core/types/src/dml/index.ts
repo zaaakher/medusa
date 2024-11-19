@@ -69,7 +69,6 @@ export type PropertyMetadata = {
   fieldName: string
   defaultValue?: any
   nullable: boolean
-  optional: boolean
   dataType: {
     name: KnownDataTypes
     options?: Record<string, any>
@@ -184,15 +183,6 @@ export type InferHasManyFields<Relation> = Relation extends () => IDmlEntity<
 export type InferManyToManyFields<Relation> = InferHasManyFields<Relation>
 
 /**
- * Only processed property that can be undefined and mark them as optional
- */
-export type InferOptionalFields<Schema extends DMLSchema> = Prettify<{
-  [K in keyof Schema as undefined extends Schema[K]["$dataType"]
-    ? K
-    : never]?: Schema[K]["$dataType"]
-}>
-
-/**
  * Inferring the types of the schema fields from the DML
  * entity
  */
@@ -212,9 +202,7 @@ export type InferSchemaFields<Schema extends DMLSchema> = Prettify<
         ? InferManyToManyFields<Schema[K]["$dataType"]>
         : never
       : Schema[K]["$dataType"]
-  } & InferForeignKeys<Schema> &
-    InferOptionalFields<Schema>
->
+  } & InferForeignKeys<Schema>>
 
 /**
  * Helper to infer the schema type of a DmlEntity
