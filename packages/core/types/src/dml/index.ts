@@ -202,7 +202,8 @@ export type InferSchemaFields<Schema extends DMLSchema> = Prettify<
         ? InferManyToManyFields<Schema[K]["$dataType"]>
         : never
       : Schema[K]["$dataType"]
-  } & InferForeignKeys<Schema>>
+  } & InferForeignKeys<Schema>
+>
 
 /**
  * Helper to infer the schema type of a DmlEntity

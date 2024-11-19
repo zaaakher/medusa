@@ -6,13 +6,7 @@ import {
   ProductTypes,
 } from "@medusajs/framework/types"
 import { DALUtils, isDefined, MedusaError } from "@medusajs/framework/utils"
-import {
-  EntityDTO,
-  LoadStrategy,
-  FilterQuery as MikroFilterQuery,
-  FindOptions as MikroOptions,
-  RequiredEntityData,
-} from "@mikro-orm/core"
+import { LoadStrategy, FindOptions as MikroOptions } from "@mikro-orm/core"
 import { SqlEntityManager } from "@mikro-orm/postgresql"
 import { ProductCategory } from "@models"
 import { UpdateCategoryInput } from "@types"
@@ -487,9 +481,10 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
               )
             )[0]
 
-            const newParentCategory = await manager.findOne<
-              InferEntityType<typeof ProductCategory>
-            >(ProductCategory, categoryData.parent_category_id)
+            const newParentCategory = await manager.findOne(
+              ProductCategory,
+              categoryData.parent_category_id
+            )
 
             if (!newParentCategory) {
               throw new MedusaError(
