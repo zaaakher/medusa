@@ -1,5 +1,4 @@
 import {
-  BaseFilterable,
   Context,
   DAL,
   FilterQuery,
