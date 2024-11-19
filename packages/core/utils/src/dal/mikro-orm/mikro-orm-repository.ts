@@ -3,6 +3,7 @@ import {
   Context,
   DAL,
   FilterQuery,
+  FindOptions,
   InferEntityType,
   InferRepositoryReturnType,
   FilterQuery as InternalFilterQuery,
@@ -162,10 +163,7 @@ export class MikroOrmBaseRepository<const T extends object = object>
     throw new Error("Method not implemented.")
   }
 
-  delete(
-    idsOrPKs: FilterQuery<T> & BaseFilterable<FilterQuery<T>>,
-    context?: Context
-  ): Promise<void> {
+  delete(idsOrPKs: FindOptions<T>["where"], context?: Context): Promise<void> {
     throw new Error("Method not implemented.")
   }
 
@@ -445,7 +443,7 @@ export function mikroOrmBaseRepositoryFactory<const T extends object>(
     }
 
     async delete(
-      filters: FilterQuery<T> & BaseFilterable<FilterQuery<T>>,
+      filters: FindOptions<T>["where"],
       context?: Context
     ): Promise<void> {
       const manager = this.getActiveManager<EntityManager>(context)
