@@ -130,7 +130,9 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
       ancestors?: boolean
     },
     productCategories: InferEntityType<typeof ProductCategory>[],
-    findOptions: DAL.FindOptions<typeof ProductCategory> = { where: {} },
+    findOptions: DAL.FindOptions<typeof ProductCategory> & {
+      serialize?: boolean
+    } = { where: {} },
     context: Context = {}
   ): Promise<InferEntityType<typeof ProductCategory>[]> {
     const { serialize = true } = findOptions
@@ -178,7 +180,7 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
       ...findOptions.options,
       limit: undefined,
       offset: 0,
-    } as FindOptions<any>
+    } as MikroOptions<any>
 
     delete where.id
     delete where.mpath
@@ -434,11 +436,11 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
         const categoryData: Partial<InferEntityType<typeof ProductCategory>> = {
           ...entry,
         }
-        const productCategory = await manager.findOne<
+        let productCategory = await manager.findOne<
           InferEntityType<typeof ProductCategory>
         >(ProductCategory.name, {
           id: categoryData.id,
-        })) as ProductCategory
+        })
 
         if (!productCategory) {
           throw new MedusaError(
@@ -487,10 +489,7 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
 
             const newParentCategory = await manager.findOne<
               InferEntityType<typeof ProductCategory>
-            >(
-              ProductCategory,
-              categoryData.parent_category_id
-            )
+            >(ProductCategory, categoryData.parent_category_id)
 
             if (!newParentCategory) {
               throw new MedusaError(
@@ -509,7 +508,7 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
             )
 
             function updateMpathRecursively(
-              category: ProductCategory,
+              category: InferEntityType<typeof ProductCategory>,
               newBaseMpath: string
             ) {
               const newMpath = `${newBaseMpath}.${category.id}`
