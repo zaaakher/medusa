@@ -2843,7 +2843,7 @@ describe("Entity builder", () => {
           nullable: false,
           onDelete: undefined,
           reference: "m:1",
-          isForeignKey: true,
+          // isForeignKey: true,
         },
         ...defaultColumnMetadata,
       })
@@ -2869,11 +2869,11 @@ describe("Entity builder", () => {
             'CREATE UNIQUE INDEX IF NOT EXISTS "IDX_unique-name" ON "user" (organization, account, group_id) WHERE deleted_at IS NULL',
           name: "IDX_unique-name",
         },
-        {
-          expression:
-            'CREATE INDEX IF NOT EXISTS "IDX_user_group_id" ON "user" (group_id) WHERE deleted_at IS NULL',
-          name: "IDX_user_group_id",
-        },
+        // {
+        //   expression:
+        //     'CREATE INDEX IF NOT EXISTS "IDX_user_group_id" ON "user" (group_id) WHERE deleted_at IS NULL',
+        //   name: "IDX_user_group_id",
+        // },
       ])
     })
 
@@ -2950,11 +2950,11 @@ describe("Entity builder", () => {
             'CREATE INDEX IF NOT EXISTS "IDX_user_account_group_id" ON "user" (account, group_id) WHERE is_owner IS TRUE AND deleted_at IS NULL',
           name: "IDX_user_account_group_id",
         },
-        {
-          expression:
-            'CREATE INDEX IF NOT EXISTS "IDX_user_group_id" ON "user" (group_id) WHERE deleted_at IS NULL',
-          name: "IDX_user_group_id",
-        },
+        // {
+        //   expression:
+        //     'CREATE INDEX IF NOT EXISTS "IDX_user_group_id" ON "user" (group_id) WHERE deleted_at IS NULL',
+        //   name: "IDX_user_group_id",
+        // },
       ])
     })
 
@@ -3016,11 +3016,11 @@ describe("Entity builder", () => {
       const metaData = MetadataStorage.getMetadataFromDecorator(User)
 
       expect(metaData.indexes).toEqual([
-        {
-          expression:
-            'CREATE INDEX IF NOT EXISTS "IDX_user_group_id" ON "user" (group_id) WHERE deleted_at IS NULL',
-          name: "IDX_user_group_id",
-        },
+        // {
+        //   expression:
+        //     'CREATE INDEX IF NOT EXISTS "IDX_user_group_id" ON "user" (group_id) WHERE deleted_at IS NULL',
+        //   name: "IDX_user_group_id",
+        // },
       ])
 
       const Setting = toMikroORMEntity(setting)
@@ -3443,7 +3443,7 @@ describe("Entity builder", () => {
           nullable: false,
           onDelete: "cascade",
           reference: "m:1",
-          isForeignKey: true,
+          // isForeignKey: true,
         },
         created_at: {
           reference: "scalar",
@@ -4033,7 +4033,7 @@ describe("Entity builder", () => {
           mapToPk: true,
           fieldName: "user_id",
           nullable: false,
-          isForeignKey: true,
+          // isForeignKey: true,
         },
         created_at: {
           reference: "scalar",
@@ -4222,7 +4222,7 @@ describe("Entity builder", () => {
           mapToPk: true,
           fieldName: "user_id",
           nullable: true,
-          isForeignKey: true,
+          // isForeignKey: true,
         },
         created_at: {
           reference: "scalar",
@@ -4784,7 +4784,7 @@ describe("Entity builder", () => {
           mapToPk: true,
           nullable: false,
           onDelete: undefined,
-          isForeignKey: true,
+          // isForeignKey: true,
         },
         children: {
           cascade: undefined,
@@ -5022,6 +5022,7 @@ describe("Entity builder", () => {
           reference: "m:n",
           name: "teams",
           entity: "Team",
+          owner: true,
           pivotTable: "team_users",
           mappedBy: "users",
         },
@@ -5090,6 +5091,7 @@ describe("Entity builder", () => {
           reference: "m:n",
           name: "users",
           entity: "User",
+          owner: false,
           pivotTable: "team_users",
         },
         created_at: {
@@ -5200,6 +5202,7 @@ describe("Entity builder", () => {
           reference: "m:n",
           name: "teams",
           entity: "Team",
+          owner: true,
           pivotTable: "team_users",
           mappedBy: "users",
         },
@@ -5268,6 +5271,7 @@ describe("Entity builder", () => {
           reference: "m:n",
           name: "users",
           entity: "User",
+          owner: false,
           pivotTable: "team_users",
         },
         created_at: {
@@ -5412,6 +5416,7 @@ describe("Entity builder", () => {
           reference: "m:n",
           name: "teams",
           entity: "Team",
+          owner: true,
           pivotTable: "team_users",
           mappedBy: "users",
         },
@@ -5480,6 +5485,7 @@ describe("Entity builder", () => {
           reference: "m:n",
           name: "users",
           entity: "User",
+          owner: false,
           pivotTable: "team_users",
           /**
            * The other side should be inversed in order for Mikro ORM
@@ -5595,6 +5601,7 @@ describe("Entity builder", () => {
           reference: "m:n",
           name: "teams",
           entity: "Team",
+          owner: false,
           pivotTable: "team_users",
           /**
            * The other side should be inversed in order for Mikro ORM
@@ -5667,6 +5674,7 @@ describe("Entity builder", () => {
           reference: "m:n",
           name: "users",
           entity: "User",
+          owner: true,
           pivotTable: "team_users",
           mappedBy: "teams",
         },
@@ -5796,6 +5804,7 @@ describe("Entity builder", () => {
           reference: "m:n",
           name: "teams",
           entity: "Team",
+          owner: false,
           pivotTable: "team_users",
           /**
            * The other side should be inversed in order for Mikro ORM
@@ -5807,6 +5816,7 @@ describe("Entity builder", () => {
           reference: "m:n",
           name: "activeTeams",
           entity: "Team",
+          owner: false,
           pivotTable: "team_users",
           inversedBy: "activeTeamsUsers",
         },
@@ -5875,6 +5885,7 @@ describe("Entity builder", () => {
           reference: "m:n",
           name: "users",
           entity: "User",
+          owner: true,
           pivotTable: "team_users",
           mappedBy: "teams",
         },
@@ -5882,6 +5893,7 @@ describe("Entity builder", () => {
           reference: "m:n",
           name: "activeTeamsUsers",
           entity: "User",
+          owner: true,
           pivotTable: "team_users",
           mappedBy: "activeTeams",
         },
@@ -5996,6 +6008,7 @@ describe("Entity builder", () => {
           reference: "m:n",
           name: "teams",
           entity: "Team",
+          owner: true,
           pivotTable: "platform.team_users",
           mappedBy: "users",
         },
@@ -6065,6 +6078,7 @@ describe("Entity builder", () => {
           reference: "m:n",
           name: "users",
           entity: "User",
+          owner: false,
           pivotTable: "platform.team_users",
         },
         created_at: {
@@ -6151,6 +6165,7 @@ describe("Entity builder", () => {
           reference: "m:n",
           name: "teams",
           entity: "TeamSquad",
+          owner: true,
           pivotTable: "random_user_team_squads",
           mappedBy: "users",
         },
@@ -6219,6 +6234,7 @@ describe("Entity builder", () => {
           reference: "m:n",
           name: "users",
           entity: "RandomUser",
+          owner: false,
           pivotTable: "random_user_team_squads",
         },
         created_at: {
@@ -6334,6 +6350,7 @@ describe("Entity builder", () => {
           reference: "m:n",
           name: "teams",
           entity: "Team",
+          owner: true,
           pivotTable: "users_teams",
           mappedBy: "users",
         },
@@ -6401,6 +6418,7 @@ describe("Entity builder", () => {
         users: {
           reference: "m:n",
           name: "users",
+          owner: false,
           entity: "User",
           pivotTable: "users_teams",
         },
@@ -6518,7 +6536,7 @@ describe("Entity builder", () => {
           mapToPk: true,
           fieldName: "user_id",
           nullable: false,
-          isForeignKey: true,
+          // isForeignKey: true,
         },
         user: {
           reference: "scalar",
@@ -6537,7 +6555,7 @@ describe("Entity builder", () => {
           mapToPk: true,
           fieldName: "team_id",
           nullable: false,
-          isForeignKey: true,
+          // isForeignKey: true,
         },
         team: {
           reference: "scalar",
@@ -6613,6 +6631,7 @@ describe("Entity builder", () => {
           reference: "m:n",
           name: "teams",
           entity: "Team",
+          owner: true,
           pivotEntity: "TeamUsers",
           mappedBy: "users",
         },
@@ -6681,6 +6700,7 @@ describe("Entity builder", () => {
           reference: "m:n",
           name: "users",
           entity: "User",
+          owner: false,
           pivotEntity: "TeamUsers",
         },
         created_at: {

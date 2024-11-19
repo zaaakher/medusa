@@ -420,6 +420,9 @@ export function defineManyToManyRelationship(
 
   if (!pivotEntityName) {
     const { tableName } = parseEntityName(entity)
+    let tableNameWithoutSchema: string
+    let relatedTableNameWithoutSchema: string
+
     /**
      * Pivot table name is created as follows (when not explicitly provided)
      *
@@ -428,10 +431,25 @@ export function defineManyToManyRelationship(
      * - Converting them from camelCase to snake_case.
      * - And finally pluralizing the second entity name.
      */
+
+    let [schema, ...tableTokens] = tableName.split(".")
+    if (!tableTokens.length) {
+      tableNameWithoutSchema = schema
+    } else {
+      tableNameWithoutSchema = tableTokens.join(".")
+    }
+
+    const [relatedSchema, ...relatedTableTokens] = relatedTableName.split(".")
+    if (!relatedTableTokens.length) {
+      relatedTableNameWithoutSchema = relatedSchema
+    } else {
+      relatedTableNameWithoutSchema = relatedTableTokens.join(".")
+    }
+
     pivotTableName =
       relationship.options.pivotTable ??
       otherSideRelationship.parse("").options.pivotTable ??
-      [tableName, relatedTableName]
+      [tableNameWithoutSchema, relatedTableNameWithoutSchema]
         .sort()
         .map((token, index) => {
           if (index === 1) {
@@ -449,7 +467,8 @@ export function defineManyToManyRelationship(
   }
 
   ManyToMany({
-    owner: !!relationship.options.pivotTable, // TODO: need clarification and discussion in order to infer it differently instead
+    owner: !!mappedBy,
+    // !!relationship.options.pivotTable, // TODO: need clarification and discussion in order to infer it differently instead
     entity: relatedModelName,
     ...(pivotTableName
       ? {
