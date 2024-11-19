@@ -1,6 +1,6 @@
+import { PropertyMetadata } from "@medusajs/types"
 import { expectTypeOf } from "expect-type"
 import { BaseProperty } from "../properties/base"
-import { PropertyMetadata } from "@medusajs/types"
 import { TextProperty } from "../properties/text"
 
 describe("Base property", () => {
