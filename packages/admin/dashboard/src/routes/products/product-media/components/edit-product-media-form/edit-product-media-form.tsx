@@ -366,6 +366,7 @@ const MediaGridItem = ({
     attributes,
     listeners,
     setNodeRef,
+    setActivatorNodeRef,
     transform,
     transition,
     isDragging,
@@ -379,7 +380,9 @@ const MediaGridItem = ({
 
   return (
     <div
-      className="shadow-elevation-card-rest hover:shadow-elevation-card-hover focus-visible:shadow-borders-focus bg-ui-bg-subtle-hover group relative aspect-square h-auto max-w-full overflow-hidden rounded-lg outline-none"
+      className={clx(
+        "shadow-elevation-card-rest hover:shadow-elevation-card-hover focus-visible:shadow-borders-focus bg-ui-bg-subtle-hover group relative aspect-square h-auto max-w-full overflow-hidden rounded-lg outline-none"
+      )}
       style={style}
       ref={setNodeRef}
     >
@@ -394,6 +397,7 @@ const MediaGridItem = ({
         className={clx("absolute inset-0 cursor-grab touch-none outline-none", {
           "cursor-grabbing": isDragging,
         })}
+        ref={setActivatorNodeRef}
         {...attributes}
         {...listeners}
       />

@@ -175,6 +175,7 @@ const MediaItem = ({ field, onDelete, onMakeThumbnail }: MediaItemProps) => {
     attributes,
     listeners,
     setNodeRef,
+    setActivatorNodeRef,
     transform,
     transition,
     isDragging,
@@ -199,9 +200,11 @@ const MediaItem = ({ field, onDelete, onMakeThumbnail }: MediaItemProps) => {
       <div className="flex items-center gap-x-2">
         <IconButton
           variant="transparent"
+          type="button"
           size="small"
           {...attributes}
           {...listeners}
+          ref={setActivatorNodeRef}
           className="cursor-grab touch-none active:cursor-grabbing"
         >
           <DotsSix className="text-ui-fg-muted" />
