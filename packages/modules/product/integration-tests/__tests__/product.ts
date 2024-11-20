@@ -62,18 +62,19 @@ moduleIntegrationTestRunner<Service>({
         service: ProductModuleService,
       }).linkable
 
-      expect(Object.keys(linkable)).toHaveLength(7)
-      expect(Object.keys(linkable)).toEqual([
-        "product",
-        "productVariant",
-        "productOption",
-        "productOptionValue",
-        "productType",
-        "productImage",
-        "productTag",
-        "productCollection",
-        "productCategory",
-      ])
+      expect(Object.keys(linkable)).toHaveLength(8)
+      expect(Object.keys(linkable)).toEqual(
+        expect.arrayContaining([
+          "product",
+          "productVariant",
+          "productOption",
+          "productOptionValue",
+          "productType",
+          "productTag",
+          "productCollection",
+          "productCategory",
+        ])
+      )
 
       Object.keys(linkable).forEach((key) => {
         delete linkable[key].toJSON

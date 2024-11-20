@@ -197,7 +197,7 @@ describe("manyToMany - manyToMany", () => {
     })
   })
 
-  it(`should fail to load the dml's if both side of the relation are missing the mappedBy options`, () => {
+  it(`should not fail to load the dml's if both side of the relation are missing the mappedBy options`, () => {
     mikroORMEntityBuilder.clear()
 
     const team = model.define("team", {
@@ -214,16 +214,85 @@ describe("manyToMany - manyToMany", () => {
       squads: model.manyToMany(() => team),
     })
 
+    ;[User, Team] = toMikroOrmEntities([user, team])
+
+    const teamMetaData = MetadataStorage.getMetadataFromDecorator(Team)
+    expect((teamMetaData.properties as any).users.mappedBy).toBe("squads")
+    expect((teamMetaData.properties as any).users.owner).toBe(false)
+
+    const userMetaData = MetadataStorage.getMetadataFromDecorator(User)
+    expect((userMetaData.properties as any).squads.mappedBy).not.toBeDefined()
+    expect((userMetaData.properties as any).squads.inversedBy).toBe("users")
+    expect((userMetaData.properties as any).squads.owner).toBe(true)
+  })
+
+  it(`should load the dml's correclty when both side of the relation are specifying the mappedBy options without pivot table`, () => {
+    mikroORMEntityBuilder.clear()
+
+    const team = model.define("team", {
+      id: model.id().primaryKey(),
+      name: model.text(),
+      users: model.manyToMany(() => user, {
+        mappedBy: "squads",
+      }),
+    })
+
+    const user = model.define("user", {
+      id: model.id().primaryKey(),
+      username: model.text(),
+      squads: model.manyToMany(() => team, {
+        mappedBy: "users",
+      }),
+    })
+
+    let [User, Team] = toMikroOrmEntities([user, team])
+
+    const teamMetaData = MetadataStorage.getMetadataFromDecorator(Team)
+    expect((teamMetaData.properties as any).users.mappedBy).toBe("squads")
+    expect((teamMetaData.properties as any).users.owner).toBe(false)
+    expect((teamMetaData.properties as any).users.pivotTable).toBe("team_users")
+
+    const userMetaData = MetadataStorage.getMetadataFromDecorator(User)
+    expect((userMetaData.properties as any).squads.mappedBy).not.toBeDefined()
+    expect((userMetaData.properties as any).squads.inversedBy).toBe("users")
+    expect((userMetaData.properties as any).squads.owner).toBe(true)
+    expect((userMetaData.properties as any).squads.pivotTable).toBe(
+      "team_users"
+    )
+  })
+
+  it(`should fail to load the dml's if both side of the relation are missing the mappedBy options and multiple relations points to the same entity`, () => {
+    mikroORMEntityBuilder.clear()
+
+    const team = model.define("team", {
+      id: model.id().primaryKey(),
+      name: model.text(),
+      users: model.manyToMany(() => user, {
+        pivot_table: "team_users",
+      }),
+      users2: model.manyToMany(() => user, {
+        pivot_table: "team_users2",
+      }),
+    })
+
+    const user = model.define("user", {
+      id: model.id().primaryKey(),
+      username: model.text(),
+      squads: model.manyToMany(() => team),
+      squads2: model.manyToMany(() => team),
+    })
+
     let error!: Error
+
     try {
       ;[User, Team] = toMikroOrmEntities([user, team])
     } catch (e) {
       error = e
     }
 
-    expect(error).toBeTruthy()
-    expect(error.message).toEqual(
-      'Invalid relationship reference for "User.squads". "mappedBy" should be defined on one side or the other.'
+    expect(error).toBeDefined()
+    expect(error?.message).toEqual(
+      'Invalid relationship reference for "user.squads". Make sure to set the mappedBy property on one side or the other or both.'
     )
   })
 

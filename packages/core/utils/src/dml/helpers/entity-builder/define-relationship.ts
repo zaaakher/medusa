@@ -27,7 +27,7 @@ type Context = {
   MANY_TO_MANY_TRACKED_RELATIONS: Record<string, boolean>
 }
 
-function retrieveOtherSideRelationshipMAnyToMany({
+function retrieveOtherSideRelationshipManyToMany({
   relationship,
   relatedEntity,
   relatedModelName,
@@ -40,11 +40,12 @@ function retrieveOtherSideRelationshipMAnyToMany({
   >
   relatedModelName: string
   entity: DmlEntity<any, any>
-}) {
+}): [string, RelationshipType<any>] {
   if (relationship.mappedBy) {
-    return relatedEntity.parse().schema[
-      relationship.mappedBy
-    ] as RelationshipType<any>
+    return [
+      relationship.mappedBy,
+      relatedEntity.parse().schema[relationship.mappedBy],
+    ] as [string, RelationshipType<any>]
   }
 
   /**
@@ -54,7 +55,7 @@ function retrieveOtherSideRelationshipMAnyToMany({
    */
   const potentialOtherSide = Object.entries(relatedEntity.schema)
     .filter(([, propConfig]) => DmlManyToMany.isManyToMany(propConfig))
-    .find(([prop, propConfig]) => {
+    .filter(([prop, propConfig]) => {
       const parsedProp = propConfig.parse(prop) as RelationshipMetadata
 
       const relatedEntity =
@@ -69,13 +70,21 @@ function retrieveOtherSideRelationshipMAnyToMany({
       }
 
       return (
-        parsedProp.mappedBy === relationship.name &&
+        (parsedProp.mappedBy === relationship.name &&
+          parseEntityName(relatedEntity).modelName ===
+            parseEntityName(entity).modelName) ||
         parseEntityName(relatedEntity).modelName ===
           parseEntityName(entity).modelName
       )
-    }) as unknown as [string, RelationshipType<any>]
+    }) as unknown as [string, RelationshipType<any>][]
 
-  return potentialOtherSide?.[1]
+  if (potentialOtherSide.length > 1) {
+    throw new Error(
+      `Invalid relationship reference for "${entity.name}.${relationship.name}". Make sure to set the mappedBy property on one side or the other or both.`
+    )
+  }
+
+  return potentialOtherSide[0] ?? []
 }
 
 /**
@@ -106,7 +115,7 @@ function validateManyToManyRelationshipWithoutMappedBy({
    * relationship, we will try to find all the other side many to many that refers to the current entity.
    * If there is any, we will try to find if at least one of them has a mappedBy.
    */
-  const potentialOtherSide = retrieveOtherSideRelationshipMAnyToMany({
+  const [, potentialOtherSide] = retrieveOtherSideRelationshipManyToMany({
     relationship,
     relatedEntity,
     relatedModelName,
@@ -346,12 +355,13 @@ export function defineManyToManyRelationship(
   let inverseJoinColumn: undefined | string =
     relationship.options.inverseJoinColumn
 
-  const otherSideRelationship = retrieveOtherSideRelationshipMAnyToMany({
-    relationship,
-    relatedEntity,
-    relatedModelName,
-    entity,
-  })
+  const [otherSideRelationshipProperty, otherSideRelationship] =
+    retrieveOtherSideRelationshipManyToMany({
+      relationship,
+      relatedEntity,
+      relatedModelName,
+      entity,
+    })
 
   /**
    * Validating other side of relationship when mapped by is defined
@@ -368,25 +378,6 @@ export function defineManyToManyRelationship(
         `Invalid relationship reference for "${mappedBy}" on "${relatedModelName}" entity. Make sure to define a manyToMany relationship`
       )
     }
-
-    /**
-     * Check if the other side has defined a mapped by and if that
-     * mapping is already tracked as the owner.
-     *
-     * - If yes, we will inverse our mapped by
-     * - Otherwise, we will track ourselves as the owner.
-     */
-    if (
-      otherSideRelationship.parse(mappedBy).mappedBy &&
-      MANY_TO_MANY_TRACKED_RELATIONS[`${relatedModelName}.${mappedBy}`]
-    ) {
-      inversedBy = mappedBy
-      mappedBy = undefined
-    } else {
-      MANY_TO_MANY_TRACKED_RELATIONS[
-        `${MikroORMEntity.name}.${relationship.name}`
-      ] = true
-    }
   } else {
     validateManyToManyRelationshipWithoutMappedBy({
       MikroORMEntity,
@@ -396,6 +387,10 @@ export function defineManyToManyRelationship(
       entity,
     })
   }
+
+  MANY_TO_MANY_TRACKED_RELATIONS[
+    `${MikroORMEntity.name}.${relationship.name}`
+  ] = true
 
   /**
    * Validating pivot entity when it is defined and computing
@@ -460,15 +455,32 @@ export function defineManyToManyRelationship(
         .join("_")
   }
 
-  if (!joinColumn || !inverseJoinColumn) {
-    const otherSideRelationshipOptions = otherSideRelationship.parse("").options
-    joinColumn ??= otherSideRelationshipOptions.joinColumn
-    inverseJoinColumn ??= otherSideRelationshipOptions.inverseJoinColumn
-  }
+  // if (!joinColumn || !inverseJoinColumn) {
+  //   const otherSideRelationshipOptions = otherSideRelationship.parse("").options
+  //   joinColumn ??= otherSideRelationshipOptions.joinColumn
+  //   inverseJoinColumn ??= otherSideRelationshipOptions.inverseJoinColumn
+  // }
+
+  const otherSideRelationOptions = otherSideRelationship.parse("").options
+
+  const isOwner =
+    !!joinColumn ||
+    !!inverseJoinColumn ||
+    !!relationship.options.pivotTable ||
+    // We cant infer it from the current entity so lets look at the otherside configuration as well to make a choice
+    (!otherSideRelationOptions.pivotTable &&
+      !otherSideRelationOptions.joinColumn &&
+      !otherSideRelationOptions.inverseJoinColumn &&
+      !MANY_TO_MANY_TRACKED_RELATIONS[
+        `${relatedModelName}.${otherSideRelationshipProperty}`
+      ])
+
+  const mappedByProp = isOwner ? "inversedBy" : "mappedBy"
+  const mappedByPropValue =
+    mappedBy ?? inversedBy ?? otherSideRelationshipProperty
 
   ManyToMany({
-    owner: !!mappedBy,
-    // !!relationship.options.pivotTable, // TODO: need clarification and discussion in order to infer it differently instead
+    owner: isOwner,
     entity: relatedModelName,
     ...(pivotTableName
       ? {
@@ -478,8 +490,7 @@ export function defineManyToManyRelationship(
         }
       : {}),
     ...(pivotEntityName ? { pivotEntity: pivotEntityName } : {}),
-    ...(mappedBy ? { mappedBy: mappedBy as any } : {}),
-    ...(inversedBy ? { mappedBy: inversedBy as any } : {}),
+    ...({ [mappedByProp]: mappedByPropValue } as any),
     ...(joinColumn ? { joinColumn } : {}),
     ...(inverseJoinColumn ? { inverseJoinColumn } : {}),
   })(MikroORMEntity.prototype, relationship.name)
