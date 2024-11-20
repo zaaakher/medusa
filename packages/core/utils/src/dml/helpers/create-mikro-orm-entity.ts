@@ -7,16 +7,16 @@ import type {
   PropertyType,
 } from "@medusajs/types"
 import { BeforeCreate, Entity, Filter } from "@mikro-orm/core"
+import { camelToSnakeCase } from "../../common"
 import { mikroOrmSoftDeletableFilterOptions } from "../../dal"
 import { DmlEntity } from "../entity"
-import { IdProperty } from "../properties/id"
 import { DuplicateIdPropertyError } from "../errors"
-import { defineProperty } from "./entity-builder/define-property"
+import { IdProperty } from "../properties/id"
 import { applySearchable } from "./entity-builder/apply-searchable"
-import { parseEntityName } from "./entity-builder/parse-entity-name"
+import { defineProperty } from "./entity-builder/define-property"
 import { defineRelationship } from "./entity-builder/define-relationship"
+import { parseEntityName } from "./entity-builder/parse-entity-name"
 import { applyEntityIndexes, applyIndexes } from "./mikro-orm/apply-indexes"
-import { camelToSnakeCase } from "../../common"
 
 /**
  * Factory function to create the mikro orm entity builder. The return
@@ -93,6 +93,7 @@ function createMikrORMEntity() {
         applySearchable(MikroORMEntity, field)
       } else {
         defineRelationship(MikroORMEntity, entity, field, cascades, context)
+        applySearchable(MikroORMEntity, field)
       }
     })
 
