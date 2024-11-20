@@ -182,9 +182,9 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
 
     const categoriesInTree = serialize
       ? await this.serialize<InferEntityType<typeof ProductCategory>[]>(
-          await manager.find(ProductCategory, where, options)
+          await manager.find(ProductCategory as any, where, options)
         )
-      : await manager.find(ProductCategory, where, options)
+      : await manager.find(ProductCategory as any, where, options)
 
     const categoriesById = new Map(categoriesInTree.map((cat) => [cat.id, cat]))
 
@@ -482,7 +482,7 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
             )[0]
 
             const newParentCategory = await manager.findOne(
-              ProductCategory,
+              ProductCategory as any,
               categoryData.parent_category_id
             )
 
@@ -509,7 +509,7 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
               const newMpath = `${newBaseMpath}.${category.id}`
               category.mpath = newMpath
               for (let child of category.category_children) {
-                child = manager.getReference(ProductCategory, child.id)
+                child = manager.getReference(ProductCategory as any, child.id)
                 manager.assign(
                   child,
                   categoryDataChildrenMap.get(child.id) ?? {}
@@ -518,7 +518,10 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
               }
             }
 
-            updateMpathRecursively(productCategory!, newParentCategory.mpath!)
+            updateMpathRecursively(
+              productCategory!,
+              (newParentCategory as any).mpath!
+            )
             // categoryData.mpath = `${newParentCategory.mpath}.${productCategory.id}`
           }
 

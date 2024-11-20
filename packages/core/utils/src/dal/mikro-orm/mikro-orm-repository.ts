@@ -501,7 +501,7 @@ export function mikroOrmBaseRepositoryFactory<const T extends object>(
       return (await manager.findAndCount(
         this.entity,
         findOptions_.where,
-        findOptions_.options as MikroOptions<T>
+        findOptions_.options as any // MikroOptions<T>
       )) as [InferRepositoryReturnType<T>[], number]
     }
 
