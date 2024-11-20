@@ -124,7 +124,6 @@ moduleIntegrationTestRunner<IProductModuleService>({
           productCategoryTwo = categories[1]
 
           productOne = service.createProducts({
-            id: "product-1",
             title: "product 1",
             status: ProductStatus.PUBLISHED,
             options: [
@@ -135,7 +134,6 @@ moduleIntegrationTestRunner<IProductModuleService>({
             ],
             variants: [
               {
-                id: "variant-1",
                 title: "variant 1",
                 options: { "opt-title": "val-1" },
               },
@@ -143,12 +141,11 @@ moduleIntegrationTestRunner<IProductModuleService>({
           })
 
           productTwo = service.createProducts({
-            id: "product-2",
             title: "product 2",
             status: ProductStatus.PUBLISHED,
-            categories: [{ id: productCategoryOne.id }],
             collection_id: productCollectionOne.id,
-            tags: [{ id: tags[0].id }],
+            category_ids: [productCategoryOne.id],
+            tag_ids: [tags[0].id],
             options: [
               {
                 title: "size",
@@ -161,7 +158,6 @@ moduleIntegrationTestRunner<IProductModuleService>({
             ],
             variants: [
               {
-                id: "variant-2",
                 title: "variant 2",
                 options: {
                   size: "large",
@@ -169,7 +165,6 @@ moduleIntegrationTestRunner<IProductModuleService>({
                 },
               },
               {
-                id: "variant-3",
                 title: "variant 3",
                 options: {
                   size: "small",
@@ -388,11 +383,11 @@ moduleIntegrationTestRunner<IProductModuleService>({
 
           const existingVariant1 = product.variants.find(
             (v) => v.title === "new variant 1"
-          )
+          )!
 
           const existingVariant2 = product.variants.find(
             (v) => v.title === "new variant 2"
-          )
+          )!
 
           await service.upsertProductVariants([
             {
@@ -792,10 +787,14 @@ moduleIntegrationTestRunner<IProductModuleService>({
         })
 
         it("should do a partial update on the options of a variant successfully", async () => {
+          const variantToUpdate = productTwo.variants.find(
+            (variant) => variant.title === "variant 3"
+          )!
+
           await service.updateProducts(productTwo.id, {
             variants: [
               {
-                id: "variant-3",
+                id: variantToUpdate.id,
                 options: { size: "small", color: "blue" },
               },
             ],

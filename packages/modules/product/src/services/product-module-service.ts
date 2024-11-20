@@ -1628,6 +1628,13 @@ export default class ProductModuleService
   ) {
     this.validateProductPayload(productData)
 
+    if (!productData.title) {
+      throw new MedusaError(
+        MedusaError.Types.INVALID_DATA,
+        `Product title is required`
+      )
+    }
+
     const options = productData.options
     const missingOptionsVariants: string[] = []
 
@@ -1688,6 +1695,10 @@ export default class ProductModuleService
     const productData = { ...product }
     if (productData.is_giftcard) {
       productData.discountable = false
+    }
+
+    if (!productData.handle && productData.title) {
+      productData.handle = toHandle(productData.title)
     }
 
     if (productData.options?.length) {
