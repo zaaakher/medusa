@@ -5487,11 +5487,7 @@ describe("Entity builder", () => {
           entity: "User",
           owner: false,
           pivotTable: "team_users",
-          /**
-           * The other side should be inversed in order for Mikro ORM
-           * to work. Both sides cannot have mappedBy.
-           */
-          inversedBy: "teams",
+          mappedBy: "teams",
         },
         created_at: {
           reference: "scalar",
@@ -5603,11 +5599,7 @@ describe("Entity builder", () => {
           entity: "Team",
           owner: false,
           pivotTable: "team_users",
-          /**
-           * The other side should be inversed in order for Mikro ORM
-           * to work. Both sides cannot have mappedBy.
-           */
-          inversedBy: "users",
+          mappedBy: "users",
         },
         created_at: {
           reference: "scalar",
@@ -5806,11 +5798,7 @@ describe("Entity builder", () => {
           entity: "Team",
           owner: false,
           pivotTable: "team_users",
-          /**
-           * The other side should be inversed in order for Mikro ORM
-           * to work. Both sides cannot have mappedBy.
-           */
-          inversedBy: "users",
+          mappedBy: "users",
         },
         activeTeams: {
           reference: "m:n",
@@ -5818,7 +5806,7 @@ describe("Entity builder", () => {
           entity: "Team",
           owner: false,
           pivotTable: "team_users",
-          inversedBy: "activeTeamsUsers",
+          mappedBy: "activeTeamsUsers",
         },
         created_at: {
           reference: "scalar",
