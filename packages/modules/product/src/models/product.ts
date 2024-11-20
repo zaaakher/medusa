@@ -38,7 +38,7 @@ const Product = model
   .define("Product", {
     id: model.id({ prefix: "prod" }).primaryKey(),
     title: model.text().searchable(),
-    handle: model.text().nullable(), // TODO: provide a way to compute a value if not provided (default maybe)
+    handle: model.text(),
     subtitle: model.text().searchable().nullable(),
     description: model.text().searchable().nullable(),
     is_giftcard: model.boolean().default(false),
@@ -93,7 +93,7 @@ const Product = model
   })
   .hooks({
     creating: (product) => {
-      product.handle ??= product.title ? toHandle(product.title) : null
+      product.handle ??= toHandle(product.title)
     },
   })
   .indexes([
