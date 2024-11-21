@@ -5127,7 +5127,7 @@ describe("Entity builder", () => {
           entity: "Team",
           owner: true,
           pivotTable: "team_users",
-          mappedBy: "users",
+          inversedBy: "users",
         },
         created_at: {
           reference: "scalar",
@@ -5193,6 +5193,7 @@ describe("Entity builder", () => {
         users: {
           reference: "m:n",
           name: "users",
+          mappedBy: "teams",
           entity: "User",
           owner: false,
           pivotTable: "team_users",
@@ -5307,7 +5308,7 @@ describe("Entity builder", () => {
           entity: "Team",
           owner: true,
           pivotTable: "team_users",
-          mappedBy: "users",
+          inversedBy: "users",
         },
         created_at: {
           reference: "scalar",
@@ -5375,6 +5376,7 @@ describe("Entity builder", () => {
           name: "users",
           entity: "User",
           owner: false,
+          mappedBy: "teams",
           pivotTable: "team_users",
         },
         created_at: {
@@ -5521,7 +5523,7 @@ describe("Entity builder", () => {
           entity: "Team",
           owner: true,
           pivotTable: "team_users",
-          mappedBy: "users",
+          inversedBy: "users",
         },
         created_at: {
           reference: "scalar",
@@ -5771,7 +5773,7 @@ describe("Entity builder", () => {
           entity: "User",
           owner: true,
           pivotTable: "team_users",
-          mappedBy: "teams",
+          inversedBy: "teams",
         },
         created_at: {
           reference: "scalar",
@@ -5978,7 +5980,7 @@ describe("Entity builder", () => {
           entity: "User",
           owner: true,
           pivotTable: "team_users",
-          mappedBy: "teams",
+          inversedBy: "teams",
         },
         activeTeamsUsers: {
           reference: "m:n",
@@ -5986,7 +5988,7 @@ describe("Entity builder", () => {
           entity: "User",
           owner: true,
           pivotTable: "team_users",
-          mappedBy: "activeTeams",
+          inversedBy: "activeTeams",
         },
         created_at: {
           reference: "scalar",
@@ -6101,7 +6103,7 @@ describe("Entity builder", () => {
           entity: "Team",
           owner: true,
           pivotTable: "platform.team_users",
-          mappedBy: "users",
+          inversedBy: "users",
         },
         created_at: {
           reference: "scalar",
@@ -6170,6 +6172,7 @@ describe("Entity builder", () => {
           name: "users",
           entity: "User",
           owner: false,
+          mappedBy: "teams",
           pivotTable: "platform.team_users",
         },
         created_at: {
@@ -6258,7 +6261,7 @@ describe("Entity builder", () => {
           entity: "TeamSquad",
           owner: true,
           pivotTable: "random_user_team_squads",
-          mappedBy: "users",
+          inversedBy: "users",
         },
         created_at: {
           reference: "scalar",
@@ -6326,6 +6329,7 @@ describe("Entity builder", () => {
           name: "users",
           entity: "RandomUser",
           owner: false,
+          mappedBy: "teams",
           pivotTable: "random_user_team_squads",
         },
         created_at: {
@@ -6370,9 +6374,7 @@ describe("Entity builder", () => {
       const team = model.define("team", {
         id: model.number(),
         name: model.text(),
-        users: model.manyToMany(() => user, {
-          pivotTable: "users_teams",
-        }),
+        users: model.manyToMany(() => user),
       })
 
       const user = model.define("user", {
@@ -6443,7 +6445,7 @@ describe("Entity builder", () => {
           entity: "Team",
           owner: true,
           pivotTable: "users_teams",
-          mappedBy: "users",
+          inversedBy: "users",
         },
         created_at: {
           reference: "scalar",
@@ -6511,6 +6513,7 @@ describe("Entity builder", () => {
           name: "users",
           owner: false,
           entity: "User",
+          mappedBy: "teams",
           pivotTable: "users_teams",
         },
         created_at: {
@@ -6724,7 +6727,7 @@ describe("Entity builder", () => {
           entity: "Team",
           owner: true,
           pivotEntity: "TeamUsers",
-          mappedBy: "users",
+          inversedBy: "users",
         },
         created_at: {
           reference: "scalar",
@@ -6792,6 +6795,7 @@ describe("Entity builder", () => {
           name: "users",
           entity: "User",
           owner: false,
+          mappedBy: "teams",
           pivotEntity: "TeamUsers",
         },
         created_at: {
