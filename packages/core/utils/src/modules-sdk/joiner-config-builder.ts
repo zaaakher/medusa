@@ -191,6 +191,8 @@ export function defineJoinerConfig(
     })
   }
 
+  primaryKeys.push(...Array.from(finalPrimaryKeys))
+
   // TODO: In the context of DML add a validation on primary keys and linkable keys if the consumer provide them manually. follow up pr
 
   return {
