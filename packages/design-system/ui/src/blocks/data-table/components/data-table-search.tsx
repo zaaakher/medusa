@@ -15,6 +15,12 @@ interface DataTableSearchProps {
 const DataTableSearch = ({ className, ...props }: DataTableSearchProps) => {
   const { instance } = useDataTableContext()
 
+  if (!instance.enableSearch) {
+    throw new Error(
+      "DataTable.Search was rendered but search is not enabled. Make sure to pass search to 'useDataTable'"
+    )
+  }
+
   if (instance.showSkeleton) {
     return <DataTableSearchSkeleton />
   }

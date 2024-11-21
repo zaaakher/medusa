@@ -139,6 +139,10 @@ interface UseDataTableReturn<TData>
   pageIndex: number
   pageSize: number
   rowCount: number
+  enablePagination: boolean
+  enableFiltering: boolean
+  enableSorting: boolean
+  enableSearch: boolean
 }
 
 const useDataTable = <TData,>({
@@ -393,27 +397,36 @@ const useDataTable = <TData,>({
     return isLoading === true && rows.length === 0
   }, [isLoading, rows])
 
+  const enablePagination: boolean = !!pagination
+  const enableFiltering: boolean = !!filtering
+  const enableSorting: boolean = !!sorting
+  const enableSearch: boolean = !!search
+
   return {
     // Table
     getHeaderGroups: instance.getHeaderGroups,
     getRowModel: instance.getRowModel,
     getAllColumns: instance.getAllColumns,
     // Pagination
+    enablePagination,
     getCanNextPage: instance.getCanNextPage,
     getCanPreviousPage: instance.getCanPreviousPage,
     nextPage: instance.nextPage,
     previousPage: instance.previousPage,
     getPageCount: instance.getPageCount,
-    pageIndex: instance.getState().pagination.pageIndex,
-    pageSize: instance.getState().pagination.pageSize,
+    pageIndex: instance.getState()?.pagination?.pageIndex ?? 0,
+    pageSize: instance.getState()?.pagination?.pageSize ?? 10,
     rowCount,
     // Search
+    enableSearch,
     getSearch,
     onSearchChange: onSearchChangeHandler,
     // Sorting
+    enableSorting,
     getSorting,
     setSorting,
     // Filtering
+    enableFiltering,
     getFilters,
     getFilterOptions,
     getFilterMeta,

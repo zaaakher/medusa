@@ -46,8 +46,16 @@ const DataTableSortingMenu = ({ tooltip }: DataTableSortingMenuProps) => {
     [instance]
   )
 
+  if (!instance.enableSorting) {
+    throw new Error(
+      "DataTable.SortingMenu was rendered but sorting is not enabled. Make sure to pass sorting to 'useDataTable'"
+    )
+  }
+
   if (!sortableColumns.length) {
-    return null
+    throw new Error(
+      "DataTable.SortingMenu was rendered but there are no sortable columns. Make sure to set `enableSorting` to true on at least one column."
+    )
   }
 
   if (instance.showSkeleton) {

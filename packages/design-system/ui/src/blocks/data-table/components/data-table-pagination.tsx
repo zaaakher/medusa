@@ -14,6 +14,12 @@ interface DataTablePaginationProps {
 const DataTablePagination = ({ translations }: DataTablePaginationProps) => {
   const { instance } = useDataTableContext()
 
+  if (!instance.enablePagination) {
+    throw new Error(
+      "DataTable.Pagination was rendered but pagination is not enabled. Make sure to pass pagination to 'useDataTable'"
+    )
+  }
+
   if (instance.showSkeleton) {
     return <DataTablePaginationSkeleton />
   }

@@ -20,6 +20,12 @@ const DataTableFilterMenu = ({ tooltip }: DataTableFilterMenuProps) => {
     .getFilters()
     .filter((filter) => !enabledFilters.includes(filter.id))
 
+  if (!enabledFilters.length && !filterOptions.length) {
+    throw new Error(
+      "DataTable.FilterMenu was rendered but there are no filters to apply. Make sure to pass filters to 'useDataTable'"
+    )
+  }
+
   const Wrapper = tooltip ? Tooltip : React.Fragment
 
   if (instance.showSkeleton) {

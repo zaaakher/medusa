@@ -387,7 +387,7 @@ const KitchenSinkDemo = () => {
     commands,
     rowCount: count,
     getRowId: (row) => row.id,
-    onRowClick: (row) => {
+    onRowClick: (_event, row) => {
       alert(`Navigate to ${row.id}`)
     },
     search: {
