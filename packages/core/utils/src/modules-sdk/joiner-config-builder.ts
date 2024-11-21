@@ -9,7 +9,6 @@ import * as path from "path"
 import { dirname, join, normalize } from "path"
 import {
   camelToSnakeCase,
-  deduplicate,
   getCallerFilePath,
   isObject,
   lowerCaseFirst,
@@ -173,32 +172,30 @@ export function defineJoinerConfig(
    * It can happen that we could just remove that but we need to investigate (looking at the
    * lookups from the remote joiner to identify which entity a property refers to)
    */
-  primaryKeys ??= []
+  primaryKeys ??= ["id"]
+  const finalPrimaryKeys = new Set(primaryKeys)
   if (modelDefinitions.size) {
     const linkConfig = buildLinkConfigFromModelObjects(
       serviceName,
       Object.fromEntries(modelDefinitions)
     )
 
-    const inferedPrimaryKeysFromLinkable = deduplicate(
-      Object.values(linkConfig).flatMap((entityLinkConfig) => {
-        return (Object.values(entityLinkConfig as any) as any[])
-          .filter((linkableConfig) => isObject(linkableConfig))
-          .map((linkableConfig) => {
-            // @ts-ignore
-            return linkableConfig.primaryKey
-          })
-      })
-    )
-
-    primaryKeys.push(...inferedPrimaryKeysFromLinkable)
+    Object.values(linkConfig).flatMap((entityLinkConfig) => {
+      return Object.values(
+        entityLinkConfig as Record<string, { primaryKey: string }>
+      )
+        .filter((linkableConfig) => isObject(linkableConfig))
+        .forEach((linkableConfig) => {
+          finalPrimaryKeys.add(linkableConfig.primaryKey)
+        })
+    })
   }
 
   // TODO: In the context of DML add a validation on primary keys and linkable keys if the consumer provide them manually. follow up pr
 
   return {
     serviceName,
-    primaryKeys: primaryKeys ?? ["id"],
+    primaryKeys,
     schema,
     linkableKeys: linkableKeys,
     alias: [

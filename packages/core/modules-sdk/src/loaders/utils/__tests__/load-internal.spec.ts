@@ -239,8 +239,7 @@ describe("load internal", () => {
 
         expect(generatedJoinerConfig).toEqual({
           serviceName: "module-without-joiner-config",
-          // primaryKeys: ["id"],
-          primaryKeys: [],
+          primaryKeys: ["id"],
           linkableKeys: {
             entity2_id: "Entity2",
             entity_model_id: "EntityModel",
@@ -317,8 +316,7 @@ describe("load internal", () => {
 
         expect(generatedJoinerConfig).toEqual({
           serviceName: "module-service",
-          // primaryKeys: ["id"],
-          primaryKeys: [],
+          primaryKeys: ["id"],
           linkableKeys: {},
           schema: "",
           alias: [

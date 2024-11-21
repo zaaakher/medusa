@@ -298,8 +298,7 @@ describe("joiner-config-builder", () => {
 
       expect(joinerConfig).toEqual({
         serviceName: Modules.FULFILLMENT,
-        // primaryKeys: ["id"],
-        primaryKeys: [],
+        primaryKeys: ["id"],
         schema: "",
         linkableKeys: {
           fulfillment_set_id: FulfillmentSet.name,
@@ -334,8 +333,7 @@ describe("joiner-config-builder", () => {
 
       expect(joinerConfig).toEqual({
         serviceName: Modules.FULFILLMENT,
-        // primaryKeys: ["id"],
-        primaryKeys: [],
+        primaryKeys: ["id"],
         schema: expect.any(String),
         linkableKeys: {
           fulfillment_set_id: FulfillmentSet.name,
