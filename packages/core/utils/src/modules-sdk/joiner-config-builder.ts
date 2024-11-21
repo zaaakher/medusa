@@ -165,13 +165,22 @@ export function defineJoinerConfig(
   }
   linkableKeys = mergedLinkableKeys
 
-  if (!primaryKeys && modelDefinitions.size) {
+  /**
+   * Merge custom primary keys from the joiner config with the infered primary keys
+   * from the models.
+   *
+   * TODO: Maybe worth looking into the real needs for primary keys.
+   * It can happen that we could just remove that but we need to investigate (looking at the
+   * lookups from the remote joiner to identify which entity a property refers to)
+   */
+  primaryKeys ??= []
+  if (modelDefinitions.size) {
     const linkConfig = buildLinkConfigFromModelObjects(
       serviceName,
       Object.fromEntries(modelDefinitions)
     )
 
-    primaryKeys = deduplicate(
+    const inferedPrimaryKeysFromLinkable = deduplicate(
       Object.values(linkConfig).flatMap((entityLinkConfig) => {
         return (Object.values(entityLinkConfig as any) as any[])
           .filter((linkableConfig) => isObject(linkableConfig))
@@ -181,6 +190,8 @@ export function defineJoinerConfig(
           })
       })
     )
+
+    primaryKeys.push(...inferedPrimaryKeysFromLinkable)
   }
 
   // TODO: In the context of DML add a validation on primary keys and linkable keys if the consumer provide them manually. follow up pr
@@ -364,17 +375,22 @@ export function buildLinkConfigFromModelObjects<
 
     const schema = model.schema
 
-    // @ts-ignore
+    /**
+     * When using a linkable, if a specific linkable property is not specified, the toJSON
+     * function will be called and return the first linkable available for this model.
+     */
     const modelLinkConfig = (linkConfig[lowerCaseFirst(model.name)] ??= {
       toJSON: function () {
         const linkables = Object.entries(this)
           .filter(([name]) => name !== "toJSON")
           .map(([, object]) => object)
-        const lastIndex = linkables.length - 1
-        return linkables[lastIndex]
+        return linkables[0]
       },
     })
 
+    /**
+     * Build all linkable properties for the model
+     */
     for (const [property, value] of Object.entries(schema)) {
       if (BaseRelationship.isRelationship(value)) {
         continue
@@ -396,7 +412,10 @@ export function buildLinkConfigFromModelObjects<
       }
     }
 
-    // Merge existing custom linkable keys configuration
+    /**
+     * If the joiner config specify some custom linkable keys, we merge them with the
+     * existing linkable keys infered from the model above.
+     */
     const linkableKeysPerModel = Object.entries(linkableKeys).reduce(
       (acc, [key, entityName]) => {
         acc[entityName] ??= []
