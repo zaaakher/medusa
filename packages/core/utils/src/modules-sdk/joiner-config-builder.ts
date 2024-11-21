@@ -172,7 +172,7 @@ export function defineJoinerConfig(
    * It can happen that we could just remove that but we need to investigate (looking at the
    * lookups from the remote joiner to identify which entity a property refers to)
    */
-  primaryKeys ??= ["id"]
+  primaryKeys ??= []
   const finalPrimaryKeys = new Set(primaryKeys)
   if (modelDefinitions.size) {
     const linkConfig = buildLinkConfigFromModelObjects(
@@ -191,7 +191,7 @@ export function defineJoinerConfig(
     })
   }
 
-  primaryKeys.push(...Array.from(finalPrimaryKeys))
+  primaryKeys = Array.from(finalPrimaryKeys.add("id"))
 
   // TODO: In the context of DML add a validation on primary keys and linkable keys if the consumer provide them manually. follow up pr
 
