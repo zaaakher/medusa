@@ -1697,10 +1697,6 @@ export default class ProductModuleService
       productData.discountable = false
     }
 
-    if (!productData.handle && productData.title) {
-      productData.handle = toHandle(productData.title)
-    }
-
     if (productData.options?.length) {
       const dbOptions = await this.productOptionService_.list(
         { product_id: productData.id },
