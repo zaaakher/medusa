@@ -13,17 +13,17 @@ const OrderChange = model
     }),
     return: model
       .belongsTo(() => Return, {
-        mappedBy: "order_changes",
+        mappedBy: "changes",
       })
       .nullable(),
     claim: model
       .belongsTo(() => OrderClaim, {
-        mappedBy: "order_changes",
+        mappedBy: "changes",
       })
       .nullable(),
     exchange: model
       .belongsTo(() => OrderExchange, {
-        mappedBy: "order_changes",
+        mappedBy: "changes",
       })
       .nullable(),
     version: model.number(),

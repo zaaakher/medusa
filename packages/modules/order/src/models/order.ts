@@ -2,6 +2,7 @@ import { model, OrderStatus } from "@medusajs/framework/utils"
 import OrderAddress from "./address"
 import OrderClaim from "./claim"
 import OrderExchange from "./exchange"
+import OrderChange from "./order-change"
 import OrderItem from "./order-item"
 import OrderShipping from "./order-shipping-method"
 import OrderSummary from "./order-summary"
@@ -47,6 +48,7 @@ const Order = model
     returns: model.hasMany(() => Return, {
       mappedBy: "order",
     }),
+    changes: model.hasMany(() => OrderChange),
   })
   .indexes([
     {

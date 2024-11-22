@@ -1,6 +1,7 @@
 import { model } from "@medusajs/framework/utils"
 import OrderLineItemAdjustment from "./line-item-adjustment"
 import OrderLineItemTaxLine from "./line-item-tax-line"
+import OrderItem from "./order-item"
 
 const OrderLineItem = model
   .define("OrderLineItem", {
@@ -36,6 +37,10 @@ const OrderLineItem = model
       mappedBy: "item",
     }),
     metadata: model.json().nullable(),
+
+    items: model.hasMany(() => OrderItem, {
+      mappedBy: "item",
+    }),
   })
   .indexes([
     {

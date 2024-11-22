@@ -1,5 +1,5 @@
 import { model, ReturnStatus } from "@medusajs/framework/utils"
-import { OrderTransaction, ReturnItem } from "@models"
+import { OrderChange, OrderTransaction, ReturnItem } from "@models"
 import Claim from "./claim"
 import Exchange from "./exchange"
 import Order from "./order"
@@ -33,6 +33,7 @@ const Return = model
     transactions: model.hasMany(() => OrderTransaction, {
       mappedBy: "return",
     }),
+    changes: model.hasMany(() => OrderChange),
     created_by: model.text().nullable(),
     metadata: model.json().nullable(),
     requested_at: model.dateTime().nullable(),

@@ -1,6 +1,7 @@
 import { ClaimType, model } from "@medusajs/framework/utils"
 import ClaimItem from "./claim-item"
 import Order from "./order"
+import OrderChange from "./order-change"
 import OrderShipping from "./order-shipping-method"
 import Return from "./return"
 import OrderTransaction from "./transaction"
@@ -32,6 +33,7 @@ const OrderClaim = model
     transactions: model.hasMany(() => OrderTransaction, {
       mappedBy: "claim",
     }),
+    changes: model.hasMany(() => OrderChange),
     created_by: model.text().nullable(),
     canceled_at: model.dateTime().nullable(),
     metadata: model.json().nullable(),

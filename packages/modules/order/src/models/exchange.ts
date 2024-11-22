@@ -1,5 +1,5 @@
 import { model } from "@medusajs/framework/utils"
-import { OrderExchangeItem, OrderTransaction } from "@models"
+import { OrderChange, OrderExchangeItem, OrderTransaction } from "@models"
 import Order from "./order"
 import OrderShipping from "./order-shipping-method"
 import Return from "./return"
@@ -28,6 +28,7 @@ const OrderExchange = model
     transactions: model.hasMany(() => OrderTransaction, {
       mappedBy: "exchange",
     }),
+    changes: model.hasMany(() => OrderChange),
     created_by: model.text().nullable(),
     metadata: model.json().nullable(),
     canceled_at: model.dateTime().nullable(),
