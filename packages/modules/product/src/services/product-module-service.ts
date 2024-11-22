@@ -1155,7 +1155,12 @@ export default class ProductModuleService
   ): Promise<
     ProductTypes.ProductCategoryDTO[] | ProductTypes.ProductCategoryDTO
   > {
-    const input = Array.isArray(data) ? data : [data]
+    const input = (Array.isArray(data) ? data : [data]).map(
+      (productCategory) => {
+        productCategory.handle ??= kebabCase(productCategory.name)
+        return productCategory
+      }
+    )
 
     const categories = await this.productCategoryService_.create(
       input,

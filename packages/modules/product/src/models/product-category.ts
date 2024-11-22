@@ -1,4 +1,5 @@
-import { kebabCase, model } from "@medusajs/framework/utils"
+// import { kebabCase, model } from "@medusajs/framework/utils"
+import { model } from "@medusajs/framework/utils"
 import Product from "./product"
 
 const categoryHandleIndexName = "IDX_category_handle_unique"
@@ -48,12 +49,12 @@ const ProductCategory = model
         productCategory.mpath ? productCategory.mpath + "." : ""
       }${productCategory.id}`
 
-      /**
-       * TODO: A validation step might need to exists, maybe at the service level or the repository level
-       */
-      productCategory.handle ??= kebabCase(
-        productCategory.name ?? productCategory.id // TODO: There seems to be a bug with model configuration where both properties are optional but non nullable.
-      )
+      // /**
+      //  * TODO: A validation step might need to exists, maybe at the service level or the repository level
+      //  */
+      // productCategory.handle ??= kebabCase(
+      //   productCategory.name ?? productCategory.id // TODO: There seems to be a bug with model configuration where both properties are optional but non nullable.
+      // )
     },
   })
   .cascades({

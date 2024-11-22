@@ -879,6 +879,7 @@ moduleIntegrationTestRunner<Service>({
           await service.create([
             {
               name: "New Category",
+              handle: "new-category",
               parent_category_id: null,
             },
           ])
@@ -904,11 +905,13 @@ moduleIntegrationTestRunner<Service>({
           await service.create([
             {
               name: "New Category",
+              handle: "new-category",
               parent_category_id: null,
               rank: 0,
             },
             {
               name: "New Category 2",
+              handle: "new-category-2",
               parent_category_id: null,
             },
           ])
@@ -932,6 +935,7 @@ moduleIntegrationTestRunner<Service>({
           await service.create([
             {
               name: "New Category 2.1",
+              handle: "new-category-2-1",
               parent_category_id: productCategoryNew.id,
             },
           ])
