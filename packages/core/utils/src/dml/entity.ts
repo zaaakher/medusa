@@ -6,7 +6,6 @@ import {
   IDmlEntity,
   IDmlEntityConfig,
   InferDmlEntityNameFromConfig,
-  InferSchemaFields,
   QueryCondition,
 } from "@medusajs/types"
 import { isObject, isString, toCamelCase } from "../common"
@@ -14,14 +13,6 @@ import { transformIndexWhere } from "./helpers/entity-builder/build-indexes"
 import { BelongsTo } from "./relations/belongs-to"
 
 const IsDmlEntity = Symbol.for("isDmlEntity")
-
-/**
- * @experimental
- * need to be moved after RFV
- */
-type Hooks<Schema extends DMLSchema, TConfig extends IDmlEntityConfig> = {
-  creating?: (entity: InferSchemaFields<Schema>) => void
-}
 
 function extractNameAndTableName<const Config extends IDmlEntityConfig>(
   nameOrConfig: Config
@@ -78,13 +69,6 @@ export class DmlEntity<
   #cascades: EntityCascades<string[]> = {}
   #indexes: EntityIndex<Schema>[] = []
 
-  /**
-   * @experimental
-   * TODO: Write RFC about this, for now it is unstable and mainly
-   * for test purposes
-   */
-  #hooks: Hooks<Schema, TConfig> = {}
-
   constructor(nameOrConfig: TConfig, schema: Schema) {
     const { name, tableName } = extractNameAndTableName(nameOrConfig)
     this.schema = schema
@@ -112,7 +96,6 @@ export class DmlEntity<
     schema: DMLSchema
     cascades: EntityCascades<string[]>
     indexes: EntityIndex<Schema>[]
-    hooks: Hooks<Schema, TConfig>
   } {
     return {
       name: this.name,
@@ -120,7 +103,6 @@ export class DmlEntity<
       schema: this.schema,
       cascades: this.#cascades,
       indexes: this.#indexes,
-      hooks: this.#hooks,
     }
   }
 
@@ -250,18 +232,6 @@ export class DmlEntity<
     }
 
     this.#indexes = indexes as EntityIndex<Schema>[]
-    return this
-  }
-
-  /**
-   * @experimental
-   * TODO: Write RFC about this, for now it is unstable and mainly
-   * for test purposes
-   * @param hooks
-   * @returns
-   */
-  hooks(hooks: Hooks<Schema, TConfig>): this {
-    this.#hooks = hooks
     return this
   }
 }

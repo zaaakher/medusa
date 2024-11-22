@@ -6,12 +6,12 @@ import type {
   Infer,
   PropertyType,
 } from "@medusajs/types"
-import { BeforeCreate, Entity, Filter } from "@mikro-orm/core"
-import { camelToSnakeCase } from "../../common"
-import { mikroOrmSoftDeletableFilterOptions } from "../../dal"
+import { Entity, Filter } from "@mikro-orm/core"
+
 import { DmlEntity } from "../entity"
-import { DuplicateIdPropertyError } from "../errors"
 import { IdProperty } from "../properties/id"
+import { DuplicateIdPropertyError } from "../errors"
+import { mikroOrmSoftDeletableFilterOptions } from "../../dal"
 import { applySearchable } from "./entity-builder/apply-searchable"
 import { defineProperty } from "./entity-builder/define-property"
 import { defineRelationship } from "./entity-builder/define-relationship"
@@ -47,12 +47,7 @@ function createMikrORMEntity() {
   function createEntity<T extends DmlEntity<any, any>>(entity: T): Infer<T> {
     class MikroORMEntity {}
 
-    const {
-      schema,
-      cascades,
-      indexes: entityIndexes = [],
-      hooks = {},
-    } = entity.parse()
+    const { schema, cascades, indexes: entityIndexes = [] } = entity.parse()
     const { modelName, tableName } = parseEntityName(entity)
     if (ENTITIES[modelName]) {
       return ENTITIES[modelName] as Infer<T>
@@ -98,23 +93,6 @@ function createMikrORMEntity() {
     })
 
     applyEntityIndexes(MikroORMEntity, tableName, entityIndexes)
-
-    /**
-     * @experimental
-     * TODO: Write RFC about this, for now it is unstable and should be moved
-     * to `applyHooks`
-     */
-    for (const [hookName, hook] of Object.entries(hooks)) {
-      if (hookName === "creating") {
-        const hookMethodName = "beforeCreate_" + camelToSnakeCase(modelName)
-        const hookWrapper = function (this: MikroORMEntity) {
-          return hook(this as any)
-        }
-
-        MikroORMEntity.prototype[hookMethodName] = hookWrapper
-        BeforeCreate()(MikroORMEntity.prototype, hookMethodName)
-      }
-    }
 
     /**
      * Converting class to a MikroORM entity
