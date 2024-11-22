@@ -13,7 +13,6 @@ const OrderLineItemTaxLine = model
     item: model.belongsTo(() => OrderLineItem, {
       mappedBy: "tax_lines",
     }),
-    item_id: model.text(),
   })
   .indexes([
     {

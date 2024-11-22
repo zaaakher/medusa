@@ -13,7 +13,6 @@ const OrderLineItemAdjustment = model
     item: model.belongsTo(() => OrderLineItem, {
       mappedBy: "adjustments",
     }),
-    item_id: model.text(),
   })
   .indexes([
     {
