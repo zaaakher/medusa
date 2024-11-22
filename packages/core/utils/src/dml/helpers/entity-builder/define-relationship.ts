@@ -16,7 +16,6 @@ import {
   rel,
 } from "@mikro-orm/core"
 import { camelToSnakeCase, pluralize } from "../../../common"
-import { ForeignKey } from "../../../dal/mikro-orm/decorators/foreign-key"
 import { DmlEntity } from "../../entity"
 import { HasMany } from "../../relations/has-many"
 import { HasOne } from "../../relations/has-one"
