@@ -1,4 +1,5 @@
 import { model } from "@medusajs/framework/utils"
+import OrderLineItem from "./line-item"
 
 const OrderLineItemTaxLine = model
   .define("OrderLineItemTaxLine", {
@@ -9,7 +10,9 @@ const OrderLineItemTaxLine = model
     rate: model.bigNumber(),
     raw_rate: model.json(),
     provider_id: model.text().nullable(),
-    item: model.belongsTo(() => "OrderLineItem", { mappedBy: "tax_lines" }),
+    item: model.belongsTo(() => OrderLineItem, {
+      mappedBy: "tax_lines",
+    }),
     item_id: model.text(),
   })
   .indexes([

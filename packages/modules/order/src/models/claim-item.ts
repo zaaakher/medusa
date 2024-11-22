@@ -3,10 +3,6 @@ import Claim from "./claim"
 import OrderClaimItemImage from "./claim-item-image"
 import OrderLineItem from "./line-item"
 
-const ClaimIdIndex = "IDX_order_claim_item_claim_id"
-const ItemIdIndex = "IDX_order_claim_item_item_id"
-const DeletedAtIndex = "IDX_order_claim_item_deleted_at"
-
 const OrderClaimItem = model
   .define("OrderClaimItem", {
     id: model.id({ prefix: "claitem" }).primaryKey(),
@@ -28,19 +24,19 @@ const OrderClaimItem = model
   })
   .indexes([
     {
-      name: ClaimIdIndex,
+      name: "IDX_order_claim_item_claim_id",
       on: ["claim_id"],
       unique: false,
       where: "deleted_at IS NOT NULL",
     },
     {
-      name: ItemIdIndex,
+      name: "IDX_order_claim_item_item_id",
       on: ["item_id"],
       unique: false,
       where: "deleted_at IS NOT NULL",
     },
     {
-      name: DeletedAtIndex,
+      name: "IDX_order_claim_item_deleted_at",
       on: ["deleted_at"],
       unique: false,
       where: "deleted_at IS NOT NULL",

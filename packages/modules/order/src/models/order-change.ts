@@ -5,14 +5,6 @@ import Order from "./order"
 import OrderChangeAction from "./order-change-action"
 import Return from "./return"
 
-const OrderIdIndex = "IDX_order_change_order_id"
-const ReturnIdIndex = "IDX_order_change_return_id"
-const OrderClaimIdIndex = "IDX_order_change_claim_id"
-const OrderExchangeIdIndex = "IDX_order_change_exchange_id"
-const OrderChangeStatusIndex = "IDX_order_change_status"
-const DeletedAtIndex = "IDX_order_change_deleted_at"
-const VersionIndex = "IDX_order_change_version"
-
 const OrderChange = model
   .define("OrderChange", {
     id: model.id({ prefix: "ordch" }).primaryKey(),
@@ -56,43 +48,43 @@ const OrderChange = model
   })
   .indexes([
     {
-      name: OrderIdIndex,
+      name: "IDX_order_change_order_id",
       on: ["order_id"],
       unique: false,
       where: "deleted_at IS NOT NULL",
     },
     {
-      name: ReturnIdIndex,
+      name: "IDX_order_change_return_id",
       on: ["return_id"],
       unique: false,
       where: "return_id IS NOT NULL AND deleted_at IS NOT NULL",
     },
     {
-      name: OrderClaimIdIndex,
+      name: "IDX_order_change_claim_id",
       on: ["claim_id"],
       unique: false,
       where: "claim_id IS NOT NULL AND deleted_at IS NOT NULL",
     },
     {
-      name: OrderExchangeIdIndex,
+      name: "IDX_order_change_exchange_id",
       on: ["exchange_id"],
       unique: false,
       where: "exchange_id IS NOT NULL AND deleted_at IS NOT NULL",
     },
     {
-      name: OrderChangeStatusIndex,
+      name: "IDX_order_change_status",
       on: ["status"],
       unique: false,
       where: "deleted_at IS NOT NULL",
     },
     {
-      name: DeletedAtIndex,
+      name: "IDX_order_change_deleted_at",
       on: ["deleted_at"],
       unique: false,
       where: "deleted_at IS NOT NULL",
     },
     {
-      name: VersionIndex,
+      name: "IDX_order_change_version",
       on: ["order_id", "version"],
       unique: false,
       where: "deleted_at IS NOT NULL",

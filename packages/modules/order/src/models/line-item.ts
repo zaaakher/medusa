@@ -2,11 +2,6 @@ import { model } from "@medusajs/framework/utils"
 import OrderLineItemAdjustment from "./line-item-adjustment"
 import OrderLineItemTaxLine from "./line-item-tax-line"
 
-const DeletedAtIndex = "IDX_order_line_item_deleted_at"
-const ProductIdIndex = "IDX_order_line_item_product_id"
-const ProductTypeIdIndex = "IDX_line_item_product_type_id"
-const VariantIdIndex = "IDX_order_line_item_variant_id"
-
 const OrderLineItem = model
   .define("OrderLineItem", {
     id: model.id({ prefix: "ordli" }).primaryKey(),
@@ -44,25 +39,25 @@ const OrderLineItem = model
   })
   .indexes([
     {
-      name: DeletedAtIndex,
+      name: "IDX_order_line_item_deleted_at",
       on: ["deleted_at"],
       unique: false,
       where: "deleted_at IS NOT NULL",
     },
     {
-      name: ProductIdIndex,
+      name: "IDX_order_line_item_product_id",
       on: ["product_id"],
       unique: false,
       where: "deleted_at IS NOT NULL",
     },
     {
-      name: ProductTypeIdIndex,
+      name: "IDX_line_item_product_type_id",
       on: ["product_type_id"],
       unique: false,
       where: "deleted_at IS NOT NULL AND product_type_id IS NOT NULL",
     },
     {
-      name: VariantIdIndex,
+      name: "IDX_order_line_item_variant_id",
       on: ["variant_id"],
       unique: false,
       where: "deleted_at IS NOT NULL",

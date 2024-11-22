@@ -17,7 +17,7 @@ const OrderShippingMethodAdjustment = model
   })
   .indexes([
     {
-      name: "ShippingMethodIdIdIndex",
+      name: "IDX_order_shipping_method_adjustment_shipping_method_id",
       on: ["shipping_method_id"],
       unique: false,
     },

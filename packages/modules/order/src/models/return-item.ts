@@ -3,11 +3,6 @@ import OrderLineItem from "./line-item"
 import Return from "./return"
 import ReturnReason from "./return-reason"
 
-const ReturnIdIndex = "IDX_return_item_return_id"
-const ReturnReasonIdIndex = "IDX_return_item_reason_id"
-const ItemIdIndex = "IDX_return_item_item_id"
-const DeletedAtIndex = "IDX_return_item_deleted_at"
-
 const ReturnItem = model
   .define("ReturnItem", {
     id: model.id({ prefix: "retitem" }).primaryKey(),
@@ -33,25 +28,25 @@ const ReturnItem = model
   })
   .indexes([
     {
-      name: ReturnIdIndex,
+      name: "IDX_return_item_return_id",
       on: ["return_id"],
       unique: false,
       where: "deleted_at IS NOT NULL",
     },
     {
-      name: ReturnReasonIdIndex,
+      name: "IDX_return_item_reason_id",
       on: ["reason_id"],
       unique: false,
       where: "deleted_at IS NOT NULL",
     },
     {
-      name: ItemIdIndex,
+      name: "IDX_return_item_item_id",
       on: ["item_id"],
       unique: false,
       where: "deleted_at IS NOT NULL",
     },
     {
-      name: DeletedAtIndex,
+      name: "IDX_return_item_deleted_at",
       on: ["deleted_at"],
       unique: false,
       where: "deleted_at IS NOT NULL",

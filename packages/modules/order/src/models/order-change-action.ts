@@ -1,13 +1,5 @@
 import { model } from "@medusajs/framework/utils"
 
-const OrderChangeIdIndex = "IDX_order_change_action_order_change_id"
-const OrderIdIndex = "IDX_order_change_action_order_id"
-const ReturnIdIndex = "IDX_order_change_action_return_id"
-const OrderClaimIdIndex = "IDX_order_change_action_claim_id"
-const OrderExchangeIdIndex = "IDX_order_change_action_exchange_id"
-const DeletedAtIndex = "IDX_order_change_action_deleted_at"
-const ActionOrderingIndex = "IDX_order_change_action_ordering"
-
 const OrderChangeAction = model
   .define("OrderChangeAction", {
     id: model.id({ prefix: "ordchact" }).primaryKey(),
@@ -29,43 +21,43 @@ const OrderChangeAction = model
   })
   .indexes([
     {
-      name: OrderChangeIdIndex,
+      name: "IDX_order_change_action_order_change_id",
       on: ["order_change_id"],
       unique: false,
       where: "deleted_at IS NOT NULL",
     },
     {
-      name: OrderIdIndex,
+      name: "IDX_order_change_action_order_id",
       on: ["order_id"],
       unique: false,
       where: "deleted_at IS NOT NULL",
     },
     {
-      name: ReturnIdIndex,
+      name: "IDX_order_change_action_return_id",
       on: ["return_id"],
       unique: false,
       where: "return_id IS NOT NULL AND deleted_at IS NOT NULL",
     },
     {
-      name: OrderClaimIdIndex,
+      name: "IDX_order_change_action_claim_id",
       on: ["claim_id"],
       unique: false,
       where: "claim_id IS NOT NULL AND deleted_at IS NOT NULL",
     },
     {
-      name: OrderExchangeIdIndex,
+      name: "IDX_order_change_action_exchange_id",
       on: ["exchange_id"],
       unique: false,
       where: "exchange_id IS NOT NULL AND deleted_at IS NOT NULL",
     },
     {
-      name: DeletedAtIndex,
+      name: "IDX_order_change_action_deleted_at",
       on: ["deleted_at"],
       unique: false,
       where: "deleted_at IS NOT NULL",
     },
     {
-      name: ActionOrderingIndex,
+      name: "IDX_order_change_action_ordering",
       on: ["ordering"],
       unique: false,
       where: "deleted_at IS NOT NULL",

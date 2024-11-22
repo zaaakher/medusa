@@ -1,19 +1,12 @@
 import { model, OrderStatus } from "@medusajs/framework/utils"
 import OrderAddress from "./address"
+import OrderClaim from "./claim"
+import OrderExchange from "./exchange"
 import OrderItem from "./order-item"
 import OrderShipping from "./order-shipping-method"
 import OrderSummary from "./order-summary"
+import Return from "./return"
 import OrderTransaction from "./transaction"
-
-const DisplayIdIndex = "IDX_order_display_id"
-const RegionIdIndex = "IDX_order_region_id"
-const CustomerIdIndex = "IDX_order_customer_id"
-const SalesChannelIdIndex = "IDX_order_sales_channel_id"
-const OrderDeletedAtIndex = "IDX_order_deleted_at"
-const CurrencyCodeIndex = "IDX_order_currency_code"
-const ShippingAddressIdIndex = "IDX_order_shipping_address_id"
-const BillingAddressIdIndex = "IDX_order_billing_address_id"
-const IsDraftOrderIndex = "IDX_order_is_draft_order"
 
 const Order = model
   .define("Order", {
@@ -27,14 +20,8 @@ const Order = model
     is_draft_order: model.boolean().default(false),
     email: model.text().searchable().nullable(),
     currency_code: model.text(),
-    shipping_address_id: model.text().nullable(),
-    shipping_address: model.belongsTo(() => OrderAddress, {
-      mappedBy: "shipping_orders",
-    }),
-    billing_address_id: model.text().nullable(),
-    billing_address: model.belongsTo(() => OrderAddress, {
-      mappedBy: "billing_orders",
-    }),
+    shipping_address: model.belongsTo(() => OrderAddress),
+    billing_address: model.belongsTo(() => OrderAddress),
     no_notification: model.boolean().nullable(),
     summary: model.hasMany(() => OrderSummary, {
       mappedBy: "order",
@@ -50,58 +37,68 @@ const Order = model
       mappedBy: "order",
     }),
     canceled_at: model.dateTime().nullable(),
+
+    exchanges: model.hasMany(() => OrderExchange, {
+      mappedBy: "order",
+    }),
+    claims: model.hasMany(() => OrderClaim, {
+      mappedBy: "order",
+    }),
+    returns: model.hasMany(() => Return, {
+      mappedBy: "order",
+    }),
   })
   .indexes([
     {
-      name: DisplayIdIndex,
+      name: "IDX_order_display_id",
       on: ["display_id"],
       unique: false,
       where: "deleted_at IS NOT NULL",
     },
     {
-      name: RegionIdIndex,
+      name: "IDX_order_region_id",
       on: ["region_id"],
       unique: false,
       where: "deleted_at IS NOT NULL",
     },
     {
-      name: CustomerIdIndex,
+      name: "IDX_order_customer_id",
       on: ["customer_id"],
       unique: false,
       where: "deleted_at IS NOT NULL",
     },
     {
-      name: SalesChannelIdIndex,
+      name: "IDX_order_sales_channel_id",
       on: ["sales_channel_id"],
       unique: false,
       where: "deleted_at IS NOT NULL",
     },
     {
-      name: OrderDeletedAtIndex,
+      name: "IDX_order_deleted_at",
       on: ["deleted_at"],
       unique: false,
       where: "deleted_at IS NOT NULL",
     },
     {
-      name: CurrencyCodeIndex,
+      name: "IDX_order_currency_code",
       on: ["currency_code"],
       unique: false,
       where: "deleted_at IS NOT NULL",
     },
     {
-      name: ShippingAddressIdIndex,
+      name: "IDX_order_shipping_address_id",
       on: ["shipping_address_id"],
       unique: false,
       where: "deleted_at IS NOT NULL",
     },
     {
-      name: BillingAddressIdIndex,
+      name: "IDX_order_billing_address_id",
       on: ["billing_address_id"],
       unique: false,
       where: "deleted_at IS NOT NULL",
     },
     {
-      name: IsDraftOrderIndex,
+      name: "IDX_order_is_draft_order",
       on: ["is_draft_order"],
       unique: false,
       where: "deleted_at IS NOT NULL",

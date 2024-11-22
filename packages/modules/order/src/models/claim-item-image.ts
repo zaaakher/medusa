@@ -1,9 +1,6 @@
 import { model } from "@medusajs/framework/utils"
 import ClaimItem from "./claim-item"
 
-const ClaimItemImageDeletedAtIndex = "IDX_order_claim_item_image_deleted_at"
-const ClaimItemIdIndex = "IDX_order_claim_item_image_claim_item_id"
-
 const OrderClaimItemImage = model
   .define("OrderClaimItemImage", {
     id: model.id({ prefix: "climg" }).primaryKey(),
@@ -15,13 +12,13 @@ const OrderClaimItemImage = model
   })
   .indexes([
     {
-      name: ClaimItemImageDeletedAtIndex,
+      name: "IDX_order_claim_item_image_deleted_at",
       on: ["deleted_at"],
       unique: false,
       where: "deleted_at IS NOT NULL",
     },
     {
-      name: ClaimItemIdIndex,
+      name: "IDX_order_claim_item_image_claim_item_id",
       on: ["claim_item_id"],
       unique: false,
       where: "deleted_at IS NOT NULL",

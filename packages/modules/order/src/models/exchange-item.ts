@@ -2,10 +2,6 @@ import { model } from "@medusajs/framework/utils"
 import Exchange from "./exchange"
 import OrderLineItem from "./line-item"
 
-const ExchangeIdIndex = "IDX_order_exchange_item_exchange_id"
-const ItemIdIndex = "IDX_order_exchange_item_item_id"
-const DeletedAtIndex = "IDX_order_exchange_item_deleted_at"
-
 const OrderExchangeItem = model
   .define("OrderExchangeItem", {
     id: model.id({ prefix: "oexcitem" }).primaryKey(),
@@ -22,19 +18,19 @@ const OrderExchangeItem = model
   })
   .indexes([
     {
-      name: ExchangeIdIndex,
+      name: "IDX_order_exchange_item_exchange_id",
       on: ["exchange_id"],
       unique: false,
       where: "deleted_at IS NOT NULL",
     },
     {
-      name: ItemIdIndex,
+      name: "IDX_order_exchange_item_item_id",
       on: ["item_id"],
       unique: false,
       where: "deleted_at IS NOT NULL",
     },
     {
-      name: DeletedAtIndex,
+      name: "IDX_order_exchange_item_deleted_at",
       on: ["deleted_at"],
       unique: false,
       where: "deleted_at IS NOT NULL",

@@ -5,23 +5,15 @@ import Exchange from "./exchange"
 import Order from "./order"
 import OrderShipping from "./order-shipping-method"
 
-const DisplayIdIndex = "IDX_return_display_id"
-const ReturnDeletedAtIndex = "IDX_return_deleted_at"
-const OrderIdIndex = "IDX_return_order_id"
-const ExchangeIdIndex = "IDX_return_exchange_id"
-const ClaimIdIndex = "IDX_return_claim_id"
-
 const Return = model
   .define("Return", {
     id: model.id({ prefix: "return" }).primaryKey(),
     order: model.belongsTo(() => Order, {
       mappedBy: "returns",
     }),
-    exchange_id: model.text().nullable(),
     exchange: model.belongsTo(() => Exchange, {
       mappedBy: "return",
     }),
-    claim_id: model.text().nullable(),
     claim: model.belongsTo(() => Claim, {
       mappedBy: "return",
     }),
@@ -49,31 +41,31 @@ const Return = model
   })
   .indexes([
     {
-      name: DisplayIdIndex,
+      name: "IDX_return_display_id",
       on: ["display_id"],
       unique: false,
       where: "deleted_at IS NOT NULL",
     },
     {
-      name: ReturnDeletedAtIndex,
+      name: "IDX_return_deleted_at",
       on: ["deleted_at"],
       unique: false,
       where: "deleted_at IS NOT NULL",
     },
     {
-      name: OrderIdIndex,
+      name: "IDX_return_order_id",
       on: ["order_id"],
       unique: false,
       where: "deleted_at IS NOT NULL",
     },
     {
-      name: ExchangeIdIndex,
+      name: "IDX_return_exchange_id",
       on: ["exchange_id"],
       unique: false,
       where: "exchange_id IS NOT NULL AND deleted_at IS NOT NULL",
     },
     {
-      name: ClaimIdIndex,
+      name: "IDX_return_claim_id",
       on: ["claim_id"],
       unique: false,
       where: "claim_id IS NOT NULL AND deleted_at IS NOT NULL",

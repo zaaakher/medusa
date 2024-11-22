@@ -1,9 +1,5 @@
 import { model } from "@medusajs/framework/utils"
 
-const DeletedAtIndex = "IDX_return_reason_deleted_at"
-const ValueIndex = "IDX_return_reason_value"
-const ParentIndex = "IDX_return_reason_parent_return_reason_id"
-
 const ReturnReason = model
   .define("ReturnReason", {
     id: model.id({ prefix: "rr" }).primaryKey(),
@@ -21,19 +17,19 @@ const ReturnReason = model
   })
   .indexes([
     {
-      name: DeletedAtIndex,
+      name: "IDX_return_reason_deleted_at",
       on: ["deleted_at"],
       unique: false,
       where: "deleted_at IS NOT NULL",
     },
     {
-      name: ValueIndex,
+      name: "IDX_return_reason_value",
       on: ["value"],
       unique: false,
       where: "deleted_at IS NOT NULL",
     },
     {
-      name: ParentIndex,
+      name: "IDX_return_reason_parent_return_reason_id",
       on: ["parent_return_reason_id"],
       unique: false,
       where: "deleted_at IS NOT NULL",

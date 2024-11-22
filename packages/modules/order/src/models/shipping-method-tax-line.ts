@@ -1,9 +1,6 @@
 import { model } from "@medusajs/framework/utils"
 import OrderShippingMethod from "./shipping-method"
 
-const ShippingMethodIdIndex =
-  "IDX_order_shipping_method_tax_line_shipping_method_id"
-
 const OrderShippingMethodTaxLine = model
   .define("OrderShippingMethodTaxLine", {
     id: model.id({ prefix: "ordsmtxl" }).primaryKey(),
@@ -19,7 +16,7 @@ const OrderShippingMethodTaxLine = model
   })
   .indexes([
     {
-      name: ShippingMethodIdIndex,
+      name: "IDX_order_shipping_method_tax_line_shipping_method_id",
       on: ["shipping_method_id"],
       unique: false,
     },
