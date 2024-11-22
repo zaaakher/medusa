@@ -1463,7 +1463,7 @@ medusaIntegrationTestRunner({
           )
         })
 
-        it.only("updates a product (update prices, tags, update status, delete collection, delete type, replaces images)", async () => {
+        it("updates a product (update prices, tags, update status, delete collection, delete type, replaces images)", async () => {
           const payload = {
             collection_id: null,
             title: "Test an update",
