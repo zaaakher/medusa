@@ -8,7 +8,6 @@ const OrderLineItemTaxLine = model
     tax_rate_id: model.text().nullable(),
     code: model.text(),
     rate: model.bigNumber(),
-    raw_rate: model.json(),
     provider_id: model.text().nullable(),
     item: model.belongsTo(() => OrderLineItem, {
       mappedBy: "tax_lines",

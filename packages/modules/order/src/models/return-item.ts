@@ -12,11 +12,8 @@ const ReturnItem = model
       })
       .nullable(),
     quantity: model.bigNumber(),
-    raw_quantity: model.json(),
     received_quantity: model.bigNumber().default(0),
-    raw_received_quantity: model.json(),
     damaged_quantity: model.bigNumber().default(0),
-    raw_damaged_quantity: model.json(),
     return: model.belongsTo(() => Return, {
       mappedBy: "return_items",
     }),

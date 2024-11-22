@@ -11,7 +11,6 @@ const OrderClaimItem = model
     }),
     reason: model.enum(ClaimReason).nullable(),
     quantity: model.bigNumber(),
-    raw_quantity: model.json(),
     claim: model.belongsTo(() => Claim, {
       mappedBy: "items",
     }),

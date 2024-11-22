@@ -1,27 +1,26 @@
 import { model } from "@medusajs/framework/utils"
+import OrderClaim from "./claim"
+import OrderExchange from "./exchange"
+import Order from "./order"
+import Return from "./return"
 
 const OrderTransaction = model
   .define("OrderTransaction", {
     id: model.id({ prefix: "ordtrx" }).primaryKey(),
-    order_id: model.text(),
-    order: model.belongsTo(() => "Order", {
+    order: model.belongsTo(() => Order, {
       mappedBy: "transactions",
     }),
-    return_id: model.text().nullable(),
-    return: model.belongsTo(() => "Return", {
+    return: model.belongsTo(() => Return, {
       mappedBy: "transactions",
     }),
-    exchange_id: model.text().nullable(),
-    exchange: model.belongsTo(() => "Exchange", {
+    exchange: model.belongsTo(() => OrderExchange, {
       mappedBy: "transactions",
     }),
-    claim_id: model.text().nullable(),
-    claim: model.belongsTo(() => "Claim", {
+    claim: model.belongsTo(() => OrderClaim, {
       mappedBy: "transactions",
     }),
     version: model.number().default(1),
     amount: model.bigNumber(),
-    raw_amount: model.json(),
     currency_code: model.text(),
     reference: model.text().nullable(),
     reference_id: model.text().nullable(),

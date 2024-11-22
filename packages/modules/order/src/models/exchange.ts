@@ -17,7 +17,6 @@ const OrderExchange = model
     display_id: model.number(),
     no_notification: model.boolean().nullable(),
     difference_due: model.bigNumber().nullable(),
-    raw_difference_due: model.json(),
     allow_backorder: model.boolean().default(false),
     additional_items: model.hasMany(() => OrderExchangeItem, {
       mappedBy: "exchange",

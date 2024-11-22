@@ -8,7 +8,6 @@ const OrderShippingMethodAdjustment = model
     promotion_id: model.text().nullable(),
     code: model.text().nullable(),
     amount: model.bigNumber(),
-    raw_amount: model.json(),
     provider_id: model.text().nullable(),
     shipping_method: model.belongsTo(() => OrderShippingMethod, {
       mappedBy: "adjustments",

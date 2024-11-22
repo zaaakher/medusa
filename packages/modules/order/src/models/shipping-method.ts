@@ -8,7 +8,6 @@ const OrderShippingMethod = model
     name: model.text(),
     description: model.json().nullable(),
     amount: model.bigNumber(),
-    raw_amount: model.json(),
     is_tax_inclusive: model.boolean().default(false),
     is_custom_amount: model.boolean().default(false),
     shipping_option_id: model.text().nullable(),

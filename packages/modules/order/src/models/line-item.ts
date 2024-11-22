@@ -26,9 +26,7 @@ const OrderLineItem = model
     is_discountable: model.boolean().default(true),
     is_tax_inclusive: model.boolean().default(false),
     compare_at_unit_price: model.bigNumber().nullable(),
-    raw_compare_at_unit_price: model.json().nullable(),
     unit_price: model.bigNumber(),
-    raw_unit_price: model.json(),
     is_custom_price: model.boolean().default(false),
     tax_lines: model.hasMany(() => OrderLineItemTaxLine, {
       mappedBy: "item",

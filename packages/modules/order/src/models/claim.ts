@@ -20,7 +20,6 @@ const OrderClaim = model
     type: model.enum(ClaimType),
     no_notification: model.boolean().nullable(),
     refund_amount: model.bigNumber().nullable(),
-    raw_refund_amount: model.json(),
     additional_items: model.hasMany(() => ClaimItem, {
       mappedBy: "claim",
     }),

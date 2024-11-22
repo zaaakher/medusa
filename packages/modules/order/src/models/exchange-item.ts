@@ -6,7 +6,6 @@ const OrderExchangeItem = model
   .define("OrderExchangeItem", {
     id: model.id({ prefix: "oexcitem" }).primaryKey(),
     quantity: model.bigNumber(),
-    raw_quantity: model.json(),
     exchange: model.belongsTo(() => Exchange, {
       mappedBy: "items",
     }),
