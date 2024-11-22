@@ -391,11 +391,13 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
         }
 
         // Set the base mpath if the category has a parent. The model `create` hook will append the own id to the base mpath.
+        let parentCategory: InferEntityType<typeof ProductCategory> | null =
+          null
         const parentCategoryId =
           categoryData.parent_category_id ?? categoryData.parent_category?.id
 
         if (parentCategoryId) {
-          const parentCategory = await manager.findOne<
+          parentCategory = await manager.findOne<
             InferEntityType<typeof ProductCategory>
           >(ProductCategory.name, parentCategoryId)
 
@@ -405,14 +407,28 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
               `Parent category with id: '${parentCategoryId}' does not exist`
             )
           }
-
-          categoryData.mpath = parentCategory.mpath
         }
 
-        return manager.create<InferEntityType<typeof ProductCategory>>(
+        const result = await manager.create<
+          InferEntityType<typeof ProductCategory>
+        >(
           ProductCategory.name,
           categoryData as unknown as InferEntityType<typeof ProductCategory>
         )
+
+        /**
+         * Since "mpath" calculation relies on the id of the created
+         * category, we have to compute it after calling manager.create. So
+         * that we can access the "category.id" which is under the hood
+         * defined by DML.
+         */
+        manager.assign(result, {
+          mpath: parentCategory
+            ? `${parentCategory.mpath}.${result.id}`
+            : result.id,
+        })
+
+        return result
       })
     )
 

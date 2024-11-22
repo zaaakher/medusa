@@ -43,20 +43,6 @@ const ProductCategory = model
       mappedBy: "categories",
     }),
   })
-  .hooks({
-    creating: (productCategory) => {
-      productCategory.mpath = `${
-        productCategory.mpath ? productCategory.mpath + "." : ""
-      }${productCategory.id}`
-
-      // /**
-      //  * TODO: A validation step might need to exists, maybe at the service level or the repository level
-      //  */
-      // productCategory.handle ??= kebabCase(
-      //   productCategory.name ?? productCategory.id // TODO: There seems to be a bug with model configuration where both properties are optional but non nullable.
-      // )
-    },
-  })
   .cascades({
     delete: ["category_children"],
   })
