@@ -4,9 +4,9 @@ import { DmlEntity } from "../entity"
 import { model } from "../entity-builder"
 import { DuplicateIdPropertyError } from "../errors"
 import {
+  mikroORMEntityBuilder,
   toMikroORMEntity,
   toMikroOrmEntities,
-  mikroORMEntityBuilder,
 } from "../helpers/create-mikro-orm-entity"
 
 describe("Entity builder", () => {
@@ -2822,7 +2822,6 @@ describe("Entity builder", () => {
           reference: "scalar",
           setter: false,
           type: "string",
-          isForeignKey: true,
           persist: false,
         },
         created_at: {
@@ -2946,12 +2945,16 @@ describe("Entity builder", () => {
           nullable: false,
           onDelete: undefined,
           reference: "m:1",
-          // isForeignKey: true,
         },
         ...defaultColumnMetadata,
       })
 
       expect(metaData.indexes).toEqual([
+        {
+          expression:
+            'CREATE INDEX IF NOT EXISTS "IDX_user_group_id" ON "user" (group_id) WHERE deleted_at IS NULL',
+          name: "IDX_user_group_id",
+        },
         {
           expression:
             'CREATE UNIQUE INDEX IF NOT EXISTS "IDX_user_email_account_unique" ON "user" (email, account) WHERE deleted_at IS NULL',
@@ -2972,11 +2975,6 @@ describe("Entity builder", () => {
             'CREATE UNIQUE INDEX IF NOT EXISTS "IDX_unique-name" ON "user" (organization, account, group_id) WHERE deleted_at IS NULL',
           name: "IDX_unique-name",
         },
-        // {
-        //   expression:
-        //     'CREATE INDEX IF NOT EXISTS "IDX_user_group_id" ON "user" (group_id) WHERE deleted_at IS NULL',
-        //   name: "IDX_user_group_id",
-        // },
       ])
     })
 
@@ -3030,6 +3028,11 @@ describe("Entity builder", () => {
       expect(metaData.indexes).toEqual([
         {
           expression:
+            'CREATE INDEX IF NOT EXISTS "IDX_user_group_id" ON "user" (group_id) WHERE deleted_at IS NULL',
+          name: "IDX_user_group_id",
+        },
+        {
+          expression:
             'CREATE INDEX IF NOT EXISTS "IDX_user_organization_account" ON "user" (organization, account) WHERE email IS NOT NULL AND deleted_at IS NULL',
           name: "IDX_user_organization_account",
         },
@@ -3053,11 +3056,6 @@ describe("Entity builder", () => {
             'CREATE INDEX IF NOT EXISTS "IDX_user_account_group_id" ON "user" (account, group_id) WHERE is_owner IS TRUE AND deleted_at IS NULL',
           name: "IDX_user_account_group_id",
         },
-        // {
-        //   expression:
-        //     'CREATE INDEX IF NOT EXISTS "IDX_user_group_id" ON "user" (group_id) WHERE deleted_at IS NULL',
-        //   name: "IDX_user_group_id",
-        // },
       ])
     })
 
@@ -3119,11 +3117,11 @@ describe("Entity builder", () => {
       const metaData = MetadataStorage.getMetadataFromDecorator(User)
 
       expect(metaData.indexes).toEqual([
-        // {
-        //   expression:
-        //     'CREATE INDEX IF NOT EXISTS "IDX_user_group_id" ON "user" (group_id) WHERE deleted_at IS NULL',
-        //   name: "IDX_user_group_id",
-        // },
+        {
+          expression:
+            'CREATE INDEX IF NOT EXISTS "IDX_user_group_id" ON "user" (group_id) WHERE deleted_at IS NULL',
+          name: "IDX_user_group_id",
+        },
       ])
 
       const Setting = toMikroORMEntity(setting)
@@ -3546,7 +3544,6 @@ describe("Entity builder", () => {
           nullable: false,
           onDelete: "cascade",
           reference: "m:1",
-          // isForeignKey: true,
         },
         created_at: {
           reference: "scalar",
@@ -3749,7 +3746,6 @@ describe("Entity builder", () => {
           name: "user_id",
           getter: false,
           setter: false,
-          isForeignKey: true,
           persist: false,
         },
         created_at: {
@@ -3946,7 +3942,6 @@ describe("Entity builder", () => {
           name: "user_id",
           getter: false,
           setter: false,
-          isForeignKey: true,
           persist: false,
         },
         created_at: {
@@ -4136,7 +4131,6 @@ describe("Entity builder", () => {
           mapToPk: true,
           fieldName: "user_id",
           nullable: false,
-          // isForeignKey: true,
         },
         created_at: {
           reference: "scalar",
@@ -4325,7 +4319,6 @@ describe("Entity builder", () => {
           mapToPk: true,
           fieldName: "user_id",
           nullable: true,
-          // isForeignKey: true,
         },
         created_at: {
           reference: "scalar",
@@ -4581,7 +4574,6 @@ describe("Entity builder", () => {
           name: "user_id",
           getter: false,
           setter: false,
-          isForeignKey: true,
           persist: false,
         },
         created_at: {
@@ -4780,7 +4772,6 @@ describe("Entity builder", () => {
           name: "user_id",
           getter: false,
           setter: false,
-          isForeignKey: true,
           persist: false,
         },
         created_at: {
@@ -4887,7 +4878,6 @@ describe("Entity builder", () => {
           mapToPk: true,
           nullable: false,
           onDelete: undefined,
-          // isForeignKey: true,
         },
         children: {
           cascade: undefined,
@@ -4998,7 +4988,6 @@ describe("Entity builder", () => {
           name: "parent_id",
           type: "string",
           columnType: "text",
-          isForeignKey: true,
           persist: false,
           reference: "scalar",
           getter: false,
@@ -6630,7 +6619,6 @@ describe("Entity builder", () => {
           mapToPk: true,
           fieldName: "user_id",
           nullable: false,
-          // isForeignKey: true,
         },
         user: {
           reference: "scalar",
@@ -6649,7 +6637,6 @@ describe("Entity builder", () => {
           mapToPk: true,
           fieldName: "team_id",
           nullable: false,
-          // isForeignKey: true,
         },
         team: {
           reference: "scalar",

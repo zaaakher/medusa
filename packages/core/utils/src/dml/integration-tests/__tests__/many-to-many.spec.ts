@@ -11,7 +11,7 @@ import { EntityConstructor } from "@medusajs/types"
 import { pgGodCredentials } from "../utils"
 import { FileSystem } from "../../../common"
 
-jest.setTimeout(300000)
+jest.setTimeout(30000)
 
 export const fileSystem = new FileSystem(
   join(__dirname, "../../integration-tests-migrations-many-to-many")
