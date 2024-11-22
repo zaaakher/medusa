@@ -9,7 +9,7 @@ const OrderShipping = model
   .define("OrderShipping", {
     id: model.id({ prefix: "ordspmv" }).primaryKey(),
     order: model.belongsTo(() => Order, {
-      mappedBy: "shippings",
+      mappedBy: "shipping_methods",
     }),
     return: model
       .belongsTo(() => Return, {

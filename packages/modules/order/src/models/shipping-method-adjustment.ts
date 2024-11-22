@@ -12,7 +12,6 @@ const OrderShippingMethodAdjustment = model
     shipping_method: model.belongsTo(() => OrderShippingMethod, {
       mappedBy: "adjustments",
     }),
-    shipping_method_id: model.text(),
   })
   .indexes([
     {

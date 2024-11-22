@@ -22,8 +22,8 @@ export function applyChangesToOrder(
     addActionReferenceToObject?: boolean
   }
 ) {
-  const itemsToUpsert: OrderItem[] = []
-  const shippingMethodsToUpsert: OrderShippingMethod[] = []
+  const itemsToUpsert: (typeof OrderItem)[] = []
+  const shippingMethodsToUpsert: (typeof OrderShippingMethod)[] = []
   const summariesToUpsert: any[] = []
   const orderToUpdate: any[] = []
 
