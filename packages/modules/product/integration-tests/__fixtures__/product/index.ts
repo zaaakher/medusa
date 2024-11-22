@@ -1,4 +1,8 @@
-import { ProductStatus, toMikroORMEntity } from "@medusajs/framework/utils"
+import {
+  kebabCase,
+  ProductStatus,
+  toMikroORMEntity,
+} from "@medusajs/framework/utils"
 import { SqlEntityManager } from "@mikro-orm/postgresql"
 import {
   Image,
@@ -73,6 +77,9 @@ export async function createCollections(
   }[]
 ) {
   const collections: any[] = collectionData.map((collectionData) => {
+    if (!collectionData.handle && collectionData.title) {
+      collectionData.handle = kebabCase(collectionData.title)
+    }
     return manager.create(toMikroORMEntity(ProductCollection), collectionData)
   })
 
