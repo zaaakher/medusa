@@ -1,112 +1,31 @@
-import {
-  BigNumber,
-  createPsqlIndexStatementHelper,
-  generateEntityId,
-} from "@medusajs/framework/utils"
-import {
-  BeforeCreate,
-  Entity,
-  ManyToOne,
-  OnInit,
-  PrimaryKey,
-  Property,
-  Rel,
-} from "@mikro-orm/core"
+import { model } from "@medusajs/framework/utils"
 import Order from "./order"
 
-type OrderSummaryTotals = {
-  total: BigNumber
-  subtotal: BigNumber
-  total_tax: BigNumber
+const OrderIdVersionIndex = "IDX_order_summary_order_id_version"
+const DeletedAtIndex = "IDX_order_summary_deleted_at"
 
-  ordered_total: BigNumber
-  fulfilled_total: BigNumber
-  returned_total: BigNumber
-  return_request_total: BigNumber
-  write_off_total: BigNumber
-  projected_total: BigNumber
-
-  net_total: BigNumber
-  net_subtotal: BigNumber
-  net_total_tax: BigNumber
-
-  balance: BigNumber
-
-  paid_total: BigNumber
-  refunded_total: BigNumber
-}
-
-const tableName = "order_summary"
-
-const OrderIdVersionIndex = createPsqlIndexStatementHelper({
-  tableName,
-  columns: ["order_id", "version"],
-  where: "deleted_at IS NOT NULL",
-})
-
-const DeletedAtIndex = createPsqlIndexStatementHelper({
-  tableName,
-  columns: "deleted_at",
-  where: "deleted_at IS NOT NULL",
-})
-
-@Entity({ tableName })
-@OrderIdVersionIndex.MikroORMIndex()
-export default class OrderSummary {
-  @PrimaryKey({ columnType: "text" })
-  id: string
-
-  @ManyToOne({
-    entity: () => Order,
-    columnType: "text",
-    fieldName: "order_id",
-    mapToPk: true,
-    onDelete: "cascade",
+const OrderSummary = model
+  .define("OrderSummary", {
+    id: model.id({ prefix: "ordsum" }).primaryKey(),
+    order: model.belongsTo(() => Order, {
+      mappedBy: "summaries",
+    }),
+    version: model.number().default(1),
+    totals: model.json(),
   })
-  order_id: string
+  .indexes([
+    {
+      name: OrderIdVersionIndex,
+      on: ["order_id", "version"],
+      unique: false,
+      where: "deleted_at IS NOT NULL",
+    },
+    {
+      name: DeletedAtIndex,
+      on: ["deleted_at"],
+      unique: false,
+      where: "deleted_at IS NOT NULL",
+    },
+  ])
 
-  @ManyToOne(() => Order, {
-    persist: false,
-  })
-  order: Rel<Order>
-
-  @Property({
-    columnType: "integer",
-    defaultRaw: "1",
-  })
-  version: number = 1
-
-  @Property({ columnType: "jsonb" })
-  totals: OrderSummaryTotals | null = {} as OrderSummaryTotals
-
-  @Property({
-    onCreate: () => new Date(),
-    columnType: "timestamptz",
-    defaultRaw: "now()",
-  })
-  created_at: Date
-
-  @Property({
-    onCreate: () => new Date(),
-    onUpdate: () => new Date(),
-    columnType: "timestamptz",
-    defaultRaw: "now()",
-  })
-  updated_at: Date
-
-  @Property({ columnType: "timestamptz", nullable: true })
-  @DeletedAtIndex.MikroORMIndex()
-  deleted_at: Date | null = null
-
-  @BeforeCreate()
-  onCreate() {
-    this.id = generateEntityId(this.id, "ordsum")
-    this.order_id ??= this.order?.id
-  }
-
-  @OnInit()
-  onInit() {
-    this.id = generateEntityId(this.id, "ordsum")
-    this.order_id ??= this.order?.id
-  }
-}
+export default OrderSummary

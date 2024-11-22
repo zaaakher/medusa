@@ -1,92 +1,31 @@
-import { DAL } from "@medusajs/framework/types"
-import {
-  DALUtils,
-  createPsqlIndexStatementHelper,
-  generateEntityId,
-} from "@medusajs/framework/utils"
-import {
-  BeforeCreate,
-  Entity,
-  Filter,
-  ManyToOne,
-  OnInit,
-  OptionalProps,
-  PrimaryKey,
-  Property,
-  Rel,
-} from "@mikro-orm/core"
+import { model } from "@medusajs/framework/utils"
 import ClaimItem from "./claim-item"
 
-type OptionalClaimItemImageProps = DAL.ModelDateColumns
+const ClaimItemImageDeletedAtIndex = "IDX_order_claim_item_image_deleted_at"
+const ClaimItemIdIndex = "IDX_order_claim_item_image_claim_item_id"
 
-const ClaimItemImageDeletedAtIndex = createPsqlIndexStatementHelper({
-  tableName: "order_claim_item_image",
-  columns: "deleted_at",
-  where: "deleted_at IS NOT NULL",
-})
-
-const ClaimItemIdIndex = createPsqlIndexStatementHelper({
-  tableName: "order_claim_item_image",
-  columns: ["claim_item_id"],
-  where: "deleted_at IS NOT NULL",
-})
-
-@Entity({ tableName: "order_claim_item_image" })
-@Filter(DALUtils.mikroOrmSoftDeletableFilterOptions)
-export default class OrderClaimItemImage {
-  [OptionalProps]?: OptionalClaimItemImageProps
-
-  @PrimaryKey({ columnType: "text" })
-  id: string
-
-  @ManyToOne({
-    entity: () => ClaimItem,
-    mapToPk: true,
-    fieldName: "claim_item_id",
-    columnType: "text",
+const OrderClaimItemImage = model
+  .define("OrderClaimItemImage", {
+    id: model.id({ prefix: "climg" }).primaryKey(),
+    claim_item: model.belongsTo(() => ClaimItem, {
+      mappedBy: "images",
+    }),
+    url: model.text(),
+    metadata: model.json().nullable(),
   })
-  @ClaimItemIdIndex.MikroORMIndex()
-  claim_item_id: string
+  .indexes([
+    {
+      name: ClaimItemImageDeletedAtIndex,
+      on: ["deleted_at"],
+      unique: false,
+      where: "deleted_at IS NOT NULL",
+    },
+    {
+      name: ClaimItemIdIndex,
+      on: ["claim_item_id"],
+      unique: false,
+      where: "deleted_at IS NOT NULL",
+    },
+  ])
 
-  @ManyToOne(() => ClaimItem, {
-    persist: false,
-  })
-  item: Rel<ClaimItem>
-
-  @Property({ columnType: "text" })
-  url: string
-
-  @Property({ columnType: "jsonb", nullable: true })
-  metadata: Record<string, unknown> | null = null
-
-  @Property({
-    onCreate: () => new Date(),
-    columnType: "timestamptz",
-    defaultRaw: "now()",
-  })
-  created_at: Date
-
-  @Property({
-    onCreate: () => new Date(),
-    onUpdate: () => new Date(),
-    columnType: "timestamptz",
-    defaultRaw: "now()",
-  })
-  updated_at: Date
-
-  @Property({ columnType: "timestamptz", nullable: true })
-  @ClaimItemImageDeletedAtIndex.MikroORMIndex()
-  deleted_at: Date | null = null
-
-  @BeforeCreate()
-  onCreate() {
-    this.id = generateEntityId(this.id, "climg")
-    this.claim_item_id ??= this.item?.id
-  }
-
-  @OnInit()
-  onInit() {
-    this.id = generateEntityId(this.id, "climg")
-    this.claim_item_id ??= this.item?.id
-  }
-}
+export default OrderClaimItemImage

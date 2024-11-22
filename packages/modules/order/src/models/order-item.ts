@@ -1,184 +1,69 @@
-import { BigNumberRawValue, DAL } from "@medusajs/framework/types"
-import {
-  BigNumber,
-  MikroOrmBigNumberProperty,
-  createPsqlIndexStatementHelper,
-  generateEntityId,
-} from "@medusajs/framework/utils"
-import {
-  BeforeCreate,
-  Entity,
-  ManyToOne,
-  OnInit,
-  OptionalProps,
-  PrimaryKey,
-  Property,
-  Rel,
-} from "@mikro-orm/core"
+import { model } from "@medusajs/framework/utils"
 import OrderLineItem from "./line-item"
 import Order from "./order"
 
-type OptionalLineItemProps = DAL.ModelDateColumns
+const OrderIdIndex = "IDX_order_item_order_id"
+const OrderVersionIndex = "IDX_order_item_version"
+const ItemIdIndex = "IDX_order_item_item_id"
+const DeletedAtIndex = "IDX_order_item_deleted_at"
 
-const tableName = "order_item"
-const OrderIdIndex = createPsqlIndexStatementHelper({
-  tableName,
-  columns: ["order_id"],
-  where: "deleted_at IS NOT NULL",
-})
-
-const OrderVersionIndex = createPsqlIndexStatementHelper({
-  tableName,
-  columns: ["version"],
-  where: "deleted_at IS NOT NULL",
-})
-
-const ItemIdIndex = createPsqlIndexStatementHelper({
-  tableName,
-  columns: ["item_id"],
-  where: "deleted_at IS NOT NULL",
-})
-
-const DeletedAtIndex = createPsqlIndexStatementHelper({
-  tableName,
-  columns: "deleted_at",
-  where: "deleted_at IS NOT NULL",
-})
-
-@Entity({ tableName })
-export default class OrderItem {
-  [OptionalProps]?: OptionalLineItemProps
-
-  @PrimaryKey({ columnType: "text" })
-  id: string
-
-  @ManyToOne({
-    entity: () => Order,
-    mapToPk: true,
-    fieldName: "order_id",
-    columnType: "text",
+const OrderItem = model
+  .define("OrderItem", {
+    id: model.id({ prefix: "orditem" }).primaryKey(),
+    order: model.belongsTo(() => Order, {
+      mappedBy: "items",
+    }),
+    version: model.number(),
+    item: model.belongsTo(() => OrderLineItem, {
+      mappedBy: "items",
+    }),
+    unit_price: model.bigNumber().nullable(),
+    raw_unit_price: model.json().nullable(),
+    compare_at_unit_price: model.bigNumber().nullable(),
+    raw_compare_at_unit_price: model.json().nullable(),
+    quantity: model.bigNumber(),
+    raw_quantity: model.json(),
+    fulfilled_quantity: model.bigNumber().default(0),
+    raw_fulfilled_quantity: model.json(),
+    delivered_quantity: model.bigNumber().default(0),
+    raw_delivered_quantity: model.json(),
+    shipped_quantity: model.bigNumber().default(0),
+    raw_shipped_quantity: model.json(),
+    return_requested_quantity: model.bigNumber().default(0),
+    raw_return_requested_quantity: model.json(),
+    return_received_quantity: model.bigNumber().default(0),
+    raw_return_received_quantity: model.json(),
+    return_dismissed_quantity: model.bigNumber().default(0),
+    raw_return_dismissed_quantity: model.json(),
+    written_off_quantity: model.bigNumber().default(0),
+    raw_written_off_quantity: model.json(),
+    metadata: model.json().nullable(),
   })
-  @OrderIdIndex.MikroORMIndex()
-  order_id: string
+  .indexes([
+    {
+      name: OrderIdIndex,
+      on: ["order_id"],
+      unique: false,
+      where: "deleted_at IS NOT NULL",
+    },
+    {
+      name: OrderVersionIndex,
+      on: ["version"],
+      unique: false,
+      where: "deleted_at IS NOT NULL",
+    },
+    {
+      name: ItemIdIndex,
+      on: ["item_id"],
+      unique: false,
+      where: "deleted_at IS NOT NULL",
+    },
+    {
+      name: DeletedAtIndex,
+      on: ["deleted_at"],
+      unique: false,
+      where: "deleted_at IS NOT NULL",
+    },
+  ])
 
-  @ManyToOne(() => Order, {
-    persist: false,
-  })
-  order: Rel<Order>
-
-  @Property({ columnType: "integer" })
-  @OrderVersionIndex.MikroORMIndex()
-  version: number
-
-  @ManyToOne({
-    entity: () => OrderLineItem,
-    fieldName: "item_id",
-    mapToPk: true,
-    columnType: "text",
-  })
-  @ItemIdIndex.MikroORMIndex()
-  item_id: string
-
-  @ManyToOne(() => OrderLineItem, {
-    persist: false,
-  })
-  item: Rel<OrderLineItem>
-
-  @MikroOrmBigNumberProperty({ nullable: true })
-  unit_price: BigNumber | number | null = null
-
-  @Property({ columnType: "jsonb", nullable: true })
-  raw_unit_price: BigNumberRawValue | null = null
-
-  @MikroOrmBigNumberProperty({ nullable: true })
-  compare_at_unit_price: BigNumber | number | null = null
-
-  @Property({ columnType: "jsonb", nullable: true })
-  raw_compare_at_unit_price: BigNumberRawValue | null = null
-
-  @MikroOrmBigNumberProperty()
-  quantity: BigNumber | number
-
-  @Property({ columnType: "jsonb" })
-  raw_quantity: BigNumberRawValue
-
-  @MikroOrmBigNumberProperty()
-  fulfilled_quantity: BigNumber | number = 0
-
-  @Property({ columnType: "jsonb" })
-  raw_fulfilled_quantity: BigNumberRawValue
-
-  @MikroOrmBigNumberProperty()
-  delivered_quantity: BigNumber | number = 0
-
-  @Property({ columnType: "jsonb" })
-  raw_delivered_quantity: BigNumberRawValue
-
-  @MikroOrmBigNumberProperty()
-  shipped_quantity: BigNumber | number = 0
-
-  @Property({ columnType: "jsonb" })
-  raw_shipped_quantity: BigNumberRawValue
-
-  @MikroOrmBigNumberProperty()
-  return_requested_quantity: BigNumber | number = 0
-
-  @Property({ columnType: "jsonb" })
-  raw_return_requested_quantity: BigNumberRawValue
-
-  @MikroOrmBigNumberProperty()
-  return_received_quantity: BigNumber | number = 0
-
-  @Property({ columnType: "jsonb" })
-  raw_return_received_quantity: BigNumberRawValue
-
-  @MikroOrmBigNumberProperty()
-  return_dismissed_quantity: BigNumber | number = 0
-
-  @Property({ columnType: "jsonb" })
-  raw_return_dismissed_quantity: BigNumberRawValue
-
-  @MikroOrmBigNumberProperty()
-  written_off_quantity: BigNumber | number = 0
-
-  @Property({ columnType: "jsonb" })
-  raw_written_off_quantity: BigNumberRawValue
-
-  @Property({ columnType: "jsonb", nullable: true })
-  metadata: Record<string, unknown> | null = null
-
-  @Property({
-    onCreate: () => new Date(),
-    columnType: "timestamptz",
-    defaultRaw: "now()",
-  })
-  created_at: Date
-
-  @Property({
-    onCreate: () => new Date(),
-    onUpdate: () => new Date(),
-    columnType: "timestamptz",
-    defaultRaw: "now()",
-  })
-  updated_at: Date
-
-  @Property({ columnType: "timestamptz", nullable: true })
-  @DeletedAtIndex.MikroORMIndex()
-  deleted_at: Date | null = null
-
-  @BeforeCreate()
-  onCreate() {
-    this.id = generateEntityId(this.id, "orditem")
-    this.order_id ??= this.order?.id
-    this.item_id ??= this.item?.id
-    this.version ??= this.order?.version
-  }
-
-  @OnInit()
-  onInit() {
-    this.id = generateEntityId(this.id, "orditem")
-    this.order_id ??= this.order?.id
-    this.item_id ??= this.item?.id
-    this.version ??= this.order?.version
-  }
-}
+export default OrderItem

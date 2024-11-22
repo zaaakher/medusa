@@ -1,135 +1,50 @@
-import { BigNumberRawValue, DAL } from "@medusajs/framework/types"
-import {
-  ClaimReason,
-  MikroOrmBigNumberProperty,
-  createPsqlIndexStatementHelper,
-  generateEntityId,
-} from "@medusajs/framework/utils"
-import {
-  BeforeCreate,
-  Cascade,
-  Collection,
-  Entity,
-  Enum,
-  ManyToOne,
-  OnInit,
-  OneToMany,
-  OptionalProps,
-  PrimaryKey,
-  Property,
-  Rel,
-} from "@mikro-orm/core"
+import { ClaimReason, model } from "@medusajs/framework/utils"
 import Claim from "./claim"
 import OrderClaimItemImage from "./claim-item-image"
 import OrderLineItem from "./line-item"
 
-type OptionalLineItemProps = DAL.ModelDateColumns
+const ClaimIdIndex = "IDX_order_claim_item_claim_id"
+const ItemIdIndex = "IDX_order_claim_item_item_id"
+const DeletedAtIndex = "IDX_order_claim_item_deleted_at"
 
-const tableName = "order_claim_item"
-const ClaimIdIndex = createPsqlIndexStatementHelper({
-  tableName,
-  columns: "claim_id",
-  where: "deleted_at IS NOT NULL",
-})
-
-const ItemIdIndex = createPsqlIndexStatementHelper({
-  tableName,
-  columns: "item_id",
-  where: "deleted_at IS NOT NULL",
-})
-
-const DeletedAtIndex = createPsqlIndexStatementHelper({
-  tableName,
-  columns: "deleted_at",
-  where: "deleted_at IS NOT NULL",
-})
-
-@Entity({ tableName })
-export default class OrderClaimItem {
-  [OptionalProps]?: OptionalLineItemProps
-
-  @PrimaryKey({ columnType: "text" })
-  id: string
-
-  @OneToMany(() => OrderClaimItemImage, (ci) => ci.item, {
-    cascade: [Cascade.PERSIST, Cascade.REMOVE],
+const OrderClaimItem = model
+  .define("OrderClaimItem", {
+    id: model.id({ prefix: "claitem" }).primaryKey(),
+    images: model.hasMany(() => OrderClaimItemImage, {
+      mappedBy: "item",
+    }),
+    reason: model.enum(ClaimReason).nullable(),
+    quantity: model.bigNumber(),
+    raw_quantity: model.json(),
+    claim: model.belongsTo(() => Claim, {
+      mappedBy: "items",
+    }),
+    item: model.belongsTo(() => OrderLineItem, {
+      mappedBy: "items",
+    }),
+    is_additional_item: model.boolean().default(false),
+    note: model.text().nullable(),
+    metadata: model.json().nullable(),
   })
-  images = new Collection<Rel<OrderClaimItemImage>>(this)
+  .indexes([
+    {
+      name: ClaimIdIndex,
+      on: ["claim_id"],
+      unique: false,
+      where: "deleted_at IS NOT NULL",
+    },
+    {
+      name: ItemIdIndex,
+      on: ["item_id"],
+      unique: false,
+      where: "deleted_at IS NOT NULL",
+    },
+    {
+      name: DeletedAtIndex,
+      on: ["deleted_at"],
+      unique: false,
+      where: "deleted_at IS NOT NULL",
+    },
+  ])
 
-  @Enum({ items: () => ClaimReason, nullable: true })
-  reason: Rel<ClaimReason> | null = null
-
-  @MikroOrmBigNumberProperty()
-  quantity: Number | number
-
-  @Property({ columnType: "jsonb" })
-  raw_quantity: BigNumberRawValue
-
-  @ManyToOne(() => Claim, {
-    columnType: "text",
-    fieldName: "claim_id",
-    mapToPk: true,
-    onDelete: "cascade",
-  })
-  @ClaimIdIndex.MikroORMIndex()
-  claim_id: string
-
-  @ManyToOne(() => Claim, {
-    persist: false,
-  })
-  claim: Rel<Claim>
-
-  @ManyToOne({
-    entity: () => OrderLineItem,
-    fieldName: "item_id",
-    mapToPk: true,
-    columnType: "text",
-  })
-  @ItemIdIndex.MikroORMIndex()
-  item_id: string
-
-  @ManyToOne(() => OrderLineItem, {
-    persist: false,
-  })
-  item: Rel<OrderLineItem>
-
-  @Property({ columnType: "boolean", default: false })
-  is_additional_item: boolean = false
-
-  @Property({ columnType: "text", nullable: true })
-  note: string
-
-  @Property({ columnType: "jsonb", nullable: true })
-  metadata: Record<string, unknown> | null = null
-
-  @Property({
-    onCreate: () => new Date(),
-    columnType: "timestamptz",
-    defaultRaw: "now()",
-  })
-  created_at: Date
-
-  @Property({
-    onCreate: () => new Date(),
-    onUpdate: () => new Date(),
-    columnType: "timestamptz",
-    defaultRaw: "now()",
-  })
-  updated_at: Date
-
-  @Property({ columnType: "timestamptz", nullable: true })
-  @DeletedAtIndex.MikroORMIndex()
-  deleted_at: Date | null = null
-
-  @BeforeCreate()
-  onCreate() {
-    this.id = generateEntityId(this.id, "claitem")
-    this.claim_id ??= this.claim?.id
-  }
-
-  @OnInit()
-  onInit() {
-    this.id = generateEntityId(this.id, "claitem")
-    this.claim_id ??= this.claim?.id
-  }
-}
+export default OrderClaimItem

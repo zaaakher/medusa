@@ -1,42 +1,26 @@
-import {
-  createPsqlIndexStatementHelper,
-  generateEntityId,
-} from "@medusajs/framework/utils"
-import { BeforeCreate, Entity, ManyToOne, OnInit, Rel } from "@mikro-orm/core"
-import AdjustmentLine from "./adjustment-line"
+import { model } from "@medusajs/framework/utils"
 import OrderShippingMethod from "./shipping-method"
 
-const ShippingMethodIdIdIndex = createPsqlIndexStatementHelper({
-  tableName: "order_shipping_method_adjustment",
-  columns: "shipping_method_id",
-})
-
-@Entity({ tableName: "order_shipping_method_adjustment" })
-export default class OrderShippingMethodAdjustment extends AdjustmentLine {
-  @ManyToOne(() => OrderShippingMethod, {
-    persist: false,
+const OrderShippingMethodAdjustment = model
+  .define("OrderShippingMethodAdjustment", {
+    id: model.id({ prefix: "ordsmadj" }).primaryKey(),
+    description: model.text().nullable(),
+    promotion_id: model.text().nullable(),
+    code: model.text().nullable(),
+    amount: model.bigNumber(),
+    raw_amount: model.json(),
+    provider_id: model.text().nullable(),
+    shipping_method: model.belongsTo(() => OrderShippingMethod, {
+      mappedBy: "adjustments",
+    }),
+    shipping_method_id: model.text(),
   })
-  shipping_method: Rel<OrderShippingMethod>
+  .indexes([
+    {
+      name: "ShippingMethodIdIdIndex",
+      on: ["shipping_method_id"],
+      unique: false,
+    },
+  ])
 
-  @ManyToOne({
-    entity: () => OrderShippingMethod,
-    columnType: "text",
-    fieldName: "shipping_method_id",
-    mapToPk: true,
-    onDelete: "cascade",
-  })
-  @ShippingMethodIdIdIndex.MikroORMIndex()
-  shipping_method_id: string
-
-  @BeforeCreate()
-  onCreate() {
-    this.id = generateEntityId(this.id, "ordsmadj")
-    this.shipping_method_id ??= this.shipping_method?.id
-  }
-
-  @OnInit()
-  onInit() {
-    this.id = generateEntityId(this.id, "ordsmadj")
-    this.shipping_method_id ??= this.shipping_method?.id
-  }
-}
+export default OrderShippingMethodAdjustment
