@@ -189,10 +189,7 @@ export type InferManyToManyFields<Relation> = InferHasManyFields<Relation>
  */
 export type InferSchemaFields<Schema extends DMLSchema> = Prettify<
   {
-    // Omit optional properties to manage them separately and mark them as optional
-    [K in keyof Schema as undefined extends Schema[K]["$dataType"]
-      ? never
-      : K]: Schema[K] extends RelationshipType<any>
+    [K in keyof Schema]: Schema[K] extends RelationshipType<any>
       ? Schema[K]["type"] extends "belongsTo"
         ? InferBelongsToFields<Schema[K]["$dataType"]>
         : Schema[K]["type"] extends "hasOne"

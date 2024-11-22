@@ -7,6 +7,8 @@ import { FileSystem } from "../../../common"
 import { DmlEntity, mikroORMEntityBuilder, model } from "../../../dml"
 import { defineMikroOrmCliConfig } from "../../../modules-sdk"
 
+jest.setTimeout(30000)
+
 const DB_HOST = process.env.DB_HOST ?? "localhost"
 const DB_USERNAME = process.env.DB_USERNAME ?? ""
 const DB_PASSWORD = process.env.DB_PASSWORD ?? " "
@@ -30,7 +32,7 @@ describe("Generate migrations", () => {
     await fs.cleanup()
     MetadataStorage.clear()
     mikroORMEntityBuilder.clear()
-  }, 300 * 1000)
+  })
 
   test("generate migrations for a single entity", async () => {
     const User = model.define("User", {

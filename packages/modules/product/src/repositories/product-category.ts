@@ -497,10 +497,9 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
               )
             )[0]
 
-            const newParentCategory = await manager.findOne(
-              ProductCategory as any,
-              categoryData.parent_category_id
-            )
+            const newParentCategory = await manager.findOne<
+              InferEntityType<typeof ProductCategory>
+            >(ProductCategory.name, categoryData.parent_category_id)
 
             if (!newParentCategory) {
               throw new MedusaError(
@@ -525,7 +524,7 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
               const newMpath = `${newBaseMpath}.${category.id}`
               category.mpath = newMpath
               for (let child of category.category_children) {
-                child = manager.getReference(ProductCategory as any, child.id)
+                child = manager.getReference(ProductCategory.name, child.id)
                 manager.assign(
                   child,
                   categoryDataChildrenMap.get(child.id) ?? {}

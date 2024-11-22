@@ -15,7 +15,7 @@ const ProductTag = model
   )
   .indexes([
     {
-      name: "tagValueIndexName",
+      name: "IDX_tag_value_unique",
       on: ["value"],
       unique: true,
       where: "deleted_at IS NULL",

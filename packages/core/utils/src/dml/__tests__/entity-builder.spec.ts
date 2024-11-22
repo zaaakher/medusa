@@ -2972,7 +2972,7 @@ describe("Entity builder", () => {
             'CREATE UNIQUE INDEX IF NOT EXISTS "IDX_unique-name" ON "user" (organization, account, group_id) WHERE deleted_at IS NULL',
           name: "IDX_unique-name",
         },
-        // {
+              ]        // {
         //   expression:
         //     'CREATE INDEX IF NOT EXISTS "IDX_user_group_id" ON "user" (group_id) WHERE deleted_at IS NULL',
         //   name: "IDX_user_group_id",
