@@ -7,10 +7,10 @@ const OrderExchangeItem = model
     id: model.id({ prefix: "oexcitem" }).primaryKey(),
     quantity: model.bigNumber(),
     exchange: model.belongsTo(() => Exchange, {
-      mappedBy: "items",
+      mappedBy: "additional_items",
     }),
     item: model.belongsTo(() => OrderLineItem, {
-      mappedBy: "items",
+      mappedBy: "exchange_items",
     }),
     note: model.text().nullable(),
     metadata: model.json().nullable(),

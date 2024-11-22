@@ -15,7 +15,7 @@ const ReturnItem = model
     received_quantity: model.bigNumber().default(0),
     damaged_quantity: model.bigNumber().default(0),
     return: model.belongsTo(() => Return, {
-      mappedBy: "return_items",
+      mappedBy: "items",
     }),
     item: model.belongsTo(() => OrderLineItem, {
       mappedBy: "return_items",

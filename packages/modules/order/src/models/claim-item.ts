@@ -15,7 +15,7 @@ const OrderClaimItem = model
       mappedBy: "items",
     }),
     item: model.belongsTo(() => OrderLineItem, {
-      mappedBy: "items",
+      mappedBy: "claim_items",
     }),
     is_additional_item: model.boolean().default(false),
     note: model.text().nullable(),

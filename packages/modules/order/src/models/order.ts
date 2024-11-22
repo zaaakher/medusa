@@ -24,10 +24,10 @@ const Order = model
     shipping_address: model.belongsTo(() => OrderAddress),
     billing_address: model.belongsTo(() => OrderAddress),
     no_notification: model.boolean().nullable(),
+    metadata: model.json().nullable(),
     summary: model.hasMany(() => OrderSummary, {
       mappedBy: "order",
     }),
-    metadata: model.json().nullable(),
     items: model.hasMany(() => OrderItem, {
       mappedBy: "order",
     }),

@@ -8,6 +8,7 @@ import OrderShippingMethod from "./shipping-method"
 const OrderShipping = model
   .define("OrderShipping", {
     id: model.id({ prefix: "ordspmv" }).primaryKey(),
+    version: model.number(),
     order: model.belongsTo(() => Order, {
       mappedBy: "shipping_methods",
     }),
@@ -26,7 +27,6 @@ const OrderShipping = model
         mappedBy: "shipping_methods",
       })
       .nullable(),
-    version: model.number(),
     shipping_method: model.belongsTo(() => OrderShippingMethod, {
       mappedBy: "shipping_methods",
     }),

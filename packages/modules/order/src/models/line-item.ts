@@ -1,7 +1,10 @@
 import { model } from "@medusajs/framework/utils"
+import OrderClaimItem from "./claim-item"
+import OrderExchangeItem from "./exchange-item"
 import OrderLineItemAdjustment from "./line-item-adjustment"
 import OrderLineItemTaxLine from "./line-item-tax-line"
 import OrderItem from "./order-item"
+import ReturnItem from "./return-item"
 
 const OrderLineItem = model
   .define("OrderLineItem", {
@@ -28,15 +31,23 @@ const OrderLineItem = model
     compare_at_unit_price: model.bigNumber().nullable(),
     unit_price: model.bigNumber(),
     is_custom_price: model.boolean().default(false),
+    metadata: model.json().nullable(),
     tax_lines: model.hasMany(() => OrderLineItemTaxLine, {
       mappedBy: "item",
     }),
     adjustments: model.hasMany(() => OrderLineItemAdjustment, {
       mappedBy: "item",
     }),
-    metadata: model.json().nullable(),
-
     items: model.hasMany(() => OrderItem, {
+      mappedBy: "item",
+    }),
+    return_items: model.hasMany(() => ReturnItem, {
+      mappedBy: "item",
+    }),
+    claim_items: model.hasMany(() => OrderClaimItem, {
+      mappedBy: "item",
+    }),
+    exchange_items: model.hasMany(() => OrderExchangeItem, {
       mappedBy: "item",
     }),
   })
