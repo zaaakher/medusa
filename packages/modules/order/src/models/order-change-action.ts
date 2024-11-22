@@ -3,7 +3,7 @@ import { model } from "@medusajs/framework/utils"
 const OrderChangeAction = model
   .define("OrderChangeAction", {
     id: model.id({ prefix: "ordchact" }).primaryKey(),
-    ordering: model.number(),
+    ordering: model.autoincrement(),
     order_id: model.text().nullable(),
     return_id: model.text().nullable(),
     claim_id: model.text().nullable(),

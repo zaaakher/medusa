@@ -1,10 +1,13 @@
 import { model, ReturnStatus } from "@medusajs/framework/utils"
-import { OrderChange, OrderTransaction } from "@models"
+import { OrderChange, OrderTransaction, ReturnItem } from "@models"
+import Claim from "./claim"
+import Exchange from "./exchange"
+import Order from "./order"
+import OrderShipping from "./order-shipping-method"
 
 const Return = model
   .define("Return", {
     id: model.id({ prefix: "return" }).primaryKey(),
-    /*
     order: model.belongsTo(() => Order, {
       mappedBy: "returns",
     }),
@@ -14,21 +17,18 @@ const Return = model
     claim: model.belongsTo(() => Claim, {
       mappedBy: "return",
     }),
-    */
     order_version: model.number(),
-    display_id: model.number(),
+    display_id: model.autoincrement(),
     status: model.enum(ReturnStatus).default(ReturnStatus.OPEN),
     location_id: model.text().nullable(),
     no_notification: model.boolean().nullable(),
     refund_amount: model.bigNumber().nullable(),
-    /*
     items: model.hasMany(() => ReturnItem, {
       mappedBy: "return",
     }),
     shipping_methods: model.hasMany(() => OrderShipping, {
       mappedBy: "return",
     }),
-    */
     transactions: model.hasMany(() => OrderTransaction, {
       mappedBy: "return",
     }),

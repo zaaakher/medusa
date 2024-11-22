@@ -12,7 +12,7 @@ import OrderTransaction from "./transaction"
 const Order = model
   .define("Order", {
     id: model.id({ prefix: "order" }).primaryKey(),
-    display_id: model.number(), // TODO: numberic .searchable()
+    display_id: model.autoincrement(),
     region_id: model.text().nullable(),
     customer_id: model.text().nullable(),
     version: model.number().default(1),

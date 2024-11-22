@@ -4,8 +4,6 @@ import {
   PropertyMetadata,
   PropertyType,
 } from "@medusajs/types"
-import { MikroOrmBigNumberProperty } from "../../../dal"
-import { generateEntityId, isDefined } from "../../../common"
 import {
   ArrayType,
   BeforeCreate,
@@ -15,6 +13,8 @@ import {
   Property,
   Utils,
 } from "@mikro-orm/core"
+import { generateEntityId, isDefined } from "../../../common"
+import { MikroOrmBigNumberProperty } from "../../../dal"
 import { PrimaryKeyModifier } from "../../properties/primary-key"
 
 /**
@@ -31,6 +31,7 @@ const COLUMN_TYPES: {
   dateTime: "timestamptz",
   number: "integer",
   bigNumber: "numeric",
+  bigSerial: "bigserial",
   text: "text",
   json: "jsonb",
   array: "array",
@@ -50,6 +51,7 @@ const PROPERTY_TYPES: {
   dateTime: "date",
   number: "number",
   bigNumber: "number",
+  bigSerial: "number",
   text: "string",
   json: "any",
   array: "string[]",
@@ -231,6 +233,19 @@ export function defineProperty(
       ...(isDefined(field.defaultValue) && {
         default: JSON.stringify(field.defaultValue),
       }),
+    })(MikroORMEntity.prototype, field.fieldName)
+    return
+  }
+
+  /**
+   * Handling bigSerial property separately to set the column type
+   */
+  if (field.dataType.name === "bigSerial") {
+    Property({
+      columnType: "bigserial",
+      type: "number",
+      nullable: field.nullable,
+      fieldName: field.fieldName,
     })(MikroORMEntity.prototype, field.fieldName)
     return
   }

@@ -16,7 +16,7 @@ const OrderClaim = model
       mappedBy: "claim",
     }),
     order_version: model.number(),
-    display_id: model.number(), // TODO: auto increment
+    display_id: model.autoincrement(),
     type: model.enum(ClaimType),
     no_notification: model.boolean().nullable(),
     refund_amount: model.bigNumber().nullable(),

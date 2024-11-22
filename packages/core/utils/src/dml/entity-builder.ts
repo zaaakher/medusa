@@ -13,6 +13,7 @@ import {
   DMLSchemaDefaults,
 } from "./helpers/entity-builder/create-default-properties"
 import { ArrayProperty } from "./properties/array"
+import { AutoIncrementProperty } from "./properties/autoincrement"
 import { BigNumberProperty } from "./properties/big-number"
 import { BooleanProperty } from "./properties/boolean"
 import { DateTimeProperty } from "./properties/date-time"
@@ -237,6 +238,26 @@ export class EntityBuilder {
    */
   bigNumber() {
     return new BigNumberProperty()
+  }
+
+  /**
+   * This method defines an autoincrement property.
+   *
+   * @example
+   * import { model } from "@medusajs/framework/utils"
+   *
+   * const MyCustom = model.define("my_custom", {
+   *   serial_id: model.autoincrement(),
+   *   // ...
+   * })
+   *
+   * export default MyCustom
+   *
+   * @customNamespace Property
+   */
+
+  autoincrement() {
+    return new AutoIncrementProperty()
   }
 
   /**

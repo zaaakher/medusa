@@ -14,7 +14,7 @@ const OrderExchange = model
       mappedBy: "exchange",
     }),
     order_version: model.number(),
-    display_id: model.number(),
+    display_id: model.autoincrement(),
     no_notification: model.boolean().nullable(),
     difference_due: model.bigNumber().nullable(),
     allow_backorder: model.boolean().default(false),
