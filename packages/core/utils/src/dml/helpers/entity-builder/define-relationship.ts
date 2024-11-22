@@ -15,13 +15,14 @@ import {
   Property,
   rel,
 } from "@mikro-orm/core"
-import { DmlEntity } from "../../entity"
-import { HasOne } from "../../relations/has-one"
-import { HasMany } from "../../relations/has-many"
-import { parseEntityName } from "./parse-entity-name"
 import { camelToSnakeCase, pluralize } from "../../../common"
 import { ForeignKey } from "../../../dal/mikro-orm/decorators/foreign-key"
+import { DmlEntity } from "../../entity"
+import { HasMany } from "../../relations/has-many"
+import { HasOne } from "../../relations/has-one"
 import { ManyToMany as DmlManyToMany } from "../../relations/many-to-many"
+import { applyEntityIndexes } from "../mikro-orm/apply-indexes"
+import { parseEntityName } from "./parse-entity-name"
 
 type Context = {
   MANY_TO_MANY_TRACKED_RELATIONS: Record<string, boolean>
@@ -182,6 +183,7 @@ export function defineHasManyRelationship(
  */
 export function defineBelongsToRelationship(
   MikroORMEntity: EntityConstructor<any>,
+  entity: DmlEntity<any, any>,
   relationship: RelationshipMetadata,
   relatedEntity: DmlEntity<
     Record<string, PropertyType<any> | RelationshipType<any>>,
@@ -280,6 +282,13 @@ export function defineBelongsToRelationship(
       })(MikroORMEntity.prototype, relationship.name)
     }
 
+    const { tableName } = parseEntityName(entity)
+    applyEntityIndexes(MikroORMEntity, tableName, [
+      {
+        on: [foreignKeyName],
+        where: "deleted_at IS NULL",
+      },
+    ])
     applyForeignKeyAssignationHooks(foreignKeyName)
     return
   }
@@ -311,7 +320,14 @@ export function defineBelongsToRelationship(
       nullable: relationship.nullable,
       persist: false,
     })(MikroORMEntity.prototype, foreignKeyName)
-    ForeignKey()(MikroORMEntity.prototype, foreignKeyName)
+
+    const { tableName } = parseEntityName(entity)
+    applyEntityIndexes(MikroORMEntity, tableName, [
+      {
+        on: [foreignKeyName],
+        where: "deleted_at IS NULL",
+      },
+    ])
 
     applyForeignKeyAssignationHooks(foreignKeyName)
     return
@@ -564,6 +580,7 @@ export function defineRelationship(
     case "belongsTo":
       defineBelongsToRelationship(
         MikroORMEntity,
+        entity,
         relationship,
         relatedEntity,
         relatedEntityInfo
