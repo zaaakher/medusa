@@ -74,7 +74,8 @@ medusaIntegrationTestRunner({
             // BREAKING: Type input changed from {type: {value: string}} to {type_id: string}
             type_id: baseType.id,
             tags: [{ id: baseTag1.id }, { id: baseTag2.id }],
-            images: [{
+            images: [
+              {
                 url: "image-one",
               },
               {
@@ -139,7 +140,6 @@ medusaIntegrationTestRunner({
             ])
           )
         })
-      
 
         it("returns a list of products with all statuses when no status or invalid status is provided", async () => {
           const res = await api
@@ -991,7 +991,10 @@ medusaIntegrationTestRunner({
         })
 
         it("should get a product with images ordered by rank", async () => {
-          const res = await api.get(`/admin/products/${baseProduct.id}`, adminHeaders)
+          const res = await api.get(
+            `/admin/products/${baseProduct.id}`,
+            adminHeaders
+          )
 
           expect(res.data.product.images).toEqual(
             expect.arrayContaining([
@@ -1975,24 +1978,26 @@ medusaIntegrationTestRunner({
           )
 
           expect(res.status).toEqual(200)
-          expect(res.data.products).toEqual([
-            expect.objectContaining({
-              id: baseProduct.id,
-              sales_channels: expect.arrayContaining([
-                expect.objectContaining({
-                  id: salesChannel.id,
-                }),
-              ]),
-            }),
-            expect.objectContaining({
-              id: proposedProduct.id,
-              sales_channels: expect.arrayContaining([
-                expect.objectContaining({
-                  id: salesChannel.id,
-                }),
-              ]),
-            }),
-          ])
+          expect(res.data.products).toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({
+                id: baseProduct.id,
+                sales_channels: expect.arrayContaining([
+                  expect.objectContaining({
+                    id: salesChannel.id,
+                  }),
+                ]),
+              }),
+              expect.objectContaining({
+                id: proposedProduct.id,
+                sales_channels: expect.arrayContaining([
+                  expect.objectContaining({
+                    id: salesChannel.id,
+                  }),
+                ]),
+              }),
+            ])
+          )
 
           await api.post(
             `/admin/products/${proposedProduct.id}`,
