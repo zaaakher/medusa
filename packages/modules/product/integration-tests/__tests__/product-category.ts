@@ -175,7 +175,7 @@ moduleIntegrationTestRunner<Service>({
               include_descendants_tree: true,
             },
             {
-              select: ["id", "handle"],
+              select: ["id", "handle", "rank"],
             }
           )
 
@@ -222,7 +222,7 @@ moduleIntegrationTestRunner<Service>({
               include_ancestors_tree: true,
             },
             {
-              select: ["id", "handle"],
+              select: ["id", "handle", "rank"],
             }
           )
 
@@ -287,7 +287,7 @@ moduleIntegrationTestRunner<Service>({
               include_descendants_tree: true,
             },
             {
-              select: ["id", "handle"],
+              select: ["id", "handle", "rank"],
             }
           )
 
@@ -417,7 +417,7 @@ moduleIntegrationTestRunner<Service>({
               include_ancestors_tree: true,
             },
             {
-              select: ["id", "handle"],
+              select: ["id", "handle", "rank"],
             }
           )
 
@@ -481,7 +481,7 @@ moduleIntegrationTestRunner<Service>({
               include_ancestors_tree: true,
             },
             {
-              select: ["id", "handle"],
+              select: ["id", "handle", "rank"],
             }
           )
 
@@ -1206,15 +1206,15 @@ moduleIntegrationTestRunner<Service>({
                         "electronics.computers.desktops.gaming-desktops.laptops.gaming-laptops.high-performance",
                       category_children: [
                         expect.objectContaining({
-                          id: "vr-ready",
-                          mpath:
-                            "electronics.computers.desktops.gaming-desktops.laptops.gaming-laptops.high-performance.vr-ready",
-                          parent_category_id: "high-performance",
-                        }),
-                        expect.objectContaining({
                           id: "4k-gaming",
                           mpath:
                             "electronics.computers.desktops.gaming-desktops.laptops.gaming-laptops.high-performance.4k-gaming",
+                          parent_category_id: "high-performance",
+                        }),
+                        expect.objectContaining({
+                          id: "vr-ready",
+                          mpath:
+                            "electronics.computers.desktops.gaming-desktops.laptops.gaming-laptops.high-performance.vr-ready",
                           parent_category_id: "high-performance",
                         }),
                       ],
@@ -1228,30 +1228,30 @@ moduleIntegrationTestRunner<Service>({
                   parent_category_id: "laptops",
                   category_children: [
                     expect.objectContaining({
-                      id: "thin-light",
-                      mpath:
-                        "electronics.computers.desktops.gaming-desktops.laptops.ultrabooks.thin-light",
-                      parent_category_id: "ultrabooks",
-                    }),
-                    expect.objectContaining({
                       id: "convertible-ultrabooks",
                       mpath:
                         "electronics.computers.desktops.gaming-desktops.laptops.ultrabooks.convertible-ultrabooks",
                       parent_category_id: "ultrabooks",
                       category_children: [
                         expect.objectContaining({
-                          id: "touchscreen-ultrabooks",
-                          mpath:
-                            "electronics.computers.desktops.gaming-desktops.laptops.ultrabooks.convertible-ultrabooks.touchscreen-ultrabooks",
-                          parent_category_id: "convertible-ultrabooks",
-                        }),
-                        expect.objectContaining({
                           id: "detachable-ultrabooks",
                           mpath:
                             "electronics.computers.desktops.gaming-desktops.laptops.ultrabooks.convertible-ultrabooks.detachable-ultrabooks",
                           parent_category_id: "convertible-ultrabooks",
                         }),
+                        expect.objectContaining({
+                          id: "touchscreen-ultrabooks",
+                          mpath:
+                            "electronics.computers.desktops.gaming-desktops.laptops.ultrabooks.convertible-ultrabooks.touchscreen-ultrabooks",
+                          parent_category_id: "convertible-ultrabooks",
+                        }),
                       ],
+                    }),
+                    expect.objectContaining({
+                      id: "thin-light",
+                      mpath:
+                        "electronics.computers.desktops.gaming-desktops.laptops.ultrabooks.thin-light",
+                      parent_category_id: "ultrabooks",
                     }),
                   ],
                 }),
