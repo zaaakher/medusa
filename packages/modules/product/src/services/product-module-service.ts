@@ -229,11 +229,16 @@ export default class ProductModuleService
       ...config,
       order: {
         ...config?.order,
-        ...(hasImagesRelation ? {
-          images: {
-            rank: "ASC",
-          },
-        } : {}),
+        ...{
+          id: "ASC",
+        },
+        ...(hasImagesRelation
+          ? {
+              images: {
+                rank: "ASC",
+              },
+            }
+          : {}),
       },
     }
   }
@@ -1712,6 +1717,16 @@ export default class ProductModuleService
                 sharedContext
               )
             upsertedProduct.images = productImages
+
+            await this.productImageService_.delete(
+              {
+                product_id: upsertedProduct.id,
+                id: {
+                  $nin: productImages.map(({ id }) => id),
+                },
+              },
+              sharedContext
+            )
           } else {
             await this.productImageService_.delete(
               { product_id: upsertedProduct.id },
