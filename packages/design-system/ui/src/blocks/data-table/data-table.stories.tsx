@@ -4,12 +4,12 @@ import * as React from "react"
 
 import { Container } from "@/components/container"
 import { PencilSquare, Trash } from "@medusajs/icons"
-import { ColumnFilter } from "@tanstack/react-table"
 import { Button } from "../../components/button"
 import { Heading } from "../../components/heading"
 import { TooltipProvider } from "../../components/tooltip"
 import { DataTable } from "./data-table"
 import {
+  DataTableFilteringState,
   DataTablePaginationState,
   DataTableRowSelectionState,
   DataTableSortingState,
@@ -75,8 +75,8 @@ const usePeople = ({
   limit,
 }: {
   q?: string
-  order?: { id: string; desc: boolean } | null
-  filters?: Record<string, ColumnFilter>
+  order?: DataTableSortingState | null
+  filters?: DataTableFilteringState
   offset?: number
   limit?: number
 }) => {
@@ -92,39 +92,39 @@ const usePeople = ({
     if (filters && Object.keys(filters).length > 0) {
       results = results.filter((person) => {
         return Object.entries(filters).every(([key, filter]) => {
-          if (!filter.value) return true
+          if (!filter) return true
 
           const value = person[key as keyof Employee]
 
-          if (filter.id === "birthday") {
-            if (isDateComparisonOperator(filter.value)) {
+          if (key === "birthday") {
+            if (isDateComparisonOperator(filter)) {
               if (!(value instanceof Date)) {
                 return false
               }
 
-              if (filter.value.$gte) {
-                const compareDate = new Date(filter.value.$gte)
+              if (filter.$gte) {
+                const compareDate = new Date(filter.$gte)
                 if (value < compareDate) {
                   return false
                 }
               }
 
-              if (filter.value.$lte) {
-                const compareDate = new Date(filter.value.$lte)
+              if (filter.$lte) {
+                const compareDate = new Date(filter.$lte)
                 if (value > compareDate) {
                   return false
                 }
               }
 
-              if (filter.value.$gt) {
-                const compareDate = new Date(filter.value.$gt)
+              if (filter.$gt) {
+                const compareDate = new Date(filter.$gt)
                 if (value <= compareDate) {
                   return false
                 }
               }
 
-              if (filter.value.$lt) {
-                const compareDate = new Date(filter.value.$lt)
+              if (filter.$lt) {
+                const compareDate = new Date(filter.$lt)
                 if (value >= compareDate) {
                   return false
                 }
@@ -134,13 +134,13 @@ const usePeople = ({
             }
           }
 
-          if (Array.isArray(filter.value)) {
-            if (filter.value.length === 0) return true
+          if (Array.isArray(filter)) {
+            if (filter.length === 0) return true
 
-            return filter.value.includes(value)
+            return filter.includes(value)
           }
 
-          return filter.value === value
+          return filter === value
         })
       })
     }
@@ -363,9 +363,7 @@ const KitchenSinkDemo = () => {
   const [sorting, setSorting] = React.useState<DataTableSortingState | null>(
     null
   )
-  const [filtering, setFiltering] = React.useState<
-    Record<string, ColumnFilter>
-  >({})
+  const [filtering, setFiltering] = React.useState<DataTableFilteringState>({})
 
   const [pagination, setPagination] = React.useState<DataTablePaginationState>({
     pageIndex: 0,

@@ -1,20 +1,26 @@
 "use client"
 
-import { EllipseMiniSolid, XMark } from "@medusajs/icons"
-import { ColumnFilter } from "@tanstack/react-table"
+import { XMark } from "@medusajs/icons"
 import * as React from "react"
 
-import { DropdownMenu } from "@/components/dropdown-menu"
+import { Popover } from "@/components/popover"
 import { clx } from "@/utils/clx"
 
+import { Checkbox } from "../../../components/checkbox"
 import { DatePicker } from "../../../components/date-picker"
 import { Label } from "../../../components/label"
+import { RadioGroup } from "../../../components/radio-group"
 import { useDataTableContext } from "../context/use-data-table-context"
-import { DateComparisonOperator, DateFilterProps, FilterOption } from "../types"
+import {
+  DataTableDateComparisonOperator,
+  DateFilterProps,
+  FilterOption,
+} from "../types"
 import { isDateComparisonOperator } from "../utils/is-date-comparison-operator"
 
 interface DataTableFilterProps {
-  filter: ColumnFilter
+  id: string
+  filter: unknown
 }
 
 const DEFAULT_FORMAT_DATE_VALUE = (d: Date) =>
@@ -27,46 +33,45 @@ const DEFAULT_RANGE_OPTION_LABEL = "Custom"
 const DEFAULT_RANGE_OPTION_START_LABEL = "Starting"
 const DEFAULT_RANGE_OPTION_END_LABEL = "Ending"
 
-const DataTableFilter = ({ filter }: DataTableFilterProps) => {
+const DataTableFilter = ({ id, filter }: DataTableFilterProps) => {
   const { instance } = useDataTableContext()
-  const [open, setOpen] = React.useState(filter.value === undefined)
+  const [open, setOpen] = React.useState(filter === undefined)
   const [isCustom, setIsCustom] = React.useState(false)
+
+  console.log("filter with id:", id, "is rerendering")
 
   const onOpenChange = React.useCallback(
     (open: boolean) => {
       if (
         !open &&
-        (!filter.value ||
-          (Array.isArray(filter.value) && filter.value.length === 0))
+        (!filter || (Array.isArray(filter) && filter.length === 0))
       ) {
-        instance.removeFilter(filter.id)
+        instance.removeFilter(id)
       }
 
       setOpen(open)
     },
-    [instance, filter.id, filter.value]
+    [instance, id, filter]
   )
 
   const removeFilter = React.useCallback(() => {
-    instance.removeFilter(filter.id)
-  }, [instance, filter.id])
+    instance.removeFilter(id)
+  }, [instance, id])
 
-  const meta = instance.getFilterMeta(filter.id)
-  const { id, type, options, label, ...rest } = meta ?? {}
-
-  const value = filter.value
+  const meta = instance.getFilterMeta(id)
+  const { type, options, label, ...rest } = meta ?? {}
 
   const displayValue = React.useMemo(() => {
     let displayValue: string | null = null
 
-    if (Array.isArray(value)) {
+    if (Array.isArray(filter)) {
       displayValue =
-        value
+        filter
           .map((v) => options?.find((o) => o.value === v)?.label)
           .join(", ") ?? null
     }
 
-    if (isDateComparisonOperator(value)) {
+    if (isDateComparisonOperator(filter)) {
       displayValue =
         options?.find((o) => {
           if (!isDateComparisonOperator(o.value)) {
@@ -75,10 +80,10 @@ const DataTableFilter = ({ filter }: DataTableFilterProps) => {
 
           return (
             !isCustom &&
-            (value.$gte === o.value.$gte || (!value.$gte && !o.value.$gte)) &&
-            (value.$lte === o.value.$lte || (!value.$lte && !o.value.$lte)) &&
-            (value.$gt === o.value.$gt || (!value.$gt && !o.value.$gt)) &&
-            (value.$lt === o.value.$lt || (!value.$lt && !o.value.$lt))
+            (filter.$gte === o.value.$gte || (!filter.$gte && !o.value.$gte)) &&
+            (filter.$lte === o.value.$lte || (!filter.$lte && !o.value.$lte)) &&
+            (filter.$gt === o.value.$gt || (!filter.$gt && !o.value.$gt)) &&
+            (filter.$lt === o.value.$lt || (!filter.$lt && !o.value.$lt))
           )
         })?.label ?? null
 
@@ -87,35 +92,35 @@ const DataTableFilter = ({ filter }: DataTableFilterProps) => {
           ? meta.formatDateValue
           : DEFAULT_FORMAT_DATE_VALUE
 
-        if (value.$gte && !value.$lte) {
+        if (filter.$gte && !filter.$lte) {
           displayValue = `${
             meta.rangeOptionStartLabel || DEFAULT_RANGE_OPTION_START_LABEL
-          } ${formatDateValue(new Date(value.$gte))}`
+          } ${formatDateValue(new Date(filter.$gte))}`
         }
 
-        if (value.$lte && !value.$gte) {
+        if (filter.$lte && !filter.$gte) {
           displayValue = `${
             meta.rangeOptionEndLabel || DEFAULT_RANGE_OPTION_END_LABEL
-          } ${formatDateValue(new Date(value.$lte))}`
+          } ${formatDateValue(new Date(filter.$lte))}`
         }
 
-        if (value.$gte && value.$lte) {
+        if (filter.$gte && filter.$lte) {
           displayValue = `${formatDateValue(
-            new Date(value.$gte)
-          )} - ${formatDateValue(new Date(value.$lte))}`
+            new Date(filter.$gte)
+          )} - ${formatDateValue(new Date(filter.$lte))}`
         }
       }
     }
 
     return displayValue
-  }, [value, options])
+  }, [filter, options])
 
   if (!meta) {
     return null
   }
 
   return (
-    <DropdownMenu open={open} onOpenChange={onOpenChange}>
+    <Popover open={open} onOpenChange={onOpenChange} modal>
       <div
         className={clx(
           "bg-ui-bg-component flex flex-shrink-0 items-center overflow-hidden rounded-md",
@@ -131,7 +136,7 @@ const DataTableFilter = ({ filter }: DataTableFilterProps) => {
             {label || id}
           </div>
         )}
-        <DropdownMenu.Trigger
+        <Popover.Trigger
           className={clx(
             "text-ui-fg-subtle hover:bg-ui-bg-base-hover active:bg-ui-bg-base-pressed transition-fg whitespace-nowrap px-2 py-1 outline-none",
             {
@@ -140,7 +145,7 @@ const DataTableFilter = ({ filter }: DataTableFilterProps) => {
           )}
         >
           {displayValue || label || id}
-        </DropdownMenu.Trigger>
+        </Popover.Trigger>
 
         {displayValue && (
           <button
@@ -152,12 +157,13 @@ const DataTableFilter = ({ filter }: DataTableFilterProps) => {
           </button>
         )}
       </div>
-      <DropdownMenu.Content align="center">
+      <Popover.Content align="center">
         {(() => {
           switch (type) {
             case "select":
               return (
                 <DataTableFilterSelectContent
+                  id={id}
                   filter={filter}
                   options={options as FilterOption<string>[]}
                 />
@@ -165,6 +171,7 @@ const DataTableFilter = ({ filter }: DataTableFilterProps) => {
             case "radio":
               return (
                 <DataTableFilterRadioContent
+                  id={id}
                   filter={filter}
                   options={options as FilterOption<string>[]}
                 />
@@ -172,8 +179,11 @@ const DataTableFilter = ({ filter }: DataTableFilterProps) => {
             case "date":
               return (
                 <DataTableFilterDateContent
+                  id={id}
                   filter={filter}
-                  options={options as FilterOption<DateComparisonOperator>[]}
+                  options={
+                    options as FilterOption<DataTableDateComparisonOperator>[]
+                  }
                   setIsCustom={setIsCustom}
                   {...rest}
                 />
@@ -182,14 +192,15 @@ const DataTableFilter = ({ filter }: DataTableFilterProps) => {
               return null
           }
         })()}
-      </DropdownMenu.Content>
-    </DropdownMenu>
+      </Popover.Content>
+    </Popover>
   )
 }
 
 type DataTableFilterDateContentProps = {
-  filter: ColumnFilter
-  options: FilterOption<DateComparisonOperator>[]
+  id: string
+  filter: unknown
+  options: FilterOption<DataTableDateComparisonOperator>[]
   setIsCustom: (isCustom: boolean) => void
 } & Pick<
   DateFilterProps,
@@ -201,8 +212,8 @@ type DataTableFilterDateContentProps = {
 >
 
 function getIsCustomOptionSelected(
-  options: FilterOption<DateComparisonOperator>[],
-  value: DateComparisonOperator | undefined
+  options: FilterOption<DataTableDateComparisonOperator>[],
+  value: DataTableDateComparisonOperator | undefined
 ) {
   if (!value) {
     return false
@@ -220,7 +231,10 @@ function getIsCustomOptionSelected(
   return !!value.$gte || !!value.$lte
 }
 
+const CUSTOM_RANGE_OPTION_VALUE = "__custom__range__option__"
+
 const DataTableFilterDateContent = ({
+  id,
   filter,
   options,
   format = "date",
@@ -230,7 +244,7 @@ const DataTableFilterDateContent = ({
   disableRangeOption = false,
   setIsCustom,
 }: DataTableFilterDateContentProps) => {
-  const currentValue = filter.value as DateComparisonOperator | undefined
+  const currentValue = filter as DataTableDateComparisonOperator | undefined
   const { instance } = useDataTableContext()
 
   const [showCustom, setShowCustom] = React.useState(
@@ -251,29 +265,31 @@ const DataTableFilterDateContent = ({
 
   const onValueChange = React.useCallback(
     (valueStr: string) => {
-      const value = JSON.parse(valueStr) as DateComparisonOperator
-      instance.updateFilter({ ...filter, value })
+      setShowCustom(false)
+
+      const value = JSON.parse(valueStr) as DataTableDateComparisonOperator
+      instance.updateFilter({ id, value })
     },
-    [instance, filter]
+    [instance, id]
   )
 
   const onSelectCustom = React.useCallback(
-    (event: Event) => {
+    (event: React.MouseEvent) => {
       event.preventDefault()
 
       setShowCustom(true)
-      instance.updateFilter({ ...filter, value: undefined })
+      instance.updateFilter({ id, value: undefined })
     },
-    [instance, filter]
+    [instance, id]
   )
 
   const onCustomValueChange = React.useCallback(
     (input: "$gte" | "$lte", value: Date | null) => {
       const newCurrentValue = { ...currentValue }
       newCurrentValue[input] = value ? value.toISOString() : undefined
-      instance.updateFilter({ ...filter, value: newCurrentValue })
+      instance.updateFilter({ id, value: newCurrentValue })
     },
-    [instance, filter]
+    [instance, id]
   )
 
   const granularity = format === "date-time" ? "minute" : "day"
@@ -292,35 +308,31 @@ const DataTableFilterDateContent = ({
 
   return (
     <React.Fragment>
-      <DropdownMenu.RadioGroup
-        value={selectedValue}
-        onValueChange={onValueChange}
-      >
+      <RadioGroup value={selectedValue} onValueChange={onValueChange}>
         {options.map((option, idx) => {
           return (
-            <DropdownMenu.RadioItem
+            <div
               key={idx}
-              value={JSON.stringify(option.value)}
+              className="txt-compact-small hover:bg-ui-bg-base-hover focus-within:bg-ui-bg-base-hover transition-fg flex items-center gap-2 px-2 py-1"
             >
-              {option.label}
-            </DropdownMenu.RadioItem>
+              <RadioGroup.Item
+                id={`radio-${idx}`}
+                value={JSON.stringify(option.value)}
+              />
+              <label htmlFor={`radio-${idx}`}>{option.label}</label>
+            </div>
           )
         })}
-      </DropdownMenu.RadioGroup>
-      {!disableRangeOption && (
-        <DropdownMenu.Item
-          onSelect={onSelectCustom}
-          className="flex items-center gap-2"
-        >
-          <div className="flex size-[15px] items-center justify-center">
-            {showCustom && <EllipseMiniSolid />}
+        {!disableRangeOption && (
+          <div className="txt-compact-small flex items-center gap-2">
+            <RadioGroup.Item value={CUSTOM_RANGE_OPTION_VALUE} />
+            <label>{rangeOptionLabel}</label>
           </div>
-          <span>{rangeOptionLabel}</span>
-        </DropdownMenu.Item>
-      )}
+        )}
+      </RadioGroup>
       {!disableRangeOption && showCustom && (
         <React.Fragment>
-          <DropdownMenu.Separator />
+          <div className="bg-ui-bg-base-subtle h-[1px] w-full" />
           <div className="flex flex-col gap-2 px-2 pb-3 pt-1">
             <div className="flex flex-col gap-1">
               <Label id="custom-start-date-label" size="xsmall" weight="plus">
@@ -329,9 +341,14 @@ const DataTableFilterDateContent = ({
               <DatePicker
                 aria-labelledby="custom-start-date-label"
                 granularity={granularity}
+                maxValue={maxDate}
+                onFocus={(e) => console.log("DatePicker focus:", e)}
+                onBlur={(e) => {
+                  console.log("DatePicker blur:", e)
+                  console.log("Related target:", e.relatedTarget)
+                }}
                 value={currentValue?.$gte ? new Date(currentValue.$gte) : null}
                 onChange={(value) => onCustomValueChange("$gte", value)}
-                maxValue={maxDate}
               />
             </div>
             <div className="flex flex-col gap-1">
@@ -341,9 +358,9 @@ const DataTableFilterDateContent = ({
               <DatePicker
                 aria-labelledby="custom-end-date-label"
                 granularity={granularity}
+                minValue={minDate}
                 value={currentValue?.$lte ? new Date(currentValue.$lte) : null}
                 onChange={(value) => onCustomValueChange("$lte", value)}
-                minValue={minDate}
               />
             </div>
           </div>
@@ -354,17 +371,19 @@ const DataTableFilterDateContent = ({
 }
 
 type DataTableFilterSelectContentProps = {
-  filter: ColumnFilter
+  id: string
+  filter: unknown
   options: FilterOption<string>[]
 }
 
 const DataTableFilterSelectContent = ({
+  id,
   filter,
   options,
 }: DataTableFilterSelectContentProps) => {
   const { instance } = useDataTableContext()
 
-  const currentValue = filter.value as string[] | undefined
+  const currentValue = filter as string[] | undefined
 
   const getChecked = React.useCallback(
     (value: string) => {
@@ -372,7 +391,7 @@ const DataTableFilterSelectContent = ({
         if (!checked) {
           const newValues = currentValue?.filter((v) => v !== value)
           instance.updateFilter({
-            ...filter,
+            id,
             value: newValues,
           })
 
@@ -380,26 +399,26 @@ const DataTableFilterSelectContent = ({
         }
 
         instance.updateFilter({
-          ...filter,
+          id,
           value: [...(currentValue ?? []), value],
         })
       }
     },
-    [instance, filter]
+    [instance, id]
   )
 
   return (
     <React.Fragment>
       {options.map((option) => {
         return (
-          <DropdownMenu.CheckboxItem
+          <Checkbox
             onSelect={(e) => e.preventDefault()}
             key={option.value}
             checked={currentValue?.includes(option.value)}
             onCheckedChange={getChecked(option.value)}
           >
             {option.label}
-          </DropdownMenu.CheckboxItem>
+          </Checkbox>
         )
       })}
     </React.Fragment>
@@ -407,11 +426,13 @@ const DataTableFilterSelectContent = ({
 }
 
 type DataTableFilterRadioContentProps = {
-  filter: ColumnFilter
+  id: string
+  filter: unknown
   options: FilterOption<string>[]
 }
 
 const DataTableFilterRadioContent = ({
+  id,
   filter,
   options,
 }: DataTableFilterRadioContentProps) => {
@@ -419,24 +440,21 @@ const DataTableFilterRadioContent = ({
 
   const onValueChange = React.useCallback(
     (value: string) => {
-      instance.updateFilter({ ...filter, value })
+      instance.updateFilter({ id, value })
     },
-    [instance, filter]
+    [instance, id]
   )
 
   return (
-    <DropdownMenu.RadioGroup
-      value={filter.value as string}
-      onValueChange={onValueChange}
-    >
+    <RadioGroup value={filter as string} onValueChange={onValueChange}>
       {options.map((option) => {
         return (
-          <DropdownMenu.RadioItem key={option.value} value={option.value}>
+          <RadioGroup.Item key={option.value} value={option.value}>
             {option.label}
-          </DropdownMenu.RadioItem>
+          </RadioGroup.Item>
         )
       })}
-    </DropdownMenu.RadioGroup>
+    </RadioGroup>
   )
 }
 

@@ -13,13 +13,13 @@ import {
 import * as React from "react"
 import {
   DataTableCommand,
+  DataTableDateComparisonOperator,
   DataTableEmptyState,
   DataTableFilter,
   DataTableFilteringState,
   DataTablePaginationState,
   DataTableRowSelectionState,
   DataTableSortingState,
-  DateComparisonOperator,
   FilterOption,
 } from "./types"
 
@@ -116,11 +116,13 @@ interface UseDataTableReturn<TData>
       | ((prev: DataTableSortingState | null) => DataTableSortingState)
   ) => void
   getFilters: () => DataTableFilter[]
-  getFilterOptions: <T extends string | string[] | DateComparisonOperator>(
+  getFilterOptions: <
+    T extends string | string[] | DataTableDateComparisonOperator
+  >(
     id: string
   ) => FilterOption<T>[] | null
   getFilterMeta: (id: string) => DataTableFilter | null
-  getFiltering: () => Record<string, ColumnFilter>
+  getFiltering: () => DataTableFilteringState
   addFilter: (filter: ColumnFilter) => void
   removeFilter: (id: string) => void
   clearFilters: () => void
@@ -220,7 +222,12 @@ const useDataTable = <TData,>({
     state: {
       rowSelection: rowSelectionState ?? {},
       sorting: sortingState ? [sortingState] : undefined,
-      columnFilters: Object.values(filteringState ?? {}),
+      columnFilters: Object.entries(filteringState ?? {}).map(
+        ([id, filter]) => ({
+          id,
+          value: filter,
+        })
+      ),
       pagination: paginationState,
     },
     rowCount,
@@ -258,7 +265,9 @@ const useDataTable = <TData,>({
   }, [filters])
 
   const getFilterOptions = React.useCallback(
-    <T extends string | string[] | DateComparisonOperator>(id: string) => {
+    <T extends string | string[] | DataTableDateComparisonOperator>(
+      id: string
+    ) => {
       const filter = getFilters().find((filter) => filter.id === id)
 
       if (!filter) {
@@ -279,7 +288,7 @@ const useDataTable = <TData,>({
 
   const getFiltering = React.useCallback(() => {
     const state = instance.getState().columnFilters ?? []
-    return Object.fromEntries(state.map((filter) => [filter.id, filter]))
+    return Object.fromEntries(state.map((filter) => [filter.id, filter.value]))
   }, [instance])
 
   const addFilter = React.useCallback(
@@ -287,7 +296,7 @@ const useDataTable = <TData,>({
       if (filter.value) {
         autoResetPageIndexHandler()?.()
       }
-      onFilteringChange?.({ ...getFiltering(), [filter.id]: filter })
+      onFilteringChange?.({ ...getFiltering(), [filter.id]: filter.value })
     },
     [onFilteringChange, getFiltering, autoResetPageIndexHandler]
   )
@@ -350,7 +359,6 @@ const useDataTable = <TData,>({
     }
   }, [onSearchChange, debounce, autoResetPageIndexHandler])
 
-  // Cleanup timeout
   React.useEffect(() => {
     return () => {
       if (timeoutRef.current) {
@@ -361,8 +369,8 @@ const useDataTable = <TData,>({
 
   const onSearchChangeHandler = React.useCallback(
     (search: string) => {
-      setLocalSearch(search) // Update local state immediately
-      debouncedSearchChange?.(search) // Debounce the callback
+      setLocalSearch(search)
+      debouncedSearchChange?.(search)
     },
     [debouncedSearchChange]
   )
@@ -478,13 +486,18 @@ function onRowSelectionChangeTransformer(
 }
 
 function onFilteringChangeTransformer(
-  onFilteringChange: (state: Record<string, ColumnFilter>) => void,
-  state?: Record<string, ColumnFilter>
+  onFilteringChange: (state: DataTableFilteringState) => void,
+  state?: DataTableFilteringState
 ) {
   return (updaterOrValue: Updater<ColumnFiltersState>) => {
     const value =
       typeof updaterOrValue === "function"
-        ? updaterOrValue(Object.values(state ?? {}))
+        ? updaterOrValue(
+            Object.entries(state ?? {}).map(([id, filter]) => ({
+              id,
+              value: filter,
+            }))
+          )
         : updaterOrValue
 
     const transformedValue = Object.fromEntries(

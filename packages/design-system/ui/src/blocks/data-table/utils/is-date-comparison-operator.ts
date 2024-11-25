@@ -1,8 +1,8 @@
-import { DateComparisonOperator } from "../types";
+import { DataTableDateComparisonOperator } from "../types";
 
 export function isDateComparisonOperator(
   value: unknown
-): value is DateComparisonOperator {
+): value is DataTableDateComparisonOperator {
   if (typeof value !== "object" || value === null) {
     return false
   }

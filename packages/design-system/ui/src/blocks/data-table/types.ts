@@ -3,7 +3,6 @@ import type {
   AccessorFnColumnDef,
   AccessorKeyColumnDef,
   CellContext,
-  ColumnFilter,
   ColumnSort,
   DeepKeys,
   DeepValue,
@@ -88,12 +87,17 @@ export interface DataTableColumnHelper<TData> {
   select: (props?: DataTableSelectColumnDef<TData>) => DisplayColumnDef<TData, unknown>
 }
 
-interface DataTableColumnFilter extends ColumnFilter {}
+
+
+
+
 
 export interface DataTableSortingState extends ColumnSort {}
 export interface DataTableRowSelectionState extends RowSelectionState {}
 export interface DataTablePaginationState extends PaginationState {}
-export interface DataTableFilteringState extends Record<string, DataTableColumnFilter> {}
+export type DataTableFilteringState<T extends Record<string, unknown> = Record<string, unknown>> = {
+  [K in keyof T]: T[K]
+}
 
 export type FilterType =  "radio" | "select" | "date"
 export type FilterOption<T = string> = {
@@ -128,7 +132,7 @@ export interface DateFilterProps extends BaseFilterProps {
   rangeOptionEndLabel?: string
   disableRangeOption?: boolean
   formatDateValue?: (value: Date) => string
-  options: FilterOption<DateComparisonOperator>[]
+  options: FilterOption<DataTableDateComparisonOperator>[]
 }
 
 export type DataTableFilterProps = RadioFilterProps | SelectFilterProps | DateFilterProps
@@ -143,7 +147,7 @@ export enum DataTableEmptyState {
   POPULATED = "POPULATED",
 }
 
-export type DateComparisonOperator = {
+export type DataTableDateComparisonOperator = {
   /**
    * The filtered date must be greater than or equal to this value.
    */

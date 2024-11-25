@@ -34,8 +34,8 @@ const DataTableFilterBar = ({
 
   return (
     <div className="bg-ui-bg-subtle flex w-full flex-nowrap items-center gap-2 overflow-x-auto border-t px-6 py-2 md:flex-wrap">
-      {Object.values(filterState).map((filter) => (
-        <DataTableFilter key={filter.id} filter={filter} />
+      {Object.entries(filterState).map(([id, filter]) => (
+        <DataTableFilter key={id} id={id} filter={filter} />
       ))}
       {filterCount > 0 ? (
         <Button

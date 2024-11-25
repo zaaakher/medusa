@@ -6,6 +6,7 @@ export * from "./utils/create-data-table-filter-helper"
 
 export type {
   DataTableCommand,
+  DataTableDateComparisonOperator,
   DataTableEmptyState,
   DataTableEmptyStateContent,
   DataTableEmptyStateProps,
@@ -13,5 +14,6 @@ export type {
   DataTableFilteringState,
   DataTablePaginationState,
   DataTableRowSelectionState,
-  DataTableSortingState,
+  DataTableSortingState
 } from "./types"
+
