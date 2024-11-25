@@ -5,7 +5,7 @@ const ProductCollection = model
   .define("ProductCollection", {
     id: model.id({ prefix: "pcol" }).primaryKey(),
     title: model.text().searchable(),
-    handle: model.text().nullable(),
+    handle: model.text(),
     metadata: model.json().nullable(),
     products: model.hasMany(() => Product, {
       mappedBy: "collection",
