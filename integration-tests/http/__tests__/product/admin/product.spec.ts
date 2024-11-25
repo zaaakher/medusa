@@ -1978,26 +1978,24 @@ medusaIntegrationTestRunner({
           )
 
           expect(res.status).toEqual(200)
-          expect(res.data.products).toEqual(
-            expect.arrayContaining([
-              expect.objectContaining({
-                id: baseProduct.id,
-                sales_channels: expect.arrayContaining([
-                  expect.objectContaining({
-                    id: salesChannel.id,
-                  }),
-                ]),
-              }),
-              expect.objectContaining({
-                id: proposedProduct.id,
-                sales_channels: expect.arrayContaining([
-                  expect.objectContaining({
-                    id: salesChannel.id,
-                  }),
-                ]),
-              }),
-            ])
-          )
+          expect(res.data.products).toEqual([
+            expect.objectContaining({
+              id: baseProduct.id,
+              sales_channels: expect.arrayContaining([
+                expect.objectContaining({
+                  id: salesChannel.id,
+                }),
+              ]),
+            }),
+            expect.objectContaining({
+              id: proposedProduct.id,
+              sales_channels: expect.arrayContaining([
+                expect.objectContaining({
+                  id: salesChannel.id,
+                }),
+              ]),
+            }),
+          ])
 
           await api.post(
             `/admin/products/${proposedProduct.id}`,
