@@ -4,6 +4,7 @@ import es from "./es.json"
 import pl from "./pl.json"
 import ptBR from "./ptBR.json"
 import tr from "./tr.json"
+import th from "./th.json"
 
 export default {
   en: {
@@ -23,5 +24,8 @@ export default {
   },
   tr: {
     translation: tr,
+  },
+  th: {
+    translation: th,
   },
 }
