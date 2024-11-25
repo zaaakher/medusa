@@ -20,12 +20,15 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
     familyOptions: ProductCategoryTransformOptions = {}
   ) {
     const findOptions_ = { ...findOptions }
-    findOptions_.options ??= {
-      orderBy: { rank: "ASC" },
+    findOptions_.options.orderBy = {
+      id: "ASC",
+      rank: "ASC",
+      ...findOptions_.options.orderBy,
     }
 
     const fields = (findOptions_.options.fields ??= [])
     const populate = (findOptions_.options.populate ??= [])
+    fields.push("rank")
 
     // Ref: Building descendants
     // mpath and parent_category_id needs to be added to the query for the tree building to be done accurately
@@ -182,9 +185,9 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
 
     const categoriesInTree = serialize
       ? await this.serialize<InferEntityType<typeof ProductCategory>[]>(
-          await manager.find(ProductCategory as any, where, options)
+          await manager.find(ProductCategory.name, where, options)
         )
-      : await manager.find(ProductCategory as any, where, options)
+      : await manager.find(ProductCategory.name, where, options)
 
     const categoriesById = new Map(categoriesInTree.map((cat) => [cat.id, cat]))
 
