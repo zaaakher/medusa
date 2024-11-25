@@ -20,6 +20,7 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
     familyOptions: ProductCategoryTransformOptions = {}
   ) {
     const findOptions_ = { ...findOptions }
+    findOptions_.options ??= {}
     findOptions_.options.orderBy = {
       id: "ASC",
       rank: "ASC",
@@ -28,7 +29,6 @@ export class ProductCategoryRepository extends DALUtils.MikroOrmBaseTreeReposito
 
     const fields = (findOptions_.options.fields ??= [])
     const populate = (findOptions_.options.populate ??= [])
-    fields.push("rank")
 
     // Ref: Building descendants
     // mpath and parent_category_id needs to be added to the query for the tree building to be done accurately
