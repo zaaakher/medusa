@@ -8,6 +8,7 @@ const ProductImage = model
       id: model.id({ prefix: "img" }).primaryKey(),
       url: model.text(),
       metadata: model.json().nullable(),
+      rank: model.number().default(0),
       product: model.belongsTo(() => Product, {
         mappedBy: "images",
       }),
