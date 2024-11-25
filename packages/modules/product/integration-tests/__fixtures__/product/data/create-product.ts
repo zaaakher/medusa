@@ -1,6 +1,6 @@
 import { ProductTypes } from "@medusajs/framework/types"
 import { ProductStatus, toHandle } from "@medusajs/framework/utils"
-import { Image } from "@models"
+import { ProductImage } from "@models"
 import faker from "faker"
 
 export const buildProductOnlyData = ({
@@ -26,7 +26,7 @@ export const buildProductOnlyData = ({
 } = {}) => {
   title ??= faker.commerce.productName()
   return {
-    title,
+    title: title as string,
     handle: handle ?? toHandle(title!),
     description: description ?? faker.commerce.productName(),
     subtitle: subtitle ?? faker.commerce.productName(),
@@ -34,7 +34,7 @@ export const buildProductOnlyData = ({
     discountable: discountable ?? true,
     thumbnail: thumbnail as string,
     status: status ?? ProductStatus.PUBLISHED,
-    images: (images ?? []) as Image[],
+    images: (images ?? []) as ProductImage[],
   }
 }
 
@@ -52,7 +52,7 @@ export const buildProductAndRelationsData = ({
   options,
   variants,
   collection_id,
-}: Partial<ProductTypes.CreateProductDTO>) => {
+}: Partial<ProductTypes.CreateProductDTO> & { tags: { value: string }[] }) => {
   const defaultOptionTitle = "test-option"
   const defaultOptionValue = "test-value"
 
@@ -64,7 +64,7 @@ export const buildProductAndRelationsData = ({
     discountable: discountable ?? true,
     thumbnail: thumbnail as string,
     status: status ?? ProductStatus.PUBLISHED,
-    images: (images ?? []) as Image[],
+    images: (images ?? []) as ProductImage[],
     type_id,
     tags: tags ?? [{ value: "tag-1" }],
     collection_id,

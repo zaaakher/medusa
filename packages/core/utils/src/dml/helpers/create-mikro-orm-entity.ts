@@ -83,7 +83,10 @@ function createMikrORMEntity() {
           hasIdAlreadyDefined = true
         }
 
-        defineProperty(MikroORMEntity, name, property as PropertyType<any>)
+        defineProperty(MikroORMEntity, property as PropertyType<any>, {
+          propertyName: name,
+          tableName,
+        })
         applyIndexes(MikroORMEntity, tableName, field)
         applySearchable(MikroORMEntity, field)
       } else {

@@ -237,7 +237,6 @@ export function defineBelongsToRelationship(
         return
       }
 
-      // this[relationship.name] ??= this[foreignKeyName]
       this[foreignKeyName] ??= this[relationship.name]?.id ?? null
     }
 
@@ -470,19 +469,16 @@ export function defineManyToManyRelationship(
         .join("_")
   }
 
-  // if (!joinColumn || !inverseJoinColumn) {
-  //   const otherSideRelationshipOptions = otherSideRelationship.parse("").options
-  //   joinColumn ??= otherSideRelationshipOptions.joinColumn
-  //   inverseJoinColumn ??= otherSideRelationshipOptions.inverseJoinColumn
-  // }
-
   const otherSideRelationOptions = otherSideRelationship.parse("").options
 
   const isOwner =
     !!joinColumn ||
     !!inverseJoinColumn ||
     !!relationship.options.pivotTable ||
-    // We cant infer it from the current entity so lets look at the otherside configuration as well to make a choice
+    /**
+     * We can't infer it from the current entity so lets
+     * look at the otherside configuration as well to make a choice
+     */
     (!otherSideRelationOptions.pivotTable &&
       !otherSideRelationOptions.joinColumn &&
       !otherSideRelationOptions.inverseJoinColumn &&
