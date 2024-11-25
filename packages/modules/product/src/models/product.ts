@@ -60,7 +60,7 @@ const Product = model
     }),
   })
   .cascades({
-    delete: ["variants", "options"],
+    delete: ["variants", "options", "images"],
   })
   .indexes([
     {
