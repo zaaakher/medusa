@@ -8,7 +8,9 @@ const ProductImage = model
       id: model.id({ prefix: "img" }).primaryKey(),
       url: model.text(),
       metadata: model.json().nullable(),
-      products: model.manyToMany(() => Product),
+      product: model.belongsTo(() => Product, {
+        mappedBy: "images",
+      }),
     }
   )
   .indexes([
