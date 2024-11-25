@@ -86,7 +86,7 @@ export function applyChangesToOrder(
         return_dismissed_quantity: orderItem.return_dismissed_quantity ?? 0,
         written_off_quantity: orderItem.written_off_quantity ?? 0,
         metadata: orderItem.metadata,
-      } as OrderItem)
+      } as any)
     }
 
     const orderSummary = order.summary as any

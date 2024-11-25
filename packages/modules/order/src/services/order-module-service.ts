@@ -4,6 +4,7 @@ import {
   DAL,
   FilterableOrderReturnReasonProps,
   FindConfig,
+  InferEntityType,
   InternalModuleDeclaration,
   IOrderModuleService,
   ModuleJoinerConfig,
@@ -134,30 +135,7 @@ const generateMethodForModels = {
 }
 
 // TODO: rm template args here, keep it for later to not collide with carlos work at least as little as possible
-export default class OrderModuleService<
-    TOrder extends Order = Order,
-    TAddress extends OrderAddress = OrderAddress,
-    TLineItem extends OrderLineItem = OrderLineItem,
-    TLineItemAdjustment extends OrderLineItemAdjustment = OrderLineItemAdjustment,
-    TLineItemTaxLine extends OrderLineItemTaxLine = OrderLineItemTaxLine,
-    TOrderShippingMethodAdjustment extends OrderShippingMethodAdjustment = OrderShippingMethodAdjustment,
-    TOrderShippingMethodTaxLine extends OrderShippingMethodTaxLine = OrderShippingMethodTaxLine,
-    TOrderShippingMethod extends OrderShippingMethod = OrderShippingMethod,
-    TOrderTransaction extends OrderTransaction = OrderTransaction,
-    TOrderChange extends OrderChange = OrderChange,
-    TOrderChangeAction extends OrderChangeAction = OrderChangeAction,
-    TOrderItem extends OrderItem = OrderItem,
-    TOrderSummary extends OrderSummary = OrderSummary,
-    TOrderShipping extends OrderShipping = OrderShipping,
-    TReturnReason extends ReturnReason = ReturnReason,
-    TReturn extends Return = Return,
-    TReturnItem extends ReturnItem = ReturnItem,
-    TClaim extends OrderClaim = OrderClaim,
-    TClaimItem extends OrderClaimItem = OrderClaimItem,
-    TClaimItemImage extends OrderClaimItemImage = OrderClaimItemImage,
-    TExchange extends OrderExchange = OrderExchange,
-    TExchangeItem extends OrderExchangeItem = OrderExchangeItem
-  >
+export default class OrderModuleService
   extends ModulesSdkUtils.MedusaService<{
     Order: { dto: OrderTypes.OrderDTO }
     OrderAddress: { dto: OrderTypes.OrderAddressDTO }
@@ -190,27 +168,69 @@ export default class OrderModuleService<
 {
   protected baseRepository_: DAL.RepositoryService
   protected orderService_: OrderService
-  protected orderAddressService_: ModulesSdkTypes.IMedusaInternalService<TAddress>
-  protected orderLineItemService_: ModulesSdkTypes.IMedusaInternalService<TLineItem>
-  protected orderShippingMethodAdjustmentService_: ModulesSdkTypes.IMedusaInternalService<TOrderShippingMethodAdjustment>
-  protected orderShippingMethodService_: ModulesSdkTypes.IMedusaInternalService<TOrderShippingMethod>
-  protected orderLineItemAdjustmentService_: ModulesSdkTypes.IMedusaInternalService<TLineItemAdjustment>
-  protected orderLineItemTaxLineService_: ModulesSdkTypes.IMedusaInternalService<TLineItemTaxLine>
-  protected orderShippingMethodTaxLineService_: ModulesSdkTypes.IMedusaInternalService<TOrderShippingMethodTaxLine>
-  protected orderTransactionService_: ModulesSdkTypes.IMedusaInternalService<TOrderTransaction>
-  protected orderChangeService_: ModulesSdkTypes.IMedusaInternalService<TOrderChange>
-  protected orderChangeActionService_: ModulesSdkTypes.IMedusaInternalService<TOrderChangeAction>
-  protected orderItemService_: ModulesSdkTypes.IMedusaInternalService<TOrderItem>
-  protected orderSummaryService_: ModulesSdkTypes.IMedusaInternalService<TOrderSummary>
-  protected orderShippingService_: ModulesSdkTypes.IMedusaInternalService<TOrderShipping>
-  protected returnReasonService_: ModulesSdkTypes.IMedusaInternalService<TReturnReason>
-  protected returnService_: ModulesSdkTypes.IMedusaInternalService<TReturn>
-  protected returnItemService_: ModulesSdkTypes.IMedusaInternalService<TReturnItem>
-  protected orderClaimService_: ModulesSdkTypes.IMedusaInternalService<TClaim>
-  protected orderClaimItemService_: ModulesSdkTypes.IMedusaInternalService<TClaimItem>
-  protected orderClaimItemImageService_: ModulesSdkTypes.IMedusaInternalService<TClaimItemImage>
-  protected orderExchangeService_: ModulesSdkTypes.IMedusaInternalService<TExchange>
-  protected orderExchangeItemService_: ModulesSdkTypes.IMedusaInternalService<TExchangeItem>
+  protected orderAddressService_: ModulesSdkTypes.IMedusaInternalService<
+    InferEntityType<typeof OrderAddress>
+  >
+  protected orderLineItemService_: ModulesSdkTypes.IMedusaInternalService<
+    InferEntityType<typeof OrderLineItem>
+  >
+  protected orderShippingMethodAdjustmentService_: ModulesSdkTypes.IMedusaInternalService<
+    InferEntityType<typeof OrderShippingMethodAdjustment>
+  >
+  protected orderShippingMethodService_: ModulesSdkTypes.IMedusaInternalService<
+    InferEntityType<typeof OrderShippingMethod>
+  >
+  protected orderLineItemAdjustmentService_: ModulesSdkTypes.IMedusaInternalService<
+    InferEntityType<typeof OrderLineItemAdjustment>
+  >
+  protected orderLineItemTaxLineService_: ModulesSdkTypes.IMedusaInternalService<
+    InferEntityType<typeof OrderLineItemTaxLine>
+  >
+  protected orderShippingMethodTaxLineService_: ModulesSdkTypes.IMedusaInternalService<
+    InferEntityType<typeof OrderShippingMethodTaxLine>
+  >
+  protected orderTransactionService_: ModulesSdkTypes.IMedusaInternalService<
+    InferEntityType<typeof OrderTransaction>
+  >
+  protected orderChangeService_: ModulesSdkTypes.IMedusaInternalService<
+    InferEntityType<typeof OrderChange>
+  >
+  protected orderChangeActionService_: ModulesSdkTypes.IMedusaInternalService<
+    InferEntityType<typeof OrderChangeAction>
+  >
+  protected orderItemService_: ModulesSdkTypes.IMedusaInternalService<
+    InferEntityType<typeof OrderItem>
+  >
+  protected orderSummaryService_: ModulesSdkTypes.IMedusaInternalService<
+    InferEntityType<typeof OrderSummary>
+  >
+  protected orderShippingService_: ModulesSdkTypes.IMedusaInternalService<
+    InferEntityType<typeof OrderShipping>
+  >
+  protected returnReasonService_: ModulesSdkTypes.IMedusaInternalService<
+    InferEntityType<typeof ReturnReason>
+  >
+  protected returnService_: ModulesSdkTypes.IMedusaInternalService<
+    InferEntityType<typeof Return>
+  >
+  protected returnItemService_: ModulesSdkTypes.IMedusaInternalService<
+    InferEntityType<typeof ReturnItem>
+  >
+  protected orderClaimService_: ModulesSdkTypes.IMedusaInternalService<
+    InferEntityType<typeof OrderClaim>
+  >
+  protected orderClaimItemService_: ModulesSdkTypes.IMedusaInternalService<
+    InferEntityType<typeof OrderClaimItem>
+  >
+  protected orderClaimItemImageService_: ModulesSdkTypes.IMedusaInternalService<
+    InferEntityType<typeof OrderClaimItemImage>
+  >
+  protected orderExchangeService_: ModulesSdkTypes.IMedusaInternalService<
+    InferEntityType<typeof OrderExchange>
+  >
+  protected orderExchangeItemService_: ModulesSdkTypes.IMedusaInternalService<
+    InferEntityType<typeof OrderExchangeItem>
+  >
 
   constructor(
     {
@@ -637,7 +657,7 @@ export default class OrderModuleService<
   ) {
     const lineItemsToCreate: CreateOrderLineItemDTO[] = []
 
-    const createdOrders: Order[] = []
+    const createdOrders: (typeof Order)[] = []
     for (const { items, shipping_methods, ...order } of data) {
       const ord = order as any
 
@@ -789,7 +809,7 @@ export default class OrderModuleService<
       | OrderTypes.CreateOrderLineItemDTO,
     @MedusaContext() sharedContext: Context = {}
   ): Promise<OrderTypes.OrderLineItemDTO[]> {
-    let items: OrderLineItem[] = []
+    let items: InferEntityType<typeof OrderLineItem>[] = []
     if (isString(orderIdOrData)) {
       items = await this.createOrderLineItems_(
         orderIdOrData,
@@ -835,7 +855,7 @@ export default class OrderModuleService<
     orderId: string,
     items: OrderTypes.CreateOrderLineItemDTO[],
     @MedusaContext() sharedContext: Context = {}
-  ): Promise<OrderLineItem[]> {
+  ): Promise<InferEntityType<typeof OrderLineItem>[]> {
     const order = await this.retrieveOrder(
       orderId,
       { select: ["id", "version"] },
@@ -857,7 +877,7 @@ export default class OrderModuleService<
   protected async createOrderLineItemsBulk_(
     data: CreateOrderLineItemDTO[],
     @MedusaContext() sharedContext: Context = {}
-  ): Promise<OrderLineItem[]> {
+  ): Promise<InferEntityType<typeof OrderLineItem>[]> {
     const orderItemToCreate: CreateOrderItemDTO[] = []
 
     const lineItems = await this.orderLineItemService_.create(
@@ -912,7 +932,7 @@ export default class OrderModuleService<
       | Partial<OrderTypes.UpdateOrderLineItemDTO>,
     @MedusaContext() sharedContext: Context = {}
   ): Promise<OrderTypes.OrderLineItemDTO[] | OrderTypes.OrderLineItemDTO> {
-    let items: OrderLineItem[] = []
+    let items: InferEntityType<typeof OrderLineItem>[] = []
     if (isString(lineItemIdOrDataOrSelector)) {
       const item = await this.updateOrderLineItem_(
         lineItemIdOrDataOrSelector,
@@ -955,7 +975,7 @@ export default class OrderModuleService<
     lineItemId: string,
     data: Partial<OrderTypes.UpdateOrderLineItemDTO>,
     @MedusaContext() sharedContext: Context = {}
-  ): Promise<OrderLineItem> {
+  ): Promise<InferEntityType<typeof OrderLineItem>> {
     const [item] = await this.orderLineItemService_.update(
       [{ id: lineItemId, ...data }],
       sharedContext
@@ -980,7 +1000,7 @@ export default class OrderModuleService<
   protected async updateOrderLineItemsWithSelector_(
     updates: OrderTypes.UpdateOrderLineItemWithSelectorDTO[],
     @MedusaContext() sharedContext: Context = {}
-  ): Promise<OrderLineItem[]> {
+  ): Promise<InferEntityType<typeof OrderLineItem>[]> {
     let toUpdate: UpdateOrderLineItemDTO[] = []
     const detailsToUpdate: UpdateOrderItemWithSelectorDTO[] = []
     for (const { selector, data } of updates) {
@@ -1034,7 +1054,7 @@ export default class OrderModuleService<
       | Partial<OrderTypes.UpdateOrderItemDTO>,
     @MedusaContext() sharedContext: Context = {}
   ): Promise<OrderTypes.OrderItemDTO[] | OrderTypes.OrderItemDTO> {
-    let items: OrderItem[] = []
+    let items: InferEntityType<typeof OrderItem>[] = []
     if (isString(orderItemIdOrDataOrSelector)) {
       const item = await this.updateOrderItem_(
         orderItemIdOrDataOrSelector,
@@ -1074,7 +1094,7 @@ export default class OrderModuleService<
     orderItemId: string,
     data: Partial<OrderTypes.UpdateOrderItemDTO>,
     @MedusaContext() sharedContext: Context = {}
-  ): Promise<OrderItem> {
+  ): Promise<InferEntityType<typeof OrderItem>> {
     const [detail] = await this.orderItemService_.update(
       [{ id: orderItemId, ...data }],
       sharedContext
@@ -1087,7 +1107,7 @@ export default class OrderModuleService<
   protected async updateOrderItemWithSelector_(
     updates: OrderTypes.UpdateOrderItemWithSelectorDTO[],
     @MedusaContext() sharedContext: Context = {}
-  ): Promise<OrderItem[]> {
+  ): Promise<InferEntityType<typeof OrderItem>[]> {
     let toUpdate: UpdateOrderItemDTO[] = []
     for (const { selector, data } of updates) {
       const details = await this.listOrderItems(
@@ -1131,7 +1151,7 @@ export default class OrderModuleService<
   ): Promise<
     OrderTypes.OrderShippingMethodDTO[] | OrderTypes.OrderShippingMethodDTO
   > {
-    let methods: OrderShippingMethod[]
+    let methods: InferEntityType<typeof OrderShippingMethod>[]
     if (isString(orderIdOrData)) {
       methods = await this.createOrderShippingMethods_(
         orderIdOrData,
@@ -1181,7 +1201,7 @@ export default class OrderModuleService<
     orderId: string,
     data: CreateOrderShippingMethodDTO[],
     @MedusaContext() sharedContext: Context = {}
-  ): Promise<OrderShippingMethod[]> {
+  ): Promise<InferEntityType<typeof OrderShippingMethod>[]> {
     const order = await this.retrieveOrder(
       orderId,
       { select: ["id", "version"] },
@@ -1210,7 +1230,7 @@ export default class OrderModuleService<
       version: number
     }[],
     @MedusaContext() sharedContext: Context = {}
-  ): Promise<OrderShippingMethod[]> {
+  ): Promise<InferEntityType<typeof OrderShippingMethod>[]> {
     const sm = await this.orderShippingService_.create(
       data as unknown as CreateOrderShippingMethodDTO[],
       sharedContext
@@ -1293,7 +1313,7 @@ export default class OrderModuleService<
     adjustments?: OrderTypes.CreateOrderLineItemAdjustmentDTO[],
     @MedusaContext() sharedContext: Context = {}
   ): Promise<OrderTypes.OrderLineItemAdjustmentDTO[]> {
-    let addedAdjustments: OrderLineItemAdjustment[] = []
+    let addedAdjustments: InferEntityType<typeof OrderLineItemAdjustment>[] = []
     if (isString(orderIdOrData)) {
       const order = await this.retrieveOrder(
         orderIdOrData,
@@ -1466,7 +1486,9 @@ export default class OrderModuleService<
     | OrderTypes.OrderShippingMethodAdjustmentDTO[]
     | OrderTypes.OrderShippingMethodAdjustmentDTO
   > {
-    let addedAdjustments: OrderShippingMethodAdjustment[] = []
+    let addedAdjustments: InferEntityType<
+      typeof OrderShippingMethodAdjustment
+    >[] = []
     if (isString(orderIdOrData)) {
       const order = await this.retrieveOrder(
         orderIdOrData,
@@ -1546,7 +1568,7 @@ export default class OrderModuleService<
   ): Promise<
     OrderTypes.OrderLineItemTaxLineDTO[] | OrderTypes.OrderLineItemTaxLineDTO
   > {
-    let addedTaxLines: OrderLineItemTaxLine[]
+    let addedTaxLines: InferEntityType<typeof OrderLineItemTaxLine>[]
     if (isString(orderIdOrData)) {
       const lines = Array.isArray(taxLines) ? taxLines : [taxLines]
 
@@ -1658,7 +1680,7 @@ export default class OrderModuleService<
     | OrderTypes.OrderShippingMethodTaxLineDTO[]
     | OrderTypes.OrderShippingMethodTaxLineDTO
   > {
-    let addedTaxLines: OrderShippingMethodTaxLine[]
+    let addedTaxLines: InferEntityType<typeof OrderShippingMethodTaxLine>[]
     if (isString(orderIdOrData)) {
       const lines = Array.isArray(taxLines) ? taxLines : [taxLines]
 
@@ -1900,7 +1922,7 @@ export default class OrderModuleService<
   protected async createOrderChange_(
     data: CreateOrderChangeDTO | CreateOrderChangeDTO[],
     @MedusaContext() sharedContext?: Context
-  ): Promise<OrderChange[]> {
+  ): Promise<InferEntityType<typeof OrderChange>[]> {
     const dataArr = Array.isArray(data) ? data : [data]
     const orderIds: string[] = []
     const dataMap: Record<string, object> = {}
@@ -2280,7 +2302,7 @@ export default class OrderModuleService<
     )
 
     return await this.applyOrderChanges_(
-      changes as ApplyOrderChangeDTO[],
+      changes as unknown as ApplyOrderChangeDTO[],
       sharedContext
     )
   }
@@ -2694,7 +2716,8 @@ export default class OrderModuleService<
       | OrderTypes.CreateOrderChangeActionDTO[],
     @MedusaContext() sharedContext?: Context
   ): Promise<
-    OrderTypes.OrderChangeActionDTO | OrderTypes.OrderChangeActionDTO[]
+    | InferEntityType<typeof OrderChangeAction>
+    | InferEntityType<typeof OrderChangeAction>[]
   > {
     let dataArr = Array.isArray(data) ? data : [data]
 
@@ -2728,7 +2751,8 @@ export default class OrderModuleService<
     const actions = (await this.orderChangeActionService_.create(
       dataArr,
       sharedContext
-    )) as OrderTypes.OrderChangeActionDTO[]
+    )) as InferEntityType<typeof OrderChangeAction>[]
+
     return Array.isArray(data) ? actions : actions[0]
   }
 

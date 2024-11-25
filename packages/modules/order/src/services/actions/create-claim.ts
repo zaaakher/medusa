@@ -67,7 +67,7 @@ function createClaimAndReturnItems(
   returnReference,
   actions
 ) {
-  const returnItems: ReturnItem[] = []
+  const returnItems: (typeof ReturnItem)[] = []
   const claimItems = data.claim_items?.map((item) => {
     actions.push({
       action: ChangeActionType.WRITE_OFF_ITEM,
@@ -108,8 +108,8 @@ async function processAdditionalItems(
   sharedContext
 ) {
   const itemsToAdd: any[] = []
-  const additionalNewItems: OrderClaimItem[] = []
-  const additionalItems: OrderClaimItem[] = []
+  const additionalNewItems: (typeof OrderClaimItem)[] = []
+  const additionalItems: (typeof OrderClaimItem)[] = []
   data.additional_items?.forEach((item) => {
     const hasItem = item.id
       ? order.items.find((o) => o.item.id === item.id)

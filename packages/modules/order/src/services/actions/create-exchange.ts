@@ -75,8 +75,8 @@ async function processAdditionalItems(
   sharedContext
 ) {
   const itemsToAdd: any[] = []
-  const additionalNewItems: OrderExchangeItem[] = []
-  const additionalItems: OrderExchangeItem[] = []
+  const additionalNewItems: (typeof OrderExchangeItem)[] = []
+  const additionalItems: (typeof OrderExchangeItem)[] = []
   data.additional_items?.forEach((item) => {
     const hasItem = item.id
       ? order.items.find((o) => o.item.id === item.id)
