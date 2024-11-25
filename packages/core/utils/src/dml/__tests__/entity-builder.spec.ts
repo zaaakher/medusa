@@ -1942,6 +1942,11 @@ describe("Entity builder", () => {
           expression:
             'CREATE UNIQUE INDEX IF NOT EXISTS "IDX_user_email_unique" ON "user" (email) WHERE deleted_at IS NULL',
         },
+        {
+          expression:
+            'CREATE INDEX IF NOT EXISTS "IDX_user_deleted_at" ON "user" (deleted_at) WHERE deleted_at IS NULL',
+          name: "IDX_user_deleted_at",
+        },
       ])
 
       expect(metaData.filters).toEqual({
@@ -2053,6 +2058,11 @@ describe("Entity builder", () => {
           expression:
             'CREATE UNIQUE INDEX IF NOT EXISTS "IDX_user_email_unique" ON "platform"."user" (email) WHERE deleted_at IS NULL',
         },
+        {
+          expression:
+            'CREATE INDEX IF NOT EXISTS "IDX_user_deleted_at" ON "platform"."user" (deleted_at) WHERE deleted_at IS NULL',
+          name: "IDX_user_deleted_at",
+        },
       ])
 
       expect(metaData.filters).toEqual({
@@ -2162,6 +2172,11 @@ describe("Entity builder", () => {
           name: "IDX_user_myEmail_unique",
           expression:
             'CREATE UNIQUE INDEX IF NOT EXISTS "IDX_user_myEmail_unique" ON "user" (myEmail) WHERE deleted_at IS NULL',
+        },
+        {
+          expression:
+            'CREATE INDEX IF NOT EXISTS "IDX_user_deleted_at" ON "user" (deleted_at) WHERE deleted_at IS NULL',
+          name: "IDX_user_deleted_at",
         },
       ])
 
@@ -2957,6 +2972,11 @@ describe("Entity builder", () => {
         },
         {
           expression:
+            'CREATE INDEX IF NOT EXISTS "IDX_user_deleted_at" ON "user" (deleted_at) WHERE deleted_at IS NULL',
+          name: "IDX_user_deleted_at",
+        },
+        {
+          expression:
             'CREATE UNIQUE INDEX IF NOT EXISTS "IDX_user_email_account_unique" ON "user" (email, account) WHERE deleted_at IS NULL',
           name: "IDX_user_email_account_unique",
         },
@@ -3030,6 +3050,11 @@ describe("Entity builder", () => {
           expression:
             'CREATE INDEX IF NOT EXISTS "IDX_user_group_id" ON "user" (group_id) WHERE deleted_at IS NULL',
           name: "IDX_user_group_id",
+        },
+        {
+          expression:
+            'CREATE INDEX IF NOT EXISTS "IDX_user_deleted_at" ON "user" (deleted_at) WHERE deleted_at IS NULL',
+          name: "IDX_user_deleted_at",
         },
         {
           expression:
@@ -3122,6 +3147,11 @@ describe("Entity builder", () => {
             'CREATE INDEX IF NOT EXISTS "IDX_user_group_id" ON "user" (group_id) WHERE deleted_at IS NULL',
           name: "IDX_user_group_id",
         },
+        {
+          expression:
+            'CREATE INDEX IF NOT EXISTS "IDX_user_deleted_at" ON "user" (deleted_at) WHERE deleted_at IS NULL',
+          name: "IDX_user_deleted_at",
+        },
       ])
 
       const Setting = toMikroORMEntity(setting)
@@ -3132,6 +3162,11 @@ describe("Entity builder", () => {
           expression:
             'CREATE INDEX IF NOT EXISTS "IDX_setting_user_id" ON "setting" (user_id) WHERE deleted_at IS NULL',
           name: "IDX_setting_user_id",
+        },
+        {
+          expression:
+            'CREATE INDEX IF NOT EXISTS "IDX_setting_deleted_at" ON "setting" (deleted_at) WHERE deleted_at IS NULL',
+          name: "IDX_setting_deleted_at",
         },
       ])
     })
