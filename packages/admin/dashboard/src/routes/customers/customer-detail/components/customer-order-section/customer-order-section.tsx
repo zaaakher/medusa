@@ -102,7 +102,7 @@ const CustomerOrderActions = ({ order }: { order: HttpTypes.AdminOrder }) => {
           actions: [
             {
               label: t("transferOwnership.label"),
-              to: `${order.id}/transfer-ownership`,
+              to: `${order.id}/transfer`,
               icon: <ArrowPath />,
             },
           ],
@@ -120,11 +120,10 @@ const useColumns = () => {
   return useMemo(
     () => [
       ...base,
-      // TODO: REENABLE WHEN TRANSFER OWNERSHIP IS IMPLEMENTED
-      // columnHelper.display({
-      //   id: "actions",
-      //   cell: ({ row }) => <CustomerOrderActions order={row.original} />,
-      // }),
+      columnHelper.display({
+        id: "actions",
+        cell: ({ row }) => <CustomerOrderActions order={row.original} />,
+      }),
     ],
     [base]
   )

@@ -136,7 +136,8 @@
     "logout": "Logout",
     "hide": "Hide",
     "export": "Export",
-    "import": "Import"
+    "import": "Import",
+    "cannotUndo": "This action cannot be undone"
   },
   "operators": {
     "in": "In"
@@ -397,6 +398,8 @@
       "successToast": "Product {{title}} was successfully updated."
     },
     "create": {
+      "title": "Create Product",
+      "description": "Create a new product.",
       "header": "General",
       "tabs": {
         "details": "Details",
@@ -501,7 +504,8 @@
         "header": "No media yet",
         "description": "Add media to the product to showcase it in your storefront.",
         "action": "Add media"
-      }
+      },
+      "successToast": "Media was successfully updated."
     },
     "discountableHint": "When unchecked, discounts will not be applied to this product.",
     "noSalesChannels": "Not available in any sales channels",
@@ -943,6 +947,14 @@
       "discountSubtotal": "Discount Subtotal",
       "taxTotal": "Tax Total"
     },
+    "transfer": {
+      "title": "Transfer ownership",
+      "requestSuccess": "Order transfer request sent to: {{email}}.",
+      "currentOwner": "Current owner",
+      "newOwner": "New owner",
+      "currentOwnerDescription": "The customer currently related to this order.",
+      "newOwnerDescription": "The customer to transfer this order to."
+    },
     "payment": {
       "title": "Payments",
       "isReadyToBeCaptured": "Payment <0/> is ready to be captured.",
@@ -1246,6 +1258,8 @@
         "addButtonText": "Add comment",
         "deleteButtonText": "Delete comment"
       },
+      "from": "From",
+      "to": "To",
       "events": {
         "common": {
           "toReturn": "To return",
@@ -1298,6 +1312,11 @@
         "edit": {
           "requested": "Order edit #{{editId}} requested",
           "confirmed": "Order edit #{{editId}} confirmed"
+        },
+        "transfer": {
+          "requested": "Order transfer #{{transferId}} requested",
+          "confirmed": "Order transfer #{{transferId}} confirmed",
+          "declined": "Order transfer #{{transferId}} declined"
         }
       }
     },

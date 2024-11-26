@@ -174,6 +174,13 @@ export const RouteMap: RouteObject[] = [
                             "../../routes/product-variants/product-variant-manage-inventory-items"
                           ),
                       },
+                      {
+                        path: "metadata/edit",
+                        lazy: () =>
+                          import(
+                            "../../routes/product-variants/product-variant-metadata"
+                          ),
+                      },
                     ],
                   },
                 ],
@@ -316,6 +323,11 @@ export const RouteMap: RouteObject[] = [
                     path: "refund",
                     lazy: () =>
                       import("../../routes/orders/order-create-refund"),
+                  },
+                  {
+                    path: "transfer",
+                    lazy: () =>
+                      import("../../routes/orders/order-request-transfer"),
                   },
                 ],
               },
@@ -590,6 +602,11 @@ export const RouteMap: RouteObject[] = [
                       import(
                         "../../routes/customers/customers-add-customer-group"
                       ),
+                  },
+                  {
+                    path: ":order_id/transfer",
+                    lazy: () =>
+                      import("../../routes/orders/order-request-transfer"),
                   },
                   {
                     path: "metadata/edit",
