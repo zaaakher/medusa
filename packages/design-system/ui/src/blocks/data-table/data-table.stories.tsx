@@ -363,7 +363,13 @@ const KitchenSinkDemo = () => {
   const [sorting, setSorting] = React.useState<DataTableSortingState | null>(
     null
   )
-  const [filtering, setFiltering] = React.useState<DataTableFilteringState>({})
+  const [filtering, setFiltering] = React.useState<DataTableFilteringState>({
+    birthday: {
+      $gte: new Date(
+        new Date().setFullYear(new Date().getFullYear() - 18)
+      ).toISOString(),
+    },
+  })
 
   const [pagination, setPagination] = React.useState<DataTablePaginationState>({
     pageIndex: 0,

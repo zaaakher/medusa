@@ -57,8 +57,9 @@ const DataTableFilter = ({ id, filter }: DataTableFilterProps) => {
   const meta = instance.getFilterMeta(id)
   const { type, options, label, ...rest } = meta ?? {}
 
-  const displayValue = React.useMemo(() => {
+  const { displayValue, isCustomRange } = React.useMemo(() => {
     let displayValue: string | null = null
+    let isCustomRange = false
 
     if (typeof filter === "string") {
       displayValue = options?.find((o) => o.value === filter)?.label ?? null
@@ -93,18 +94,21 @@ const DataTableFilter = ({ id, filter }: DataTableFilterProps) => {
           : DEFAULT_FORMAT_DATE_VALUE
 
         if (filter.$gte && !filter.$lte) {
+          isCustomRange = true
           displayValue = `${
             meta.rangeOptionStartLabel || DEFAULT_RANGE_OPTION_START_LABEL
           } ${formatDateValue(new Date(filter.$gte))}`
         }
 
         if (filter.$lte && !filter.$gte) {
+          isCustomRange = true
           displayValue = `${
             meta.rangeOptionEndLabel || DEFAULT_RANGE_OPTION_END_LABEL
           } ${formatDateValue(new Date(filter.$lte))}`
         }
 
         if (filter.$gte && filter.$lte) {
+          isCustomRange = true
           displayValue = `${formatDateValue(
             new Date(filter.$gte)
           )} - ${formatDateValue(new Date(filter.$lte))}`
@@ -112,8 +116,14 @@ const DataTableFilter = ({ id, filter }: DataTableFilterProps) => {
       }
     }
 
-    return displayValue
+    return { displayValue, isCustomRange }
   }, [filter, options])
+
+  React.useEffect(() => {
+    if (isCustomRange && !isCustom) {
+      setIsCustom(true)
+    }
+  }, [isCustomRange, isCustom])
 
   if (!meta) {
     return null
@@ -159,7 +169,10 @@ const DataTableFilter = ({ id, filter }: DataTableFilterProps) => {
           )}
         </div>
       </Popover.Anchor>
-      <Popover.Content align="start" className="p-0 outline-none">
+      <Popover.Content
+        align="start"
+        className="bg-ui-bg-component p-0 outline-none"
+      >
         {(() => {
           switch (type) {
             case "select":
@@ -214,26 +227,6 @@ type DataTableFilterDateContentProps = {
   | "rangeOptionStartLabel"
   | "rangeOptionEndLabel"
 >
-
-function getIsCustomOptionSelected(
-  options: FilterOption<DataTableDateComparisonOperator>[],
-  value: DataTableDateComparisonOperator | undefined
-) {
-  if (!value) {
-    return false
-  }
-
-  const stringifiedValue = JSON.stringify(value)
-  const stringifiedOptions = options.map((option) =>
-    JSON.stringify(option.value)
-  )
-
-  if (stringifiedOptions.includes(stringifiedValue)) {
-    return false
-  }
-
-  return !!value.$gte || !!value.$lte
-}
 
 const DataTableFilterDateContent = ({
   id,
@@ -343,29 +336,26 @@ const DataTableFilterDateContent = ({
           )
         })}
         {!disableRangeOption && (
-          <button
-            type="button"
-            className={clx(
-              "txt-compact-small transition-fg flex items-center gap-2 rounded px-2 py-1",
-              {
-                "bg-ui-bg-base-hover": focusedIndex === options.length,
-              }
-            )}
+          <OptionButton
+            index={options.length}
+            option={{
+              label: rangeOptionLabel,
+              value: "__custom",
+            }}
+            icon={EllipseMiniSolid}
+            isSelected={isCustom}
+            isFocused={focusedIndex === options.length}
             onClick={onSelectCustom}
-            onMouseEnter={() => setFocusedIndex(options.length)}
-            onMouseLeave={() => setFocusedIndex(-1)}
-            tabIndex={-1}
-          >
-            <div className="flex size-[15px] items-center justify-center">
-              {isCustom && <EllipseMiniSolid />}
-            </div>
-            <span>{rangeOptionLabel}</span>
-          </button>
+            onMouseEvent={setFocusedIndex}
+          />
         )}
       </div>
       {!disableRangeOption && isCustom && (
         <React.Fragment>
-          <div className="bg-ui-border-base h-px w-full" />
+          <div className="flex flex-col py-[3px]">
+            <div className="bg-ui-border-menu-top h-px w-full" />
+            <div className="bg-ui-border-menu-bot h-px w-full" />
+          </div>
           <div className="flex flex-col gap-2 px-2 pb-3 pt-1">
             <div className="flex flex-col gap-1">
               <Label id="custom-start-date-label" size="xsmall" weight="plus">
@@ -559,8 +549,8 @@ const OptionButton = React.memo(
       type="button"
       role="listitem"
       className={clx(
-        "txt-compact-small transition-fg flex items-center gap-2 rounded px-2 py-1 outline-none",
-        { "bg-ui-bg-base-hover": isFocused }
+        "bg-ui-bg-component txt-compact-small transition-fg flex items-center gap-2 rounded px-2 py-1 outline-none",
+        { "bg-ui-bg-component-hover": isFocused }
       )}
       onClick={onClick}
       onMouseEnter={() => onMouseEvent(index)}
