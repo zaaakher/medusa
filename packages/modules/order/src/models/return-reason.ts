@@ -7,7 +7,6 @@ const _ReturnReason = model
     value: model.text().searchable(),
     label: model.text().searchable(),
     description: model.text().nullable(),
-    parent_return_reason_id: model.text().nullable(),
     parent_return_reason:
       model.belongsTo<any /* <() => typeof _ReturnReason> */>(
         () => _ReturnReason,

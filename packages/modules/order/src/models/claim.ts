@@ -46,7 +46,10 @@ const _OrderClaim = model
       }
     ),
     changes: model.hasMany<any /* <() => typeof OrderChange> */>(
-      () => OrderChange
+      () => OrderChange,
+      {
+        mappedBy: "claim",
+      }
     ),
     created_by: model.text().nullable(),
     canceled_at: model.dateTime().nullable(),

@@ -9,7 +9,7 @@ const _OrderClaimItem = model
     images: model.hasMany<any /* <() => typeof OrderClaimItemImage> */>(
       () => OrderClaimItemImage,
       {
-        mappedBy: "item",
+        mappedBy: "claim_item",
       }
     ),
     reason: model.enum(ClaimReason).nullable(),
@@ -17,7 +17,7 @@ const _OrderClaimItem = model
     claim: model.belongsTo<any /* <() => typeof OrderClaim> */>(
       () => OrderClaim,
       {
-        mappedBy: "items",
+        mappedBy: "additional_items",
       }
     ),
     item: model.belongsTo<any /* <() => typeof OrderLineItem> */>(

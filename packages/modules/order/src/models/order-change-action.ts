@@ -1,4 +1,5 @@
 import { model } from "@medusajs/framework/utils"
+import { OrderChange } from "./order-change"
 
 const _OrderChangeAction = model
   .define("OrderChangeAction", {
@@ -9,7 +10,6 @@ const _OrderChangeAction = model
     claim_id: model.text().nullable(),
     exchange_id: model.text().nullable(),
     version: model.number().nullable(),
-    order_change_id: model.text().nullable(),
     reference: model.text().nullable(),
     reference_id: model.text().nullable(),
     action: model.text(),
@@ -17,6 +17,12 @@ const _OrderChangeAction = model
     amount: model.bigNumber().nullable(),
     internal_note: model.text().nullable(),
     applied: model.boolean().default(false),
+    order_change: model.belongsTo<any /* <() => typeof OrderChange> */>(
+      () => OrderChange,
+      {
+        mappedBy: "actions",
+      }
+    ),
   })
   .indexes([
     {

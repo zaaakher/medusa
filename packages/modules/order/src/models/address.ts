@@ -1,4 +1,5 @@
 import { model } from "@medusajs/framework/utils"
+import { Order } from "./order"
 
 const CustomerIdIndex = "IDX_order_address_customer_id"
 
@@ -17,6 +18,9 @@ const _OrderAddress = model
     postal_code: model.text().searchable().nullable(),
     phone: model.text().searchable().nullable(),
     metadata: model.json().nullable(),
+    order: model.hasMany<any /* <() => typeof Order> */>(() => Order, {
+      mappedBy: "shipping_address",
+    }),
   })
   .indexes([
     {

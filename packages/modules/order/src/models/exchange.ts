@@ -38,7 +38,10 @@ const _OrderExchange = model
       }
     ),
     changes: model.hasMany<any /* <() => typeof OrderChange> */>(
-      () => OrderChange
+      () => OrderChange,
+      {
+        mappedBy: "exchange",
+      }
     ),
     created_by: model.text().nullable(),
     metadata: model.json().nullable(),
