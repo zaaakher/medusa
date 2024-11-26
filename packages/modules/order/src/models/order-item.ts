@@ -5,11 +5,11 @@ import Order from "./order"
 const OrderItem = model
   .define("OrderItem", {
     id: model.id({ prefix: "orditem" }).primaryKey(),
-    order: model.belongsTo(() => Order, {
+    order: model.belongsTo<any>(() => Order, {
       mappedBy: "items",
     }),
     version: model.number(),
-    item: model.belongsTo(() => OrderLineItem, {
+    item: model.belongsTo<any>(() => OrderLineItem, {
       mappedBy: "items",
     }),
     unit_price: model.bigNumber().nullable(),

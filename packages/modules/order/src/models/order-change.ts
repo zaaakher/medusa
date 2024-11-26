@@ -8,21 +8,21 @@ import Return from "./return"
 const OrderChange = model
   .define("OrderChange", {
     id: model.id({ prefix: "ordch" }).primaryKey(),
-    order: model.belongsTo(() => Order, {
+    order: model.belongsTo<any>(() => Order, {
       mappedBy: "changes",
     }),
     return: model
-      .belongsTo(() => Return, {
+      .belongsTo<any>(() => Return, {
         mappedBy: "changes",
       })
       .nullable(),
     claim: model
-      .belongsTo(() => OrderClaim, {
+      .belongsTo<any>(() => OrderClaim, {
         mappedBy: "changes",
       })
       .nullable(),
     exchange: model
-      .belongsTo(() => OrderExchange, {
+      .belongsTo<any>(() => OrderExchange, {
         mappedBy: "changes",
       })
       .nullable(),

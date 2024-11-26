@@ -11,10 +11,10 @@ const OrderClaimItem = model
     }),
     reason: model.enum(ClaimReason).nullable(),
     quantity: model.bigNumber(),
-    claim: model.belongsTo(() => Claim, {
+    claim: model.belongsTo<any>(() => Claim, {
       mappedBy: "items",
     }),
-    item: model.belongsTo(() => OrderLineItem, {
+    item: model.belongsTo<any>(() => OrderLineItem, {
       mappedBy: "claim_items",
     }),
     is_additional_item: model.boolean().default(false),

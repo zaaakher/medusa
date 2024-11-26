@@ -1230,11 +1230,8 @@ export default class OrderModuleService
       version: number
     }[],
     @MedusaContext() sharedContext: Context = {}
-  ): Promise<InferEntityType<typeof OrderShippingMethod>[]> {
-    const sm = await this.orderShippingService_.create(
-      data as unknown as CreateOrderShippingMethodDTO[],
-      sharedContext
-    )
+  ): Promise<InferEntityType<typeof OrderShippingMethod>> {
+    const sm = await this.orderShippingService_.create(data, sharedContext)
 
     return sm.map((s) => s.shipping_method)
   }

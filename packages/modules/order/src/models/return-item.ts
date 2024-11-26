@@ -7,17 +7,17 @@ const ReturnItem = model
   .define("ReturnItem", {
     id: model.id({ prefix: "retitem" }).primaryKey(),
     reason: model
-      .belongsTo(() => ReturnReason, {
+      .belongsTo<any>(() => ReturnReason, {
         mappedBy: "return_items",
       })
       .nullable(),
     quantity: model.bigNumber(),
     received_quantity: model.bigNumber().default(0),
     damaged_quantity: model.bigNumber().default(0),
-    return: model.belongsTo(() => Return, {
+    return: model.belongsTo<any>(() => Return, {
       mappedBy: "items",
     }),
-    item: model.belongsTo(() => OrderLineItem, {
+    item: model.belongsTo<any>(() => OrderLineItem, {
       mappedBy: "return_items",
     }),
     note: model.text().nullable(),

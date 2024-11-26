@@ -9,25 +9,25 @@ const OrderShipping = model
   .define("OrderShipping", {
     id: model.id({ prefix: "ordspmv" }).primaryKey(),
     version: model.number(),
-    order: model.belongsTo(() => Order, {
+    order: model.belongsTo<any>(() => Order, {
       mappedBy: "shipping_methods",
     }),
     return: model
-      .belongsTo(() => Return, {
+      .belongsTo<any>(() => Return, {
         mappedBy: "shipping_methods",
       })
       .nullable(),
     exchange: model
-      .belongsTo(() => Exchange, {
+      .belongsTo<any>(() => Exchange, {
         mappedBy: "shipping_methods",
       })
       .nullable(),
     claim: model
-      .belongsTo(() => Claim, {
+      .belongsTo<any>(() => Claim, {
         mappedBy: "shipping_methods",
       })
       .nullable(),
-    shipping_method: model.belongsTo(() => OrderShippingMethod, {
+    shipping_method: model.belongsTo<any>(() => OrderShippingMethod, {
       mappedBy: "shipping_methods",
     }),
   })

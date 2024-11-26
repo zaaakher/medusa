@@ -7,10 +7,11 @@ import Return from "./return"
 const OrderExchange = model
   .define("OrderExchange", {
     id: model.id({ prefix: "oexc" }).primaryKey(),
-    order: model.belongsTo(() => Order, {
+    order: model.belongsTo<any>(() => Order, {
       mappedBy: "exchanges",
     }),
-    return: model.hasMany(() => Return, {
+    return_id: model.text().nullable(),
+    return: model.hasMany<any>(() => Return, {
       mappedBy: "exchange",
     }),
     order_version: model.number(),
@@ -18,16 +19,16 @@ const OrderExchange = model
     no_notification: model.boolean().nullable(),
     difference_due: model.bigNumber().nullable(),
     allow_backorder: model.boolean().default(false),
-    additional_items: model.hasMany(() => OrderExchangeItem, {
+    additional_items: model.hasMany<any>(() => OrderExchangeItem, {
       mappedBy: "exchange",
     }),
-    shipping_methods: model.hasMany(() => OrderShipping, {
+    shipping_methods: model.hasMany<any>(() => OrderShipping, {
       mappedBy: "exchange",
     }),
-    transactions: model.hasMany(() => OrderTransaction, {
+    transactions: model.hasMany<any>(() => OrderTransaction, {
       mappedBy: "exchange",
     }),
-    changes: model.hasMany(() => OrderChange),
+    changes: model.hasMany<any>(() => OrderChange),
     created_by: model.text().nullable(),
     metadata: model.json().nullable(),
     canceled_at: model.dateTime().nullable(),

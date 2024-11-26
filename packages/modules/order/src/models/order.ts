@@ -21,8 +21,8 @@ const Order = model
     is_draft_order: model.boolean().default(false),
     email: model.text().searchable().nullable(),
     currency_code: model.text(),
-    shipping_address: model.belongsTo(() => OrderAddress),
-    billing_address: model.belongsTo(() => OrderAddress),
+    shipping_address: model.belongsTo<any>(() => OrderAddress),
+    billing_address: model.belongsTo<any>(() => OrderAddress),
     no_notification: model.boolean().nullable(),
     metadata: model.json().nullable(),
     summary: model.hasMany(() => OrderSummary, {

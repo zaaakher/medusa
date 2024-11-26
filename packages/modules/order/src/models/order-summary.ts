@@ -6,7 +6,7 @@ const OrderSummary = model
     id: model.id({ prefix: "ordsum" }).primaryKey(),
     version: model.number().default(1),
     totals: model.json(),
-    order: model.belongsTo(() => Order, {
+    order: model.belongsTo<any>(() => Order, {
       mappedBy: "summary",
     }),
   })

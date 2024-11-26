@@ -12,6 +12,7 @@ const OrderClaim = model
     order: model.belongsTo(() => Order, {
       mappedBy: "claims",
     }),
+    return_id: model.text().nullable(),
     return: model.hasMany(() => Return, {
       mappedBy: "claim",
     }),

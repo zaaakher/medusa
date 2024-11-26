@@ -10,6 +10,7 @@ import {
   getShippingMethodsTotals,
   isString,
   promiseAll,
+  toMikroORMEntity,
 } from "@medusajs/framework/utils"
 import { OrderExchange, OrderExchangeItem, Return, ReturnItem } from "@models"
 
@@ -75,8 +76,8 @@ async function processAdditionalItems(
   sharedContext
 ) {
   const itemsToAdd: any[] = []
-  const additionalNewItems: (typeof OrderExchangeItem)[] = []
-  const additionalItems: (typeof OrderExchangeItem)[] = []
+  const additionalNewItems: any[] = []
+  const additionalItems: any[] = []
   data.additional_items?.forEach((item) => {
     const hasItem = item.id
       ? order.items.find((o) => o.item.id === item.id)
@@ -98,7 +99,7 @@ async function processAdditionalItems(
       })
 
       additionalItems.push(
-        em.create(OrderExchangeItem, {
+        em.create(toMikroORMEntity(OrderExchangeItem), {
           item_id: item.id,
           quantity: item.quantity,
           note: item.note,
@@ -110,7 +111,7 @@ async function processAdditionalItems(
       itemsToAdd.push(item)
 
       additionalNewItems.push(
-        em.create(OrderExchangeItem, {
+        em.create(toMikroORMEntity(OrderExchangeItem), {
           quantity: item.quantity,
           unit_price: item.unit_price,
           note: item.note,
