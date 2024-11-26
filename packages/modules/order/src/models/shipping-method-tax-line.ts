@@ -9,12 +9,13 @@ const _OrderShippingMethodTaxLine = model
     code: model.text(),
     rate: model.bigNumber(),
     provider_id: model.text().nullable(),
-    shipping_method: model.belongsTo<() => typeof OrderShippingMethod>(
-      () => OrderShippingMethod,
-      {
-        mappedBy: "tax_lines",
-      }
-    ),
+    shipping_method:
+      model.belongsTo<any /* <() => typeof OrderShippingMethod> */>(
+        () => OrderShippingMethod,
+        {
+          mappedBy: "tax_lines",
+        }
+      ),
   })
   .indexes([
     {

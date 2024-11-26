@@ -9,11 +9,11 @@ import { OrderTransaction } from "./transaction"
 const _OrderClaim = model
   .define("OrderClaim", {
     id: model.id({ prefix: "claim" }).primaryKey(),
-    order: model.belongsTo<() => typeof Order>(() => Order, {
+    order: model.belongsTo<any /* <() => typeof Order> */>(() => Order, {
       mappedBy: "claims",
     }),
     return_id: model.text().nullable(),
-    return: model.hasMany<() => typeof Return>(() => Return, {
+    return: model.hasMany<any /* <() => typeof Return> */>(() => Return, {
       mappedBy: "claim",
     }),
     order_version: model.number(),
@@ -21,31 +21,33 @@ const _OrderClaim = model
     type: model.enum(ClaimType),
     no_notification: model.boolean().nullable(),
     refund_amount: model.bigNumber().nullable(),
-    additional_items: model.hasMany<() => typeof OrderClaimItem>(
+    additional_items: model.hasMany<any /* <() => typeof OrderClaimItem> */>(
       () => OrderClaimItem,
       {
         mappedBy: "claim",
       }
     ),
-    claim_items: model.hasMany<() => typeof OrderClaimItem>(
+    claim_items: model.hasMany<any /* <() => typeof OrderClaimItem> */>(
       () => OrderClaimItem,
       {
         mappedBy: "claim",
       }
     ),
-    shipping_methods: model.hasMany<() => typeof OrderShipping>(
+    shipping_methods: model.hasMany<any /* <() => typeof OrderShipping> */>(
       () => OrderShipping,
       {
         mappedBy: "claim",
       }
     ),
-    transactions: model.hasMany<() => typeof OrderTransaction>(
+    transactions: model.hasMany<any /* <() => typeof OrderTransaction> */>(
       () => OrderTransaction,
       {
         mappedBy: "claim",
       }
     ),
-    changes: model.hasMany<() => typeof OrderChange>(() => OrderChange),
+    changes: model.hasMany<any /* <() => typeof OrderChange> */>(
+      () => OrderChange
+    ),
     created_by: model.text().nullable(),
     canceled_at: model.dateTime().nullable(),
     metadata: model.json().nullable(),

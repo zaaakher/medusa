@@ -2,7 +2,6 @@ import {
   DMLSchema,
   IDmlEntityConfig,
   RelationshipOptions,
-  RelationshipType,
 } from "@medusajs/types"
 import { DmlEntity } from "./entity"
 import {

@@ -9,9 +9,12 @@ const _OrderLineItemTaxLine = model
     code: model.text(),
     rate: model.bigNumber(),
     provider_id: model.text().nullable(),
-    item: model.belongsTo<() => typeof OrderLineItem>(() => OrderLineItem, {
-      mappedBy: "tax_lines",
-    }),
+    item: model.belongsTo<any /* <() => typeof OrderLineItem> */>(
+      () => OrderLineItem,
+      {
+        mappedBy: "tax_lines",
+      }
+    ),
   })
   .indexes([
     {

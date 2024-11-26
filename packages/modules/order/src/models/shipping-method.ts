@@ -14,19 +14,21 @@ const _OrderShippingMethod = model
     shipping_option_id: model.text().nullable(),
     data: model.json().nullable(),
     metadata: model.json().nullable(),
-    tax_lines: model.hasMany<() => typeof OrderShippingMethodTaxLine>(
-      () => OrderShippingMethodTaxLine,
-      {
-        mappedBy: "shipping_method",
-      }
-    ),
-    adjustments: model.hasMany<() => typeof OrderShippingMethodAdjustment>(
-      () => OrderShippingMethodAdjustment,
-      {
-        mappedBy: "shipping_method",
-      }
-    ),
-    shipping_methods: model.hasMany<() => typeof OrderShipping>(
+    tax_lines:
+      model.hasMany<any /* <() => typeof OrderShippingMethodTaxLine> */>(
+        () => OrderShippingMethodTaxLine,
+        {
+          mappedBy: "shipping_method",
+        }
+      ),
+    adjustments:
+      model.hasMany<any /* <() => typeof OrderShippingMethodAdjustment> */>(
+        () => OrderShippingMethodAdjustment,
+        {
+          mappedBy: "shipping_method",
+        }
+      ),
+    shipping_methods: model.hasMany<any /* <() => typeof OrderShipping> */>(
       () => OrderShipping,
       {
         mappedBy: "shipping_method",

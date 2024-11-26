@@ -4,7 +4,7 @@ import { OrderClaimItem } from "./claim-item"
 const _OrderClaimItemImage = model
   .define("OrderClaimItemImage", {
     id: model.id({ prefix: "climg" }).primaryKey(),
-    claim_item: model.belongsTo<() => typeof OrderClaimItem>(
+    claim_item: model.belongsTo<any /* <() => typeof OrderClaimItem> */>(
       () => OrderClaimItem,
       {
         mappedBy: "images",

@@ -8,21 +8,26 @@ const _ReturnReason = model
     label: model.text().searchable(),
     description: model.text().nullable(),
     parent_return_reason_id: model.text().nullable(),
-    parent_return_reason: model.belongsTo<() => typeof _ReturnReason>(
-      () => _ReturnReason,
+    parent_return_reason:
+      model.belongsTo<any /* <() => typeof _ReturnReason> */>(
+        () => _ReturnReason,
+        {
+          mappedBy: "return_reason_children",
+        }
+      ),
+    return_reason_children:
+      model.hasMany<any /* <() => typeof _ReturnReason> */>(
+        () => _ReturnReason,
+        {
+          mappedBy: "parent_return_reason",
+        }
+      ),
+    return_items: model.hasMany<any /* <() => typeof ReturnItem> */>(
+      () => ReturnItem,
       {
-        mappedBy: "return_reason_children",
+        mappedBy: "reason",
       }
     ),
-    return_reason_children: model.hasMany<() => typeof _ReturnReason>(
-      () => _ReturnReason,
-      {
-        mappedBy: "parent_return_reason",
-      }
-    ),
-    return_items: model.hasMany<() => typeof ReturnItem>(() => ReturnItem, {
-      mappedBy: "reason",
-    }),
     metadata: model.json().nullable(),
   })
   .indexes([

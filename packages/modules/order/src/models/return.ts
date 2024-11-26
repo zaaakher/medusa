@@ -8,15 +8,21 @@ import { OrderShipping } from "./order-shipping-method"
 const _Return = model
   .define("Return", {
     id: model.id({ prefix: "return" }).primaryKey(),
-    order: model.belongsTo<() => typeof Order>(() => Order, {
+    order: model.belongsTo<any /* <() => typeof Order> */>(() => Order, {
       mappedBy: "returns",
     }),
-    exchange: model.belongsTo<() => typeof OrderExchange>(() => OrderExchange, {
-      mappedBy: "return",
-    }),
-    claim: model.belongsTo<() => typeof OrderClaim>(() => OrderClaim, {
-      mappedBy: "return",
-    }),
+    exchange: model.belongsTo<any /* <() => typeof OrderExchange> */>(
+      () => OrderExchange,
+      {
+        mappedBy: "return",
+      }
+    ),
+    claim: model.belongsTo<any /* <() => typeof OrderClaim> */>(
+      () => OrderClaim,
+      {
+        mappedBy: "return",
+      }
+    ),
     order_version: model.number(),
     display_id: model.autoincrement(),
     status: model.enum(ReturnStatus).default(ReturnStatus.OPEN),
@@ -26,19 +32,21 @@ const _Return = model
     items: model.hasMany(() => ReturnItem, {
       mappedBy: "return",
     }),
-    shipping_methods: model.hasMany<() => typeof OrderShipping>(
+    shipping_methods: model.hasMany<any /* <() => typeof OrderShipping> */>(
       () => OrderShipping,
       {
         mappedBy: "return",
       }
     ),
-    transactions: model.hasMany<() => typeof OrderTransaction>(
+    transactions: model.hasMany<any /* <() => typeof OrderTransaction> */>(
       () => OrderTransaction,
       {
         mappedBy: "return",
       }
     ),
-    changes: model.hasMany<() => typeof OrderChange>(() => OrderChange),
+    changes: model.hasMany<any /* <() => typeof OrderChange> */>(
+      () => OrderChange
+    ),
     created_by: model.text().nullable(),
     metadata: model.json().nullable(),
     requested_at: model.dateTime().nullable(),

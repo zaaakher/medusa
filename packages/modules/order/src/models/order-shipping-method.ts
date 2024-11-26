@@ -9,30 +9,31 @@ const _OrderShipping = model
   .define("OrderShipping", {
     id: model.id({ prefix: "ordspmv" }).primaryKey(),
     version: model.number(),
-    order: model.belongsTo<() => typeof Order>(() => Order, {
+    order: model.belongsTo<any /* <() => typeof Order> */>(() => Order, {
       mappedBy: "shipping_methods",
     }),
     return: model
-      .belongsTo<() => typeof Return>(() => Return, {
+      .belongsTo<any /* <() => typeof Return> */>(() => Return, {
         mappedBy: "shipping_methods",
       })
       .nullable(),
     exchange: model
-      .belongsTo<() => typeof OrderExchange>(() => OrderExchange, {
+      .belongsTo<any /* <() => typeof OrderExchange> */>(() => OrderExchange, {
         mappedBy: "shipping_methods",
       })
       .nullable(),
     claim: model
-      .belongsTo<() => typeof OrderClaim>(() => OrderClaim, {
+      .belongsTo<any /* <() => typeof OrderClaim> */>(() => OrderClaim, {
         mappedBy: "shipping_methods",
       })
       .nullable(),
-    shipping_method: model.belongsTo<() => typeof OrderShippingMethod>(
-      () => OrderShippingMethod,
-      {
-        mappedBy: "shipping_methods",
-      }
-    ),
+    shipping_method:
+      model.belongsTo<any /* <() => typeof OrderShippingMethod> */>(
+        () => OrderShippingMethod,
+        {
+          mappedBy: "shipping_methods",
+        }
+      ),
   })
   .indexes([
     {

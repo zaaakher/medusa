@@ -6,7 +6,7 @@ import { OrderLineItem } from "./line-item"
 const _OrderClaimItem = model
   .define("OrderClaimItem", {
     id: model.id({ prefix: "claitem" }).primaryKey(),
-    images: model.hasMany<() => typeof OrderClaimItemImage>(
+    images: model.hasMany<any /* <() => typeof OrderClaimItemImage> */>(
       () => OrderClaimItemImage,
       {
         mappedBy: "item",
@@ -14,12 +14,18 @@ const _OrderClaimItem = model
     ),
     reason: model.enum(ClaimReason).nullable(),
     quantity: model.bigNumber(),
-    claim: model.belongsTo<() => typeof OrderClaim>(() => OrderClaim, {
-      mappedBy: "items",
-    }),
-    item: model.belongsTo<() => typeof OrderLineItem>(() => OrderLineItem, {
-      mappedBy: "claim_items",
-    }),
+    claim: model.belongsTo<any /* <() => typeof OrderClaim> */>(
+      () => OrderClaim,
+      {
+        mappedBy: "items",
+      }
+    ),
+    item: model.belongsTo<any /* <() => typeof OrderLineItem> */>(
+      () => OrderLineItem,
+      {
+        mappedBy: "claim_items",
+      }
+    ),
     is_additional_item: model.boolean().default(false),
     note: model.text().nullable(),
     metadata: model.json().nullable(),

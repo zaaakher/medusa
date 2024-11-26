@@ -657,7 +657,7 @@ export default class OrderModuleService
   ) {
     const lineItemsToCreate: CreateOrderLineItemDTO[] = []
 
-    const createdOrders: (typeof Order)[] = []
+    const createdOrders: InferEntityType<typeof Order>[] = []
     for (const { items, shipping_methods, ...order } of data) {
       const ord = order as any
 
@@ -1230,10 +1230,10 @@ export default class OrderModuleService
       version: number
     }[],
     @MedusaContext() sharedContext: Context = {}
-  ): Promise<InferEntityType<typeof OrderShippingMethod>> {
+  ): Promise<InferEntityType<typeof OrderShippingMethod>[]> {
     const sm = await this.orderShippingService_.create(data, sharedContext)
 
-    return sm.map((s) => s.shipping_method)
+    return sm.map((s) => s.shipping_method) as any
   }
 
   @InjectManager()
@@ -2706,6 +2706,7 @@ export default class OrderModuleService
     data: OrderTypes.CreateOrderChangeActionDTO[],
     sharedContext?: Context
   ): Promise<OrderTypes.OrderChangeActionDTO[]>
+
   @InjectTransactionManager()
   async addOrderAction(
     data:
@@ -2713,8 +2714,7 @@ export default class OrderModuleService
       | OrderTypes.CreateOrderChangeActionDTO[],
     @MedusaContext() sharedContext?: Context
   ): Promise<
-    | InferEntityType<typeof OrderChangeAction>
-    | InferEntityType<typeof OrderChangeAction>[]
+    OrderTypes.OrderChangeActionDTO | OrderTypes.OrderChangeActionDTO[]
   > {
     let dataArr = Array.isArray(data) ? data : [data]
 
@@ -2748,7 +2748,7 @@ export default class OrderModuleService
     const actions = (await this.orderChangeActionService_.create(
       dataArr,
       sharedContext
-    )) as InferEntityType<typeof OrderChangeAction>[]
+    )) as unknown as OrderTypes.OrderChangeActionDTO[]
 
     return Array.isArray(data) ? actions : actions[0]
   }
@@ -2885,10 +2885,10 @@ export default class OrderModuleService
       }
     }
 
-    const created = await this.orderTransactionService_.create(
+    const created = (await this.orderTransactionService_.create(
       data,
       sharedContext
-    )
+    )) as (InferEntityType<typeof OrderTransaction> & { order_id: string })[]
 
     await this.updateOrderPaidRefundableAmount_(created, false, sharedContext)
 

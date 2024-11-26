@@ -7,11 +7,11 @@ import { Return } from "./return"
 const _OrderExchange = model
   .define("OrderExchange", {
     id: model.id({ prefix: "oexc" }).primaryKey(),
-    order: model.belongsTo<() => typeof Order>(() => Order, {
+    order: model.belongsTo<any /* <() => typeof Order> */>(() => Order, {
       mappedBy: "exchanges",
     }),
     return_id: model.text().nullable(),
-    return: model.hasMany<() => typeof Return>(() => Return, {
+    return: model.hasMany<any /* <() => typeof Return> */>(() => Return, {
       mappedBy: "exchange",
     }),
     order_version: model.number(),
@@ -19,25 +19,27 @@ const _OrderExchange = model
     no_notification: model.boolean().nullable(),
     difference_due: model.bigNumber().nullable(),
     allow_backorder: model.boolean().default(false),
-    additional_items: model.hasMany<() => typeof OrderExchangeItem>(
+    additional_items: model.hasMany<any /* <() => typeof OrderExchangeItem> */>(
       () => OrderExchangeItem,
       {
         mappedBy: "exchange",
       }
     ),
-    shipping_methods: model.hasMany<() => typeof OrderShipping>(
+    shipping_methods: model.hasMany<any /* <() => typeof OrderShipping> */>(
       () => OrderShipping,
       {
         mappedBy: "exchange",
       }
     ),
-    transactions: model.hasMany<() => typeof OrderTransaction>(
+    transactions: model.hasMany<any /* <() => typeof OrderTransaction> */>(
       () => OrderTransaction,
       {
         mappedBy: "exchange",
       }
     ),
-    changes: model.hasMany<() => typeof OrderChange>(() => OrderChange),
+    changes: model.hasMany<any /* <() => typeof OrderChange> */>(
+      () => OrderChange
+    ),
     created_by: model.text().nullable(),
     metadata: model.json().nullable(),
     canceled_at: model.dateTime().nullable(),

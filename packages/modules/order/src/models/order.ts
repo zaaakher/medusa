@@ -21,27 +21,30 @@ const _Order = model
     is_draft_order: model.boolean().default(false),
     email: model.text().searchable().nullable(),
     currency_code: model.text(),
-    shipping_address: model.belongsTo<() => typeof OrderAddress>(
+    shipping_address: model.belongsTo<any /* <() => typeof OrderAddress> */>(
       () => OrderAddress
     ),
-    billing_address: model.belongsTo<() => typeof OrderAddress>(
+    billing_address: model.belongsTo<any /* <() => typeof OrderAddress> */>(
       () => OrderAddress
     ),
     no_notification: model.boolean().nullable(),
     metadata: model.json().nullable(),
-    summary: model.hasMany<() => typeof OrderSummary>(() => OrderSummary, {
+    summary: model.hasMany<any /* <() => typeof OrderSummary> */>(
+      () => OrderSummary,
+      {
+        mappedBy: "order",
+      }
+    ),
+    items: model.hasMany<any /* <() => typeof OrderItem> */>(() => OrderItem, {
       mappedBy: "order",
     }),
-    items: model.hasMany<() => typeof OrderItem>(() => OrderItem, {
-      mappedBy: "order",
-    }),
-    shipping_methods: model.hasMany<() => typeof OrderShipping>(
+    shipping_methods: model.hasMany<any /* <() => typeof OrderShipping> */>(
       () => OrderShipping,
       {
         mappedBy: "order",
       }
     ),
-    transactions: model.hasMany<() => typeof OrderTransaction>(
+    transactions: model.hasMany<any /* <() => typeof OrderTransaction> */>(
       () => OrderTransaction,
       {
         mappedBy: "order",
@@ -49,16 +52,24 @@ const _Order = model
     ),
     canceled_at: model.dateTime().nullable(),
 
-    exchanges: model.hasMany<() => typeof OrderExchange>(() => OrderExchange, {
+    exchanges: model.hasMany<any /* <() => typeof OrderExchange> */>(
+      () => OrderExchange,
+      {
+        mappedBy: "order",
+      }
+    ),
+    claims: model.hasMany<any /* <() => typeof OrderClaim> */>(
+      () => OrderClaim,
+      {
+        mappedBy: "order",
+      }
+    ),
+    returns: model.hasMany<any /* <() => typeof Return> */>(() => Return, {
       mappedBy: "order",
     }),
-    claims: model.hasMany<() => typeof OrderClaim>(() => OrderClaim, {
-      mappedBy: "order",
-    }),
-    returns: model.hasMany<() => typeof Return>(() => Return, {
-      mappedBy: "order",
-    }),
-    changes: model.hasMany<() => typeof OrderChange>(() => OrderChange),
+    changes: model.hasMany<any /* <() => typeof OrderChange> */>(
+      () => OrderChange
+    ),
   })
   .indexes([
     {

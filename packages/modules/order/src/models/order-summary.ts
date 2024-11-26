@@ -6,7 +6,7 @@ const _OrderSummary = model
     id: model.id({ prefix: "ordsum" }).primaryKey(),
     version: model.number().default(1),
     totals: model.json(),
-    order: model.belongsTo<() => typeof Order>(() => Order, {
+    order: model.belongsTo<any /* <() => typeof Order> */>(() => Order, {
       mappedBy: "summary",
     }),
   })

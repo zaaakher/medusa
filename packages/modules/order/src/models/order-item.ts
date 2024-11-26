@@ -5,13 +5,16 @@ import { Order } from "./order"
 const _OrderItem = model
   .define("OrderItem", {
     id: model.id({ prefix: "orditem" }).primaryKey(),
-    order: model.belongsTo<() => typeof Order>(() => Order, {
+    order: model.belongsTo<any /* <() => typeof Order> */>(() => Order, {
       mappedBy: "items",
     }),
     version: model.number(),
-    item: model.belongsTo<() => typeof OrderLineItem>(() => OrderLineItem, {
-      mappedBy: "items",
-    }),
+    item: model.belongsTo<any /* <() => typeof OrderLineItem> */>(
+      () => OrderLineItem,
+      {
+        mappedBy: "items",
+      }
+    ),
     unit_price: model.bigNumber().nullable(),
     compare_at_unit_price: model.bigNumber().nullable(),
     quantity: model.bigNumber(),

@@ -7,18 +7,24 @@ import { Return } from "./return"
 const _OrderTransaction = model
   .define("OrderTransaction", {
     id: model.id({ prefix: "ordtrx" }).primaryKey(),
-    order: model.belongsTo<() => typeof Order>(() => Order, {
+    order: model.belongsTo<any /* <() => typeof Order> */>(() => Order, {
       mappedBy: "transactions",
     }),
-    return: model.belongsTo<() => typeof Return>(() => Return, {
+    return: model.belongsTo<any /* <() => typeof Return> */>(() => Return, {
       mappedBy: "transactions",
     }),
-    exchange: model.belongsTo<() => typeof OrderExchange>(() => OrderExchange, {
-      mappedBy: "transactions",
-    }),
-    claim: model.belongsTo<() => typeof OrderClaim>(() => OrderClaim, {
-      mappedBy: "transactions",
-    }),
+    exchange: model.belongsTo<any /* <() => typeof OrderExchange> */>(
+      () => OrderExchange,
+      {
+        mappedBy: "transactions",
+      }
+    ),
+    claim: model.belongsTo<any /* <() => typeof OrderClaim> */>(
+      () => OrderClaim,
+      {
+        mappedBy: "transactions",
+      }
+    ),
     version: model.number().default(1),
     amount: model.bigNumber(),
     currency_code: model.text(),

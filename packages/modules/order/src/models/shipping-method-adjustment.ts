@@ -9,12 +9,13 @@ const _OrderShippingMethodAdjustment = model
     code: model.text().nullable(),
     amount: model.bigNumber(),
     provider_id: model.text().nullable(),
-    shipping_method: model.belongsTo<() => typeof OrderShippingMethod>(
-      () => OrderShippingMethod,
-      {
-        mappedBy: "adjustments",
-      }
-    ),
+    shipping_method:
+      model.belongsTo<any /* <() => typeof OrderShippingMethod> */>(
+        () => OrderShippingMethod,
+        {
+          mappedBy: "adjustments",
+        }
+      ),
   })
   .indexes([
     {
