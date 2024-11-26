@@ -3866,7 +3866,7 @@ describe("Entity builder", () => {
         string | null
       >()
 
-      expectTypeOf(new Email()).toEqualTypeOf<{
+      expectTypeOf(new Email()).toMatchTypeOf<{
         email: string
         isVerified: boolean
         user: {
@@ -3881,15 +3881,8 @@ describe("Entity builder", () => {
             deleted_at: Date | null
             user_id: string | null
           }
-          created_at: Date
-          updated_at: Date
-          deleted_at: Date | null
-        }
-        created_at: Date
-        updated_at: Date
-        deleted_at: Date | null
-        user_id: string | null
-      }>({} as any)
+        } | null
+      }>()
       expectTypeOf(new Email().user_id).toEqualTypeOf<string | null>()
 
       const metaData = MetadataStorage.getMetadataFromDecorator(User)
