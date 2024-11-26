@@ -604,6 +604,11 @@ export const RouteMap: RouteObject[] = [
                       ),
                   },
                   {
+                    path: ":order_id/transfer",
+                    lazy: () =>
+                      import("../../routes/orders/order-request-transfer"),
+                  },
+                  {
                     path: "metadata/edit",
                     lazy: () =>
                       import("../../routes/customers/customer-metadata"),
