@@ -569,7 +569,7 @@ export const newStarter = async (args) => {
       await setupEnvVars(rootPath, dbName, creds)
     }
 
-    if (!skipMigrations && !skipDb) {
+    if (!skipMigrations) {
       track("CLI_NEW_RUN_MIGRATIONS")
       await runMigrations(rootPath)
     }
