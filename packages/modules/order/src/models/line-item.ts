@@ -32,22 +32,22 @@ const OrderLineItem = model
     unit_price: model.bigNumber(),
     is_custom_price: model.boolean().default(false),
     metadata: model.json().nullable(),
-    tax_lines: model.hasMany<any>(() => OrderLineItemTaxLine, {
+    tax_lines: model.hasMany(() => OrderLineItemTaxLine, {
       mappedBy: "item",
     }),
-    adjustments: model.hasMany<any>(() => OrderLineItemAdjustment, {
+    adjustments: model.hasMany(() => OrderLineItemAdjustment, {
       mappedBy: "item",
     }),
-    items: model.hasMany<any>(() => OrderItem, {
+    items: model.hasMany(() => OrderItem, {
       mappedBy: "item",
     }),
-    return_items: model.hasMany<any>(() => ReturnItem, {
+    return_items: model.hasMany(() => ReturnItem, {
       mappedBy: "item",
     }),
-    claim_items: model.hasMany<any>(() => OrderClaimItem, {
+    claim_items: model.hasMany(() => OrderClaimItem, {
       mappedBy: "item",
     }),
-    exchange_items: model.hasMany<any>(() => OrderExchangeItem, {
+    exchange_items: model.hasMany(() => OrderExchangeItem, {
       mappedBy: "item",
     }),
   })

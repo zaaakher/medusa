@@ -8,13 +8,13 @@ import OrderShipping from "./order-shipping-method"
 const Return = model
   .define("Return", {
     id: model.id({ prefix: "return" }).primaryKey(),
-    order: model.belongsTo<any>(() => Order, {
+    order: model.belongsTo(() => Order, {
       mappedBy: "returns",
     }),
-    exchange: model.belongsTo<any>(() => Exchange, {
+    exchange: model.belongsTo(() => Exchange, {
       mappedBy: "return",
     }),
-    claim: model.belongsTo<any>(() => Claim, {
+    claim: model.belongsTo(() => Claim, {
       mappedBy: "return",
     }),
     order_version: model.number(),
@@ -23,16 +23,16 @@ const Return = model
     location_id: model.text().nullable(),
     no_notification: model.boolean().nullable(),
     refund_amount: model.bigNumber().nullable(),
-    items: model.hasMany<any>(() => ReturnItem, {
+    items: model.hasMany(() => ReturnItem, {
       mappedBy: "return",
     }),
-    shipping_methods: model.hasMany<any>(() => OrderShipping, {
+    shipping_methods: model.hasMany(() => OrderShipping, {
       mappedBy: "return",
     }),
-    transactions: model.hasMany<any>(() => OrderTransaction, {
+    transactions: model.hasMany(() => OrderTransaction, {
       mappedBy: "return",
     }),
-    changes: model.hasMany<any>(() => OrderChange),
+    changes: model.hasMany(() => OrderChange),
     created_by: model.text().nullable(),
     metadata: model.json().nullable(),
     requested_at: model.dateTime().nullable(),

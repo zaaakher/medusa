@@ -3837,7 +3837,7 @@ describe("Entity builder", () => {
       const User = toMikroORMEntity(user)
       const Email = toMikroORMEntity(email)
 
-      expectTypeOf(new User()).toMatchTypeOf<{
+      expectTypeOf(new User()).toEqualTypeOf<{
         id: number
         username: string
         email: {
@@ -3846,16 +3846,27 @@ describe("Entity builder", () => {
           user: {
             id: number
             username: string
-          } | null
+            email: any
+            created_at: Date
+            updated_at: Date
+            deleted_at: Date | null
+          }
+          created_at: Date
+          updated_at: Date
+          deleted_at: Date | null
+          user_id: string | null
         }
-      }>()
+        created_at: Date
+        updated_at: Date
+        deleted_at: Date | null
+      }>({} as any)
 
       const userInstance = new User()
       expectTypeOf<(typeof userInstance)["email"]["user_id"]>().toEqualTypeOf<
         string | null
       >()
 
-      expectTypeOf(new Email()).toMatchTypeOf<{
+      expectTypeOf(new Email()).toEqualTypeOf<{
         email: string
         isVerified: boolean
         user: {
@@ -3864,9 +3875,21 @@ describe("Entity builder", () => {
           email: {
             email: string
             isVerified: boolean
+            user: any
+            created_at: Date
+            updated_at: Date
+            deleted_at: Date | null
+            user_id: string | null
           }
-        } | null
-      }>()
+          created_at: Date
+          updated_at: Date
+          deleted_at: Date | null
+        }
+        created_at: Date
+        updated_at: Date
+        deleted_at: Date | null
+        user_id: string | null
+      }>({} as any)
       expectTypeOf(new Email().user_id).toEqualTypeOf<string | null>()
 
       const metaData = MetadataStorage.getMetadataFromDecorator(User)

@@ -5,6 +5,14 @@ import {
   RelationshipTypes,
 } from "@medusajs/types"
 
+// type Cleanup<T, Exclusion extends string[] = []> = {
+//   [K in keyof T as K extends Exclusion[number]
+//     ? never
+//     : K]: T[K] extends RelationshipType<infer RelationResolver>
+//     ? RelationResolver extends () => infer Relation ? RelationshipCleanup<Relation, [K & string, ...Exclusion]>
+//     : T[K]
+// }
+
 export const IsRelationship = Symbol.for("isRelationship")
 
 /**
