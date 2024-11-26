@@ -1,15 +1,13 @@
 "use client"
 
-import { XMark } from "@medusajs/icons"
+import { CheckMini, EllipseMiniSolid, XMark } from "@medusajs/icons"
 import * as React from "react"
 
 import { Popover } from "@/components/popover"
 import { clx } from "@/utils/clx"
 
-import { Checkbox } from "../../../components/checkbox"
 import { DatePicker } from "../../../components/date-picker"
 import { Label } from "../../../components/label"
-import { RadioGroup } from "../../../components/radio-group"
 import { useDataTableContext } from "../context/use-data-table-context"
 import {
   DataTableDateComparisonOperator,
@@ -38,8 +36,6 @@ const DataTableFilter = ({ id, filter }: DataTableFilterProps) => {
   const [open, setOpen] = React.useState(filter === undefined)
   const [isCustom, setIsCustom] = React.useState(false)
 
-  console.log("filter with id:", id, "is rerendering")
-
   const onOpenChange = React.useCallback(
     (open: boolean) => {
       if (
@@ -63,6 +59,10 @@ const DataTableFilter = ({ id, filter }: DataTableFilterProps) => {
 
   const displayValue = React.useMemo(() => {
     let displayValue: string | null = null
+
+    if (typeof filter === "string") {
+      displayValue = options?.find((o) => o.value === filter)?.label ?? null
+    }
 
     if (Array.isArray(filter)) {
       displayValue =
@@ -121,50 +121,52 @@ const DataTableFilter = ({ id, filter }: DataTableFilterProps) => {
 
   return (
     <Popover open={open} onOpenChange={onOpenChange} modal>
-      <div
-        className={clx(
-          "bg-ui-bg-component flex flex-shrink-0 items-center overflow-hidden rounded-md",
-          "[&>*]:txt-compact-small-plus [&>*]:flex [&>*]:items-center [&>*]:justify-center",
-          {
-            "shadow-borders-base divide-x": displayValue,
-            "border border-dashed": !displayValue,
-          }
-        )}
-      >
-        {displayValue && (
-          <div className="text-ui-fg-muted whitespace-nowrap px-2 py-1">
-            {label || id}
-          </div>
-        )}
-        <Popover.Trigger
+      <Popover.Anchor asChild>
+        <div
           className={clx(
-            "text-ui-fg-subtle hover:bg-ui-bg-base-hover active:bg-ui-bg-base-pressed transition-fg whitespace-nowrap px-2 py-1 outline-none",
+            "bg-ui-bg-component flex flex-shrink-0 items-center overflow-hidden rounded-md",
+            "[&>*]:txt-compact-small-plus [&>*]:flex [&>*]:items-center [&>*]:justify-center",
             {
-              "text-ui-fg-muted": !displayValue,
+              "shadow-borders-base divide-x": displayValue,
+              "border border-dashed": !displayValue,
             }
           )}
         >
-          {displayValue || label || id}
-        </Popover.Trigger>
-
-        {displayValue && (
-          <button
-            type="button"
-            className="text-ui-fg-muted hover:bg-ui-bg-base-hover active:bg-ui-bg-base-pressed transition-fg size-7 outline-none"
-            onClick={removeFilter}
+          {displayValue && (
+            <div className="text-ui-fg-muted whitespace-nowrap px-2 py-1">
+              {label || id}
+            </div>
+          )}
+          <Popover.Trigger
+            className={clx(
+              "text-ui-fg-subtle hover:bg-ui-bg-base-hover active:bg-ui-bg-base-pressed transition-fg whitespace-nowrap px-2 py-1 outline-none",
+              {
+                "text-ui-fg-muted": !displayValue,
+              }
+            )}
           >
-            <XMark />
-          </button>
-        )}
-      </div>
-      <Popover.Content align="center">
+            {displayValue || label || id}
+          </Popover.Trigger>
+
+          {displayValue && (
+            <button
+              type="button"
+              className="text-ui-fg-muted hover:bg-ui-bg-base-hover active:bg-ui-bg-base-pressed transition-fg size-7 outline-none"
+              onClick={removeFilter}
+            >
+              <XMark />
+            </button>
+          )}
+        </div>
+      </Popover.Anchor>
+      <Popover.Content align="start" className="p-0 outline-none">
         {(() => {
           switch (type) {
             case "select":
               return (
                 <DataTableFilterSelectContent
                   id={id}
-                  filter={filter}
+                  filter={filter as string[] | undefined}
                   options={options as FilterOption<string>[]}
                 />
               )
@@ -184,6 +186,7 @@ const DataTableFilter = ({ id, filter }: DataTableFilterProps) => {
                   options={
                     options as FilterOption<DataTableDateComparisonOperator>[]
                   }
+                  isCustom={isCustom}
                   setIsCustom={setIsCustom}
                   {...rest}
                 />
@@ -201,6 +204,7 @@ type DataTableFilterDateContentProps = {
   id: string
   filter: unknown
   options: FilterOption<DataTableDateComparisonOperator>[]
+  isCustom: boolean
   setIsCustom: (isCustom: boolean) => void
 } & Pick<
   DateFilterProps,
@@ -231,8 +235,6 @@ function getIsCustomOptionSelected(
   return !!value.$gte || !!value.$lte
 }
 
-const CUSTOM_RANGE_OPTION_VALUE = "__custom__range__option__"
-
 const DataTableFilterDateContent = ({
   id,
   filter,
@@ -242,30 +244,23 @@ const DataTableFilterDateContent = ({
   rangeOptionStartLabel = DEFAULT_RANGE_OPTION_START_LABEL,
   rangeOptionEndLabel = DEFAULT_RANGE_OPTION_END_LABEL,
   disableRangeOption = false,
+  isCustom,
   setIsCustom,
 }: DataTableFilterDateContentProps) => {
   const currentValue = filter as DataTableDateComparisonOperator | undefined
   const { instance } = useDataTableContext()
 
-  const [showCustom, setShowCustom] = React.useState(
-    getIsCustomOptionSelected(options, currentValue)
-  )
-
-  React.useEffect(() => {
-    setIsCustom(showCustom)
-  }, [showCustom])
-
   const selectedValue = React.useMemo(() => {
-    if (!currentValue || showCustom) {
+    if (!currentValue || isCustom) {
       return undefined
     }
 
     return JSON.stringify(currentValue)
-  }, [currentValue, showCustom])
+  }, [currentValue, isCustom])
 
   const onValueChange = React.useCallback(
     (valueStr: string) => {
-      setShowCustom(false)
+      setIsCustom(false)
 
       const value = JSON.parse(valueStr) as DataTableDateComparisonOperator
       instance.updateFilter({ id, value })
@@ -273,15 +268,10 @@ const DataTableFilterDateContent = ({
     [instance, id]
   )
 
-  const onSelectCustom = React.useCallback(
-    (event: React.MouseEvent) => {
-      event.preventDefault()
-
-      setShowCustom(true)
-      instance.updateFilter({ id, value: undefined })
-    },
-    [instance, id]
-  )
+  const onSelectCustom = React.useCallback(() => {
+    setIsCustom(true)
+    instance.updateFilter({ id, value: undefined })
+  }, [instance, id])
 
   const onCustomValueChange = React.useCallback(
     (input: "$gte" | "$lte", value: Date | null) => {
@@ -290,6 +280,18 @@ const DataTableFilterDateContent = ({
       instance.updateFilter({ id, value: newCurrentValue })
     },
     [instance, id]
+  )
+
+  const { focusedIndex, setFocusedIndex } = useKeyboardNavigation(
+    options,
+    (index) => {
+      if (index === options.length && !disableRangeOption) {
+        onSelectCustom()
+      } else {
+        onValueChange(JSON.stringify(options[index].value))
+      }
+    },
+    disableRangeOption ? 0 : 1
   )
 
   const granularity = format === "date-time" ? "minute" : "day"
@@ -306,33 +308,64 @@ const DataTableFilterDateContent = ({
       : new Date(new Date(currentValue.$gte).setHours(0, 0, 0, 0))
     : undefined
 
+  const initialFocusedIndex = isCustom ? options.length : 0
+
+  const onListFocus = React.useCallback(() => {
+    if (focusedIndex === -1) {
+      setFocusedIndex(initialFocusedIndex)
+    }
+  }, [focusedIndex, initialFocusedIndex])
+
   return (
     <React.Fragment>
-      <RadioGroup value={selectedValue} onValueChange={onValueChange}>
+      <div
+        className="flex flex-col p-1 outline-none"
+        tabIndex={0}
+        role="list"
+        onFocus={onListFocus}
+        autoFocus
+      >
         {options.map((option, idx) => {
+          const value = JSON.stringify(option.value)
+          const isSelected = selectedValue === value
+
           return (
-            <div
+            <OptionButton
               key={idx}
-              className="txt-compact-small hover:bg-ui-bg-base-hover focus-within:bg-ui-bg-base-hover transition-fg flex items-center gap-2 px-2 py-1"
-            >
-              <RadioGroup.Item
-                id={`radio-${idx}`}
-                value={JSON.stringify(option.value)}
-              />
-              <label htmlFor={`radio-${idx}`}>{option.label}</label>
-            </div>
+              index={idx}
+              option={option}
+              isSelected={isSelected}
+              isFocused={focusedIndex === idx}
+              onClick={() => onValueChange(value)}
+              onMouseEvent={setFocusedIndex}
+              icon={EllipseMiniSolid}
+            />
           )
         })}
         {!disableRangeOption && (
-          <div className="txt-compact-small flex items-center gap-2">
-            <RadioGroup.Item value={CUSTOM_RANGE_OPTION_VALUE} />
-            <label>{rangeOptionLabel}</label>
-          </div>
+          <button
+            type="button"
+            className={clx(
+              "txt-compact-small transition-fg flex items-center gap-2 rounded px-2 py-1",
+              {
+                "bg-ui-bg-base-hover": focusedIndex === options.length,
+              }
+            )}
+            onClick={onSelectCustom}
+            onMouseEnter={() => setFocusedIndex(options.length)}
+            onMouseLeave={() => setFocusedIndex(-1)}
+            tabIndex={-1}
+          >
+            <div className="flex size-[15px] items-center justify-center">
+              {isCustom && <EllipseMiniSolid />}
+            </div>
+            <span>{rangeOptionLabel}</span>
+          </button>
         )}
-      </RadioGroup>
-      {!disableRangeOption && showCustom && (
+      </div>
+      {!disableRangeOption && isCustom && (
         <React.Fragment>
-          <div className="bg-ui-bg-base-subtle h-[1px] w-full" />
+          <div className="bg-ui-border-base h-px w-full" />
           <div className="flex flex-col gap-2 px-2 pb-3 pt-1">
             <div className="flex flex-col gap-1">
               <Label id="custom-start-date-label" size="xsmall" weight="plus">
@@ -342,11 +375,6 @@ const DataTableFilterDateContent = ({
                 aria-labelledby="custom-start-date-label"
                 granularity={granularity}
                 maxValue={maxDate}
-                onFocus={(e) => console.log("DatePicker focus:", e)}
-                onBlur={(e) => {
-                  console.log("DatePicker blur:", e)
-                  console.log("Related target:", e.relatedTarget)
-                }}
                 value={currentValue?.$gte ? new Date(currentValue.$gte) : null}
                 onChange={(value) => onCustomValueChange("$gte", value)}
               />
@@ -372,56 +400,71 @@ const DataTableFilterDateContent = ({
 
 type DataTableFilterSelectContentProps = {
   id: string
-  filter: unknown
+  filter?: string[]
   options: FilterOption<string>[]
 }
 
 const DataTableFilterSelectContent = ({
   id,
-  filter,
+  filter = [],
   options,
 }: DataTableFilterSelectContentProps) => {
   const { instance } = useDataTableContext()
 
-  const currentValue = filter as string[] | undefined
-
-  const getChecked = React.useCallback(
+  const onValueChange = React.useCallback(
     (value: string) => {
-      return (checked: boolean) => {
-        if (!checked) {
-          const newValues = currentValue?.filter((v) => v !== value)
-          instance.updateFilter({
-            id,
-            value: newValues,
-          })
-
-          return
-        }
-
+      if (filter?.includes(value)) {
+        const newValues = filter?.filter((v) => v !== value)
         instance.updateFilter({
           id,
-          value: [...(currentValue ?? []), value],
+          value: newValues,
+        })
+      } else {
+        instance.updateFilter({
+          id,
+          value: [...(filter ?? []), value],
         })
       }
     },
-    [instance, id]
+    [instance, id, filter]
   )
 
+  const { focusedIndex, setFocusedIndex } = useKeyboardNavigation(
+    options,
+    (index) => onValueChange(options[index].value)
+  )
+
+  const onListFocus = React.useCallback(() => {
+    if (focusedIndex === -1) {
+      setFocusedIndex(0)
+    }
+  }, [focusedIndex])
+
   return (
-    <React.Fragment>
-      {options.map((option) => {
+    <div
+      className="flex flex-col p-1 outline-none"
+      role="list"
+      tabIndex={0}
+      onFocus={onListFocus}
+      autoFocus
+    >
+      {options.map((option, idx) => {
+        const isSelected = !!filter?.includes(option.value)
+
         return (
-          <Checkbox
-            onSelect={(e) => e.preventDefault()}
-            key={option.value}
-            checked={currentValue?.includes(option.value)}
-            onCheckedChange={getChecked(option.value)}
-          >
-            {option.label}
-          </Checkbox>
+          <OptionButton
+            key={idx}
+            index={idx}
+            option={option}
+            isSelected={isSelected}
+            isFocused={focusedIndex === idx}
+            onClick={() => onValueChange(option.value)}
+            onMouseEvent={setFocusedIndex}
+            icon={CheckMini}
+          />
         )
       })}
-    </React.Fragment>
+    </div>
   )
 }
 
@@ -445,16 +488,42 @@ const DataTableFilterRadioContent = ({
     [instance, id]
   )
 
+  const { focusedIndex, setFocusedIndex } = useKeyboardNavigation(
+    options,
+    (index) => onValueChange(options[index].value)
+  )
+
+  const onListFocus = React.useCallback(() => {
+    if (focusedIndex === -1) {
+      setFocusedIndex(0)
+    }
+  }, [focusedIndex])
+
   return (
-    <RadioGroup value={filter as string} onValueChange={onValueChange}>
-      {options.map((option) => {
+    <div
+      className="flex flex-col p-1 outline-none"
+      role="list"
+      tabIndex={0}
+      onFocus={onListFocus}
+      autoFocus
+    >
+      {options.map((option, idx) => {
+        const isSelected = filter === option.value
+
         return (
-          <RadioGroup.Item key={option.value} value={option.value}>
-            {option.label}
-          </RadioGroup.Item>
+          <OptionButton
+            key={idx}
+            index={idx}
+            option={option}
+            isSelected={isSelected}
+            isFocused={focusedIndex === idx}
+            onClick={() => onValueChange(option.value)}
+            onMouseEvent={setFocusedIndex}
+            icon={EllipseMiniSolid}
+          />
         )
       })}
-    </RadioGroup>
+    </div>
   )
 }
 
@@ -464,6 +533,93 @@ function isDateFilterProps(props?: unknown | null): props is DateFilterProps {
   }
 
   return (props as DateFilterProps).type === "date"
+}
+
+type OptionButtonProps = {
+  index: number
+  option: FilterOption<string | DataTableDateComparisonOperator>
+  isSelected: boolean
+  isFocused: boolean
+  onClick: () => void
+  onMouseEvent: (idx: number) => void
+  icon: React.ElementType
+}
+
+const OptionButton = React.memo(
+  ({
+    index,
+    option,
+    isSelected,
+    isFocused,
+    onClick,
+    onMouseEvent,
+    icon: Icon,
+  }: OptionButtonProps) => (
+    <button
+      type="button"
+      role="listitem"
+      className={clx(
+        "txt-compact-small transition-fg flex items-center gap-2 rounded px-2 py-1 outline-none",
+        { "bg-ui-bg-base-hover": isFocused }
+      )}
+      onClick={onClick}
+      onMouseEnter={() => onMouseEvent(index)}
+      onMouseLeave={() => onMouseEvent(-1)}
+      tabIndex={-1}
+    >
+      <div className="flex size-[15px] items-center justify-center">
+        {isSelected && <Icon />}
+      </div>
+      <span>{option.label}</span>
+    </button>
+  )
+)
+
+function useKeyboardNavigation(
+  options: unknown[],
+  onSelect: (index: number) => void,
+  extraItems: number = 0
+) {
+  const [focusedIndex, setFocusedIndex] = React.useState(-1)
+
+  const onKeyDown = React.useCallback(
+    (e: KeyboardEvent) => {
+      const totalLength = options.length + extraItems
+
+      if ((document.activeElement as HTMLElement).contentEditable === "true") {
+        return
+      }
+
+      switch (e.key) {
+        case "ArrowDown":
+          e.preventDefault()
+          setFocusedIndex((prev) => (prev < totalLength - 1 ? prev + 1 : prev))
+          break
+        case "ArrowUp":
+          e.preventDefault()
+          setFocusedIndex((prev) => (prev > 0 ? prev - 1 : prev))
+          break
+        case " ":
+        case "Enter":
+          e.preventDefault()
+          if (focusedIndex >= 0) {
+            onSelect(focusedIndex)
+          }
+          break
+      }
+    },
+    [options.length, extraItems, focusedIndex, onSelect]
+  )
+
+  React.useEffect(() => {
+    window.addEventListener("keydown", onKeyDown)
+
+    return () => {
+      window.removeEventListener("keydown", onKeyDown)
+    }
+  }, [onKeyDown])
+
+  return { focusedIndex, setFocusedIndex }
 }
 
 export { DataTableFilter }

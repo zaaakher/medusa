@@ -165,9 +165,9 @@ export const DataTable = <TData,>({
       Object.entries(value).forEach(([key, filter]) => {
         if (
           prefixedFilterIds.includes(getQueryParamKey(key, prefix)) &&
-          filter.value
+          filter
         ) {
-          prev.set(getQueryParamKey(key, prefix), JSON.stringify(filter.value))
+          prev.set(getQueryParamKey(key, prefix), JSON.stringify(filter))
         }
       })
 
