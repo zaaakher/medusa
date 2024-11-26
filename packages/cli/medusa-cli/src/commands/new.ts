@@ -23,6 +23,8 @@ import { PanicId } from "../reporter/panic-handler"
 import { clearProject } from "../util/clear-project"
 import { getPackageManager, setPackageManager } from "../util/package-manager"
 
+const STARTER_PATH = `medusajs/medusa-starter-default`
+
 const removeUndefined = (obj) => {
   return Object.fromEntries(
     Object.entries(obj)
@@ -211,11 +213,9 @@ const clone = async (hostInfo, rootPath, inputBranch) => {
   if (!isGit) await createInitialGitCommit(rootPath, url)
 }
 
-const getPaths = async (starterPath, rootPath) => {
-  let selectedOtherStarter = false
-
+const getRootPath = async (rootPath) => {
   // if no args are passed, prompt user for path and starter
-  if (!starterPath && !rootPath) {
+  if (rootPath) {
     const response = await prompts.prompt([
       {
         type: `text`,
@@ -228,20 +228,17 @@ const getPaths = async (starterPath, rootPath) => {
     // exit gracefully if responses aren't provided
     if (!response.path.trim()) {
       throw new Error(
-        `Please mention both starter package and project name along with path(if its not in the root)`
+        `Please mention project name along and path (if not in the root)`
       )
     }
 
-    selectedOtherStarter = response.starter === `different`
-    starterPath = `medusajs/medusa-starter-default`
     rootPath = response.path
   }
 
   // set defaults if no root or starter has been set yet
   rootPath = rootPath || process.cwd()
-  starterPath = starterPath || `medusajs/medusa-starter-default`
 
-  return { starterPath, rootPath, selectedOtherStarter }
+  return rootPath
 }
 
 const successMessage = (path) => {
@@ -450,9 +447,6 @@ const attemptSeed = async (rootPath) => {
         cwd: rootPath,
       })
 
-      // Useful for development
-      // proc.stdout.pipe(process.stdout)
-
       await proc
         .then(() => {
           reporter.success(seedActivity, "Seed completed")
@@ -486,7 +480,6 @@ export const newStarter = async (args) => {
   track("CLI_NEW")
 
   const {
-    starter,
     root,
     skipDb,
     skipMigrations,
@@ -509,39 +502,11 @@ export const newStarter = async (args) => {
     host: dbHost,
   })
 
-  const { starterPath, rootPath, selectedOtherStarter } = await getPaths(
-    starter,
-    root
-  )
+  const rootPath = await getRootPath(root)
 
   const urlObject = url.parse(rootPath)
 
-  if (selectedOtherStarter) {
-    reporter.info(
-      `Find the url of the Medusa starter you wish to create and run:
-
-medusa new ${rootPath} [url-to-starter]
-
-`
-    )
-    return
-  }
-
   if (urlObject.protocol && urlObject.host) {
-    const isStarterAUrl =
-      starter && !url.parse(starter).hostname && !url.parse(starter).protocol
-
-    if (/medusa-starter/gi.test(rootPath) && isStarterAUrl) {
-      reporter.panic({
-        id: PanicId.InvalidProjectName,
-        context: {
-          starter,
-          rootPath,
-        },
-      })
-      return
-    }
-
     reporter.panic({
       id: PanicId.InvalidProjectName,
       context: {
@@ -571,11 +536,12 @@ medusa new ${rootPath} [url-to-starter]
     return
   }
 
-  const hostedInfo = hostedGitInfo.fromUrl(starterPath)
+  const hostedInfo = hostedGitInfo.fromUrl(STARTER_PATH)
+
   if (hostedInfo) {
     await clone(hostedInfo, rootPath, branch)
   } else {
-    await copy(starterPath, rootPath)
+    await copy(STARTER_PATH, rootPath)
   }
 
   track("CLI_NEW_LAYOUT_COMPLETED")
@@ -603,7 +569,7 @@ medusa new ${rootPath} [url-to-starter]
       await setupEnvVars(rootPath, dbName, creds)
     }
 
-    if (!skipMigrations) {
+    if (!skipMigrations && !skipDb) {
       track("CLI_NEW_RUN_MIGRATIONS")
       await runMigrations(rootPath)
     }
@@ -614,16 +580,14 @@ medusa new ${rootPath} [url-to-starter]
     }
   }
 
-  if (!selectedOtherStarter) {
-    reporter.info("Final project preparations...")
-    // remove demo files
-    clearProject(rootPath)
-    // remove .git directory
-    fs.rmSync(sysPath.join(rootPath, ".git"), {
-      recursive: true,
-      force: true,
-    })
-  }
+  reporter.info("Final project preparations...")
+  // remove demo files
+  clearProject(rootPath)
+  // remove .git directory
+  fs.rmSync(sysPath.join(rootPath, ".git"), {
+    recursive: true,
+    force: true,
+  })
 
   successMessage(rootPath)
   track("CLI_NEW_SUCCEEDED")
