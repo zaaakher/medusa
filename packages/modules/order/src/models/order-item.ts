@@ -1,15 +1,15 @@
 import { model } from "@medusajs/framework/utils"
-import OrderLineItem from "./line-item"
-import Order from "./order"
+import { OrderLineItem } from "./line-item"
+import { Order } from "./order"
 
-const OrderItem = model
+const _OrderItem = model
   .define("OrderItem", {
     id: model.id({ prefix: "orditem" }).primaryKey(),
-    order: model.belongsTo(() => Order, {
+    order: model.belongsTo<() => typeof Order>(() => Order, {
       mappedBy: "items",
     }),
     version: model.number(),
-    item: model.belongsTo(() => OrderLineItem, {
+    item: model.belongsTo<() => typeof OrderLineItem>(() => OrderLineItem, {
       mappedBy: "items",
     }),
     unit_price: model.bigNumber().nullable(),
@@ -51,4 +51,4 @@ const OrderItem = model
     },
   ])
 
-export default OrderItem
+export const OrderItem = _OrderItem

@@ -1,9 +1,9 @@
 import { model } from "@medusajs/framework/utils"
-import OrderShipping from "./order-shipping-method"
-import OrderShippingMethodAdjustment from "./shipping-method-adjustment"
-import OrderShippingMethodTaxLine from "./shipping-method-tax-line"
+import { OrderShipping } from "./order-shipping-method"
+import { OrderShippingMethodAdjustment } from "./shipping-method-adjustment"
+import { OrderShippingMethodTaxLine } from "./shipping-method-tax-line"
 
-const OrderShippingMethod = model
+const _OrderShippingMethod = model
   .define("OrderShippingMethod", {
     id: model.id({ prefix: "ordsm" }).primaryKey(),
     name: model.text(),
@@ -14,15 +14,24 @@ const OrderShippingMethod = model
     shipping_option_id: model.text().nullable(),
     data: model.json().nullable(),
     metadata: model.json().nullable(),
-    tax_lines: model.hasMany(() => OrderShippingMethodTaxLine, {
-      mappedBy: "shipping_method",
-    }),
-    adjustments: model.hasMany(() => OrderShippingMethodAdjustment, {
-      mappedBy: "shipping_method",
-    }),
-    shipping_methods: model.hasMany(() => OrderShipping, {
-      mappedBy: "shipping_method",
-    }),
+    tax_lines: model.hasMany<() => typeof OrderShippingMethodTaxLine>(
+      () => OrderShippingMethodTaxLine,
+      {
+        mappedBy: "shipping_method",
+      }
+    ),
+    adjustments: model.hasMany<() => typeof OrderShippingMethodAdjustment>(
+      () => OrderShippingMethodAdjustment,
+      {
+        mappedBy: "shipping_method",
+      }
+    ),
+    shipping_methods: model.hasMany<() => typeof OrderShipping>(
+      () => OrderShipping,
+      {
+        mappedBy: "shipping_method",
+      }
+    ),
   })
   .indexes([
     {
@@ -32,4 +41,4 @@ const OrderShippingMethod = model
     },
   ])
 
-export default OrderShippingMethod
+export const OrderShippingMethod = _OrderShippingMethod

@@ -1,7 +1,7 @@
 import { model } from "@medusajs/framework/utils"
-import OrderLineItem from "./line-item"
+import { OrderLineItem } from "./line-item"
 
-const OrderLineItemTaxLine = model
+const _OrderLineItemTaxLine = model
   .define("OrderLineItemTaxLine", {
     id: model.id({ prefix: "ordlitxl" }).primaryKey(),
     description: model.text().nullable(),
@@ -9,7 +9,7 @@ const OrderLineItemTaxLine = model
     code: model.text(),
     rate: model.bigNumber(),
     provider_id: model.text().nullable(),
-    item: model.belongsTo(() => OrderLineItem, {
+    item: model.belongsTo<() => typeof OrderLineItem>(() => OrderLineItem, {
       mappedBy: "tax_lines",
     }),
   })
@@ -21,4 +21,4 @@ const OrderLineItemTaxLine = model
     },
   ])
 
-export default OrderLineItemTaxLine
+export const OrderLineItemTaxLine = _OrderLineItemTaxLine

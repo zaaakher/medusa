@@ -1,20 +1,26 @@
 import { model } from "@medusajs/framework/utils"
-import ReturnItem from "./return-item"
+import { ReturnItem } from "./return-item"
 
-const ReturnReason = model
+const _ReturnReason = model
   .define("ReturnReason", {
     id: model.id({ prefix: "rr" }).primaryKey(),
     value: model.text().searchable(),
     label: model.text().searchable(),
     description: model.text().nullable(),
     parent_return_reason_id: model.text().nullable(),
-    parent_return_reason: model.belongsTo(() => ReturnReason, {
-      mappedBy: "return_reason_children",
-    }),
-    return_reason_children: model.hasMany(() => ReturnReason, {
-      mappedBy: "parent_return_reason",
-    }),
-    return_items: model.hasMany(() => ReturnItem, {
+    parent_return_reason: model.belongsTo<() => typeof _ReturnReason>(
+      () => _ReturnReason,
+      {
+        mappedBy: "return_reason_children",
+      }
+    ),
+    return_reason_children: model.hasMany<() => typeof _ReturnReason>(
+      () => _ReturnReason,
+      {
+        mappedBy: "parent_return_reason",
+      }
+    ),
+    return_items: model.hasMany<() => typeof ReturnItem>(() => ReturnItem, {
       mappedBy: "reason",
     }),
     metadata: model.json().nullable(),
@@ -40,4 +46,4 @@ const ReturnReason = model
     },
   ])
 
-export default ReturnReason
+export const ReturnReason = _ReturnReason

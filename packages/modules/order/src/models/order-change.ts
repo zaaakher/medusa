@@ -1,36 +1,39 @@
 import { model, OrderChangeStatus } from "@medusajs/framework/utils"
-import OrderClaim from "./claim"
-import OrderExchange from "./exchange"
-import Order from "./order"
-import OrderChangeAction from "./order-change-action"
-import Return from "./return"
+import { OrderClaim } from "./claim"
+import { OrderExchange } from "./exchange"
+import { Order } from "./order"
+import { OrderChangeAction } from "./order-change-action"
+import { Return } from "./return"
 
-const OrderChange = model
+const _OrderChange = model
   .define("OrderChange", {
     id: model.id({ prefix: "ordch" }).primaryKey(),
-    order: model.belongsTo(() => Order, {
+    order: model.belongsTo<() => typeof Order>(() => Order, {
       mappedBy: "changes",
     }),
     return: model
-      .belongsTo(() => Return, {
+      .belongsTo<() => typeof Return>(() => Return, {
         mappedBy: "changes",
       })
       .nullable(),
     claim: model
-      .belongsTo(() => OrderClaim, {
+      .belongsTo<() => typeof OrderClaim>(() => OrderClaim, {
         mappedBy: "changes",
       })
       .nullable(),
     exchange: model
-      .belongsTo(() => OrderExchange, {
+      .belongsTo<() => typeof OrderExchange>(() => OrderExchange, {
         mappedBy: "changes",
       })
       .nullable(),
     version: model.number(),
     change_type: model.text().nullable(),
-    actions: model.hasMany(() => OrderChangeAction, {
-      mappedBy: "order_change",
-    }),
+    actions: model.hasMany<() => typeof OrderChangeAction>(
+      () => OrderChangeAction,
+      {
+        mappedBy: "order_change",
+      }
+    ),
     description: model.text().nullable(),
     status: model.enum(OrderChangeStatus).default(OrderChangeStatus.PENDING),
     internal_note: model.text().nullable(),
@@ -91,4 +94,4 @@ const OrderChange = model
     },
   ])
 
-export default OrderChange
+export const OrderChange = _OrderChange

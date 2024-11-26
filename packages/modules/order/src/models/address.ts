@@ -2,7 +2,7 @@ import { model } from "@medusajs/framework/utils"
 
 const CustomerIdIndex = "IDX_order_address_customer_id"
 
-const OrderAddress = model
+const _OrderAddress = model
   .define("OrderAddress", {
     id: model.id({ prefix: "ordaddr" }).primaryKey(),
     customer_id: model.text().nullable(),
@@ -26,4 +26,4 @@ const OrderAddress = model
     },
   ])
 
-export default OrderAddress
+export const OrderAddress = _OrderAddress

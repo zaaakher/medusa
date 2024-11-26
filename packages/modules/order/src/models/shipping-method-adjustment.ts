@@ -1,7 +1,7 @@
 import { model } from "@medusajs/framework/utils"
-import OrderShippingMethod from "./shipping-method"
+import { OrderShippingMethod } from "./shipping-method"
 
-const OrderShippingMethodAdjustment = model
+const _OrderShippingMethodAdjustment = model
   .define("OrderShippingMethodAdjustment", {
     id: model.id({ prefix: "ordsmadj" }).primaryKey(),
     description: model.text().nullable(),
@@ -9,9 +9,12 @@ const OrderShippingMethodAdjustment = model
     code: model.text().nullable(),
     amount: model.bigNumber(),
     provider_id: model.text().nullable(),
-    shipping_method: model.belongsTo(() => OrderShippingMethod, {
-      mappedBy: "adjustments",
-    }),
+    shipping_method: model.belongsTo<() => typeof OrderShippingMethod>(
+      () => OrderShippingMethod,
+      {
+        mappedBy: "adjustments",
+      }
+    ),
   })
   .indexes([
     {
@@ -21,4 +24,4 @@ const OrderShippingMethodAdjustment = model
     },
   ])
 
-export default OrderShippingMethodAdjustment
+export const OrderShippingMethodAdjustment = _OrderShippingMethodAdjustment

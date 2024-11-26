@@ -1,7 +1,7 @@
 import { model } from "@medusajs/framework/utils"
-import OrderLineItem from "./line-item"
+import { OrderLineItem } from "./line-item"
 
-const OrderLineItemAdjustment = model
+const _OrderLineItemAdjustment = model
   .define("OrderLineItemAdjustment", {
     id: model.id({ prefix: "ordliadj" }).primaryKey(),
     description: model.text().nullable(),
@@ -9,7 +9,7 @@ const OrderLineItemAdjustment = model
     code: model.text().nullable(),
     amount: model.bigNumber(),
     provider_id: model.text().nullable(),
-    item: model.belongsTo(() => OrderLineItem, {
+    item: model.belongsTo<() => typeof OrderLineItem>(() => OrderLineItem, {
       mappedBy: "adjustments",
     }),
   })
@@ -21,4 +21,4 @@ const OrderLineItemAdjustment = model
     },
   ])
 
-export default OrderLineItemAdjustment
+export const OrderLineItemAdjustment = _OrderLineItemAdjustment

@@ -1,20 +1,20 @@
 import { model, ReturnStatus } from "@medusajs/framework/utils"
 import { OrderChange, OrderTransaction, ReturnItem } from "@models"
-import Claim from "./claim"
-import Exchange from "./exchange"
-import Order from "./order"
-import OrderShipping from "./order-shipping-method"
+import { OrderClaim } from "./claim"
+import { OrderExchange } from "./exchange"
+import { Order } from "./order"
+import { OrderShipping } from "./order-shipping-method"
 
-const Return = model
+const _Return = model
   .define("Return", {
     id: model.id({ prefix: "return" }).primaryKey(),
-    order: model.belongsTo(() => Order, {
+    order: model.belongsTo<() => typeof Order>(() => Order, {
       mappedBy: "returns",
     }),
-    exchange: model.belongsTo(() => Exchange, {
+    exchange: model.belongsTo<() => typeof OrderExchange>(() => OrderExchange, {
       mappedBy: "return",
     }),
-    claim: model.belongsTo(() => Claim, {
+    claim: model.belongsTo<() => typeof OrderClaim>(() => OrderClaim, {
       mappedBy: "return",
     }),
     order_version: model.number(),
@@ -26,13 +26,19 @@ const Return = model
     items: model.hasMany(() => ReturnItem, {
       mappedBy: "return",
     }),
-    shipping_methods: model.hasMany(() => OrderShipping, {
-      mappedBy: "return",
-    }),
-    transactions: model.hasMany(() => OrderTransaction, {
-      mappedBy: "return",
-    }),
-    changes: model.hasMany(() => OrderChange),
+    shipping_methods: model.hasMany<() => typeof OrderShipping>(
+      () => OrderShipping,
+      {
+        mappedBy: "return",
+      }
+    ),
+    transactions: model.hasMany<() => typeof OrderTransaction>(
+      () => OrderTransaction,
+      {
+        mappedBy: "return",
+      }
+    ),
+    changes: model.hasMany<() => typeof OrderChange>(() => OrderChange),
     created_by: model.text().nullable(),
     metadata: model.json().nullable(),
     requested_at: model.dateTime().nullable(),
@@ -72,4 +78,4 @@ const Return = model
     },
   ])
 
-export default Return
+export const Return = _Return

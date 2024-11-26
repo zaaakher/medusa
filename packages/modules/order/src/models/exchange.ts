@@ -1,17 +1,17 @@
 import { model } from "@medusajs/framework/utils"
 import { OrderChange, OrderExchangeItem, OrderTransaction } from "@models"
-import Order from "./order"
-import OrderShipping from "./order-shipping-method"
-import Return from "./return"
+import { Order } from "./order"
+import { OrderShipping } from "./order-shipping-method"
+import { Return } from "./return"
 
-const OrderExchange = model
+const _OrderExchange = model
   .define("OrderExchange", {
     id: model.id({ prefix: "oexc" }).primaryKey(),
-    order: model.belongsTo(() => Order, {
+    order: model.belongsTo<() => typeof Order>(() => Order, {
       mappedBy: "exchanges",
     }),
     return_id: model.text().nullable(),
-    return: model.hasMany(() => Return, {
+    return: model.hasMany<() => typeof Return>(() => Return, {
       mappedBy: "exchange",
     }),
     order_version: model.number(),
@@ -19,16 +19,25 @@ const OrderExchange = model
     no_notification: model.boolean().nullable(),
     difference_due: model.bigNumber().nullable(),
     allow_backorder: model.boolean().default(false),
-    additional_items: model.hasMany(() => OrderExchangeItem, {
-      mappedBy: "exchange",
-    }),
-    shipping_methods: model.hasMany(() => OrderShipping, {
-      mappedBy: "exchange",
-    }),
-    transactions: model.hasMany(() => OrderTransaction, {
-      mappedBy: "exchange",
-    }),
-    changes: model.hasMany(() => OrderChange),
+    additional_items: model.hasMany<() => typeof OrderExchangeItem>(
+      () => OrderExchangeItem,
+      {
+        mappedBy: "exchange",
+      }
+    ),
+    shipping_methods: model.hasMany<() => typeof OrderShipping>(
+      () => OrderShipping,
+      {
+        mappedBy: "exchange",
+      }
+    ),
+    transactions: model.hasMany<() => typeof OrderTransaction>(
+      () => OrderTransaction,
+      {
+        mappedBy: "exchange",
+      }
+    ),
+    changes: model.hasMany<() => typeof OrderChange>(() => OrderChange),
     created_by: model.text().nullable(),
     metadata: model.json().nullable(),
     canceled_at: model.dateTime().nullable(),
@@ -60,4 +69,4 @@ const OrderExchange = model
     },
   ])
 
-export default OrderExchange
+export const OrderExchange = _OrderExchange

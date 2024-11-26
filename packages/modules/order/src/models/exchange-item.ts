@@ -1,15 +1,15 @@
 import { model } from "@medusajs/framework/utils"
-import Exchange from "./exchange"
-import OrderLineItem from "./line-item"
+import { OrderExchange } from "./exchange"
+import { OrderLineItem } from "./line-item"
 
-const OrderExchangeItem = model
+const _OrderExchangeItem = model
   .define("OrderExchangeItem", {
     id: model.id({ prefix: "oexcitem" }).primaryKey(),
     quantity: model.bigNumber(),
-    exchange: model.belongsTo(() => Exchange, {
+    exchange: model.belongsTo<() => typeof OrderExchange>(() => OrderExchange, {
       mappedBy: "additional_items",
     }),
-    item: model.belongsTo(() => OrderLineItem, {
+    item: model.belongsTo<() => typeof OrderLineItem>(() => OrderLineItem, {
       mappedBy: "exchange_items",
     }),
     note: model.text().nullable(),
@@ -36,4 +36,4 @@ const OrderExchangeItem = model
     },
   ])
 
-export default OrderExchangeItem
+export const OrderExchangeItem = _OrderExchangeItem

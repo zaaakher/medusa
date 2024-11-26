@@ -1,22 +1,22 @@
 import { model } from "@medusajs/framework/utils"
-import OrderClaim from "./claim"
-import OrderExchange from "./exchange"
-import Order from "./order"
-import Return from "./return"
+import { OrderClaim } from "./claim"
+import { OrderExchange } from "./exchange"
+import { Order } from "./order"
+import { Return } from "./return"
 
-const OrderTransaction = model
+const _OrderTransaction = model
   .define("OrderTransaction", {
     id: model.id({ prefix: "ordtrx" }).primaryKey(),
-    order: model.belongsTo(() => Order, {
+    order: model.belongsTo<() => typeof Order>(() => Order, {
       mappedBy: "transactions",
     }),
-    return: model.belongsTo(() => Return, {
+    return: model.belongsTo<() => typeof Return>(() => Return, {
       mappedBy: "transactions",
     }),
-    exchange: model.belongsTo(() => OrderExchange, {
+    exchange: model.belongsTo<() => typeof OrderExchange>(() => OrderExchange, {
       mappedBy: "transactions",
     }),
-    claim: model.belongsTo(() => OrderClaim, {
+    claim: model.belongsTo<() => typeof OrderClaim>(() => OrderClaim, {
       mappedBy: "transactions",
     }),
     version: model.number().default(1),
@@ -76,4 +76,4 @@ const OrderTransaction = model
     },
   ])
 
-export default OrderTransaction
+export const OrderTransaction = _OrderTransaction

@@ -1,19 +1,19 @@
 import { ClaimType, model } from "@medusajs/framework/utils"
-import ClaimItem from "./claim-item"
-import Order from "./order"
-import OrderChange from "./order-change"
-import OrderShipping from "./order-shipping-method"
-import Return from "./return"
-import OrderTransaction from "./transaction"
+import { OrderClaimItem } from "./claim-item"
+import { Order } from "./order"
+import { OrderChange } from "./order-change"
+import { OrderShipping } from "./order-shipping-method"
+import { Return } from "./return"
+import { OrderTransaction } from "./transaction"
 
-const OrderClaim = model
+const _OrderClaim = model
   .define("OrderClaim", {
     id: model.id({ prefix: "claim" }).primaryKey(),
-    order: model.belongsTo(() => Order, {
+    order: model.belongsTo<() => typeof Order>(() => Order, {
       mappedBy: "claims",
     }),
     return_id: model.text().nullable(),
-    return: model.hasMany(() => Return, {
+    return: model.hasMany<() => typeof Return>(() => Return, {
       mappedBy: "claim",
     }),
     order_version: model.number(),
@@ -21,19 +21,31 @@ const OrderClaim = model
     type: model.enum(ClaimType),
     no_notification: model.boolean().nullable(),
     refund_amount: model.bigNumber().nullable(),
-    additional_items: model.hasMany(() => ClaimItem, {
-      mappedBy: "claim",
-    }),
-    claim_items: model.hasMany(() => ClaimItem, {
-      mappedBy: "claim",
-    }),
-    shipping_methods: model.hasMany(() => OrderShipping, {
-      mappedBy: "claim",
-    }),
-    transactions: model.hasMany(() => OrderTransaction, {
-      mappedBy: "claim",
-    }),
-    changes: model.hasMany(() => OrderChange),
+    additional_items: model.hasMany<() => typeof OrderClaimItem>(
+      () => OrderClaimItem,
+      {
+        mappedBy: "claim",
+      }
+    ),
+    claim_items: model.hasMany<() => typeof OrderClaimItem>(
+      () => OrderClaimItem,
+      {
+        mappedBy: "claim",
+      }
+    ),
+    shipping_methods: model.hasMany<() => typeof OrderShipping>(
+      () => OrderShipping,
+      {
+        mappedBy: "claim",
+      }
+    ),
+    transactions: model.hasMany<() => typeof OrderTransaction>(
+      () => OrderTransaction,
+      {
+        mappedBy: "claim",
+      }
+    ),
+    changes: model.hasMany<() => typeof OrderChange>(() => OrderChange),
     created_by: model.text().nullable(),
     canceled_at: model.dateTime().nullable(),
     metadata: model.json().nullable(),
@@ -65,4 +77,4 @@ const OrderClaim = model
     },
   ])
 
-export default OrderClaim
+export const OrderClaim = _OrderClaim

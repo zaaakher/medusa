@@ -1,20 +1,23 @@
 import { ClaimReason, model } from "@medusajs/framework/utils"
-import Claim from "./claim"
-import OrderClaimItemImage from "./claim-item-image"
-import OrderLineItem from "./line-item"
+import { OrderClaim } from "./claim"
+import { OrderClaimItemImage } from "./claim-item-image"
+import { OrderLineItem } from "./line-item"
 
-const OrderClaimItem = model
+const _OrderClaimItem = model
   .define("OrderClaimItem", {
     id: model.id({ prefix: "claitem" }).primaryKey(),
-    images: model.hasMany(() => OrderClaimItemImage, {
-      mappedBy: "item",
-    }),
+    images: model.hasMany<() => typeof OrderClaimItemImage>(
+      () => OrderClaimItemImage,
+      {
+        mappedBy: "item",
+      }
+    ),
     reason: model.enum(ClaimReason).nullable(),
     quantity: model.bigNumber(),
-    claim: model.belongsTo(() => Claim, {
+    claim: model.belongsTo<() => typeof OrderClaim>(() => OrderClaim, {
       mappedBy: "items",
     }),
-    item: model.belongsTo(() => OrderLineItem, {
+    item: model.belongsTo<() => typeof OrderLineItem>(() => OrderLineItem, {
       mappedBy: "claim_items",
     }),
     is_additional_item: model.boolean().default(false),
@@ -42,4 +45,4 @@ const OrderClaimItem = model
     },
   ])
 
-export default OrderClaimItem
+export const OrderClaimItem = _OrderClaimItem

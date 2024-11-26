@@ -1,12 +1,12 @@
 import { model } from "@medusajs/framework/utils"
-import Order from "./order"
+import { Order } from "./order"
 
-const OrderSummary = model
+const _OrderSummary = model
   .define("OrderSummary", {
     id: model.id({ prefix: "ordsum" }).primaryKey(),
     version: model.number().default(1),
     totals: model.json(),
-    order: model.belongsTo(() => Order, {
+    order: model.belongsTo<() => typeof Order>(() => Order, {
       mappedBy: "summary",
     }),
   })
@@ -25,4 +25,4 @@ const OrderSummary = model
     },
   ])
 
-export default OrderSummary
+export const OrderSummary = _OrderSummary

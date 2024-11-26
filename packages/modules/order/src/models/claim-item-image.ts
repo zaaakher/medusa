@@ -1,12 +1,15 @@
 import { model } from "@medusajs/framework/utils"
-import ClaimItem from "./claim-item"
+import { OrderClaimItem } from "./claim-item"
 
-const OrderClaimItemImage = model
+const _OrderClaimItemImage = model
   .define("OrderClaimItemImage", {
     id: model.id({ prefix: "climg" }).primaryKey(),
-    claim_item: model.belongsTo(() => ClaimItem, {
-      mappedBy: "images",
-    }),
+    claim_item: model.belongsTo<() => typeof OrderClaimItem>(
+      () => OrderClaimItem,
+      {
+        mappedBy: "images",
+      }
+    ),
     url: model.text(),
     metadata: model.json().nullable(),
   })
@@ -25,4 +28,4 @@ const OrderClaimItemImage = model
     },
   ])
 
-export default OrderClaimItemImage
+export const OrderClaimItemImage = _OrderClaimItemImage

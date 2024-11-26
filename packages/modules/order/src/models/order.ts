@@ -1,15 +1,15 @@
 import { model, OrderStatus } from "@medusajs/framework/utils"
-import OrderAddress from "./address"
-import OrderClaim from "./claim"
-import OrderExchange from "./exchange"
-import OrderChange from "./order-change"
-import OrderItem from "./order-item"
-import OrderShipping from "./order-shipping-method"
-import OrderSummary from "./order-summary"
-import Return from "./return"
-import OrderTransaction from "./transaction"
+import { OrderAddress } from "./address"
+import { OrderClaim } from "./claim"
+import { OrderExchange } from "./exchange"
+import { OrderChange } from "./order-change"
+import { OrderItem } from "./order-item"
+import { OrderShipping } from "./order-shipping-method"
+import { OrderSummary } from "./order-summary"
+import { Return } from "./return"
+import { OrderTransaction } from "./transaction"
 
-const Order = model
+const _Order = model
   .define("Order", {
     id: model.id({ prefix: "order" }).primaryKey(),
     display_id: model.autoincrement(),
@@ -21,34 +21,44 @@ const Order = model
     is_draft_order: model.boolean().default(false),
     email: model.text().searchable().nullable(),
     currency_code: model.text(),
-    shipping_address: model.belongsTo(() => OrderAddress),
-    billing_address: model.belongsTo(() => OrderAddress),
+    shipping_address: model.belongsTo<() => typeof OrderAddress>(
+      () => OrderAddress
+    ),
+    billing_address: model.belongsTo<() => typeof OrderAddress>(
+      () => OrderAddress
+    ),
     no_notification: model.boolean().nullable(),
     metadata: model.json().nullable(),
-    summary: model.hasMany(() => OrderSummary, {
+    summary: model.hasMany<() => typeof OrderSummary>(() => OrderSummary, {
       mappedBy: "order",
     }),
-    items: model.hasMany(() => OrderItem, {
+    items: model.hasMany<() => typeof OrderItem>(() => OrderItem, {
       mappedBy: "order",
     }),
-    shipping_methods: model.hasMany(() => OrderShipping, {
-      mappedBy: "order",
-    }),
-    transactions: model.hasMany(() => OrderTransaction, {
-      mappedBy: "order",
-    }),
+    shipping_methods: model.hasMany<() => typeof OrderShipping>(
+      () => OrderShipping,
+      {
+        mappedBy: "order",
+      }
+    ),
+    transactions: model.hasMany<() => typeof OrderTransaction>(
+      () => OrderTransaction,
+      {
+        mappedBy: "order",
+      }
+    ),
     canceled_at: model.dateTime().nullable(),
 
-    exchanges: model.hasMany(() => OrderExchange, {
+    exchanges: model.hasMany<() => typeof OrderExchange>(() => OrderExchange, {
       mappedBy: "order",
     }),
-    claims: model.hasMany(() => OrderClaim, {
+    claims: model.hasMany<() => typeof OrderClaim>(() => OrderClaim, {
       mappedBy: "order",
     }),
-    returns: model.hasMany(() => Return, {
+    returns: model.hasMany<() => typeof Return>(() => Return, {
       mappedBy: "order",
     }),
-    changes: model.hasMany(() => OrderChange),
+    changes: model.hasMany<() => typeof OrderChange>(() => OrderChange),
   })
   .indexes([
     {
@@ -107,4 +117,4 @@ const Order = model
     },
   ])
 
-export default Order
+export const Order = _Order

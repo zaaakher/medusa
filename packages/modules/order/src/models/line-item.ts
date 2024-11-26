@@ -1,12 +1,12 @@
 import { model } from "@medusajs/framework/utils"
-import OrderClaimItem from "./claim-item"
-import OrderExchangeItem from "./exchange-item"
-import OrderLineItemAdjustment from "./line-item-adjustment"
-import OrderLineItemTaxLine from "./line-item-tax-line"
-import OrderItem from "./order-item"
-import ReturnItem from "./return-item"
+import { OrderClaimItem } from "./claim-item"
+import { OrderExchangeItem } from "./exchange-item"
+import { OrderLineItemAdjustment } from "./line-item-adjustment"
+import { OrderLineItemTaxLine } from "./line-item-tax-line"
+import { OrderItem } from "./order-item"
+import { ReturnItem } from "./return-item"
 
-const OrderLineItem = model
+const _OrderLineItem = model
   .define("OrderLineItem", {
     id: model.id({ prefix: "ordli" }).primaryKey(),
     title: model.text(),
@@ -32,24 +32,36 @@ const OrderLineItem = model
     unit_price: model.bigNumber(),
     is_custom_price: model.boolean().default(false),
     metadata: model.json().nullable(),
-    tax_lines: model.hasMany(() => OrderLineItemTaxLine, {
+    tax_lines: model.hasMany<() => typeof OrderLineItemTaxLine>(
+      () => OrderLineItemTaxLine,
+      {
+        mappedBy: "item",
+      }
+    ),
+    adjustments: model.hasMany<() => typeof OrderLineItemAdjustment>(
+      () => OrderLineItemAdjustment,
+      {
+        mappedBy: "item",
+      }
+    ),
+    items: model.hasMany<() => typeof OrderItem>(() => OrderItem, {
       mappedBy: "item",
     }),
-    adjustments: model.hasMany(() => OrderLineItemAdjustment, {
+    return_items: model.hasMany<() => typeof ReturnItem>(() => ReturnItem, {
       mappedBy: "item",
     }),
-    items: model.hasMany(() => OrderItem, {
-      mappedBy: "item",
-    }),
-    return_items: model.hasMany(() => ReturnItem, {
-      mappedBy: "item",
-    }),
-    claim_items: model.hasMany(() => OrderClaimItem, {
-      mappedBy: "item",
-    }),
-    exchange_items: model.hasMany(() => OrderExchangeItem, {
-      mappedBy: "item",
-    }),
+    claim_items: model.hasMany<() => typeof OrderClaimItem>(
+      () => OrderClaimItem,
+      {
+        mappedBy: "item",
+      }
+    ),
+    exchange_items: model.hasMany<() => typeof OrderExchangeItem>(
+      () => OrderExchangeItem,
+      {
+        mappedBy: "item",
+      }
+    ),
   })
   .indexes([
     {
@@ -78,4 +90,4 @@ const OrderLineItem = model
     },
   ])
 
-export default OrderLineItem
+export const OrderLineItem = _OrderLineItem

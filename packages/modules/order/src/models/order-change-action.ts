@@ -1,6 +1,6 @@
 import { model } from "@medusajs/framework/utils"
 
-const OrderChangeAction = model
+const _OrderChangeAction = model
   .define("OrderChangeAction", {
     id: model.id({ prefix: "ordchact" }).primaryKey(),
     ordering: model.autoincrement(),
@@ -63,4 +63,4 @@ const OrderChangeAction = model
     },
   ])
 
-export default OrderChangeAction
+export const OrderChangeAction = _OrderChangeAction

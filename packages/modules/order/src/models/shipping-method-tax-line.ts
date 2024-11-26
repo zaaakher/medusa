@@ -1,7 +1,7 @@
 import { model } from "@medusajs/framework/utils"
-import OrderShippingMethod from "./shipping-method"
+import { OrderShippingMethod } from "./shipping-method"
 
-const OrderShippingMethodTaxLine = model
+const _OrderShippingMethodTaxLine = model
   .define("OrderShippingMethodTaxLine", {
     id: model.id({ prefix: "ordsmtxl" }).primaryKey(),
     description: model.text().nullable(),
@@ -9,9 +9,12 @@ const OrderShippingMethodTaxLine = model
     code: model.text(),
     rate: model.bigNumber(),
     provider_id: model.text().nullable(),
-    shipping_method: model.belongsTo(() => OrderShippingMethod, {
-      mappedBy: "tax_lines",
-    }),
+    shipping_method: model.belongsTo<() => typeof OrderShippingMethod>(
+      () => OrderShippingMethod,
+      {
+        mappedBy: "tax_lines",
+      }
+    ),
   })
   .indexes([
     {
@@ -21,4 +24,4 @@ const OrderShippingMethodTaxLine = model
     },
   ])
 
-export default OrderShippingMethodTaxLine
+export const OrderShippingMethodTaxLine = _OrderShippingMethodTaxLine

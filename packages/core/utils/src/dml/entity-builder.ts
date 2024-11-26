@@ -28,27 +28,6 @@ import { HasMany } from "./relations/has-many"
 import { HasOne } from "./relations/has-one"
 import { ManyToMany } from "./relations/many-to-many"
 
-export type Cleanup<T, Exclusion extends string[] = []> = {
-  [K in keyof T]: K extends Exclusion[number]
-    ? unknown
-    : T[K] extends RelationshipType<infer RelationResolver>
-    ? null extends RelationResolver
-      ? RelationshipType<
-          | (() => Cleanup<
-              RelationResolver extends () => infer Relation ? Relation : false,
-              [K & string, ...Exclusion]
-            >)
-          | null
-        >
-      : RelationshipType<
-          () => Cleanup<
-            RelationResolver extends () => infer Relation ? Relation : false,
-            [K & string, ...Exclusion]
-          >
-        >
-    : T[K]
-}
-
 /**
  * The implicit properties added by EntityBuilder in every schema
  */
@@ -143,14 +122,20 @@ export class EntityBuilder {
   define<Schema extends DMLSchema, const TConfig extends IDmlEntityConfig>(
     nameOrConfig: TConfig,
     schema: Schema
-  ): DmlEntity<Cleanup<Schema> & DMLSchemaDefaults, TConfig> {
+  ): DmlEntity<
+    DMLSchemaWithBigNumber<Schema> & DMLSchemaDefaults & Schema,
+    TConfig
+  > {
     this.#disallowImplicitProperties(schema)
 
-    return new DmlEntity<Schema, TConfig>(nameOrConfig, {
+    return new DmlEntity(nameOrConfig, {
       ...schema,
       ...createBigNumberProperties(schema),
       ...createDefaultProperties(),
-    }) as unknown as DmlEntity<Cleanup<Schema> & DMLSchemaDefaults, TConfig>
+    } as any) as DmlEntity<
+      DMLSchemaWithBigNumber<Schema> & DMLSchemaDefaults & Schema,
+      TConfig
+    >
   }
 
   /**
