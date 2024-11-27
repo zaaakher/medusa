@@ -3,15 +3,9 @@ import {
   IDmlEntityConfig,
   RelationshipOptions,
 } from "@medusajs/types"
-import { DmlEntity } from "./entity"
-import {
-  createBigNumberProperties,
-  DMLSchemaWithBigNumber,
-} from "./helpers/entity-builder/create-big-number-properties"
-import {
-  createDefaultProperties,
-  DMLSchemaDefaults,
-} from "./helpers/entity-builder/create-default-properties"
+import { DmlEntity, DMLEntitySchemaBuilder } from "./entity"
+import { createBigNumberProperties } from "./helpers/entity-builder/create-big-number-properties"
+import { createDefaultProperties } from "./helpers/entity-builder/create-default-properties"
 import { ArrayProperty } from "./properties/array"
 import { AutoIncrementProperty } from "./properties/autoincrement"
 import { BigNumberProperty } from "./properties/big-number"
@@ -121,20 +115,14 @@ export class EntityBuilder {
   define<Schema extends DMLSchema, const TConfig extends IDmlEntityConfig>(
     nameOrConfig: TConfig,
     schema: Schema
-  ): DmlEntity<
-    DMLSchemaWithBigNumber<Schema> & DMLSchemaDefaults & Schema,
-    TConfig
-  > {
+  ): DmlEntity<DMLEntitySchemaBuilder<Schema>, TConfig> {
     this.#disallowImplicitProperties(schema)
 
     return new DmlEntity(nameOrConfig, {
       ...schema,
       ...createBigNumberProperties(schema),
       ...createDefaultProperties(),
-    } as any) as DmlEntity<
-      DMLSchemaWithBigNumber<Schema> & DMLSchemaDefaults & Schema,
-      TConfig
-    >
+    } as any) as DmlEntity<DMLEntitySchemaBuilder<Schema>, TConfig>
   }
 
   /**

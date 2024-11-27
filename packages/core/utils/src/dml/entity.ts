@@ -6,61 +6,23 @@ import {
   IDmlEntity,
   IDmlEntityConfig,
   InferDmlEntityNameFromConfig,
-  Prettify,
   QueryCondition,
-  RelationshipType,
 } from "@medusajs/types"
 import { isObject, isString, toCamelCase } from "../common"
 import { transformIndexWhere } from "./helpers/entity-builder/build-indexes"
-import {
-  HasMany,
-  HasOne,
-  ManyToMany,
-  RelationNullableModifier,
-} from "./relations"
 import { BelongsTo } from "./relations/belongs-to"
-
-// TODO: Might need to remove it, it was to run some tests.
-// But we are blocked by circular references in the relation resolver
-export type CleanupSchemaCiruclarRef<
-  T,
-  Exclusion extends string[] = []
-> = Prettify<{
-  [K in keyof T]: K extends Exclusion[number]
-    ? Omit<T[K], "schema">
-    : T[K] extends RelationNullableModifier<infer R, infer U>
-    ? R extends () => infer RV
-      ? RelationNullableModifier<
-          () => CleanupSchemaCiruclarRef<RV, [K & string, ...Exclusion]>,
-          RelationshipType<
-            () => CleanupSchemaCiruclarRef<RV, [K & string, ...Exclusion]>
-          >
-        >
-      : never
-    : T[K] extends HasOne<infer R>
-    ? R extends () => infer RV
-      ? HasOne<() => CleanupSchemaCiruclarRef<RV, [K & string, ...Exclusion]>>
-      : never
-    : T[K] extends BelongsTo<infer R>
-    ? R extends () => infer RV
-      ? BelongsTo<
-          () => CleanupSchemaCiruclarRef<RV, [K & string, ...Exclusion]>
-        >
-      : never
-    : T[K] extends HasMany<infer R>
-    ? R extends () => infer RV
-      ? HasMany<() => CleanupSchemaCiruclarRef<RV, [K & string, ...Exclusion]>>
-      : never
-    : T[K] extends ManyToMany<infer R>
-    ? R extends () => infer RV
-      ? ManyToMany<
-          () => CleanupSchemaCiruclarRef<RV, [K & string, ...Exclusion]>
-        >
-      : never
-    : T[K]
-}>
+import {
+  DMLSchemaDefaults,
+  DMLSchemaWithBigNumber,
+} from "./helpers/entity-builder"
 
 const IsDmlEntity = Symbol.for("isDmlEntity")
+
+/**
+ * Compose the Schema with bigNumbers and the defaults
+ */
+export type DMLEntitySchemaBuilder<Schema extends DMLSchema> =
+  DMLSchemaWithBigNumber<Schema> & DMLSchemaDefaults & Schema
 
 function extractNameAndTableName<const Config extends IDmlEntityConfig>(
   nameOrConfig: Config
