@@ -1,14 +1,14 @@
 import { ClaimReason, model } from "@medusajs/framework/utils"
 import { OrderClaim } from "./claim"
-import { OrderLineItem } from "./line-item"
 import { OrderClaimItemImage } from "./claim-item-image"
+import { OrderLineItem } from "./line-item"
 
 const _OrderClaimItem = model
   .define("OrderClaimItem", {
     id: model.id({ prefix: "claitem" }).primaryKey(),
     reason: model.enum(ClaimReason).nullable(),
     quantity: model.bigNumber(),
-    is_additional_item: model.boolean().default(false).nullable(),
+    is_additional_item: model.boolean().default(false),
     note: model.text().nullable(),
     metadata: model.json().nullable(),
     claim: model.belongsTo<() => typeof OrderClaim>(() => OrderClaim, {

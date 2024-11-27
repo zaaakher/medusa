@@ -1,10 +1,10 @@
 import { model } from "@medusajs/framework/utils"
-import { OrderItem } from "./order-item"
-import { ReturnItem } from "./return-item"
 import { OrderClaimItem } from "./claim-item"
 import { OrderExchangeItem } from "./exchange-item"
-import { OrderLineItemTaxLine } from "./line-item-tax-line"
 import { OrderLineItemAdjustment } from "./line-item-adjustment"
+import { OrderLineItemTaxLine } from "./line-item-tax-line"
+import { OrderItem } from "./order-item"
+import { ReturnItem } from "./return-item"
 
 const _OrderLineItem = model
   .define("OrderLineItem", {
@@ -25,12 +25,12 @@ const _OrderLineItem = model
     variant_barcode: model.text().nullable(),
     variant_title: model.text().nullable(),
     variant_option_values: model.json().nullable(),
-    requires_shipping: model.boolean().default(true).nullable(),
-    is_discountable: model.boolean().default(true).nullable(),
-    is_tax_inclusive: model.boolean().default(false).nullable(),
+    requires_shipping: model.boolean().default(true),
+    is_discountable: model.boolean().default(true),
+    is_tax_inclusive: model.boolean().default(false),
     compare_at_unit_price: model.bigNumber().nullable(),
     unit_price: model.bigNumber(),
-    is_custom_price: model.boolean().default(false).nullable(),
+    is_custom_price: model.boolean().default(false),
     metadata: model.json().nullable(),
     tax_lines: model.hasMany<() => typeof OrderLineItemTaxLine>(
       () => OrderLineItemTaxLine,

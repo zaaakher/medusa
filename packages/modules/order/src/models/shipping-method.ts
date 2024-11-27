@@ -1,7 +1,7 @@
 import { model } from "@medusajs/framework/utils"
 import { OrderShipping } from "./order-shipping-method"
-import { OrderShippingMethodTaxLine } from "./shipping-method-tax-line"
 import { OrderShippingMethodAdjustment } from "./shipping-method-adjustment"
+import { OrderShippingMethodTaxLine } from "./shipping-method-tax-line"
 
 const _OrderShippingMethod = model
   .define("OrderShippingMethod", {
@@ -9,8 +9,8 @@ const _OrderShippingMethod = model
     name: model.text(),
     description: model.json().nullable(),
     amount: model.bigNumber(),
-    is_tax_inclusive: model.boolean().default(false).nullable(),
-    is_custom_amount: model.boolean().default(false).nullable(),
+    is_tax_inclusive: model.boolean(),
+    is_custom_amount: model.boolean(),
     shipping_option_id: model.text().nullable(),
     data: model.json().nullable(),
     metadata: model.json().nullable(),

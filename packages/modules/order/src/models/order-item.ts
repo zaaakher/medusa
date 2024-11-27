@@ -1,7 +1,7 @@
 import { model } from "@medusajs/framework/utils"
 
-import { Order } from "./order"
 import { OrderLineItem } from "./line-item"
+import { Order } from "./order"
 
 const _OrderItem = model
   .define("OrderItem", {
@@ -10,13 +10,13 @@ const _OrderItem = model
     unit_price: model.bigNumber().nullable(),
     compare_at_unit_price: model.bigNumber().nullable(),
     quantity: model.bigNumber(),
-    fulfilled_quantity: model.bigNumber().default(0).nullable(),
-    delivered_quantity: model.bigNumber().default(0).nullable(),
-    shipped_quantity: model.bigNumber().default(0).nullable(),
-    return_requested_quantity: model.bigNumber().default(0).nullable(),
-    return_received_quantity: model.bigNumber().default(0).nullable(),
-    return_dismissed_quantity: model.bigNumber().default(0).nullable(),
-    written_off_quantity: model.bigNumber().default(0).nullable(),
+    fulfilled_quantity: model.bigNumber().default(0),
+    delivered_quantity: model.bigNumber().default(0),
+    shipped_quantity: model.bigNumber().default(0),
+    return_requested_quantity: model.bigNumber().default(0),
+    return_received_quantity: model.bigNumber().default(0),
+    return_dismissed_quantity: model.bigNumber().default(0),
+    written_off_quantity: model.bigNumber().default(0),
     metadata: model.json().nullable(),
     order: model.belongsTo<() => typeof Order>(() => Order, {
       mappedBy: "items",

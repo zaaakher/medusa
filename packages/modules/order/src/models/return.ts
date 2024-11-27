@@ -1,18 +1,18 @@
 import { model, ReturnStatus } from "@medusajs/framework/utils"
-import { Order } from "./order"
 import { OrderClaim } from "./claim"
 import { OrderExchange } from "./exchange"
-import { ReturnItem } from "./return-item"
+import { Order } from "./order"
 import { OrderChange } from "./order-change"
-import { OrderTransaction } from "./transaction"
 import { OrderShipping } from "./order-shipping-method"
+import { ReturnItem } from "./return-item"
+import { OrderTransaction } from "./transaction"
 
 const _Return = model
   .define("Return", {
     id: model.id({ prefix: "return" }).primaryKey(),
     order_version: model.number(),
     display_id: model.autoincrement(),
-    status: model.enum(ReturnStatus).default(ReturnStatus.OPEN).nullable(),
+    status: model.enum(ReturnStatus).default(ReturnStatus.OPEN),
     location_id: model.text().nullable(),
     no_notification: model.boolean().nullable(),
     refund_amount: model.bigNumber().nullable(),

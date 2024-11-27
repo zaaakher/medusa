@@ -31,10 +31,10 @@ type OrderSchema = {
   display_id: NullableModifier<number, AutoIncrementProperty>
   region_id: NullableModifier<string, TextProperty>
   customer_id: NullableModifier<string, TextProperty>
-  version: NullableModifier<number, NumberProperty>
+  version: NumberProperty
   sales_channel_id: NullableModifier<string, TextProperty>
-  status: NullableModifier<string, EnumProperty<typeof OrderStatus>>
-  is_draft_order: NullableModifier<boolean, BooleanProperty>
+  status: EnumProperty<typeof OrderStatus>
+  is_draft_order: BooleanProperty
   email: NullableModifier<string, TextProperty>
   currency_code: TextProperty
   no_notification: NullableModifier<boolean, BooleanProperty>
@@ -58,10 +58,10 @@ const _Order = model
     display_id: model.autoincrement().nullable(),
     region_id: model.text().nullable(),
     customer_id: model.text().nullable(),
-    version: model.number().default(1).nullable(),
+    version: model.number().default(1),
     sales_channel_id: model.text().nullable(),
-    status: model.enum(OrderStatus).default(OrderStatus.PENDING).nullable(),
-    is_draft_order: model.boolean().default(false).nullable(),
+    status: model.enum(OrderStatus).default(OrderStatus.PENDING),
+    is_draft_order: model.boolean().default(false),
     email: model.text().searchable().nullable(),
     currency_code: model.text(),
     no_notification: model.boolean().nullable(),

@@ -1,14 +1,14 @@
 import { model } from "@medusajs/framework/utils"
-import { Return } from "./return"
 import { OrderLineItem } from "./line-item"
+import { Return } from "./return"
 import { ReturnReason } from "./return-reason"
 
 const _ReturnItem = model
   .define("ReturnItem", {
     id: model.id({ prefix: "retitem" }).primaryKey(),
     quantity: model.bigNumber(),
-    received_quantity: model.bigNumber().default(0).nullable(),
-    damaged_quantity: model.bigNumber().default(0).nullable(),
+    received_quantity: model.bigNumber().default(0),
+    damaged_quantity: model.bigNumber().default(0),
     note: model.text().nullable(),
     metadata: model.json().nullable(),
     reason: model

@@ -1,11 +1,11 @@
 import { model } from "@medusajs/framework/utils"
 
-import { Order } from "./order"
-import { Return } from "./return"
-import { OrderChange } from "./order-change"
-import { OrderTransaction } from "./transaction"
 import { OrderExchangeItem } from "./exchange-item"
+import { Order } from "./order"
+import { OrderChange } from "./order-change"
 import { OrderShipping } from "./order-shipping-method"
+import { Return } from "./return"
+import { OrderTransaction } from "./transaction"
 
 const _OrderExchange = model
   .define("OrderExchange", {
@@ -15,7 +15,7 @@ const _OrderExchange = model
     display_id: model.autoincrement(),
     no_notification: model.boolean().nullable(),
     difference_due: model.bigNumber().nullable(),
-    allow_backorder: model.boolean().default(false).nullable(),
+    allow_backorder: model.boolean().default(false),
     created_by: model.text().nullable(),
     metadata: model.json().nullable(),
     canceled_at: model.dateTime().nullable(),
