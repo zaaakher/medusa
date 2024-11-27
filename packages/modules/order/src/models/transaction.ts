@@ -8,19 +8,6 @@ import { OrderExchange } from "./exchange"
 import { Order } from "./order"
 import { Return } from "./return"
 
-// type OrderTransactionSchema = {
-//   id: PrimaryKeyModifier<string, IdProperty>
-//   version: NumberProperty
-//   amount: BigNumberProperty
-//   currency_code: TextProperty
-//   reference: NullableModifier<string, TextProperty>
-//   reference_id: NullableModifier<string, TextProperty>
-//   exchange: BelongsTo<typeof OrderExchange>
-//   claim: BelongsTo<typeof OrderClaim>
-//   return: BelongsTo<typeof Return>
-//   order: BelongsTo<typeof Order>
-// }
-
 const _OrderTransaction = model
   .define("OrderTransaction", {
     id: model.id({ prefix: "ordtrx" }).primaryKey(),
@@ -29,16 +16,16 @@ const _OrderTransaction = model
     currency_code: model.text(),
     reference: model.text().nullable(),
     reference_id: model.text().nullable(),
-    order: model.belongsTo<any>(() => Order, {
+    order: model.belongsTo<() => typeof Order>(() => Order, {
       mappedBy: "transactions",
     }),
-    return: model.belongsTo<any>(() => Return, {
+    return: model.belongsTo<() => typeof Return>(() => Return, {
       mappedBy: "transactions",
     }),
-    exchange: model.belongsTo<any>(() => OrderExchange, {
+    exchange: model.belongsTo<() => typeof OrderExchange>(() => OrderExchange, {
       mappedBy: "transactions",
     }),
-    claim: model.belongsTo<any>(() => OrderClaim, {
+    claim: model.belongsTo<() => typeof OrderClaim>(() => OrderClaim, {
       mappedBy: "transactions",
     }),
   })

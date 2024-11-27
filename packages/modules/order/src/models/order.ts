@@ -1,8 +1,20 @@
 import {
+  AutoIncrementProperty,
+  BelongsTo,
+  BooleanProperty,
+  DateTimeProperty,
   DmlEntity,
   DMLEntitySchemaBuilder,
+  EnumProperty,
+  HasMany,
+  IdProperty,
+  JSONProperty,
   model,
+  NullableModifier,
+  NumberProperty,
   OrderStatus,
+  PrimaryKeyModifier,
+  TextProperty,
 } from "@medusajs/framework/utils"
 import { OrderAddress } from "./address"
 import { OrderClaim } from "./claim"
@@ -14,31 +26,31 @@ import { OrderSummary } from "./order-summary"
 import { Return } from "./return"
 import { OrderTransaction } from "./transaction"
 
-//type OrderSchema = {
-//   id: PrimaryKeyModifier<string, IdProperty>
-//   display_id: AutoIncrementProperty
-//   region_id: NullableModifier<string, TextProperty>
-//   customer_id: NullableModifier<string, TextProperty>
-//   version: NumberProperty
-//   sales_channel_id: NullableModifier<string, TextProperty>
-//   status: EnumProperty<typeof OrderStatus>
-//   is_draft_order: BooleanProperty
-//   email: NullableModifier<string, TextProperty>
-//   currency_code: TextProperty
-//   no_notification: NullableModifier<boolean, BooleanProperty>
-//   metadata: NullableModifier<Record<string, unknown>, JSONProperty>
-//   canceled_at: NullableModifier<Date, DateTimeProperty>
-//   exchanges: HasMany<typeof OrderExchange>
-//   claims: HasMany<typeof OrderClaim>
-//   returns: HasMany<typeof Return>
-//   changes: HasMany<typeof OrderChange>
-//   shipping_address: BelongsTo<typeof OrderAddress>
-//   billing_address: BelongsTo<typeof OrderAddress>
-//   summary: HasMany<typeof OrderSummary>
-//   items: HasMany<typeof OrderItem>
-//   shipping_methods: HasMany<typeof OrderShipping>
-//   transactions: HasMany<typeof OrderTransaction>
-// }
+type OrderSchema = {
+  id: PrimaryKeyModifier<string, IdProperty>
+  display_id: AutoIncrementProperty
+  region_id: NullableModifier<string, TextProperty>
+  customer_id: NullableModifier<string, TextProperty>
+  version: NumberProperty
+  sales_channel_id: NullableModifier<string, TextProperty>
+  status: EnumProperty<typeof OrderStatus>
+  is_draft_order: BooleanProperty
+  email: NullableModifier<string, TextProperty>
+  currency_code: TextProperty
+  no_notification: NullableModifier<boolean, BooleanProperty>
+  metadata: NullableModifier<Record<string, unknown>, JSONProperty>
+  canceled_at: NullableModifier<Date, DateTimeProperty>
+  exchanges: HasMany<typeof OrderExchange>
+  claims: HasMany<typeof OrderClaim>
+  returns: HasMany<typeof Return>
+  changes: HasMany<typeof OrderChange>
+  shipping_address: BelongsTo<typeof OrderAddress>
+  billing_address: BelongsTo<typeof OrderAddress>
+  summary: HasMany<typeof OrderSummary>
+  items: HasMany<typeof OrderItem>
+  shipping_methods: HasMany<typeof OrderShipping>
+  transactions: HasMany<typeof OrderTransaction>
+}
 
 const _Order = model
   .define("Order", {
@@ -138,6 +150,6 @@ const _Order = model
   ])
 
 export const Order = _Order as DmlEntity<
-  DMLEntitySchemaBuilder<(typeof _Order)["schema"]>,
+  DMLEntitySchemaBuilder<OrderSchema>,
   "Order"
 >
