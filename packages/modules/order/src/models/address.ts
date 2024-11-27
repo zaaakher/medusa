@@ -1,8 +1,6 @@
 import { model } from "@medusajs/framework/utils"
 import { Order } from "./order"
 
-const CustomerIdIndex = "IDX_order_address_customer_id"
-
 const _OrderAddress = model
   .define("OrderAddress", {
     id: model.id({ prefix: "ordaddr" }).primaryKey(),
@@ -24,7 +22,7 @@ const _OrderAddress = model
   })
   .indexes([
     {
-      name: CustomerIdIndex,
+      name: "IDX_order_address_customer_id",
       on: ["customer_id"],
       unique: false,
     },

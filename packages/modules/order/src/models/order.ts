@@ -14,6 +14,7 @@ import {
   NumberProperty,
   OrderStatus,
   PrimaryKeyModifier,
+  RelationNullableModifier,
   TextProperty,
 } from "@medusajs/framework/utils"
 import { OrderAddress } from "./address"
@@ -44,8 +45,14 @@ type OrderSchema = {
   claims: HasMany<typeof OrderClaim>
   returns: HasMany<typeof Return>
   changes: HasMany<typeof OrderChange>
-  shipping_address: BelongsTo<typeof OrderAddress>
-  billing_address: BelongsTo<typeof OrderAddress>
+  shipping_address: RelationNullableModifier<
+    typeof OrderAddress,
+    BelongsTo<typeof OrderAddress>
+  >
+  billing_address: RelationNullableModifier<
+    typeof OrderAddress,
+    BelongsTo<typeof OrderAddress>
+  >
   summary: HasMany<typeof OrderSummary>
   items: HasMany<typeof OrderItem>
   shipping_methods: HasMany<typeof OrderShipping>
@@ -77,8 +84,8 @@ const _Order = model
       mappedBy: "order",
     }),
     changes: model.hasMany<any>(() => OrderChange),
-    shipping_address: model.belongsTo<any>(() => OrderAddress),
-    billing_address: model.belongsTo<any>(() => OrderAddress),
+    shipping_address: model.belongsTo<any>(() => OrderAddress).nullable(),
+    billing_address: model.belongsTo<any>(() => OrderAddress).nullable(),
     summary: model.hasMany<any>(() => OrderSummary, {
       mappedBy: "order",
     }),

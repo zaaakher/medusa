@@ -8,10 +8,11 @@ import type {
 } from "@medusajs/types"
 import { Entity, Filter } from "@mikro-orm/core"
 
-import { DmlEntity } from "../entity"
-import { IdProperty } from "../properties/id"
-import { DuplicateIdPropertyError } from "../errors"
+import { isDefined } from "../../common"
 import { mikroOrmSoftDeletableFilterOptions } from "../../dal"
+import { DmlEntity } from "../entity"
+import { DuplicateIdPropertyError } from "../errors"
+import { IdProperty } from "../properties/id"
 import { applySearchable } from "./entity-builder/apply-searchable"
 import { defineProperty } from "./entity-builder/define-property"
 import { defineRelationship } from "./entity-builder/define-relationship"
@@ -45,7 +46,24 @@ function createMikrORMEntity() {
    * DML entity.
    */
   function createEntity<T extends DmlEntity<any, any>>(entity: T): Infer<T> {
-    class MikroORMEntity {}
+    class MikroORMEntity {
+      static __defaultValues = {}
+      static setDefaultValue(key: string, value: any) {
+        this.__defaultValues[key] = value
+      }
+
+      constructor() {
+        Object.entries(MikroORMEntity.__defaultValues).forEach(
+          ([key, value]) => {
+            if (isDefined(this[key])) {
+              return
+            }
+
+            this[key] = value
+          }
+        )
+      }
+    }
 
     const { schema, cascades, indexes: entityIndexes = [] } = entity.parse()
     const { modelName, tableName } = parseEntityName(entity)
@@ -102,7 +120,7 @@ function createMikrORMEntity() {
      */
     const RegisteredEntity = Entity({ tableName })(
       Filter(mikroOrmSoftDeletableFilterOptions)(MikroORMEntity)
-    ) as Infer<T>
+    ) as unknown as Infer<T>
 
     ENTITIES[modelName] = RegisteredEntity
     return RegisteredEntity
