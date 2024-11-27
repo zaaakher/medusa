@@ -11,7 +11,10 @@ const _OrderChange = model
     version: model.number(),
     change_type: model.text().nullable(),
     description: model.text().nullable(),
-    status: model.enum(OrderChangeStatus).default(OrderChangeStatus.PENDING),
+    status: model
+      .enum(OrderChangeStatus)
+      .default(OrderChangeStatus.PENDING)
+      .nullable(),
     internal_note: model.text().nullable(),
     created_by: model.text(),
     requested_by: model.text().nullable(),

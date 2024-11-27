@@ -8,7 +8,7 @@ const _OrderClaimItem = model
     id: model.id({ prefix: "claitem" }).primaryKey(),
     reason: model.enum(ClaimReason).nullable(),
     quantity: model.bigNumber(),
-    is_additional_item: model.boolean().default(false),
+    is_additional_item: model.boolean().default(false).nullable(),
     note: model.text().nullable(),
     metadata: model.json().nullable(),
     claim: model.belongsTo<() => typeof OrderClaim>(() => OrderClaim, {

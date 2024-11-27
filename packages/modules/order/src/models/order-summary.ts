@@ -4,7 +4,7 @@ import { Order } from "./order"
 const _OrderSummary = model
   .define("OrderSummary", {
     id: model.id({ prefix: "ordsum" }).primaryKey(),
-    version: model.number().default(1),
+    version: model.number().default(1).nullable(),
     totals: model.json(),
     order: model.belongsTo<() => typeof Order>(() => Order, {
       mappedBy: "summary",

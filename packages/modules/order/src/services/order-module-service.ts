@@ -1969,7 +1969,7 @@ export default class OrderModuleService
 
       return {
         ...dataMap[order.id],
-        version: order.version + 1,
+        version: order.version! + 1,
       } as any
     })
 

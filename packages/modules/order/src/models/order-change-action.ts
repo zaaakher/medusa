@@ -16,7 +16,7 @@ const _OrderChangeAction = model
     details: model.json(),
     amount: model.bigNumber().nullable(),
     internal_note: model.text().nullable(),
-    applied: model.boolean().default(false),
+    applied: model.boolean().default(false).nullable(),
     order_change: model.belongsTo<() => typeof OrderChange>(() => OrderChange, {
       mappedBy: "actions",
     }),

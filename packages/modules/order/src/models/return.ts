@@ -12,7 +12,7 @@ const _Return = model
     id: model.id({ prefix: "return" }).primaryKey(),
     order_version: model.number(),
     display_id: model.autoincrement(),
-    status: model.enum(ReturnStatus).default(ReturnStatus.OPEN),
+    status: model.enum(ReturnStatus).default(ReturnStatus.OPEN).nullable(),
     location_id: model.text().nullable(),
     no_notification: model.boolean().nullable(),
     refund_amount: model.bigNumber().nullable(),

@@ -11,7 +11,7 @@ import { Return } from "./return"
 const _OrderTransaction = model
   .define("OrderTransaction", {
     id: model.id({ prefix: "ordtrx" }).primaryKey(),
-    version: model.number().default(1),
+    version: model.number().default(1).nullable(),
     amount: model.bigNumber(),
     currency_code: model.text(),
     reference: model.text().nullable(),

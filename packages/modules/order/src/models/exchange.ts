@@ -15,7 +15,7 @@ const _OrderExchange = model
     display_id: model.autoincrement(),
     no_notification: model.boolean().nullable(),
     difference_due: model.bigNumber().nullable(),
-    allow_backorder: model.boolean().default(false),
+    allow_backorder: model.boolean().default(false).nullable(),
     created_by: model.text().nullable(),
     metadata: model.json().nullable(),
     canceled_at: model.dateTime().nullable(),

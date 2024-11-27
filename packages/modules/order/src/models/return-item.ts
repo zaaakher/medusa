@@ -7,8 +7,8 @@ const _ReturnItem = model
   .define("ReturnItem", {
     id: model.id({ prefix: "retitem" }).primaryKey(),
     quantity: model.bigNumber(),
-    received_quantity: model.bigNumber().default(0),
-    damaged_quantity: model.bigNumber().default(0),
+    received_quantity: model.bigNumber().default(0).nullable(),
+    damaged_quantity: model.bigNumber().default(0).nullable(),
     note: model.text().nullable(),
     metadata: model.json().nullable(),
     reason: model
