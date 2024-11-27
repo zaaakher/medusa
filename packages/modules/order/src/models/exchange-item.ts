@@ -6,20 +6,14 @@ const _OrderExchangeItem = model
   .define("OrderExchangeItem", {
     id: model.id({ prefix: "oexcitem" }).primaryKey(),
     quantity: model.bigNumber(),
-    exchange: model.belongsTo<any /* <() => typeof OrderExchange> */>(
-      () => OrderExchange,
-      {
-        mappedBy: "additional_items",
-      }
-    ),
-    item: model.belongsTo<any /* <() => typeof OrderLineItem> */>(
-      () => OrderLineItem,
-      {
-        mappedBy: "exchange_items",
-      }
-    ),
     note: model.text().nullable(),
     metadata: model.json().nullable(),
+    exchange: model.belongsTo<() => typeof OrderExchange>(() => OrderExchange, {
+      mappedBy: "additional_items",
+    }),
+    item: model.belongsTo<() => typeof OrderLineItem>(() => OrderLineItem, {
+      mappedBy: "exchange_items",
+    }),
   })
   .indexes([
     {

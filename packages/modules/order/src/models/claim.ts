@@ -1,59 +1,56 @@
 import { ClaimType, model } from "@medusajs/framework/utils"
-import { OrderClaimItem } from "./claim-item"
 import { Order } from "./order"
-import { OrderChange } from "./order-change"
-import { OrderShipping } from "./order-shipping-method"
 import { Return } from "./return"
+import { OrderChange } from "./order-change"
+import { OrderClaimItem } from "./claim-item"
 import { OrderTransaction } from "./transaction"
+import { OrderShipping } from "./order-shipping-method"
 
 const _OrderClaim = model
   .define("OrderClaim", {
     id: model.id({ prefix: "claim" }).primaryKey(),
-    order: model.belongsTo<any /* <() => typeof Order> */>(() => Order, {
-      mappedBy: "claims",
-    }),
     return_id: model.text().nullable(),
-    return: model.hasMany<any /* <() => typeof Return> */>(() => Return, {
-      mappedBy: "claim",
-    }),
     order_version: model.number(),
     display_id: model.autoincrement(),
     type: model.enum(ClaimType),
     no_notification: model.boolean().nullable(),
     refund_amount: model.bigNumber().nullable(),
-    additional_items: model.hasMany<any /* <() => typeof OrderClaimItem> */>(
+    created_by: model.text().nullable(),
+    canceled_at: model.dateTime().nullable(),
+    metadata: model.json().nullable(),
+    order: model.belongsTo<() => typeof Order>(() => Order, {
+      mappedBy: "claims",
+    }),
+    return: model.hasMany<() => typeof Return>(() => Return, {
+      mappedBy: "claim",
+    }),
+    additional_items: model.hasMany<() => typeof OrderClaimItem>(
       () => OrderClaimItem,
       {
         mappedBy: "claim",
       }
     ),
-    claim_items: model.hasMany<any /* <() => typeof OrderClaimItem> */>(
+    claim_items: model.hasMany<() => typeof OrderClaimItem>(
       () => OrderClaimItem,
       {
         mappedBy: "claim",
       }
     ),
-    shipping_methods: model.hasMany<any /* <() => typeof OrderShipping> */>(
+    shipping_methods: model.hasMany<() => typeof OrderShipping>(
       () => OrderShipping,
       {
         mappedBy: "claim",
       }
     ),
-    transactions: model.hasMany<any /* <() => typeof OrderTransaction> */>(
+    transactions: model.hasMany<() => typeof OrderTransaction>(
       () => OrderTransaction,
       {
         mappedBy: "claim",
       }
     ),
-    changes: model.hasMany<any /* <() => typeof OrderChange> */>(
-      () => OrderChange,
-      {
-        mappedBy: "claim",
-      }
-    ),
-    created_by: model.text().nullable(),
-    canceled_at: model.dateTime().nullable(),
-    metadata: model.json().nullable(),
+    changes: model.hasMany<() => typeof OrderChange>(() => OrderChange, {
+      mappedBy: "claim",
+    }),
   })
   .indexes([
     {

@@ -1,10 +1,10 @@
 import { model } from "@medusajs/framework/utils"
-import { OrderClaimItem } from "./claim-item"
-import { OrderExchangeItem } from "./exchange-item"
-import { OrderLineItemAdjustment } from "./line-item-adjustment"
-import { OrderLineItemTaxLine } from "./line-item-tax-line"
 import { OrderItem } from "./order-item"
 import { ReturnItem } from "./return-item"
+import { OrderClaimItem } from "./claim-item"
+import { OrderExchangeItem } from "./exchange-item"
+import { OrderLineItemTaxLine } from "./line-item-tax-line"
+import { OrderLineItemAdjustment } from "./line-item-adjustment"
 
 const _OrderLineItem = model
   .define("OrderLineItem", {
@@ -32,35 +32,31 @@ const _OrderLineItem = model
     unit_price: model.bigNumber(),
     is_custom_price: model.boolean().default(false),
     metadata: model.json().nullable(),
-    tax_lines: model.hasMany<any /* <() => typeof OrderLineItemTaxLine> */>(
+    tax_lines: model.hasMany<() => typeof OrderLineItemTaxLine>(
       () => OrderLineItemTaxLine,
       {
         mappedBy: "item",
       }
     ),
-    adjustments:
-      model.hasMany<any /* <() => typeof OrderLineItemAdjustment> */>(
-        () => OrderLineItemAdjustment,
-        {
-          mappedBy: "item",
-        }
-      ),
-    items: model.hasMany<any /* <() => typeof OrderItem> */>(() => OrderItem, {
-      mappedBy: "item",
-    }),
-    return_items: model.hasMany<any /* <() => typeof ReturnItem> */>(
-      () => ReturnItem,
+    adjustments: model.hasMany<() => typeof OrderLineItemAdjustment>(
+      () => OrderLineItemAdjustment,
       {
         mappedBy: "item",
       }
     ),
-    claim_items: model.hasMany<any /* <() => typeof OrderClaimItem> */>(
+    items: model.hasMany<() => typeof OrderItem>(() => OrderItem, {
+      mappedBy: "item",
+    }),
+    return_items: model.hasMany<() => typeof ReturnItem>(() => ReturnItem, {
+      mappedBy: "item",
+    }),
+    claim_items: model.hasMany<() => typeof OrderClaimItem>(
       () => OrderClaimItem,
       {
         mappedBy: "item",
       }
     ),
-    exchange_items: model.hasMany<any /* <() => typeof OrderExchangeItem> */>(
+    exchange_items: model.hasMany<() => typeof OrderExchangeItem>(
       () => OrderExchangeItem,
       {
         mappedBy: "item",

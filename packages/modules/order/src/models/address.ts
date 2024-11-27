@@ -18,7 +18,7 @@ const _OrderAddress = model
     postal_code: model.text().searchable().nullable(),
     phone: model.text().searchable().nullable(),
     metadata: model.json().nullable(),
-    order: model.hasMany<any /* <() => typeof Order> */>(() => Order, {
+    order: model.hasMany<() => typeof Order>(() => Order, {
       mappedBy: "shipping_address",
     }),
   })

@@ -1,13 +1,57 @@
-import { model, OrderStatus } from "@medusajs/framework/utils"
-import { OrderAddress } from "./address"
+import {
+  AutoIncrementProperty,
+  BelongsTo,
+  BooleanProperty,
+  DateTimeProperty,
+  DmlEntity,
+  DMLSchemaDefaults,
+  DMLSchemaWithBigNumber,
+  EnumProperty,
+  HasMany,
+  IdProperty,
+  JSONProperty,
+  model,
+  NullableModifier,
+  NumberProperty,
+  OrderStatus,
+  PrimaryKeyModifier,
+  TextProperty,
+} from "@medusajs/framework/utils"
+import { Return } from "./return"
 import { OrderClaim } from "./claim"
+import { OrderItem } from "./order-item"
+import { OrderAddress } from "./address"
 import { OrderExchange } from "./exchange"
 import { OrderChange } from "./order-change"
-import { OrderItem } from "./order-item"
-import { OrderShipping } from "./order-shipping-method"
 import { OrderSummary } from "./order-summary"
-import { Return } from "./return"
 import { OrderTransaction } from "./transaction"
+import { OrderShipping } from "./order-shipping-method"
+
+type OrderSchema = {
+  id: PrimaryKeyModifier<string, IdProperty>
+  display_id: AutoIncrementProperty
+  region_id: NullableModifier<string, TextProperty>
+  customer_id: NullableModifier<string, TextProperty>
+  version: NumberProperty
+  sales_channel_id: NullableModifier<string, TextProperty>
+  status: EnumProperty<typeof OrderStatus>
+  is_draft_order: BooleanProperty
+  email: NullableModifier<string, TextProperty>
+  currency_code: TextProperty
+  no_notification: NullableModifier<boolean, BooleanProperty>
+  metadata: NullableModifier<Record<string, unknown>, JSONProperty>
+  canceled_at: NullableModifier<Date, DateTimeProperty>
+  exchanges: HasMany<typeof OrderExchange>
+  claims: HasMany<typeof OrderClaim>
+  returns: HasMany<typeof Return>
+  changes: HasMany<typeof OrderChange>
+  shipping_address: BelongsTo<typeof OrderAddress>
+  billing_address: BelongsTo<typeof OrderAddress>
+  summary: HasMany<typeof OrderSummary>
+  items: HasMany<typeof OrderItem>
+  shipping_methods: HasMany<typeof OrderShipping>
+  transactions: HasMany<typeof OrderTransaction>
+}
 
 const _Order = model
   .define("Order", {
@@ -21,55 +65,33 @@ const _Order = model
     is_draft_order: model.boolean().default(false),
     email: model.text().searchable().nullable(),
     currency_code: model.text(),
-    shipping_address: model.belongsTo<any /* <() => typeof OrderAddress> */>(
-      () => OrderAddress
-    ),
-    billing_address: model.belongsTo<any /* <() => typeof OrderAddress> */>(
-      () => OrderAddress
-    ),
     no_notification: model.boolean().nullable(),
     metadata: model.json().nullable(),
-    summary: model.hasMany<any /* <() => typeof OrderSummary> */>(
-      () => OrderSummary,
-      {
-        mappedBy: "order",
-      }
-    ),
-    items: model.hasMany<any /* <() => typeof OrderItem> */>(() => OrderItem, {
-      mappedBy: "order",
-    }),
-    shipping_methods: model.hasMany<any /* <() => typeof OrderShipping> */>(
-      () => OrderShipping,
-      {
-        mappedBy: "order",
-      }
-    ),
-    transactions: model.hasMany<any /* <() => typeof OrderTransaction> */>(
-      () => OrderTransaction,
-      {
-        mappedBy: "order",
-      }
-    ),
     canceled_at: model.dateTime().nullable(),
-
-    exchanges: model.hasMany<any /* <() => typeof OrderExchange> */>(
-      () => OrderExchange,
-      {
-        mappedBy: "order",
-      }
-    ),
-    claims: model.hasMany<any /* <() => typeof OrderClaim> */>(
-      () => OrderClaim,
-      {
-        mappedBy: "order",
-      }
-    ),
-    returns: model.hasMany<any /* <() => typeof Return> */>(() => Return, {
+    exchanges: model.hasMany<any>(() => OrderExchange, {
       mappedBy: "order",
     }),
-    changes: model.hasMany<any /* <() => typeof OrderChange> */>(
-      () => OrderChange
-    ),
+    claims: model.hasMany<any>(() => OrderClaim, {
+      mappedBy: "order",
+    }),
+    returns: model.hasMany<any>(() => Return, {
+      mappedBy: "order",
+    }),
+    changes: model.hasMany<any>(() => OrderChange),
+    shipping_address: model.belongsTo<any>(() => OrderAddress),
+    billing_address: model.belongsTo<any>(() => OrderAddress),
+    summary: model.hasMany<any>(() => OrderSummary, {
+      mappedBy: "order",
+    }),
+    items: model.hasMany<any>(() => OrderItem, {
+      mappedBy: "order",
+    }),
+    shipping_methods: model.hasMany<any>(() => OrderShipping, {
+      mappedBy: "order",
+    }),
+    transactions: model.hasMany<any>(() => OrderTransaction, {
+      mappedBy: "order",
+    }),
   })
   .indexes([
     {
@@ -128,4 +150,7 @@ const _Order = model
     },
   ])
 
-export const Order = _Order
+export const Order = _Order as DmlEntity<
+  DMLSchemaWithBigNumber<OrderSchema> & DMLSchemaDefaults & OrderSchema,
+  "Order"
+>

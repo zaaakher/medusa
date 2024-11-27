@@ -1,35 +1,54 @@
-import { model } from "@medusajs/framework/utils"
-import { OrderClaim } from "./claim"
-import { OrderExchange } from "./exchange"
+import {
+  BelongsTo,
+  BigNumberProperty,
+  DmlEntity,
+  DMLSchemaDefaults,
+  DMLSchemaWithBigNumber,
+  IdProperty,
+  model,
+  NullableModifier,
+  NumberProperty,
+  PrimaryKeyModifier,
+  TextProperty,
+} from "@medusajs/framework/utils"
 import { Order } from "./order"
 import { Return } from "./return"
+import { OrderClaim } from "./claim"
+import { OrderExchange } from "./exchange"
+
+type OrderTransactionSchema = {
+  id: PrimaryKeyModifier<string, IdProperty>
+  version: NumberProperty
+  amount: BigNumberProperty
+  currency_code: TextProperty
+  reference: NullableModifier<string, TextProperty>
+  reference_id: NullableModifier<string, TextProperty>
+  exchange: BelongsTo<typeof OrderExchange>
+  claim: BelongsTo<typeof OrderClaim>
+  return: BelongsTo<typeof Return>
+  order: BelongsTo<typeof Order>
+}
 
 const _OrderTransaction = model
   .define("OrderTransaction", {
     id: model.id({ prefix: "ordtrx" }).primaryKey(),
-    order: model.belongsTo<any /* <() => typeof Order> */>(() => Order, {
-      mappedBy: "transactions",
-    }),
-    return: model.belongsTo<any /* <() => typeof Return> */>(() => Return, {
-      mappedBy: "transactions",
-    }),
-    exchange: model.belongsTo<any /* <() => typeof OrderExchange> */>(
-      () => OrderExchange,
-      {
-        mappedBy: "transactions",
-      }
-    ),
-    claim: model.belongsTo<any /* <() => typeof OrderClaim> */>(
-      () => OrderClaim,
-      {
-        mappedBy: "transactions",
-      }
-    ),
     version: model.number().default(1),
     amount: model.bigNumber(),
     currency_code: model.text(),
     reference: model.text().nullable(),
     reference_id: model.text().nullable(),
+    order: model.belongsTo<any>(() => Order, {
+      mappedBy: "transactions",
+    }),
+    return: model.belongsTo<any>(() => Return, {
+      mappedBy: "transactions",
+    }),
+    exchange: model.belongsTo<any>(() => OrderExchange, {
+      mappedBy: "transactions",
+    }),
+    claim: model.belongsTo<any>(() => OrderClaim, {
+      mappedBy: "transactions",
+    }),
   })
   .indexes([
     {
@@ -82,4 +101,9 @@ const _OrderTransaction = model
     },
   ])
 
-export const OrderTransaction = _OrderTransaction
+export const OrderTransaction = _OrderTransaction as DmlEntity<
+  DMLSchemaWithBigNumber<OrderTransactionSchema> &
+    DMLSchemaDefaults &
+    OrderTransactionSchema,
+  "OrderTransaction"
+>

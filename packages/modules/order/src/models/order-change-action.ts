@@ -17,12 +17,9 @@ const _OrderChangeAction = model
     amount: model.bigNumber().nullable(),
     internal_note: model.text().nullable(),
     applied: model.boolean().default(false),
-    order_change: model.belongsTo<any /* <() => typeof OrderChange> */>(
-      () => OrderChange,
-      {
-        mappedBy: "actions",
-      }
-    ),
+    order_change: model.belongsTo<() => typeof OrderChange>(() => OrderChange, {
+      mappedBy: "actions",
+    }),
   })
   .indexes([
     {

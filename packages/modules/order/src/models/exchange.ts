@@ -1,51 +1,51 @@
 import { model } from "@medusajs/framework/utils"
-import { OrderChange, OrderExchangeItem, OrderTransaction } from "@models"
+
 import { Order } from "./order"
-import { OrderShipping } from "./order-shipping-method"
 import { Return } from "./return"
+import { OrderChange } from "./order-change"
+import { OrderTransaction } from "./transaction"
+import { OrderExchangeItem } from "./exchange-item"
+import { OrderShipping } from "./order-shipping-method"
 
 const _OrderExchange = model
   .define("OrderExchange", {
     id: model.id({ prefix: "oexc" }).primaryKey(),
-    order: model.belongsTo<any /* <() => typeof Order> */>(() => Order, {
-      mappedBy: "exchanges",
-    }),
     return_id: model.text().nullable(),
-    return: model.hasMany<any /* <() => typeof Return> */>(() => Return, {
-      mappedBy: "exchange",
-    }),
     order_version: model.number(),
     display_id: model.autoincrement(),
     no_notification: model.boolean().nullable(),
     difference_due: model.bigNumber().nullable(),
     allow_backorder: model.boolean().default(false),
-    additional_items: model.hasMany<any /* <() => typeof OrderExchangeItem> */>(
+    created_by: model.text().nullable(),
+    metadata: model.json().nullable(),
+    canceled_at: model.dateTime().nullable(),
+    order: model.belongsTo<() => typeof Order>(() => Order, {
+      mappedBy: "exchanges",
+    }),
+    return: model.hasMany<() => typeof Return>(() => Return, {
+      mappedBy: "exchange",
+    }),
+    additional_items: model.hasMany<() => typeof OrderExchangeItem>(
       () => OrderExchangeItem,
       {
         mappedBy: "exchange",
       }
     ),
-    shipping_methods: model.hasMany<any /* <() => typeof OrderShipping> */>(
+    shipping_methods: model.hasMany<() => typeof OrderShipping>(
       () => OrderShipping,
       {
         mappedBy: "exchange",
       }
     ),
-    transactions: model.hasMany<any /* <() => typeof OrderTransaction> */>(
+    transactions: model.hasMany<() => typeof OrderTransaction>(
       () => OrderTransaction,
       {
         mappedBy: "exchange",
       }
     ),
-    changes: model.hasMany<any /* <() => typeof OrderChange> */>(
-      () => OrderChange,
-      {
-        mappedBy: "exchange",
-      }
-    ),
-    created_by: model.text().nullable(),
-    metadata: model.json().nullable(),
-    canceled_at: model.dateTime().nullable(),
+    changes: model.hasMany<() => typeof OrderChange>(() => OrderChange, {
+      mappedBy: "exchange",
+    }),
   })
   .indexes([
     {

@@ -1,30 +1,27 @@
 import { model } from "@medusajs/framework/utils"
-import { OrderLineItem } from "./line-item"
 import { Return } from "./return"
+import { OrderLineItem } from "./line-item"
 import { ReturnReason } from "./return-reason"
 
 const _ReturnItem = model
   .define("ReturnItem", {
     id: model.id({ prefix: "retitem" }).primaryKey(),
-    reason: model
-      .belongsTo<any /* <() => typeof ReturnReason> */>(() => ReturnReason, {
-        mappedBy: "return_items",
-      })
-      .nullable(),
     quantity: model.bigNumber(),
     received_quantity: model.bigNumber().default(0),
     damaged_quantity: model.bigNumber().default(0),
-    return: model.belongsTo<any /* <() => typeof Return> */>(() => Return, {
-      mappedBy: "items",
-    }),
-    item: model.belongsTo<any /* <() => typeof OrderLineItem> */>(
-      () => OrderLineItem,
-      {
-        mappedBy: "return_items",
-      }
-    ),
     note: model.text().nullable(),
     metadata: model.json().nullable(),
+    reason: model
+      .belongsTo<() => typeof ReturnReason>(() => ReturnReason, {
+        mappedBy: "return_items",
+      })
+      .nullable(),
+    return: model.belongsTo<() => typeof Return>(() => Return, {
+      mappedBy: "items",
+    }),
+    item: model.belongsTo<() => typeof OrderLineItem>(() => OrderLineItem, {
+      mappedBy: "return_items",
+    }),
   })
   .indexes([
     {

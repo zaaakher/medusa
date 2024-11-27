@@ -1,39 +1,15 @@
 import { model, OrderChangeStatus } from "@medusajs/framework/utils"
+import { Order } from "./order"
+import { Return } from "./return"
 import { OrderClaim } from "./claim"
 import { OrderExchange } from "./exchange"
-import { Order } from "./order"
 import { OrderChangeAction } from "./order-change-action"
-import { Return } from "./return"
 
 const _OrderChange = model
   .define("OrderChange", {
     id: model.id({ prefix: "ordch" }).primaryKey(),
-    order: model.belongsTo<any /* <() => typeof Order> */>(() => Order, {
-      mappedBy: "changes",
-    }),
-    return: model
-      .belongsTo<any /* <() => typeof Return> */>(() => Return, {
-        mappedBy: "changes",
-      })
-      .nullable(),
-    claim: model
-      .belongsTo<any /* <() => typeof OrderClaim> */>(() => OrderClaim, {
-        mappedBy: "changes",
-      })
-      .nullable(),
-    exchange: model
-      .belongsTo<any /* <() => typeof OrderExchange> */>(() => OrderExchange, {
-        mappedBy: "changes",
-      })
-      .nullable(),
     version: model.number(),
     change_type: model.text().nullable(),
-    actions: model.hasMany<any /* <() => typeof OrderChangeAction> */>(
-      () => OrderChangeAction,
-      {
-        mappedBy: "order_change",
-      }
-    ),
     description: model.text().nullable(),
     status: model.enum(OrderChangeStatus).default(OrderChangeStatus.PENDING),
     internal_note: model.text().nullable(),
@@ -48,6 +24,30 @@ const _OrderChange = model
     declined_at: model.dateTime().nullable(),
     canceled_by: model.text().nullable(),
     canceled_at: model.dateTime().nullable(),
+    order: model.belongsTo<() => typeof Order>(() => Order, {
+      mappedBy: "changes",
+    }),
+    return: model
+      .belongsTo<() => typeof Return>(() => Return, {
+        mappedBy: "changes",
+      })
+      .nullable(),
+    claim: model
+      .belongsTo<() => typeof OrderClaim>(() => OrderClaim, {
+        mappedBy: "changes",
+      })
+      .nullable(),
+    exchange: model
+      .belongsTo<() => typeof OrderExchange>(() => OrderExchange, {
+        mappedBy: "changes",
+      })
+      .nullable(),
+    actions: model.hasMany<() => typeof OrderChangeAction>(
+      () => OrderChangeAction,
+      {
+        mappedBy: "order_change",
+      }
+    ),
   })
   .indexes([
     {

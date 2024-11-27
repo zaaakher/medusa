@@ -9,12 +9,9 @@ const _OrderLineItemAdjustment = model
     code: model.text().nullable(),
     amount: model.bigNumber(),
     provider_id: model.text().nullable(),
-    item: model.belongsTo<any /* <() => typeof OrderLineItem> */>(
-      () => OrderLineItem,
-      {
-        mappedBy: "adjustments",
-      }
-    ),
+    item: model.belongsTo<() => typeof OrderLineItem>(() => OrderLineItem, {
+      mappedBy: "adjustments",
+    }),
   })
   .indexes([
     {

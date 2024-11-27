@@ -1,39 +1,38 @@
 import { model } from "@medusajs/framework/utils"
-import { OrderClaim } from "./claim"
-import { OrderExchange } from "./exchange"
 import { Order } from "./order"
 import { Return } from "./return"
+import { OrderClaim } from "./claim"
+import { OrderExchange } from "./exchange"
 import { OrderShippingMethod } from "./shipping-method"
 
 const _OrderShipping = model
   .define("OrderShipping", {
     id: model.id({ prefix: "ordspmv" }).primaryKey(),
     version: model.number(),
-    order: model.belongsTo<any /* <() => typeof Order> */>(() => Order, {
+    order: model.belongsTo<() => typeof Order>(() => Order, {
       mappedBy: "shipping_methods",
     }),
     return: model
-      .belongsTo<any /* <() => typeof Return> */>(() => Return, {
+      .belongsTo<() => typeof Return>(() => Return, {
         mappedBy: "shipping_methods",
       })
       .nullable(),
     exchange: model
-      .belongsTo<any /* <() => typeof OrderExchange> */>(() => OrderExchange, {
+      .belongsTo<() => typeof OrderExchange>(() => OrderExchange, {
         mappedBy: "shipping_methods",
       })
       .nullable(),
     claim: model
-      .belongsTo<any /* <() => typeof OrderClaim> */>(() => OrderClaim, {
+      .belongsTo<() => typeof OrderClaim>(() => OrderClaim, {
         mappedBy: "shipping_methods",
       })
       .nullable(),
-    shipping_method:
-      model.belongsTo<any /* <() => typeof OrderShippingMethod> */>(
-        () => OrderShippingMethod,
-        {
-          mappedBy: "shipping_methods",
-        }
-      ),
+    shipping_method: model.belongsTo<() => typeof OrderShippingMethod>(
+      () => OrderShippingMethod,
+      {
+        mappedBy: "shipping_methods",
+      }
+    ),
   })
   .indexes([
     {
