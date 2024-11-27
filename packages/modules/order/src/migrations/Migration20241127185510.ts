@@ -1,6 +1,6 @@
 import { Migration } from "@mikro-orm/migrations"
 
-export class Migration20241127171653 extends Migration {
+export class Migration20241127185510 extends Migration {
   async up(): Promise<void> {
     this.addSql(
       'alter table if exists "order_claim" drop constraint if exists "order_claim_return_id_foreign";'
@@ -217,7 +217,7 @@ export class Migration20241127171653 extends Migration {
       'CREATE INDEX IF NOT EXISTS "IDX_order_line_item_adjustment_deleted_at" ON "order_line_item_adjustment" (deleted_at) WHERE deleted_at IS NULL;'
     )
     this.addSql(
-      'CREATE INDEX IF NOT EXISTS "ItemIdIndex" ON "order_line_item_adjustment" (item_id) WHERE deleted_at IS NULL;'
+      'CREATE INDEX IF NOT EXISTS "IDX_order_order_line_item_adjustment_item_id" ON "order_line_item_adjustment" (item_id) WHERE deleted_at IS NULL;'
     )
 
     this.addSql(
@@ -231,9 +231,6 @@ export class Migration20241127171653 extends Migration {
     )
     this.addSql(
       'CREATE INDEX IF NOT EXISTS "IDX_order_line_item_tax_line_deleted_at" ON "order_line_item_tax_line" (deleted_at) WHERE deleted_at IS NULL;'
-    )
-    this.addSql(
-      'CREATE INDEX IF NOT EXISTS "ItemIdIndex" ON "order_line_item_tax_line" (item_id) WHERE deleted_at IS NULL;'
     )
 
     this.addSql(
@@ -539,7 +536,9 @@ export class Migration20241127171653 extends Migration {
     this.addSql(
       'drop index if exists "IDX_order_line_item_adjustment_deleted_at";'
     )
-    this.addSql('drop index if exists "ItemIdIndex";')
+    this.addSql(
+      'drop index if exists "IDX_order_order_line_item_adjustment_item_id";'
+    )
     this.addSql(
       'alter table if exists "order_line_item_adjustment" add constraint "order_line_item_adjustment_item_id_foreign" foreign key ("item_id") references "order_line_item" ("id") on update cascade on delete cascade;'
     )
@@ -553,7 +552,6 @@ export class Migration20241127171653 extends Migration {
     this.addSql(
       'drop index if exists "IDX_order_line_item_tax_line_deleted_at";'
     )
-    this.addSql('drop index if exists "ItemIdIndex";')
     this.addSql(
       'alter table if exists "order_line_item_tax_line" add constraint "order_line_item_tax_line_item_id_foreign" foreign key ("item_id") references "order_line_item" ("id") on update cascade on delete cascade;'
     )
@@ -776,7 +774,7 @@ export class Migration20241127171653 extends Migration {
     )
 
     this.addSql(`
-       ALTER TABLE "order_address" DROP COLUMN if exists "deleted_at";
+       ALTER TABLE "order_address" DROP COLUMN if exists "deleted_at" timestamptz NULL;
     `)
   }
 }

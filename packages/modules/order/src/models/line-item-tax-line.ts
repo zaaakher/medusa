@@ -15,7 +15,7 @@ const _OrderLineItemTaxLine = model
   })
   .indexes([
     {
-      name: "ItemIdIndex",
+      name: "IDX_order_line_item_tax_line_item_id",
       on: ["item_id"],
       unique: false,
     },

@@ -9,7 +9,8 @@ export function setFindMethods<T>(klass: Constructor<T>, entity: any) {
     options?: DAL.FindOptions<T>,
     context?: Context
   ): Promise<T[]> {
-    const manager = this.getActiveManager(context)
+    // @ts-expect-error
+    const manager = super.getActiveManager(context)
     const knex = manager.getKnex()
 
     const findOptions_ = { ...options } as any
@@ -113,7 +114,7 @@ export function setFindMethods<T>(klass: Constructor<T>, entity: any) {
     config.where ??= {}
     config.where.deleted_at ??= null
 
-    return await manager.find(entity, config.where, config.options)
+    return await manager.find(entity.name, config.where, config.options)
   }
 
   klass.prototype.findAndCount = async function findAndCount(
@@ -121,7 +122,8 @@ export function setFindMethods<T>(klass: Constructor<T>, entity: any) {
     findOptions: DAL.FindOptions<T> = { where: {} } as DAL.FindOptions<T>,
     context: Context = {}
   ): Promise<[T[], number]> {
-    const manager = this.getActiveManager(context)
+    // @ts-expect-error
+    const manager = super.getActiveManager(context)
     const knex = manager.getKnex()
 
     const findOptions_ = { ...findOptions } as any
@@ -198,6 +200,6 @@ export function setFindMethods<T>(klass: Constructor<T>, entity: any) {
       config.options.orderBy = { id: "ASC" }
     }
 
-    return await manager.findAndCount(entity, config.where, config.options)
+    return await manager.findAndCount(entity.name, config.where, config.options)
   }
 }

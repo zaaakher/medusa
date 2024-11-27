@@ -15,7 +15,7 @@ const _OrderLineItemAdjustment = model
   })
   .indexes([
     {
-      name: "ItemIdIndex",
+      name: "IDX_order_order_line_item_adjustment_item_id",
       on: ["item_id"],
       unique: false,
     },

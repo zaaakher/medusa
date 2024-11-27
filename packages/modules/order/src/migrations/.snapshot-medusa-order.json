@@ -2307,12 +2307,12 @@
           "expression": "CREATE INDEX IF NOT EXISTS \"IDX_order_line_item_adjustment_deleted_at\" ON \"order_line_item_adjustment\" (deleted_at) WHERE deleted_at IS NULL"
         },
         {
-          "keyName": "ItemIdIndex",
+          "keyName": "IDX_order_order_line_item_adjustment_item_id",
           "columnNames": [],
           "composite": false,
           "primary": false,
           "unique": false,
-          "expression": "CREATE INDEX IF NOT EXISTS \"ItemIdIndex\" ON \"order_line_item_adjustment\" (item_id) WHERE deleted_at IS NULL"
+          "expression": "CREATE INDEX IF NOT EXISTS \"IDX_order_order_line_item_adjustment_item_id\" ON \"order_line_item_adjustment\" (item_id) WHERE deleted_at IS NULL"
         },
         {
           "keyName": "order_line_item_adjustment_pkey",
@@ -2465,14 +2465,6 @@
           "primary": false,
           "unique": false,
           "expression": "CREATE INDEX IF NOT EXISTS \"IDX_order_line_item_tax_line_deleted_at\" ON \"order_line_item_tax_line\" (deleted_at) WHERE deleted_at IS NULL"
-        },
-        {
-          "keyName": "ItemIdIndex",
-          "columnNames": [],
-          "composite": false,
-          "primary": false,
-          "unique": false,
-          "expression": "CREATE INDEX IF NOT EXISTS \"ItemIdIndex\" ON \"order_line_item_tax_line\" (item_id) WHERE deleted_at IS NULL"
         },
         {
           "keyName": "order_line_item_tax_line_pkey",
