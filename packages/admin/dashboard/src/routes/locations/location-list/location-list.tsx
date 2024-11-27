@@ -1,5 +1,5 @@
 import { ShoppingBag, TriangleRightMini } from "@medusajs/icons"
-import { Container, Heading, Text } from "@medusajs/ui"
+import { Button, Container, FocusModal, Heading, Text } from "@medusajs/ui"
 import { useTranslation } from "react-i18next"
 import { Link, useLoaderData } from "react-router-dom"
 
@@ -12,6 +12,7 @@ import { ReactNode } from "react"
 import { IconAvatar } from "../../../components/common/icon-avatar"
 import { TwoColumnPage } from "../../../components/layout/pages"
 import { useDashboardExtension } from "../../../extensions"
+import { PriceRuleForm } from "../common/components/price-rule-form"
 import { LocationListHeader } from "./components/location-list-header"
 
 export function LocationList() {
@@ -107,6 +108,31 @@ const LinksSection = () => {
 
   return (
     <Container className="p-0">
+      <FocusModal>
+        <FocusModal.Trigger asChild>
+          <Button variant="secondary" size="small">
+            Open
+          </Button>
+        </FocusModal.Trigger>
+        <FocusModal.Content>
+          <FocusModal.Header />
+          <FocusModal.Body className="flex flex-1 flex-col items-center overflow-auto">
+            <div className="flex w-full flex-1 flex-col items-center">
+              <div className="flex w-full max-w-[720px] flex-col gap-y-8 px-2 py-16">
+                <PriceRuleForm />
+              </div>
+            </div>
+          </FocusModal.Body>
+          <FocusModal.Footer>
+            <div className="flex items-center justify-end gap-2">
+              <Button variant="secondary" size="small">
+                Cancel
+              </Button>
+              <Button size="small">Save</Button>
+            </div>
+          </FocusModal.Footer>
+        </FocusModal.Content>
+      </FocusModal>
       <div className="flex items-center justify-between px-6 py-4">
         <Heading level="h2">{t("stockLocations.sidebar.header")}</Heading>
       </div>

@@ -1,5 +1,5 @@
 import { useMemo } from "react"
-import { UseFormReturn } from "react-hook-form"
+import { UseFormReturn, useWatch } from "react-hook-form"
 
 import { DataGrid } from "../../../../../components/data-grid"
 import { useRouteModal } from "../../../../../components/modals"
@@ -42,7 +42,10 @@ export const CreateShippingOptionsPricesForm = ({
 
   const { setCloseOnEscape } = useRouteModal()
 
+  const name = useWatch({ control: form.control, name: "name" })
+
   const columns = useShippingOptionPriceColumns({
+    name,
     currencies,
     regions,
     pricePreferences,

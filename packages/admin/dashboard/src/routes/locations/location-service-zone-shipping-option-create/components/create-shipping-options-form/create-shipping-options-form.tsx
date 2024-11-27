@@ -76,13 +76,13 @@ export function CreateShippingOptionsForm({
 
     const regionPrices = Object.entries(data.region_prices)
       .map(([region_id, value]) => {
-        if (value === "" || value === undefined) {
+        if (value.amount === "" || value.amount === undefined) {
           return undefined
         }
 
         return {
           region_id,
-          amount: castNumber(value),
+          amount: castNumber(value.amount),
         }
       })
       .filter((o) => !!o) as { region_id: string; amount: number }[]

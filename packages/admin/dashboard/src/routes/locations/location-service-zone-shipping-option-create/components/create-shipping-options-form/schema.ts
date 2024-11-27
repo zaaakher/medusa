@@ -13,9 +13,29 @@ export const CreateShippingOptionDetailsSchema = z.object({
   provider_id: z.string().min(1),
 })
 
+enum PriceRuleAttribute {
+  gte = "gte",
+  gt = "gt",
+  lte = "lte",
+  lt = "lt",
+}
+
+const PriceRuleAttributeSchema = z.nativeEnum(PriceRuleAttribute)
+
+const PriceRuleSchema = z.object({
+  attribute: z.literal("cart_total"),
+  operator: PriceRuleAttributeSchema,
+  value: z.string(),
+})
+
+const ShippingOptionPriceSchema = z.object({
+  amount: z.string(),
+  rules: z.array(PriceRuleSchema).optional(),
+})
+
 export const CreateShippingOptionSchema = z
   .object({
-    region_prices: z.record(z.string(), z.string().optional()),
+    region_prices: z.record(z.string(), ShippingOptionPriceSchema),
     currency_prices: z.record(z.string(), z.string().optional()),
   })
   .merge(CreateShippingOptionDetailsSchema)
