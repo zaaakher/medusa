@@ -559,7 +559,7 @@ export async function loadResources({
   normalizedPath = resolve(normalizedPath)
 
   try {
-    const defaultOnFail = () => {
+    const defaultOnFail = (e) => {
       return []
     }
 

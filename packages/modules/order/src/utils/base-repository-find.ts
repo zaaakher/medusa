@@ -2,6 +2,7 @@ import { Constructor, Context, DAL } from "@medusajs/framework/types"
 import { LoadStrategy } from "@mikro-orm/core"
 import { Order, OrderClaim } from "@models"
 import { mapRepositoryToOrderModel } from "."
+import { toMikroORMEntity } from "@medusajs/framework/utils"
 
 export function setFindMethods<T>(klass: Constructor<T>, entity: any) {
   klass.prototype.find = async function find(
@@ -9,8 +10,7 @@ export function setFindMethods<T>(klass: Constructor<T>, entity: any) {
     options?: DAL.FindOptions<T>,
     context?: Context
   ): Promise<T[]> {
-    // @ts-expect-error
-    const manager = super.getActiveManager(context)
+    const manager = this.getActiveManager(context)
     const knex = manager.getKnex()
 
     const findOptions_ = { ...options } as any
@@ -66,7 +66,7 @@ export function setFindMethods<T>(klass: Constructor<T>, entity: any) {
 
     if (strategy === LoadStrategy.SELECT_IN) {
       const sql = manager
-        .qb(Order, "_sub0")
+        .qb(toMikroORMEntity(Order), "_sub0")
         .select("version")
         .where({ id: knex.raw(`"${orderAlias}"."order_id"`) })
         .getKnexQuery()
@@ -114,7 +114,7 @@ export function setFindMethods<T>(klass: Constructor<T>, entity: any) {
     config.where ??= {}
     config.where.deleted_at ??= null
 
-    return await manager.find(entity.name, config.where, config.options)
+    return await manager.find(this.entity, config.where, config.options)
   }
 
   klass.prototype.findAndCount = async function findAndCount(
@@ -122,8 +122,7 @@ export function setFindMethods<T>(klass: Constructor<T>, entity: any) {
     findOptions: DAL.FindOptions<T> = { where: {} } as DAL.FindOptions<T>,
     context: Context = {}
   ): Promise<[T[], number]> {
-    // @ts-expect-error
-    const manager = super.getActiveManager(context)
+    const manager = this.getActiveManager(context)
     const knex = manager.getKnex()
 
     const findOptions_ = { ...findOptions } as any
@@ -164,7 +163,7 @@ export function setFindMethods<T>(klass: Constructor<T>, entity: any) {
     const strategy = config.options.strategy ?? LoadStrategy.JOINED
     if (strategy === LoadStrategy.SELECT_IN) {
       const sql = manager
-        .qb(Order, "_sub0")
+        .qb(toMikroORMEntity(Order), "_sub0")
         .select("version")
         .where({ id: knex.raw(`"${orderAlias}"."order_id"`) })
         .getKnexQuery()
@@ -200,6 +199,6 @@ export function setFindMethods<T>(klass: Constructor<T>, entity: any) {
       config.options.orderBy = { id: "ASC" }
     }
 
-    return await manager.findAndCount(entity.name, config.where, config.options)
+    return await manager.findAndCount(this.entity, config.where, config.options)
   }
 }
