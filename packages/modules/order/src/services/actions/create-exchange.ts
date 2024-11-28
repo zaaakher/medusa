@@ -15,7 +15,7 @@ import {
 import { OrderExchange, OrderExchangeItem, Return, ReturnItem } from "@models"
 
 function createExchangeAndReturnEntities(em, data, order) {
-  const exchangeReference = em.create(OrderExchange, {
+  const exchangeReference = em.create(toMikroORMEntity(OrderExchange), {
     order_id: data.order_id,
     order_version: order.version,
     no_notification: data.no_notification,
@@ -23,7 +23,7 @@ function createExchangeAndReturnEntities(em, data, order) {
     difference_due: data.difference_due,
   })
 
-  const returnReference = em.create(Return, {
+  const returnReference = em.create(toMikroORMEntity(Return), {
     order_id: data.order_id,
     order_version: order.version,
     status: ReturnStatus.REQUESTED,
@@ -55,7 +55,7 @@ function createReturnItems(
       },
     })
 
-    return em.create(ReturnItem, {
+    return em.create(toMikroORMEntity(ReturnItem), {
       item_id: item.id,
       return_id: returnReference.id,
       reason: item.reason,

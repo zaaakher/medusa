@@ -16,7 +16,7 @@ import {
 import { OrderClaim, OrderClaimItem, Return, ReturnItem } from "@models"
 
 function createClaimAndReturnEntities(em, data, order) {
-  const claimReference = em.create(OrderClaim, {
+  const claimReference = em.create(toMikroORMEntity(OrderClaim), {
     order_id: data.order_id,
     order_version: order.version,
     type: data.type as ClaimType,
@@ -26,7 +26,7 @@ function createClaimAndReturnEntities(em, data, order) {
 
   const returnReference =
     data.type === ClaimType.REPLACE
-      ? em.create(Return, {
+      ? em.create(toMikroORMEntity(Return), {
           order_id: data.order_id,
           order_version: order.version,
           status: ReturnStatus.REQUESTED,
@@ -52,7 +52,7 @@ function createReturnItem(em, item, claimReference, returnReference, actions) {
     },
   })
 
-  return em.create(ReturnItem, {
+  return em.create(toMikroORMEntity(ReturnItem), {
     item_id: item.id,
     return_id: returnReference.id,
     quantity: item.quantity,
@@ -87,7 +87,7 @@ function createClaimAndReturnItems(
         : undefined
     )
 
-    return em.create(OrderClaimItem, {
+    return em.create(toMikroORMEntity(OrderClaimItem), {
       item_id: item.id,
       reason: item.reason,
       quantity: item.quantity,

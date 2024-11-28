@@ -1,9 +1,9 @@
 import { model, OrderChangeStatus } from "@medusajs/framework/utils"
-import { Order } from "./order"
-import { Return } from "./return"
 import { OrderClaim } from "./claim"
 import { OrderExchange } from "./exchange"
+import { Order } from "./order"
 import { OrderChangeAction } from "./order-change-action"
+import { Return } from "./return"
 
 const _OrderChange = model
   .define("OrderChange", {
@@ -16,7 +16,7 @@ const _OrderChange = model
       .default(OrderChangeStatus.PENDING)
       .nullable(),
     internal_note: model.text().nullable(),
-    created_by: model.text(),
+    created_by: model.text().nullable(),
     requested_by: model.text().nullable(),
     requested_at: model.dateTime().nullable(),
     confirmed_by: model.text().nullable(),

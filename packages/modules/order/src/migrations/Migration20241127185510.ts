@@ -142,12 +142,7 @@ export class Migration20241127185510 extends Migration {
     this.addSql(
       'alter table if exists "order_line_item" alter column "is_discountable" set default true;'
     )
-    this.addSql(
-      'alter table if exists "order_line_item" alter column "is_tax_inclusive" type boolean using ("is_tax_inclusive"::boolean);'
-    )
-    this.addSql(
-      'alter table if exists "order_line_item" alter column "is_tax_inclusive" set default false;'
-    )
+
     this.addSql(
       'alter table if exists "order_line_item" alter column "unit_price" type numeric using ("unit_price"::numeric);'
     )
@@ -231,19 +226,6 @@ export class Migration20241127185510 extends Migration {
     )
     this.addSql(
       'CREATE INDEX IF NOT EXISTS "IDX_order_line_item_tax_line_deleted_at" ON "order_line_item_tax_line" (deleted_at) WHERE deleted_at IS NULL;'
-    )
-
-    this.addSql(
-      'alter table if exists "order_shipping_method" alter column "is_tax_inclusive" drop default;'
-    )
-    this.addSql(
-      'alter table if exists "order_shipping_method" alter column "is_tax_inclusive" type boolean using ("is_tax_inclusive"::boolean);'
-    )
-    this.addSql(
-      'alter table if exists "order_shipping_method" alter column "is_custom_amount" drop default;'
-    )
-    this.addSql(
-      'alter table if exists "order_shipping_method" alter column "is_custom_amount" type boolean using ("is_custom_amount"::boolean);'
     )
 
     this.addSql(
@@ -338,12 +320,7 @@ export class Migration20241127185510 extends Migration {
     this.addSql(
       'alter table if exists "order_change" alter column "status" drop not null;'
     )
-    this.addSql(
-      'alter table if exists "order_change" alter column "created_by" type text using ("created_by"::text);'
-    )
-    this.addSql(
-      'alter table if exists "order_change" alter column "created_by" set not null;'
-    )
+
     this.addSql('drop index if exists "IDX_order_change_order_id_version";')
     this.addSql(
       'alter table if exists "order_change" add constraint "order_change_order_id_foreign" foreign key ("order_id") references "order" ("id") on update cascade;'
@@ -562,12 +539,6 @@ export class Migration20241127185510 extends Migration {
     this.addSql(
       'alter table if exists "order_shipping_method" alter column "is_tax_inclusive" set default false;'
     )
-    this.addSql(
-      'alter table if exists "order_shipping_method" alter column "is_custom_amount" type boolean using ("is_custom_amount"::boolean);'
-    )
-    this.addSql(
-      'alter table if exists "order_shipping_method" alter column "is_custom_amount" set default false;'
-    )
 
     this.addSql(
       'drop index if exists "IDX_order_shipping_method_adjustment_deleted_at";'
@@ -711,12 +682,7 @@ export class Migration20241127185510 extends Migration {
     this.addSql(
       'alter table if exists "order_change" alter column "status" set not null;'
     )
-    this.addSql(
-      'alter table if exists "order_change" alter column "created_by" type text using ("created_by"::text);'
-    )
-    this.addSql(
-      'alter table if exists "order_change" alter column "created_by" drop not null;'
-    )
+
     this.addSql('drop index if exists "IDX_order_change_version";')
     this.addSql(
       'alter table if exists "order_change" add constraint "order_change_order_id_foreign" foreign key ("order_id") references "order" ("id") on update cascade on delete cascade;'
