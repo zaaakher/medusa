@@ -119,18 +119,24 @@ export function defineProperty(
 ) {
   const field = property.parse(propertyName)
   /**
-   * Here we initialize all properties with their default values
+   * Here we initialize all properties with their default values on before create
+   * which means when persist is called but not necessarely flush
    */
 
   if (isDefined(field.defaultValue) || field.nullable) {
-    ;(MikroORMEntity as any).setDefaultValue(
-      propertyName,
-      isDefined(field.defaultValue)
-        ? field.defaultValue
-        : field.nullable
-        ? null
-        : undefined
-    )
+    const defaultValueSetterHookName = `${field.fieldName}_setDefaultValueOnBeforeCreate`
+    MikroORMEntity.prototype[defaultValueSetterHookName] = function () {
+      if (isDefined(field.defaultValue)) {
+        this[propertyName] = field.defaultValue
+        return
+      }
+
+      if (field.nullable) {
+        this[propertyName] = null
+        return
+      }
+    }
+    BeforeCreate()(MikroORMEntity.prototype, defaultValueSetterHookName)
   }
 
   if (SPECIAL_PROPERTIES[field.fieldName]) {

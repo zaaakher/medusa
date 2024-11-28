@@ -8,7 +8,6 @@ import type {
 } from "@medusajs/types"
 import { Entity, Filter } from "@mikro-orm/core"
 
-import { isDefined } from "../../common"
 import { mikroOrmSoftDeletableFilterOptions } from "../../dal"
 import { DmlEntity } from "../entity"
 import { DuplicateIdPropertyError } from "../errors"
@@ -46,24 +45,7 @@ function createMikrORMEntity() {
    * DML entity.
    */
   function createEntity<T extends DmlEntity<any, any>>(entity: T): Infer<T> {
-    class MikroORMEntity {
-      static __defaultValues = {}
-      static setDefaultValue(key: string, value: any) {
-        this.__defaultValues[key] = value
-      }
-
-      constructor() {
-        Object.entries(MikroORMEntity.__defaultValues).forEach(
-          ([key, value]) => {
-            if (isDefined(this[key])) {
-              return
-            }
-
-            this[key] = value
-          }
-        )
-      }
-    }
+    class MikroORMEntity {}
 
     const { schema, cascades, indexes: entityIndexes = [] } = entity.parse()
     const { modelName, tableName } = parseEntityName(entity)
