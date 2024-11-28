@@ -47,8 +47,15 @@ function createMikrORMEntity() {
   function createEntity<T extends DmlEntity<any, any>>(entity: T): Infer<T> {
     class MikroORMEntity {}
 
-    const { schema, cascades, indexes: entityIndexes = [] } = entity.parse()
+    const {
+      schema,
+      cascades,
+      indexes: entityIndexes = [],
+      params,
+    } = entity.parse()
+
     const { modelName, tableName } = parseEntityName(entity)
+
     if (ENTITIES[modelName]) {
       return ENTITIES[modelName] as Infer<T>
     }
@@ -100,9 +107,12 @@ function createMikrORMEntity() {
     /**
      * Converting class to a MikroORM entity
      */
-    const RegisteredEntity = Entity({ tableName })(
-      Filter(mikroOrmSoftDeletableFilterOptions)(MikroORMEntity)
-    ) as unknown as Infer<T>
+
+    const RegisteredEntity = (params.disableSoftDeleteFilter
+      ? Entity({ tableName })(MikroORMEntity)
+      : Entity({ tableName })(
+          Filter(mikroOrmSoftDeletableFilterOptions)(MikroORMEntity)
+        )) as unknown as Infer<T>
 
     ENTITIES[modelName] = RegisteredEntity
     return RegisteredEntity

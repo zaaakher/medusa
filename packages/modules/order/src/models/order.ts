@@ -81,6 +81,9 @@ const _Order = model
       mappedBy: "order",
     }),
   })
+  .cascades({
+    delete: ["summary", "items", "shipping_methods", "transactions"],
+  })
   .indexes([
     {
       name: "IDX_order_display_id",

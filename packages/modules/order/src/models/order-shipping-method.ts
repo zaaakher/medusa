@@ -1,39 +1,46 @@
 import { model } from "@medusajs/framework/utils"
-import { Order } from "./order"
-import { Return } from "./return"
 import { OrderClaim } from "./claim"
 import { OrderExchange } from "./exchange"
+import { Order } from "./order"
+import { Return } from "./return"
 import { OrderShippingMethod } from "./shipping-method"
 
 const _OrderShipping = model
-  .define("OrderShipping", {
-    id: model.id({ prefix: "ordspmv" }).primaryKey(),
-    version: model.number(),
-    order: model.belongsTo<() => typeof Order>(() => Order, {
-      mappedBy: "shipping_methods",
-    }),
-    return: model
-      .belongsTo<() => typeof Return>(() => Return, {
+  .define(
+    {
+      name: "OrderShipping",
+      tableName: "OrderShipping",
+      disableSoftDeleteFilter: true,
+    },
+    {
+      id: model.id({ prefix: "ordspmv" }).primaryKey(),
+      version: model.number(),
+      order: model.belongsTo<() => typeof Order>(() => Order, {
         mappedBy: "shipping_methods",
-      })
-      .nullable(),
-    exchange: model
-      .belongsTo<() => typeof OrderExchange>(() => OrderExchange, {
-        mappedBy: "shipping_methods",
-      })
-      .nullable(),
-    claim: model
-      .belongsTo<() => typeof OrderClaim>(() => OrderClaim, {
-        mappedBy: "shipping_methods",
-      })
-      .nullable(),
-    shipping_method: model.belongsTo<() => typeof OrderShippingMethod>(
-      () => OrderShippingMethod,
-      {
-        mappedBy: "shipping_methods",
-      }
-    ),
-  })
+      }),
+      return: model
+        .belongsTo<() => typeof Return>(() => Return, {
+          mappedBy: "shipping_methods",
+        })
+        .nullable(),
+      exchange: model
+        .belongsTo<() => typeof OrderExchange>(() => OrderExchange, {
+          mappedBy: "shipping_methods",
+        })
+        .nullable(),
+      claim: model
+        .belongsTo<() => typeof OrderClaim>(() => OrderClaim, {
+          mappedBy: "shipping_methods",
+        })
+        .nullable(),
+      shipping_method: model.belongsTo<() => typeof OrderShippingMethod>(
+        () => OrderShippingMethod,
+        {
+          mappedBy: "shipping_methods",
+        }
+      ),
+    }
+  )
   .indexes([
     {
       name: "IDX_order_shipping_order_id",

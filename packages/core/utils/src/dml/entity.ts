@@ -9,12 +9,12 @@ import {
   QueryCondition,
 } from "@medusajs/types"
 import { isObject, isString, toCamelCase } from "../common"
-import { transformIndexWhere } from "./helpers/entity-builder/build-indexes"
-import { BelongsTo } from "./relations/belongs-to"
 import {
   DMLSchemaDefaults,
   DMLSchemaWithBigNumber,
 } from "./helpers/entity-builder"
+import { transformIndexWhere } from "./helpers/entity-builder/build-indexes"
+import { BelongsTo } from "./relations/belongs-to"
 
 const IsDmlEntity = Symbol.for("isDmlEntity")
 
@@ -24,15 +24,17 @@ const IsDmlEntity = Symbol.for("isDmlEntity")
 export type DMLEntitySchemaBuilder<Schema extends DMLSchema> =
   DMLSchemaWithBigNumber<Schema> & DMLSchemaDefaults & Schema
 
-function extractNameAndTableName<const Config extends IDmlEntityConfig>(
+function extractEntityConfig<const Config extends IDmlEntityConfig>(
   nameOrConfig: Config
 ) {
   const result = {
     name: "",
     tableName: "",
+    disableSoftDeleteFilter: false,
   } as {
     name: InferDmlEntityNameFromConfig<Config>
     tableName: string
+    disableSoftDeleteFilter: boolean
   }
 
   if (isString(nameOrConfig)) {
@@ -56,6 +58,8 @@ function extractNameAndTableName<const Config extends IDmlEntityConfig>(
 
     result.name = toCamelCase(name) as InferDmlEntityNameFromConfig<Config>
     result.tableName = nameOrConfig.tableName
+    result.disableSoftDeleteFilter =
+      nameOrConfig.disableSoftDeleteFilter ?? true
   }
 
   return result
@@ -76,14 +80,20 @@ export class DmlEntity<
   schema: Schema
 
   readonly #tableName: string
+  readonly #params: Record<string, unknown>
+
   #cascades: EntityCascades<string[]> = {}
   #indexes: EntityIndex<Schema>[] = []
 
   constructor(nameOrConfig: TConfig, schema: Schema) {
-    const { name, tableName } = extractNameAndTableName(nameOrConfig)
+    const { name, tableName, disableSoftDeleteFilter } =
+      extractEntityConfig(nameOrConfig)
     this.schema = schema
     this.name = name
     this.#tableName = tableName
+    this.#params = {
+      disableSoftDeleteFilter,
+    }
   }
 
   /**
@@ -106,6 +116,7 @@ export class DmlEntity<
     schema: DMLSchema
     cascades: EntityCascades<string[]>
     indexes: EntityIndex<Schema>[]
+    params: Record<string, unknown>
   } {
     return {
       name: this.name,
@@ -113,6 +124,7 @@ export class DmlEntity<
       schema: this.schema,
       cascades: this.#cascades,
       indexes: this.#indexes,
+      params: this.#params,
     }
   }
 

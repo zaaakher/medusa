@@ -24,6 +24,9 @@ const _OrderClaimItem = model
       }
     ),
   })
+  .cascades({
+    delete: ["images"],
+  })
   .indexes([
     {
       name: "IDX_order_claim_item_claim_id",

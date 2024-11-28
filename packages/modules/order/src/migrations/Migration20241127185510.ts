@@ -255,12 +255,7 @@ export class Migration20241127185510 extends Migration {
     this.addSql(
       'alter table if exists "return" alter column "exchange_id" set not null;'
     )
-    this.addSql(
-      'alter table if exists "return" alter column "claim_id" type text using ("claim_id"::text);'
-    )
-    this.addSql(
-      'alter table if exists "return" alter column "claim_id" set not null;'
-    )
+
     this.addSql(
       'alter table if exists "return" alter column "display_id" type bigint using ("display_id"::bigint);'
     )
@@ -281,23 +276,9 @@ export class Migration20241127185510 extends Migration {
     )
 
     this.addSql(
-      'alter table if exists "order_transaction" alter column "return_id" type text using ("return_id"::text);'
-    )
-    this.addSql(
-      'alter table if exists "order_transaction" alter column "return_id" set not null;'
-    )
-    this.addSql(
       'alter table if exists "order_transaction" alter column "exchange_id" type text using ("exchange_id"::text);'
     )
-    this.addSql(
-      'alter table if exists "order_transaction" alter column "exchange_id" set not null;'
-    )
-    this.addSql(
-      'alter table if exists "order_transaction" alter column "claim_id" type text using ("claim_id"::text);'
-    )
-    this.addSql(
-      'alter table if exists "order_transaction" alter column "claim_id" set not null;'
-    )
+
     this.addSql(
       'alter table if exists "order_transaction" add constraint "order_transaction_order_id_foreign" foreign key ("order_id") references "order" ("id") on update cascade;'
     )
@@ -335,9 +316,7 @@ export class Migration20241127185510 extends Migration {
     this.addSql(
       'alter table if exists "order_change_action" alter column "order_change_id" type text using ("order_change_id"::text);'
     )
-    this.addSql(
-      'alter table if exists "order_change_action" alter column "order_change_id" set not null;'
-    )
+
     this.addSql(
       'alter table if exists "order_change_action" alter column "ordering" drop default;'
     )
@@ -638,24 +617,6 @@ export class Migration20241127185510 extends Migration {
       'alter table if exists "order_claim" add constraint "order_claim_return_id_unique" unique ("return_id");'
     )
 
-    this.addSql(
-      'alter table if exists "order_transaction" alter column "return_id" type text using ("return_id"::text);'
-    )
-    this.addSql(
-      'alter table if exists "order_transaction" alter column "return_id" drop not null;'
-    )
-    this.addSql(
-      'alter table if exists "order_transaction" alter column "exchange_id" type text using ("exchange_id"::text);'
-    )
-    this.addSql(
-      'alter table if exists "order_transaction" alter column "exchange_id" drop not null;'
-    )
-    this.addSql(
-      'alter table if exists "order_transaction" alter column "claim_id" type text using ("claim_id"::text);'
-    )
-    this.addSql(
-      'alter table if exists "order_transaction" alter column "claim_id" drop not null;'
-    )
     this.addSql(
       'alter table if exists "order_transaction" add constraint "order_transaction_order_id_foreign" foreign key ("order_id") references "order" ("id") on update cascade on delete cascade;'
     )

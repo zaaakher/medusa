@@ -1,6 +1,6 @@
 import { model } from "@medusajs/framework/utils"
-import { OrderChange } from "./order-change"
 import { Order, OrderClaim, OrderExchange, Return } from "@models"
+import { OrderChange } from "./order-change"
 
 const _OrderChangeAction = model
   .define("OrderChangeAction", {
@@ -17,18 +17,26 @@ const _OrderChangeAction = model
     order: model.belongsTo<() => typeof OrderChange>(() => Order, {
       mappedBy: "actions",
     }),
-    return: model.belongsTo<() => typeof Return>(() => Return, {
-      mappedBy: "actions",
-    }),
-    claim: model.belongsTo<() => typeof OrderClaim>(() => OrderClaim, {
-      mappedBy: "actions",
-    }),
-    exchange: model.belongsTo<() => typeof OrderExchange>(() => OrderExchange, {
-      mappedBy: "actions",
-    }),
-    order_change: model.belongsTo<() => typeof OrderChange>(() => OrderChange, {
-      mappedBy: "actions",
-    }),
+    return: model
+      .belongsTo<() => typeof Return>(() => Return, {
+        mappedBy: "actions",
+      })
+      .nullable(),
+    claim: model
+      .belongsTo<() => typeof OrderClaim>(() => OrderClaim, {
+        mappedBy: "actions",
+      })
+      .nullable(),
+    exchange: model
+      .belongsTo<() => typeof OrderExchange>(() => OrderExchange, {
+        mappedBy: "actions",
+      })
+      .nullable(),
+    order_change: model
+      .belongsTo<() => typeof OrderChange>(() => OrderChange, {
+        mappedBy: "actions",
+      })
+      .nullable(),
   })
   .indexes([
     {

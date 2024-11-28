@@ -23,12 +23,16 @@ const _Return = model
     order: model.belongsTo<() => typeof Order>(() => Order, {
       mappedBy: "returns",
     }),
-    exchange: model.belongsTo<() => typeof OrderExchange>(() => OrderExchange, {
-      mappedBy: "return",
-    }),
-    claim: model.belongsTo<() => typeof OrderClaim>(() => OrderClaim, {
-      mappedBy: "return",
-    }),
+    exchange: model
+      .belongsTo<() => typeof OrderExchange>(() => OrderExchange, {
+        mappedBy: "return",
+      })
+      .nullable(),
+    claim: model
+      .belongsTo<() => typeof OrderClaim>(() => OrderClaim, {
+        mappedBy: "return",
+      })
+      .nullable(),
     items: model.hasMany<() => typeof ReturnItem>(() => ReturnItem, {
       mappedBy: "return",
     }),
@@ -44,6 +48,9 @@ const _Return = model
         mappedBy: "return",
       }
     ),
+  })
+  .cascades({
+    delete: ["items", "shipping_methods", "transactions"],
   })
   .indexes([
     {

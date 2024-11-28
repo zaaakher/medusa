@@ -26,6 +26,9 @@ const _OrderShippingMethod = model
       }
     ),
   })
+  .cascades({
+    delete: ["tax_lines", "adjustments"],
+  })
   .indexes([
     {
       name: "IDX_order_shipping_method_shipping_option_id",

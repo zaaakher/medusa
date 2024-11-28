@@ -52,6 +52,9 @@ const _OrderChange = model
       }
     ),
   })
+  .cascades({
+    delete: ["actions"],
+  })
   .indexes([
     {
       name: "IDX_order_change_order_id",

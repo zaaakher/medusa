@@ -40,24 +40,9 @@ const _OrderLineItem = model
         mappedBy: "item",
       }
     ),
-    // items: model.hasMany<() => typeof OrderItem>(() => OrderItem, {
-    //   mappedBy: "item",
-    // }),
-    // return_items: model.hasMany<() => typeof ReturnItem>(() => ReturnItem, {
-    //   mappedBy: "item",
-    // }),
-    // claim_items: model.hasMany<() => typeof OrderClaimItem>(
-    //   () => OrderClaimItem,
-    //   {
-    //     mappedBy: "item",
-    //   }
-    // ),
-    // exchange_items: model.hasMany<() => typeof OrderExchangeItem>(
-    //   () => OrderExchangeItem,
-    //   {
-    //     mappedBy: "item",
-    //   }
-    // ),
+  })
+  .cascades({
+    delete: ["tax_lines", "adjustments"],
   })
   .indexes([
     {

@@ -4,27 +4,34 @@ import { OrderLineItem } from "./line-item"
 import { Order } from "./order"
 
 const _OrderItem = model
-  .define("OrderItem", {
-    id: model.id({ prefix: "orditem" }).primaryKey(),
-    version: model.number(),
-    unit_price: model.bigNumber().nullable(),
-    compare_at_unit_price: model.bigNumber().nullable(),
-    quantity: model.bigNumber(),
-    fulfilled_quantity: model.bigNumber().default(0),
-    delivered_quantity: model.bigNumber().default(0),
-    shipped_quantity: model.bigNumber().default(0),
-    return_requested_quantity: model.bigNumber().default(0),
-    return_received_quantity: model.bigNumber().default(0),
-    return_dismissed_quantity: model.bigNumber().default(0),
-    written_off_quantity: model.bigNumber().default(0),
-    metadata: model.json().nullable(),
-    order: model.belongsTo<() => typeof Order>(() => Order, {
-      mappedBy: "items",
-    }),
-    item: model.belongsTo<() => typeof OrderLineItem>(() => OrderLineItem, {
-      mappedBy: "items",
-    }),
-  })
+  .define(
+    {
+      name: "OrderItem",
+      tableName: "OrderItem",
+      disableSoftDeleteFilter: true,
+    },
+    {
+      id: model.id({ prefix: "orditem" }).primaryKey(),
+      version: model.number(),
+      unit_price: model.bigNumber().nullable(),
+      compare_at_unit_price: model.bigNumber().nullable(),
+      quantity: model.bigNumber(),
+      fulfilled_quantity: model.bigNumber().default(0),
+      delivered_quantity: model.bigNumber().default(0),
+      shipped_quantity: model.bigNumber().default(0),
+      return_requested_quantity: model.bigNumber().default(0),
+      return_received_quantity: model.bigNumber().default(0),
+      return_dismissed_quantity: model.bigNumber().default(0),
+      written_off_quantity: model.bigNumber().default(0),
+      metadata: model.json().nullable(),
+      order: model.belongsTo<() => typeof Order>(() => Order, {
+        mappedBy: "items",
+      }),
+      item: model.belongsTo<() => typeof OrderLineItem>(() => OrderLineItem, {
+        mappedBy: "items",
+      }),
+    }
+  )
   .indexes([
     {
       name: "IDX_order_item_order_id",

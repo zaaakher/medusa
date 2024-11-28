@@ -48,6 +48,14 @@ const _OrderClaim = model
       }
     ),
   })
+  .cascades({
+    delete: [
+      "additional_items",
+      "claim_items",
+      "shipping_methods",
+      "transactions",
+    ],
+  })
   .indexes([
     {
       name: "IDX_order_claim_display_id",

@@ -43,6 +43,9 @@ const _OrderExchange = model
       }
     ),
   })
+  .cascades({
+    delete: ["additional_items", "shipping_methods", "transactions"],
+  })
   .indexes([
     {
       name: "IDX_order_exchange_display_id",
