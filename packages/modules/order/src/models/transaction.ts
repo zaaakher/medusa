@@ -19,15 +19,21 @@ const _OrderTransaction = model
     order: model.belongsTo<() => typeof Order>(() => Order, {
       mappedBy: "transactions",
     }),
-    return: model.belongsTo<() => typeof Return>(() => Return, {
-      mappedBy: "transactions",
-    }),
-    exchange: model.belongsTo<() => typeof OrderExchange>(() => OrderExchange, {
-      mappedBy: "transactions",
-    }),
-    claim: model.belongsTo<() => typeof OrderClaim>(() => OrderClaim, {
-      mappedBy: "transactions",
-    }),
+    return: model
+      .belongsTo<() => typeof Return>(() => Return, {
+        mappedBy: "transactions",
+      })
+      .nullable(),
+    exchange: model
+      .belongsTo<() => typeof OrderExchange>(() => OrderExchange, {
+        mappedBy: "transactions",
+      })
+      .nullable(),
+    claim: model
+      .belongsTo<() => typeof OrderClaim>(() => OrderClaim, {
+        mappedBy: "transactions",
+      })
+      .nullable(),
   })
   .indexes([
     {

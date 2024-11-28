@@ -1,5 +1,4 @@
 import { model } from "@medusajs/framework/utils"
-import { OrderShipping } from "./order-shipping-method"
 import { OrderShippingMethodAdjustment } from "./shipping-method-adjustment"
 import { OrderShippingMethodTaxLine } from "./shipping-method-tax-line"
 
@@ -22,12 +21,6 @@ const _OrderShippingMethod = model
     ),
     adjustments: model.hasMany<() => typeof OrderShippingMethodAdjustment>(
       () => OrderShippingMethodAdjustment,
-      {
-        mappedBy: "shipping_method",
-      }
-    ),
-    shipping_methods: model.hasMany<() => typeof OrderShipping>(
-      () => OrderShipping,
       {
         mappedBy: "shipping_method",
       }

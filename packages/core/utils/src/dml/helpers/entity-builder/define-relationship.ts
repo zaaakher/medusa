@@ -208,11 +208,11 @@ export function defineBelongsToRelationship(
   /**
    * Ensure the mapped by is defined as relationship on the other side
    */
-  if (!otherSideRelation) {
-    throw new Error(
-      `Missing property "${mappedBy}" on "${relatedModelName}" entity. Make sure to define it as a relationship`
-    )
-  }
+  // if (!otherSideRelation) {
+  //   throw new Error(
+  //     `Missing property "${mappedBy}" on "${relatedModelName}" entity. Make sure to define it as a relationship`
+  //   )
+  // }
 
   function applyForeignKeyAssignationHooks(foreignKeyName: string) {
     const hookName = `assignRelationFromForeignKeyValue${foreignKeyName}`
@@ -251,6 +251,7 @@ export function defineBelongsToRelationship(
    * Otherside is a has many. Hence we should defined a ManyToOne
    */
   if (
+    !otherSideRelation ||
     HasMany.isHasMany(otherSideRelation) ||
     DmlManyToMany.isManyToMany(otherSideRelation)
   ) {

@@ -18,13 +18,9 @@ import {
   TextProperty,
 } from "@medusajs/framework/utils"
 import { OrderAddress } from "./address"
-import { OrderClaim } from "./claim"
-import { OrderExchange } from "./exchange"
-import { OrderChange } from "./order-change"
 import { OrderItem } from "./order-item"
 import { OrderShipping } from "./order-shipping-method"
 import { OrderSummary } from "./order-summary"
-import { Return } from "./return"
 import { OrderTransaction } from "./transaction"
 
 type OrderSchema = {
@@ -41,10 +37,6 @@ type OrderSchema = {
   no_notification: NullableModifier<boolean, BooleanProperty>
   metadata: NullableModifier<Record<string, unknown>, JSONProperty>
   canceled_at: NullableModifier<Date, DateTimeProperty>
-  exchanges: HasMany<typeof OrderExchange>
-  claims: HasMany<typeof OrderClaim>
-  returns: HasMany<typeof Return>
-  changes: HasMany<typeof OrderChange>
   shipping_address: RelationNullableModifier<
     typeof OrderAddress,
     BelongsTo<typeof OrderAddress>
@@ -74,16 +66,6 @@ const _Order = model
     no_notification: model.boolean().nullable(),
     metadata: model.json().nullable(),
     canceled_at: model.dateTime().nullable(),
-    exchanges: model.hasMany<any>(() => OrderExchange, {
-      mappedBy: "order",
-    }),
-    claims: model.hasMany<any>(() => OrderClaim, {
-      mappedBy: "order",
-    }),
-    returns: model.hasMany<any>(() => Return, {
-      mappedBy: "order",
-    }),
-    changes: model.hasMany<any>(() => OrderChange),
     shipping_address: model.belongsTo<any>(() => OrderAddress).nullable(),
     billing_address: model.belongsTo<any>(() => OrderAddress).nullable(),
     summary: model.hasMany<any>(() => OrderSummary, {

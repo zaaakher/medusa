@@ -1,5 +1,4 @@
 import { model } from "@medusajs/framework/utils"
-import { ReturnItem } from "./return-item"
 
 const _ReturnReason = model
   .define("ReturnReason", {
@@ -20,9 +19,6 @@ const _ReturnReason = model
         mappedBy: "parent_return_reason",
       }
     ),
-    return_items: model.hasMany<() => typeof ReturnItem>(() => ReturnItem, {
-      mappedBy: "reason",
-    }),
   })
   .indexes([
     {

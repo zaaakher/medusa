@@ -1,10 +1,6 @@
 import { model } from "@medusajs/framework/utils"
-import { OrderClaimItem } from "./claim-item"
-import { OrderExchangeItem } from "./exchange-item"
 import { OrderLineItemAdjustment } from "./line-item-adjustment"
 import { OrderLineItemTaxLine } from "./line-item-tax-line"
-import { OrderItem } from "./order-item"
-import { ReturnItem } from "./return-item"
 
 const _OrderLineItem = model
   .define("OrderLineItem", {
@@ -44,24 +40,24 @@ const _OrderLineItem = model
         mappedBy: "item",
       }
     ),
-    items: model.hasMany<() => typeof OrderItem>(() => OrderItem, {
-      mappedBy: "item",
-    }),
-    return_items: model.hasMany<() => typeof ReturnItem>(() => ReturnItem, {
-      mappedBy: "item",
-    }),
-    claim_items: model.hasMany<() => typeof OrderClaimItem>(
-      () => OrderClaimItem,
-      {
-        mappedBy: "item",
-      }
-    ),
-    exchange_items: model.hasMany<() => typeof OrderExchangeItem>(
-      () => OrderExchangeItem,
-      {
-        mappedBy: "item",
-      }
-    ),
+    // items: model.hasMany<() => typeof OrderItem>(() => OrderItem, {
+    //   mappedBy: "item",
+    // }),
+    // return_items: model.hasMany<() => typeof ReturnItem>(() => ReturnItem, {
+    //   mappedBy: "item",
+    // }),
+    // claim_items: model.hasMany<() => typeof OrderClaimItem>(
+    //   () => OrderClaimItem,
+    //   {
+    //     mappedBy: "item",
+    //   }
+    // ),
+    // exchange_items: model.hasMany<() => typeof OrderExchangeItem>(
+    //   () => OrderExchangeItem,
+    //   {
+    //     mappedBy: "item",
+    //   }
+    // ),
   })
   .indexes([
     {
