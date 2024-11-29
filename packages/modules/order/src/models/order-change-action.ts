@@ -9,7 +9,7 @@ import { Return } from "./return"
 const _OrderChangeAction = model
   .define("OrderChangeAction", {
     id: model.id({ prefix: "ordchact" }).primaryKey(),
-    ordering: model.autoincrement().nullable(),
+    ordering: model.autoincrement(),
     version: model.number().nullable(),
     reference: model.text().nullable(),
     reference_id: model.text().nullable(),
@@ -44,11 +44,11 @@ const _OrderChangeAction = model
   })
   .hooks({
     creating: (entity: any) => {
-      entity.order_id ??= entity.order_change.order_id
-      entity.return_id ??= entity.order_change.return_id
-      entity.claim_id ??= entity.order_change.claim_id
-      entity.exchange_id ??= entity.order_change.exchange_id
-      entity.version ??= entity.order_change.version
+      entity.order_id ??= entity.order_change?.order_id ?? null
+      entity.return_id ??= entity.order_change?.return_id ?? null
+      entity.claim_id ??= entity.order_change?.claim_id ?? null
+      entity.exchange_id ??= entity.order_change?.exchange_id ?? null
+      entity.version ??= entity.order_change?.version ?? null
     },
   })
   .indexes([

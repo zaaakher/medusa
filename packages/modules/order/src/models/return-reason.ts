@@ -7,12 +7,11 @@ const _ReturnReason = model
     label: model.text().searchable(),
     description: model.text().nullable(),
     metadata: model.json().nullable(),
-    parent_return_reason: model.belongsTo<() => typeof _ReturnReason>(
-      () => _ReturnReason,
-      {
+    parent_return_reason: model
+      .belongsTo<() => typeof _ReturnReason>(() => _ReturnReason, {
         mappedBy: "return_reason_children",
-      }
-    ),
+      })
+      .nullable(),
     return_reason_children: model.hasMany<() => typeof _ReturnReason>(
       () => _ReturnReason,
       {

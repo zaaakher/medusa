@@ -18,6 +18,7 @@ import {
   TextProperty,
 } from "@medusajs/framework/utils"
 import { OrderAddress } from "./address"
+import { OrderChange } from "./order-change"
 import { OrderItem } from "./order-item"
 import { OrderShipping } from "./order-shipping-method"
 import { OrderSummary } from "./order-summary"
@@ -25,7 +26,7 @@ import { OrderTransaction } from "./transaction"
 
 type OrderSchema = {
   id: PrimaryKeyModifier<string, IdProperty>
-  display_id: NullableModifier<number, AutoIncrementProperty>
+  display_id: AutoIncrementProperty
   region_id: NullableModifier<string, TextProperty>
   customer_id: NullableModifier<string, TextProperty>
   version: NumberProperty
@@ -49,12 +50,13 @@ type OrderSchema = {
   items: HasMany<typeof OrderItem>
   shipping_methods: HasMany<typeof OrderShipping>
   transactions: HasMany<typeof OrderTransaction>
+  changes: HasMany<typeof OrderChange>
 }
 
 const _Order = model
   .define("Order", {
     id: model.id({ prefix: "order" }).primaryKey(),
-    display_id: model.autoincrement().nullable(),
+    display_id: model.autoincrement(),
     region_id: model.text().nullable(),
     customer_id: model.text().nullable(),
     version: model.number().default(1),
@@ -78,6 +80,9 @@ const _Order = model
       mappedBy: "order",
     }),
     transactions: model.hasMany<any>(() => OrderTransaction, {
+      mappedBy: "order",
+    }),
+    changes: model.hasMany<any>(() => OrderChange, {
       mappedBy: "order",
     }),
   })
