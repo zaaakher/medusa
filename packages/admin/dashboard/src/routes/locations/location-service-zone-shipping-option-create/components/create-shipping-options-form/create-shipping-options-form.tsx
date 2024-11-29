@@ -7,12 +7,16 @@ import { useTranslation } from "react-i18next"
 import { useState } from "react"
 import {
   RouteFocusModal,
+  StackedFocusModal,
   useRouteModal,
 } from "../../../../../components/modals"
 import { KeyboundForm } from "../../../../../components/utilities/keybound-form"
 import { useCreateShippingOptions } from "../../../../../hooks/api/shipping-options"
 import { castNumber } from "../../../../../lib/cast-number"
-import { ShippingOptionPriceType } from "../../../common/constants"
+import {
+  CONDITIONAL_PRICES_STACKED_MODAL_ID,
+  ShippingOptionPriceType,
+} from "../../../common/constants"
 import { CreateShippingOptionDetailsForm } from "./create-shipping-option-details-form"
 import { CreateShippingOptionsPricesForm } from "./create-shipping-options-prices-form"
 import {
@@ -51,6 +55,8 @@ export function CreateShippingOptionsForm({
       provider_id: "",
       region_prices: {},
       currency_prices: {},
+      custom_region_prices: {},
+      custom_currency_prices: {},
     },
     resolver: zodResolver(CreateShippingOptionSchema),
   })
@@ -76,13 +82,13 @@ export function CreateShippingOptionsForm({
 
     const regionPrices = Object.entries(data.region_prices)
       .map(([region_id, value]) => {
-        if (value.amount === "" || value.amount === undefined) {
+        if (value === "" || value === undefined) {
           return undefined
         }
 
         return {
           region_id,
-          amount: castNumber(value.amount),
+          amount: castNumber(value),
         }
       })
       .filter((o) => !!o) as { region_id: string; amount: number }[]
@@ -192,87 +198,92 @@ export function CreateShippingOptionsForm({
     : "in-progress"
 
   return (
-    <RouteFocusModal.Form form={form}>
-      <ProgressTabs
-        value={activeTab}
-        className="flex h-full flex-col overflow-hidden"
-        onValueChange={(tab) => onTabChange(tab as Tab)}
-      >
-        <KeyboundForm className="flex h-full flex-col" onSubmit={handleSubmit}>
-          <RouteFocusModal.Header>
-            <ProgressTabs.List className="border-ui-border-base -my-2 ml-2 min-w-0 flex-1 border-l">
-              <ProgressTabs.Trigger
-                value={Tab.DETAILS}
-                status={detailsStatus}
-                className="w-full max-w-[200px]"
-              >
-                <span className="w-full cursor-auto overflow-hidden text-ellipsis whitespace-nowrap">
-                  {t("stockLocations.shippingOptions.create.tabs.details")}
-                </span>
-              </ProgressTabs.Trigger>
-              {!isCalculatedPriceType && (
+    <StackedFocusModal id={CONDITIONAL_PRICES_STACKED_MODAL_ID}>
+      <RouteFocusModal.Form form={form}>
+        <ProgressTabs
+          value={activeTab}
+          className="flex h-full flex-col overflow-hidden"
+          onValueChange={(tab) => onTabChange(tab as Tab)}
+        >
+          <KeyboundForm
+            className="flex h-full flex-col"
+            onSubmit={handleSubmit}
+          >
+            <RouteFocusModal.Header>
+              <ProgressTabs.List className="border-ui-border-base -my-2 ml-2 min-w-0 flex-1 border-l">
                 <ProgressTabs.Trigger
-                  value={Tab.PRICING}
-                  status={pricesStatus}
+                  value={Tab.DETAILS}
+                  status={detailsStatus}
                   className="w-full max-w-[200px]"
                 >
-                  <span className="w-full overflow-hidden text-ellipsis whitespace-nowrap">
-                    {t("stockLocations.shippingOptions.create.tabs.prices")}
+                  <span className="w-full cursor-auto overflow-hidden text-ellipsis whitespace-nowrap">
+                    {t("stockLocations.shippingOptions.create.tabs.details")}
                   </span>
                 </ProgressTabs.Trigger>
-              )}
-            </ProgressTabs.List>
-          </RouteFocusModal.Header>
+                {!isCalculatedPriceType && (
+                  <ProgressTabs.Trigger
+                    value={Tab.PRICING}
+                    status={pricesStatus}
+                    className="w-full max-w-[200px]"
+                  >
+                    <span className="w-full overflow-hidden text-ellipsis whitespace-nowrap">
+                      {t("stockLocations.shippingOptions.create.tabs.prices")}
+                    </span>
+                  </ProgressTabs.Trigger>
+                )}
+              </ProgressTabs.List>
+            </RouteFocusModal.Header>
 
-          <RouteFocusModal.Body className="size-full overflow-hidden">
-            <ProgressTabs.Content
-              value={Tab.DETAILS}
-              className="size-full overflow-y-auto"
-            >
-              <CreateShippingOptionDetailsForm
-                form={form}
-                zone={zone}
-                isReturn={isReturn}
-                locationId={locationId}
-              />
-            </ProgressTabs.Content>
-            <ProgressTabs.Content value={Tab.PRICING} className="size-full">
-              <CreateShippingOptionsPricesForm form={form} />
-            </ProgressTabs.Content>
-          </RouteFocusModal.Body>
-          <RouteFocusModal.Footer>
-            <div className="flex items-center justify-end gap-x-2">
-              <RouteFocusModal.Close asChild>
-                <Button variant="secondary" size="small">
-                  {t("actions.cancel")}
-                </Button>
-              </RouteFocusModal.Close>
-              {activeTab === Tab.PRICING || isCalculatedPriceType ? (
-                <Button
-                  size="small"
-                  className="whitespace-nowrap"
-                  isLoading={isLoading}
-                  key="submit-btn"
-                  type="submit"
-                >
-                  {t("actions.save")}
-                </Button>
-              ) : (
-                <Button
-                  size="small"
-                  className="whitespace-nowrap"
-                  isLoading={isLoading}
-                  onClick={() => onTabChange(Tab.PRICING)}
-                  key="continue-btn"
-                  type="button"
-                >
-                  {t("actions.continue")}
-                </Button>
-              )}
-            </div>
-          </RouteFocusModal.Footer>
-        </KeyboundForm>
-      </ProgressTabs>
-    </RouteFocusModal.Form>
+            <RouteFocusModal.Body className="size-full overflow-hidden">
+              <ProgressTabs.Content
+                value={Tab.DETAILS}
+                className="size-full overflow-y-auto"
+              >
+                <CreateShippingOptionDetailsForm
+                  form={form}
+                  zone={zone}
+                  isReturn={isReturn}
+                  locationId={locationId}
+                />
+              </ProgressTabs.Content>
+              <ProgressTabs.Content value={Tab.PRICING} className="size-full">
+                <CreateShippingOptionsPricesForm form={form} />
+              </ProgressTabs.Content>
+            </RouteFocusModal.Body>
+            <RouteFocusModal.Footer>
+              <div className="flex items-center justify-end gap-x-2">
+                <RouteFocusModal.Close asChild>
+                  <Button variant="secondary" size="small">
+                    {t("actions.cancel")}
+                  </Button>
+                </RouteFocusModal.Close>
+                {activeTab === Tab.PRICING || isCalculatedPriceType ? (
+                  <Button
+                    size="small"
+                    className="whitespace-nowrap"
+                    isLoading={isLoading}
+                    key="submit-btn"
+                    type="submit"
+                  >
+                    {t("actions.save")}
+                  </Button>
+                ) : (
+                  <Button
+                    size="small"
+                    className="whitespace-nowrap"
+                    isLoading={isLoading}
+                    onClick={() => onTabChange(Tab.PRICING)}
+                    key="continue-btn"
+                    type="button"
+                  >
+                    {t("actions.continue")}
+                  </Button>
+                )}
+              </div>
+            </RouteFocusModal.Footer>
+          </KeyboundForm>
+        </ProgressTabs>
+      </RouteFocusModal.Form>
+    </StackedFocusModal>
   )
 }

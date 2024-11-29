@@ -9,3 +9,5 @@ export enum ShippingOptionPriceType {
 }
 
 export const GEO_ZONE_STACKED_MODAL_ID = "geo-zone"
+
+export const CONDITIONAL_PRICES_STACKED_MODAL_ID = "conditional-prices"

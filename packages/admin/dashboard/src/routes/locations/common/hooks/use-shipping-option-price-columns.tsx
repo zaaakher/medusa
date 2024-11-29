@@ -9,9 +9,8 @@ import {
   createDataGridHelper,
   DataGrid,
 } from "../../../../components/data-grid"
-import { DataGridCurrencyCell } from "../../../../components/data-grid/components"
-import { DataGridReadonlyCell } from "../../../../components/data-grid/components/data-grid-readonly-cell"
 import { FieldContext } from "../../../../components/data-grid/types"
+import { ShippingOptionPriceCell } from "../components/shipping-option-price-cell"
 
 const columnHelper = createDataGridHelper()
 
@@ -32,6 +31,8 @@ export const useShippingOptionPriceColumns = ({
     return [
       columnHelper.column({
         id: "name",
+        name: t("fields.name"),
+        disableHiding: true,
         header: t("fields.name"),
         cell: (context) => {
           return (
@@ -65,7 +66,6 @@ type CreateDataGridPriceColumnsProps<
   currencies?: string[]
   regions?: HttpTypes.AdminRegion[]
   pricePreferences?: HttpTypes.AdminPricePreference[]
-  isReadyOnly?: (context: FieldContext<TData>) => boolean
   getFieldName: (
     context: FieldContext<TData>,
     value: string
@@ -80,7 +80,6 @@ export const createDataGridPriceColumns = <
   currencies,
   regions,
   pricePreferences,
-  isReadyOnly,
   getFieldName,
   t,
 }: CreateDataGridPriceColumnsProps<TData, TFieldValues>): ColumnDef<
@@ -105,12 +104,6 @@ export const createDataGridPriceColumns = <
           regionOrCurrency: currency.toUpperCase(),
         }),
         field: (context) => {
-          const isReadyOnlyValue = isReadyOnly?.(context)
-
-          if (isReadyOnlyValue) {
-            return null
-          }
-
           return getFieldName(context, currency)
         },
         type: "number",
@@ -123,11 +116,14 @@ export const createDataGridPriceColumns = <
           </div>
         ),
         cell: (context) => {
-          if (isReadyOnly?.(context)) {
-            return <DataGridReadonlyCell context={context} />
-          }
-
-          return <DataGridCurrencyCell code={currency} context={context} />
+          return (
+            <ShippingOptionPriceCell
+              type="currency"
+              header={translatedCurrencyName}
+              code={currency}
+              context={context}
+            />
+          )
         },
       })
     }) ?? []),
@@ -146,12 +142,6 @@ export const createDataGridPriceColumns = <
           regionOrCurrency: region.name,
         }),
         field: (context) => {
-          const isReadyOnlyValue = isReadyOnly?.(context)
-
-          if (isReadyOnlyValue) {
-            return null
-          }
-
           return getFieldName(context, region.id)
         },
         type: "number",
@@ -164,17 +154,15 @@ export const createDataGridPriceColumns = <
           </div>
         ),
         cell: (context) => {
-          if (isReadyOnly?.(context)) {
-            return <DataGridReadonlyCell context={context} />
-          }
-
           const currency = currencies?.find((c) => c === region.currency_code)
           if (!currency) {
             return null
           }
 
           return (
-            <DataGridCurrencyCell
+            <ShippingOptionPriceCell
+              type="region"
+              header={translatedRegionName}
               code={region.currency_code}
               context={context}
             />

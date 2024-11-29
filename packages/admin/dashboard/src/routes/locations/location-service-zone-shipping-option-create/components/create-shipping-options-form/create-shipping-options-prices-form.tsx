@@ -1,12 +1,19 @@
-import { useMemo } from "react"
+import { useMemo, useState } from "react"
 import { UseFormReturn, useWatch } from "react-hook-form"
 
 import { DataGrid } from "../../../../../components/data-grid"
-import { useRouteModal } from "../../../../../components/modals"
+import {
+  useRouteModal,
+  useStackedModal,
+} from "../../../../../components/modals"
 import { usePricePreferences } from "../../../../../hooks/api/price-preferences"
 import { useRegions } from "../../../../../hooks/api/regions"
 import { useStore } from "../../../../../hooks/api/store"
+import { PriceRuleForm } from "../../../common/components/price-rule-form"
+import { ShippingOptionPriceProvider } from "../../../common/components/shipping-option-price-provider"
+import { CONDITIONAL_PRICES_STACKED_MODAL_ID } from "../../../common/constants"
 import { useShippingOptionPriceColumns } from "../../../common/hooks/use-shipping-option-price-columns"
+import { ConditionalPriceInfo } from "../../../common/types"
 import { CreateShippingOptionSchema } from "./schema"
 
 type PricingPricesFormProps = {
@@ -16,6 +23,20 @@ type PricingPricesFormProps = {
 export const CreateShippingOptionsPricesForm = ({
   form,
 }: PricingPricesFormProps) => {
+  const { getIsOpen, setIsOpen } = useStackedModal()
+  const [selectedPrice, setSelectedPrice] =
+    useState<ConditionalPriceInfo | null>(null)
+
+  const onOpenConditionalPricesModal = (info: ConditionalPriceInfo) => {
+    setIsOpen(CONDITIONAL_PRICES_STACKED_MODAL_ID, true)
+    setSelectedPrice(info)
+  }
+
+  const onCloseConditionalPricesModal = () => {
+    setIsOpen(CONDITIONAL_PRICES_STACKED_MODAL_ID, false)
+    setSelectedPrice(null)
+  }
+
   const {
     store,
     isLoading: isStoreLoading,
@@ -67,14 +88,21 @@ export const CreateShippingOptionsPricesForm = ({
   }
 
   return (
-    <div className="flex size-full flex-col divide-y overflow-hidden">
-      <DataGrid
-        isLoading={isLoading}
-        data={data}
-        columns={columns}
-        state={form}
-        onEditingChange={(editing) => setCloseOnEscape(!editing)}
-      />
-    </div>
+    <ShippingOptionPriceProvider
+      onOpenConditionalPricesModal={onOpenConditionalPricesModal}
+      onCloseConditionalPricesModal={onCloseConditionalPricesModal}
+    >
+      <div className="flex size-full flex-col divide-y overflow-hidden">
+        <DataGrid
+          isLoading={isLoading}
+          data={data}
+          columns={columns}
+          state={form}
+          onEditingChange={(editing) => setCloseOnEscape(!editing)}
+          disableInteractions={getIsOpen(CONDITIONAL_PRICES_STACKED_MODAL_ID)}
+        />
+        {selectedPrice && <PriceRuleForm info={selectedPrice} />}
+      </div>
+    </ShippingOptionPriceProvider>
   )
 }
