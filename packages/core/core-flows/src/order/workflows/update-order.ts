@@ -41,7 +41,7 @@ export const updateOrderWorkflow = createWorkflow(
   ): WorkflowResponse<OrderPreviewDTO> {
     const orderQuery = useQueryGraphStep({
       entity: "order",
-      fields: ["id", "email", "shipping_address", "billing_address"],
+      fields: ["id", "email", "shipping_address.*", "billing_address.*"],
       filters: { id: input.id },
       options: { throwIfKeyNotFound: true },
     }).config({ name: "order-query" })

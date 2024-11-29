@@ -23,7 +23,7 @@ export const updateOrderShippingAddressWorkflow = createWorkflow(
   ) {
     const orderQuery = useQueryGraphStep({
       entity: "order",
-      fields: ["id", "shipping_address"],
+      fields: ["id", "shipping_address.*"],
       filters: { id: input.order_id },
       options: { throwIfKeyNotFound: true },
     }).config({ name: "order-query" })

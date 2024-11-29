@@ -20,6 +20,74 @@ medusaIntegrationTestRunner({
       await createAdminUser(dbConnection, adminHeaders, container)
     })
 
+    describe("POST /orders/:id", () => {
+      beforeEach(async () => {
+        seeder = await createOrderSeeder({
+          api,
+          container: getContainer(),
+        })
+        order = seeder.order
+
+        order = (await api.get(`/admin/orders/${order.id}`, adminHeaders)).data
+          .order
+      })
+
+      it("should update shipping address on an order (by creating a new Address record)", async () => {
+        const response = await api.post(
+          `/admin/orders/${order.id}`,
+          {
+            shipping_address: {
+              city: "New New York",
+            },
+          },
+          adminHeaders
+        )
+
+        const addressBefore = order.shipping_address
+
+        expect(response.data.order.shipping_address.id).not.toEqual(
+          addressBefore.id
+        ) // new addres created
+        expect(response.data.order.shipping_address).toEqual(
+          expect.objectContaining({
+            customer_id: addressBefore.customer_id,
+            company: addressBefore.company,
+            first_name: addressBefore.first_name,
+            last_name: addressBefore.last_name,
+            address_1: addressBefore.address_1,
+            address_2: addressBefore.address_2,
+            city: "New New York",
+            country_code: addressBefore.country_code,
+            province: addressBefore.province,
+            postal_code: addressBefore.postal_code,
+            phone: addressBefore.phone,
+          })
+        )
+
+        const orderChangesResult = (
+          await api.get(`/admin/orders/${order.id}/changes`, adminHeaders)
+        ).data.order_changes
+
+        expect(orderChangesResult.length).toEqual(1)
+        expect(orderChangesResult[0]).toEqual(
+          expect.objectContaining({
+            // version: 2, // TODO: implement confirmed change without version bump
+            change_type: "shipping_address_change",
+            status: "confirmed",
+            confirmed_at: expect.any(String),
+            actions: expect.arrayContaining([
+              expect.objectContaining({
+                // version: 2, // TODO: action without version bump
+                reference: "shipping_address",
+                action: "CHANGE_SHIPPING_ADDRESS",
+                details: addressBefore, // Maybe there is no need to persist the entire old address on the action
+              }),
+            ]),
+          })
+        )
+      })
+    })
+
     describe("POST /orders/:id/fulfillments", () => {
       beforeEach(async () => {
         const stockChannelOverride = (
