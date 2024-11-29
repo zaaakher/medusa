@@ -28,6 +28,7 @@ export const listShippingOptionsForCartWorkflow = createWorkflow(
         "shipping_address.city",
         "shipping_address.country_code",
         "shipping_address.province",
+        "total",
       ],
       options: { throwIfKeyNotFound: true },
     }).config({ name: "get-cart" })
@@ -91,6 +92,14 @@ export const listShippingOptionsForCartWorkflow = createWorkflow(
       })
     })
 
+    const pricingContext = transform(
+      { cart, customerGroupIds },
+      ({ cart, customerGroupIds }) => ({
+        ...cart,
+        customer_group_id: customerGroupIds,
+      })
+    )
+
     const shippingOptions = useRemoteQueryStep({
       entry_point: "shipping_options",
       fields: [
@@ -132,10 +141,7 @@ export const listShippingOptionsForCartWorkflow = createWorkflow(
         },
 
         calculated_price: {
-          context: {
-            ...cart,
-            customer_group_id: customerGroupIds,
-          },
+          context: pricingContext,
         },
       },
     }).config({ name: "shipping-options-query" })
