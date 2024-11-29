@@ -314,6 +314,5 @@ export async function createExchange(
     this.createOrderExchanges([exchangeReference], sharedContext),
     this.confirmOrderChange(change[0].id, sharedContext),
   ])
-
   return exchangeReference
 }

@@ -8,7 +8,6 @@ import { OrderShippingMethod } from "./shipping-method"
 const _OrderShipping = model
   .define(
     {
-      name: "OrderShipping",
       tableName: "OrderShipping",
       disableSoftDeleteFilter: true,
     },

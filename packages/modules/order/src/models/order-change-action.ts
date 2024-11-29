@@ -14,7 +14,7 @@ const _OrderChangeAction = model
     reference: model.text().nullable(),
     reference_id: model.text().nullable(),
     action: model.text(),
-    details: model.json(),
+    details: model.json().default({}),
     amount: model.bigNumber().nullable(),
     internal_note: model.text().nullable(),
     applied: model.boolean().default(false),

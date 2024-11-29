@@ -4,7 +4,6 @@ import { OrderShippingMethod } from "./shipping-method"
 const _OrderShippingMethodTaxLine = model
   .define(
     {
-      name: "OrderShippingMethodTaxLine",
       tableName: "OrderShippingMethodTaxLine",
       disableSoftDeleteFilter: true,
     },

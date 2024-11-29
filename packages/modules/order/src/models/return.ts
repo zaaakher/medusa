@@ -2,7 +2,6 @@ import { model, ReturnStatus } from "@medusajs/framework/utils"
 import { OrderClaim } from "./claim"
 import { OrderExchange } from "./exchange"
 import { Order } from "./order"
-import { OrderChange } from "./order-change"
 import { OrderShipping } from "./order-shipping-method"
 import { ReturnItem } from "./return-item"
 import { OrderTransaction } from "./transaction"
@@ -49,9 +48,6 @@ const _Return = model
         mappedBy: "return",
       }
     ),
-    changes: model.hasMany<() => typeof OrderChange>(() => OrderChange, {
-      mappedBy: "return",
-    }),
   })
   .cascades({
     delete: ["items", "shipping_methods", "transactions"],

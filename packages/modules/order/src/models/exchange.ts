@@ -2,7 +2,6 @@ import { model } from "@medusajs/framework/utils"
 
 import { OrderExchangeItem } from "./exchange-item"
 import { Order } from "./order"
-import { OrderChange } from "./order-change"
 import { OrderShipping } from "./order-shipping-method"
 import { Return } from "./return"
 import { OrderTransaction } from "./transaction"
@@ -22,9 +21,11 @@ const _OrderExchange = model
     order: model.belongsTo<() => typeof Order>(() => Order, {
       mappedBy: "exchanges",
     }),
-    return: model.hasMany<() => typeof Return>(() => Return, {
-      mappedBy: "exchange",
-    }),
+    return: model
+      .hasOne<() => typeof Return>(() => Return, {
+        mappedBy: "exchange",
+      })
+      .nullable(),
     additional_items: model.hasMany<() => typeof OrderExchangeItem>(
       () => OrderExchangeItem,
       {
@@ -43,9 +44,6 @@ const _OrderExchange = model
         mappedBy: "exchange",
       }
     ),
-    changes: model.hasMany<() => typeof OrderChange>(() => OrderChange, {
-      mappedBy: "exchange",
-    }),
   })
   .cascades({
     delete: ["additional_items", "shipping_methods", "transactions"],

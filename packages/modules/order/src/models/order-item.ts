@@ -6,7 +6,6 @@ import { Order } from "./order"
 const _OrderItem = model
   .define(
     {
-      name: "OrderItem",
       tableName: "OrderItem",
       disableSoftDeleteFilter: true,
     },

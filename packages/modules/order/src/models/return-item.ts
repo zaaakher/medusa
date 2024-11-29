@@ -4,25 +4,31 @@ import { Return } from "./return"
 import { ReturnReason } from "./return-reason"
 
 const _ReturnItem = model
-  .define("ReturnItem", {
-    id: model.id({ prefix: "retitem" }).primaryKey(),
-    quantity: model.bigNumber(),
-    received_quantity: model.bigNumber().default(0),
-    damaged_quantity: model.bigNumber().default(0),
-    note: model.text().nullable(),
-    metadata: model.json().nullable(),
-    reason: model
-      .belongsTo<() => typeof ReturnReason>(() => ReturnReason, {
+  .define(
+    {
+      tableName: "ReturnItem",
+      disableSoftDeleteFilter: true,
+    },
+    {
+      id: model.id({ prefix: "retitem" }).primaryKey(),
+      quantity: model.bigNumber(),
+      received_quantity: model.bigNumber().default(0),
+      damaged_quantity: model.bigNumber().default(0),
+      note: model.text().nullable(),
+      metadata: model.json().nullable(),
+      reason: model
+        .belongsTo<() => typeof ReturnReason>(() => ReturnReason, {
+          mappedBy: "return_items",
+        })
+        .nullable(),
+      return: model.belongsTo<() => typeof Return>(() => Return, {
+        mappedBy: "items",
+      }),
+      item: model.belongsTo<() => typeof OrderLineItem>(() => OrderLineItem, {
         mappedBy: "return_items",
-      })
-      .nullable(),
-    return: model.belongsTo<() => typeof Return>(() => Return, {
-      mappedBy: "items",
-    }),
-    item: model.belongsTo<() => typeof OrderLineItem>(() => OrderLineItem, {
-      mappedBy: "return_items",
-    }),
-  })
+      }),
+    }
+  )
   .indexes([
     {
       name: "IDX_return_item_return_id",

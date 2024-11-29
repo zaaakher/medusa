@@ -18,7 +18,6 @@ import {
   TextProperty,
 } from "@medusajs/framework/utils"
 import { OrderAddress } from "./address"
-import { OrderChange } from "./order-change"
 import { OrderItem } from "./order-item"
 import { OrderShipping } from "./order-shipping-method"
 import { OrderSummary } from "./order-summary"
@@ -50,42 +49,44 @@ type OrderSchema = {
   items: HasMany<typeof OrderItem>
   shipping_methods: HasMany<typeof OrderShipping>
   transactions: HasMany<typeof OrderTransaction>
-  changes: HasMany<typeof OrderChange>
 }
 
 const _Order = model
-  .define("Order", {
-    id: model.id({ prefix: "order" }).primaryKey(),
-    display_id: model.autoincrement(),
-    region_id: model.text().nullable(),
-    customer_id: model.text().nullable(),
-    version: model.number().default(1),
-    sales_channel_id: model.text().nullable(),
-    status: model.enum(OrderStatus).default(OrderStatus.PENDING),
-    is_draft_order: model.boolean().default(false),
-    email: model.text().searchable().nullable(),
-    currency_code: model.text(),
-    no_notification: model.boolean().nullable(),
-    metadata: model.json().nullable(),
-    canceled_at: model.dateTime().nullable(),
-    shipping_address: model.belongsTo<any>(() => OrderAddress).nullable(),
-    billing_address: model.belongsTo<any>(() => OrderAddress).nullable(),
-    summary: model.hasMany<any>(() => OrderSummary, {
-      mappedBy: "order",
-    }),
-    items: model.hasMany<any>(() => OrderItem, {
-      mappedBy: "order",
-    }),
-    shipping_methods: model.hasMany<any>(() => OrderShipping, {
-      mappedBy: "order",
-    }),
-    transactions: model.hasMany<any>(() => OrderTransaction, {
-      mappedBy: "order",
-    }),
-    changes: model.hasMany<any>(() => OrderChange, {
-      mappedBy: "order",
-    }),
-  })
+  .define(
+    {
+      tableName: "Order",
+      disableSoftDeleteFilter: true,
+    },
+    {
+      id: model.id({ prefix: "order" }).primaryKey(),
+      display_id: model.autoincrement(),
+      region_id: model.text().nullable(),
+      customer_id: model.text().nullable(),
+      version: model.number().default(1),
+      sales_channel_id: model.text().nullable(),
+      status: model.enum(OrderStatus).default(OrderStatus.PENDING),
+      is_draft_order: model.boolean().default(false),
+      email: model.text().searchable().nullable(),
+      currency_code: model.text(),
+      no_notification: model.boolean().nullable(),
+      metadata: model.json().nullable(),
+      canceled_at: model.dateTime().nullable(),
+      shipping_address: model.belongsTo<any>(() => OrderAddress).nullable(),
+      billing_address: model.belongsTo<any>(() => OrderAddress).nullable(),
+      summary: model.hasMany<any>(() => OrderSummary, {
+        mappedBy: "order",
+      }),
+      items: model.hasMany<any>(() => OrderItem, {
+        mappedBy: "order",
+      }),
+      shipping_methods: model.hasMany<any>(() => OrderShipping, {
+        mappedBy: "order",
+      }),
+      transactions: model.hasMany<any>(() => OrderTransaction, {
+        mappedBy: "order",
+      }),
+    }
+  )
   .cascades({
     delete: ["summary", "items", "shipping_methods", "transactions"],
   })

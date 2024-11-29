@@ -3,18 +3,27 @@ import { OrderExchange } from "./exchange"
 import { OrderLineItem } from "./line-item"
 
 const _OrderExchangeItem = model
-  .define("OrderExchangeItem", {
-    id: model.id({ prefix: "oexcitem" }).primaryKey(),
-    quantity: model.bigNumber(),
-    note: model.text().nullable(),
-    metadata: model.json().nullable(),
-    exchange: model.belongsTo<() => typeof OrderExchange>(() => OrderExchange, {
-      mappedBy: "additional_items",
-    }),
-    item: model.belongsTo<() => typeof OrderLineItem>(() => OrderLineItem, {
-      mappedBy: "exchange_items",
-    }),
-  })
+  .define(
+    {
+      tableName: "OrderExchangeItem",
+      disableSoftDeleteFilter: true,
+    },
+    {
+      id: model.id({ prefix: "oexcitem" }).primaryKey(),
+      quantity: model.bigNumber(),
+      note: model.text().nullable(),
+      metadata: model.json().nullable(),
+      exchange: model.belongsTo<() => typeof OrderExchange>(
+        () => OrderExchange,
+        {
+          mappedBy: "additional_items",
+        }
+      ),
+      item: model.belongsTo<() => typeof OrderLineItem>(() => OrderLineItem, {
+        mappedBy: "exchange_items",
+      }),
+    }
+  )
   .indexes([
     {
       name: "IDX_order_exchange_item_exchange_id",

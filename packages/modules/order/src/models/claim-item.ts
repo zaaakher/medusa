@@ -4,26 +4,32 @@ import { OrderClaimItemImage } from "./claim-item-image"
 import { OrderLineItem } from "./line-item"
 
 const _OrderClaimItem = model
-  .define("OrderClaimItem", {
-    id: model.id({ prefix: "claitem" }).primaryKey(),
-    reason: model.enum(ClaimReason).nullable(),
-    quantity: model.bigNumber(),
-    is_additional_item: model.boolean().default(false),
-    note: model.text().nullable(),
-    metadata: model.json().nullable(),
-    claim: model.belongsTo<() => typeof OrderClaim>(() => OrderClaim, {
-      mappedBy: "additional_items",
-    }),
-    item: model.belongsTo<() => typeof OrderLineItem>(() => OrderLineItem, {
-      mappedBy: "claim_items",
-    }),
-    images: model.hasMany<() => typeof OrderClaimItemImage>(
-      () => OrderClaimItemImage,
-      {
-        mappedBy: "claim_item",
-      }
-    ),
-  })
+  .define(
+    {
+      tableName: "OrderClaimItem",
+      disableSoftDeleteFilter: true,
+    },
+    {
+      id: model.id({ prefix: "claitem" }).primaryKey(),
+      reason: model.enum(ClaimReason).nullable(),
+      quantity: model.bigNumber(),
+      is_additional_item: model.boolean().default(false),
+      note: model.text().nullable(),
+      metadata: model.json().nullable(),
+      claim: model.belongsTo<() => typeof OrderClaim>(() => OrderClaim, {
+        mappedBy: "additional_items",
+      }),
+      item: model.belongsTo<() => typeof OrderLineItem>(() => OrderLineItem, {
+        mappedBy: "claim_items",
+      }),
+      images: model.hasMany<() => typeof OrderClaimItemImage>(
+        () => OrderClaimItemImage,
+        {
+          mappedBy: "claim_item",
+        }
+      ),
+    }
+  )
   .cascades({
     delete: ["images"],
   })

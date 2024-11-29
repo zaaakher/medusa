@@ -4,7 +4,6 @@ import { OrderLineItem } from "./line-item"
 const _OrderLineItemAdjustment = model
   .define(
     {
-      name: "OrderLineItemAdjustment",
       tableName: "OrderLineItemAdjustment",
       disableSoftDeleteFilter: true,
     },

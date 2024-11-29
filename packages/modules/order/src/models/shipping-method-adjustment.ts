@@ -4,7 +4,6 @@ import { OrderShippingMethod } from "./shipping-method"
 const _OrderShippingMethodAdjustment = model
   .define(
     {
-      name: "OrderShippingMethodAdjustment",
       tableName: "OrderShippingMethodAdjustment",
       disableSoftDeleteFilter: true,
     },

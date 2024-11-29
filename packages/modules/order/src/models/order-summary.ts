@@ -2,14 +2,20 @@ import { model } from "@medusajs/framework/utils"
 import { Order } from "./order"
 
 const _OrderSummary = model
-  .define("OrderSummary", {
-    id: model.id({ prefix: "ordsum" }).primaryKey(),
-    version: model.number().default(1),
-    totals: model.json(),
-    order: model.belongsTo<() => typeof Order>(() => Order, {
-      mappedBy: "summary",
-    }),
-  })
+  .define(
+    {
+      tableName: "OrderSummary",
+      disableSoftDeleteFilter: true,
+    },
+    {
+      id: model.id({ prefix: "ordsum" }).primaryKey(),
+      version: model.number().default(1),
+      totals: model.json(),
+      order: model.belongsTo<() => typeof Order>(() => Order, {
+        mappedBy: "summary",
+      }),
+    }
+  )
   .indexes([
     {
       name: "IDX_order_summary_order_id_version",
