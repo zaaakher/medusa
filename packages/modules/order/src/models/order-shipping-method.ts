@@ -14,7 +14,7 @@ const _OrderShipping = model
     },
     {
       id: model.id({ prefix: "ordspmv" }).primaryKey(),
-      version: model.number(),
+      version: model.number().default(1),
       order: model.belongsTo<() => typeof Order>(() => Order, {
         mappedBy: "shipping_methods",
       }),

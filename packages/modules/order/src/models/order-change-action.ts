@@ -1,6 +1,10 @@
 import { model } from "@medusajs/framework/utils"
-import { Order, OrderClaim, OrderExchange, Return } from "@models"
+
+import { OrderClaim } from "./claim"
+import { OrderExchange } from "./exchange"
+import { Order } from "./order"
 import { OrderChange } from "./order-change"
+import { Return } from "./return"
 
 const _OrderChangeAction = model
   .define("OrderChangeAction", {
@@ -38,6 +42,16 @@ const _OrderChangeAction = model
       })
       .nullable(),
   })
+  /*
+  //@ts-expect-error
+  .addHook(function (this: any) {
+    this.order_id ??= this.order_change.order_id
+    this.return_id ??= this.order_change.return_id
+    this.claim_id ??= this.order_change.claim_id
+    this.exchange_id ??= this.order_change.exchange_id
+    this.version ??= this.order_change.version
+  })
+    */
   .indexes([
     {
       name: "IDX_order_change_action_order_change_id",

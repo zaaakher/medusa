@@ -12,7 +12,7 @@ const _OrderItem = model
     },
     {
       id: model.id({ prefix: "orditem" }).primaryKey(),
-      version: model.number(),
+      version: model.number().default(1),
       unit_price: model.bigNumber().nullable(),
       compare_at_unit_price: model.bigNumber().nullable(),
       quantity: model.bigNumber(),

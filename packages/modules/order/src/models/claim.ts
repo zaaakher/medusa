@@ -1,6 +1,7 @@
 import { ClaimType, model } from "@medusajs/framework/utils"
 import { OrderClaimItem } from "./claim-item"
 import { Order } from "./order"
+import { OrderChange } from "./order-change"
 import { OrderShipping } from "./order-shipping-method"
 import { Return } from "./return"
 import { OrderTransaction } from "./transaction"
@@ -47,6 +48,9 @@ const _OrderClaim = model
         mappedBy: "claim",
       }
     ),
+    changes: model.hasMany<() => typeof OrderChange>(() => OrderChange, {
+      mappedBy: "claim",
+    }),
   })
   .cascades({
     delete: [
