@@ -867,6 +867,7 @@ export interface CreateOrderChangeDTO {
     | "claim"
     | "edit"
     | "transfer"
+    | "shipping_address_change"
 
   /**
    * The description of the order change.
