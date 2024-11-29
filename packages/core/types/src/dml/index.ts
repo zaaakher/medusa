@@ -47,7 +47,7 @@ export type KnownDataTypes =
   | "enum"
   | "number"
   | "bigNumber"
-  | "bigSerial"
+  | "serial"
   | "dateTime"
   | "array"
   | "json"

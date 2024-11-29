@@ -12,6 +12,7 @@ import {
   PrimaryKey,
   Property,
   Utils,
+  t as mikroOrmType,
 } from "@mikro-orm/core"
 import { generateEntityId, isDefined } from "../../../common"
 import { MikroOrmBigNumberProperty } from "../../../dal"
@@ -32,7 +33,7 @@ const COLUMN_TYPES: {
   dateTime: "timestamptz",
   number: "integer",
   bigNumber: "numeric",
-  bigSerial: "bigserial",
+  serial: "serial",
   text: "text",
   json: "jsonb",
   array: "array",
@@ -52,7 +53,7 @@ const PROPERTY_TYPES: {
   dateTime: "date",
   number: "number",
   bigNumber: "number",
-  bigSerial: "number",
+  serial: "number",
   text: "string",
   json: "any",
   array: "string[]",
@@ -205,19 +206,16 @@ export function defineProperty(
    * Defining an id property
    */
   if (field.dataType.name === "id") {
-    const IdDecorator = PrimaryKeyModifier.isPrimaryKeyModifier(property)
-      ? PrimaryKey({
-          columnType: "text",
-          type: "string",
-          nullable: false,
-          fieldName: field.fieldName,
-        })
-      : Property({
-          columnType: "text",
-          type: "string",
-          nullable: false,
-          fieldName: field.fieldName,
-        })
+    const Prop = PrimaryKeyModifier.isPrimaryKeyModifier(property)
+      ? PrimaryKey
+      : Property
+
+    const IdDecorator = Prop({
+      columnType: "text",
+      type: "string",
+      nullable: false,
+      fieldName: field.fieldName,
+    })
 
     IdDecorator(MikroORMEntity.prototype, field.fieldName)
 
@@ -263,12 +261,12 @@ export function defineProperty(
   }
 
   /**
-   * Handling bigSerial property separately to set the column type
+   * Handling serial property separately to set the column type
    */
-  if (field.dataType.name === "bigSerial") {
+  if (field.dataType.name === "serial") {
     Property({
-      columnType: "bigserial",
-      type: "number",
+      columnType: "serial",
+      type: mikroOrmType.integer,
       nullable: field.nullable,
       fieldName: field.fieldName,
     })(MikroORMEntity.prototype, field.fieldName)

@@ -9,7 +9,7 @@ describe("Autoincrement property", () => {
     expect(property.parse("display_id")).toEqual({
       fieldName: "display_id",
       dataType: {
-        name: "bigSerial",
+        name: "serial",
         options: {},
       },
       nullable: false,

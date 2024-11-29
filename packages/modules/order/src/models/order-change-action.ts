@@ -9,7 +9,7 @@ import { Return } from "./return"
 const _OrderChangeAction = model
   .define("OrderChangeAction", {
     id: model.id({ prefix: "ordchact" }).primaryKey(),
-    ordering: model.autoincrement(),
+    ordering: model.autoincrement().nullable(),
     version: model.number().nullable(),
     reference: model.text().nullable(),
     reference_id: model.text().nullable(),

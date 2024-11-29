@@ -2,12 +2,12 @@ import { BaseProperty } from "./base"
 import { PrimaryKeyModifier } from "./primary-key"
 
 /**
- * The AutoIncrementProperty is used to define a bigserial
+ * The AutoIncrementProperty is used to define a serial
  * property
  */
 export class AutoIncrementProperty extends BaseProperty<number> {
   protected dataType: {
-    name: "bigSerial"
+    name: "serial"
     options: {}
   }
 
@@ -34,7 +34,7 @@ export class AutoIncrementProperty extends BaseProperty<number> {
     super()
 
     this.dataType = {
-      name: "bigSerial",
+      name: "serial",
       options: { ...options },
     }
   }
