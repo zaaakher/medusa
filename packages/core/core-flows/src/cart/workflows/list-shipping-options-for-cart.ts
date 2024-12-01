@@ -131,9 +131,7 @@ export const listShippingOptionsForCartWorkflow = createWorkflow(
             },
           },
 
-          calculated_price: {
-            context: pricingContext,
-          },
+          calculated_price: { context: pricingContext },
         }
       }
     )

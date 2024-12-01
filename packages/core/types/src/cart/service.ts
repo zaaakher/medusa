@@ -850,14 +850,14 @@ export interface ICartModuleService extends IModuleService {
    * @returns {Promise<CartShippingMethodDTO>} The updated shipping method.
    *
    * @example
-   * const lineItem = await cartModuleService.updateLineItems(
+   * const lineItem = await cartModuleService.updateShippingMethods(
    *   "casm_123",
    *   {
    *     amount: 3000,
    *   }
    * )
    */
-  updateLineItems(
+  updateShippingMethods(
     shippingMethodId: string,
     data: Partial<UpdateShippingMethodDTO>,
     sharedContext?: Context

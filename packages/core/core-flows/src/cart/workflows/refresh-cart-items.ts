@@ -89,7 +89,7 @@ export const refreshCartItemsWorkflow = createWorkflow(
       return items
     })
 
-    const items = updateLineItemsStep({
+    updateLineItemsStep({
       id: cart.id,
       items: lineItems,
     })
@@ -106,7 +106,7 @@ export const refreshCartItemsWorkflow = createWorkflow(
     })
 
     updateTaxLinesWorkflow.runAsStep({
-      input: { cart_id: cart.id, items },
+      input: { cart_id: cart.id },
     })
 
     const cartPromoCodes = transform({ cart, input }, ({ cart, input }) => {
