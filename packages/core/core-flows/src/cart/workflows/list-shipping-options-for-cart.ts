@@ -16,7 +16,14 @@ export const listShippingOptionsForCartWorkflowId =
  */
 export const listShippingOptionsForCartWorkflow = createWorkflow(
   listShippingOptionsForCartWorkflowId,
-  (input: WorkflowData<{ cart_id: string; is_return?: boolean }>) => {
+  (
+    input: WorkflowData<{
+      cart_id: string
+      option_ids?: string[]
+      is_return?: boolean
+      enabled_in_store?: boolean
+    }>
+  ) => {
     const cartQuery = useQueryGraphStep({
       entity: "cart",
       filters: { id: input.cart_id },
@@ -28,6 +35,7 @@ export const listShippingOptionsForCartWorkflow = createWorkflow(
         "shipping_address.city",
         "shipping_address.country_code",
         "shipping_address.province",
+        "shipping_address.postal_code",
         "total",
       ],
       options: { throwIfKeyNotFound: true },
@@ -71,7 +79,7 @@ export const listShippingOptionsForCartWorkflow = createWorkflow(
     )
 
     const customerGroupIds = when({ cart }, ({ cart }) => {
-      return !!cart.id
+      return !!cart.customer_group_id
     }).then(() => {
       const customerQuery = useQueryGraphStep({
         entity: "customer",
@@ -94,10 +102,40 @@ export const listShippingOptionsForCartWorkflow = createWorkflow(
 
     const pricingContext = transform(
       { cart, customerGroupIds },
-      ({ cart, customerGroupIds }) => ({
-        ...cart,
-        customer_group_id: customerGroupIds,
-      })
+      ({ cart, customerGroupIds }) => {
+        return {
+          ...cart,
+          customer_group_id: customerGroupIds,
+        }
+      }
+    )
+
+    const queryVariables = transform(
+      { input, fulfillmentSetIds, cart, pricingContext },
+      ({ input, fulfillmentSetIds, cart, pricingContext }) => {
+        return {
+          id: input.option_ids,
+
+          context: {
+            is_return: input.is_return ?? false,
+            enabled_in_store: input.enabled_in_store ?? true,
+          },
+
+          filters: {
+            fulfillment_set_id: fulfillmentSetIds,
+            address: {
+              country_code: cart.shipping_address?.country_code,
+              province_code: cart.shipping_address?.province,
+              city: cart.shipping_address?.city,
+              postal_expression: cart.shipping_address?.postal_code,
+            },
+          },
+
+          calculated_price: {
+            context: pricingContext,
+          },
+        }
+      }
     )
 
     const shippingOptions = useRemoteQueryStep({
@@ -126,31 +164,14 @@ export const listShippingOptionsForCartWorkflow = createWorkflow(
 
         "calculated_price.*",
       ],
-      variables: {
-        context: {
-          is_return: !!input.is_return,
-          enabled_in_store: "true",
-        },
-        filters: {
-          fulfillment_set_id: fulfillmentSetIds,
-          address: {
-            city: cart.shipping_address?.city,
-            country_code: cart.shipping_address?.country_code,
-            province_code: cart.shipping_address?.province,
-          },
-        },
-
-        calculated_price: {
-          context: pricingContext,
-        },
-      },
+      variables: queryVariables,
     }).config({ name: "shipping-options-query" })
 
-    const shippingOptionsWithPrice = transform({ shippingOptions }, (data) => {
+    transform({ shippingOptions }, ({ shippingOptions }) => {
       const optionsMissingPrices: string[] = []
 
-      const options = data.shippingOptions.map((shippingOption) => {
-        const { calculated_price, ...options } = shippingOption ?? {}
+      const options = shippingOptions.map((shippingOption) => {
+        const { calculated_price, ...options } = shippingOption
 
         if (options?.id && !isPresent(calculated_price?.calculated_amount)) {
           optionsMissingPrices.push(options.id)
@@ -176,6 +197,6 @@ export const listShippingOptionsForCartWorkflow = createWorkflow(
       return options
     })
 
-    return new WorkflowResponse(shippingOptionsWithPrice)
+    return new WorkflowResponse(shippingOptions)
   }
 )
