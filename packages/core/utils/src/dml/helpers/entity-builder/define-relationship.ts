@@ -140,14 +140,18 @@ export function defineHasOneRelationship(
 ) {
   const shouldRemoveRelated = !!cascades.delete?.includes(relationship.name)
 
-  OneToOne({
+  const options: Parameters<typeof OneToOne>[0] = {
     entity: relatedModelName,
     nullable: relationship.nullable,
+    fieldName: relationship.options.fieldName,
     mappedBy: relationship.mappedBy || camelToSnakeCase(MikroORMEntity.name),
-    cascade: shouldRemoveRelated
-      ? (["persist", "soft-remove"] as any)
-      : undefined,
-  })(MikroORMEntity.prototype, relationship.name)
+  }
+
+  if (shouldRemoveRelated) {
+    options.cascade = ["persist", "soft-remove"] as any
+  }
+
+  OneToOne(options)(MikroORMEntity.prototype, relationship.name)
 }
 
 /**
@@ -321,14 +325,6 @@ export function defineBelongsToRelationship(
   if (HasOne.isHasOne(otherSideRelation)) {
     const foreignKeyName = camelToSnakeCase(`${relationship.name}Id`)
 
-    OneToOne({
-      entity: relatedModelName,
-      nullable: relationship.nullable,
-      mappedBy: mappedBy,
-      owner: true,
-      onDelete: shouldCascade ? "cascade" : undefined,
-    })(MikroORMEntity.prototype, relationship.name)
-
     Object.defineProperty(MikroORMEntity.prototype, foreignKeyName, {
       value: null,
       configurable: true,
@@ -336,12 +332,23 @@ export function defineBelongsToRelationship(
       writable: true,
     })
 
-    Property({
-      type: "string",
-      columnType: "text",
+    const oneToOneOptions = {
+      entity: relatedModelName,
       nullable: relationship.nullable,
+      inversedBy: mappedBy,
+      fieldName: foreignKeyName,
+      owner: true,
+      onDelete: shouldCascade ? "cascade" : undefined,
+      mapToPk: true,
+    }
+
+    OneToOne(oneToOneOptions)(MikroORMEntity.prototype, foreignKeyName)
+
+    OneToOne({
+      ...oneToOneOptions,
+      mapToPk: false,
       persist: false,
-    })(MikroORMEntity.prototype, foreignKeyName)
+    })(MikroORMEntity.prototype, relationship.name)
 
     const { tableName } = parseEntityName(entity)
     applyEntityIndexes(MikroORMEntity, tableName, [

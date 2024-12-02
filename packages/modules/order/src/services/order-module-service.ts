@@ -3243,6 +3243,7 @@ export default class OrderModuleService
     return await this.retrieveReturn(ret.id, {
       relations: [
         "items",
+        "items.item",
         "shipping_methods",
         "shipping_methods.tax_lines",
         "shipping_methods.adjustments",
