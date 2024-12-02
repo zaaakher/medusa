@@ -1090,6 +1090,17 @@ export interface RegisterOrderChangeDTO {
    * The details of the order change action
    */
   details?: Record<string, unknown>
+
+  /**
+   * The name of the data model that this change
+   * references. For example, `shipping_address`.
+   */
+  reference?: string
+
+  /**
+   * The ID of the data model's record referenced.
+   */
+  reference_id?: string
 }
 
 /** ORDER CHANGE END */

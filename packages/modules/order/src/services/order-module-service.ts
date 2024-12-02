@@ -2252,6 +2252,8 @@ export default class OrderModuleService<
           {
             action: ChangeActionType.UPDATE_ORDER_PROPERTIES,
             details: data.details,
+            reference: data.reference,
+            reference_id: data.reference_id,
             applied: true,
           },
         ],

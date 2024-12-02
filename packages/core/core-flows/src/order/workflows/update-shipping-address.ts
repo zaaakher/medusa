@@ -5,14 +5,16 @@ import {
   transform,
   createStep,
 } from "@medusajs/framework/workflows-sdk"
-import { OrderDTO, OrderWorkflow } from "@medusajs/framework/types"
+import {
+  OrderDTO,
+  OrderWorkflow,
+  RegisterOrderChangeDTO,
+} from "@medusajs/framework/types"
 
 import { useQueryGraphStep } from "../../common"
-import { createOrderChangeStep } from "../steps"
 import { updateOrdersStep } from "../steps/update-orders"
-import { ChangeActionType, MedusaError } from "@medusajs/framework/utils"
-import { createOrderChangeActionsWorkflow } from "./create-order-change-actions"
-import { confirmOrderChanges } from "../steps/confirm-order-changes"
+import { MedusaError } from "@medusajs/framework/utils"
+import { registerOrderChangeStep } from "../steps/register-order-change"
 
 /**
  * This step validates that an order can be updated with provided input.
@@ -79,39 +81,17 @@ export const updateOrderShippingAddressWorkflow = createWorkflow(
 
     const orderChangeInput = transform({ input }, ({ input }) => {
       return {
-        change_type: "shipping_address_change" as const,
+        change_type: "update_order" as const,
         order_id: input.order_id,
         description: input.description,
         internal_note: input.internal_note,
-      }
+        reference: "shipping_address",
+        reference_id: order.shipping_address?.id, // save previous address id as reference
+        details: input.shipping_address as Record<string, unknown>, // save what changed on the address
+      } as RegisterOrderChangeDTO
     })
 
-    const change = createOrderChangeStep(orderChangeInput)
-
-    const actionInput = transform(
-      { order, input, change },
-      ({ order, input, change }) => [
-        {
-          order_change_id: change.id,
-          order_id: input.order_id,
-          action: ChangeActionType.UPDATE_ORDER,
-          version: change.version,
-          reference: "shipping_address",
-          applied: true, // mark action as already applied so this action serves as a change record
-          reference_id: order.shipping_address?.id, // save previous address id as reference
-          details: input.shipping_address as Record<string, unknown>, // save what changed on the address
-        },
-      ]
-    )
-
-    createOrderChangeActionsWorkflow.runAsStep({
-      input: actionInput,
-    })
-
-    confirmOrderChanges({
-      orderId: input.order_id,
-      changes: [change],
-    })
+    registerOrderChangeStep(orderChangeInput)
 
     return new WorkflowResponse(order)
   }
