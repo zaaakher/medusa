@@ -79,6 +79,7 @@ medusaIntegrationTestRunner({
             actions: expect.arrayContaining([
               expect.objectContaining({
                 version: 2, // TODO: should we bump the version here?
+                applied: true,
                 reference_id: addressBefore.id,
                 reference: "shipping_address",
                 action: "CHANGE_SHIPPING_ADDRESS",
