@@ -9,7 +9,7 @@ export type UpdateOrderWorkflowInput = {
 
 export type UpdateOrderShippingAddressWorkflowInput = {
   order_id: string
-  shipping_address?: UpsertOrderAddressDTO
+  shipping_address: UpsertOrderAddressDTO
   description?: string
   internal_note?: string
 }

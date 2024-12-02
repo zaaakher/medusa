@@ -58,7 +58,7 @@ export const updateOrderWorkflow = createWorkflow(
       updateOrderShippingAddressWorkflow.runAsStep({
         input: {
           order_id: input.id,
-          shipping_address: input.shipping_address,
+          shipping_address: input.shipping_address!,
         },
       })
     })

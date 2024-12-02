@@ -7,13 +7,14 @@ OrderChangeProcessing.registerActionType(
   ChangeActionType.CHANGE_SHIPPING_ADDRESS,
   {
     operation({ action, currentOrder, options }) {
-      // noop
-      // currentOrder.shipping_address_id = action.reference_id
+      /**
+       * NOOP: used as a reference for the change
+       */
 
       setActionReference(currentOrder, action, options)
     },
     validate({ action }) {
-      // noop
+      /* noop */
     },
   }
 )
