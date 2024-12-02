@@ -131,7 +131,7 @@ export function CreateShippingOptionsForm({
             ...(rule.gte
               ? [
                   {
-                    attribute: "cart_total",
+                    attribute: "total",
                     operator: "gte",
                     value: castNumber(rule.gte),
                   },
@@ -140,7 +140,7 @@ export function CreateShippingOptionsForm({
             ...(rule.lte
               ? [
                   {
-                    attribute: "cart_total",
+                    attribute: "total",
                     operator: "lte",
                     value: castNumber(rule.lte),
                   },

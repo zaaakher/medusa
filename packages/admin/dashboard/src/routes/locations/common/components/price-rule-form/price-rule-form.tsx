@@ -273,7 +273,11 @@ const PriceRuleItem = ({
                         code={currency.code}
                         value={value}
                         onValueChange={(_value, _name, values) =>
-                          onChange(values?.float || "")
+                          onChange(
+                            typeof values?.float === "number"
+                              ? values?.float
+                              : ""
+                          )
                         }
                         {...props}
                       />
@@ -304,7 +308,11 @@ const PriceRuleItem = ({
                         code={currency.code}
                         value={value}
                         onValueChange={(_value, _name, values) =>
-                          onChange(values?.float || "")
+                          onChange(
+                            typeof values?.float === "number"
+                              ? values?.float
+                              : ""
+                          )
                         }
                         {...props}
                       />
@@ -335,7 +343,11 @@ const PriceRuleItem = ({
                         code={currency.code}
                         value={value}
                         onValueChange={(_value, _name, values) =>
-                          onChange(values?.float || "")
+                          onChange(
+                            typeof values?.float === "number"
+                              ? values?.float
+                              : ""
+                          )
                         }
                         {...props}
                       />
