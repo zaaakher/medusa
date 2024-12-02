@@ -11,8 +11,9 @@ import { OrderPreviewDTO } from "@medusajs/types"
 
 import { throwIfOrderIsCancelled } from "../utils/order-validation"
 import { previewOrderChangeStep } from "../steps"
-import { useQueryGraphStep } from "../../common"
+import { emitEventStep, useQueryGraphStep } from "../../common"
 import { updateOrderShippingAddressWorkflow } from "./update-shipping-address"
+import { OrderWorkflowEvents } from "@medusajs/framework/utils"
 
 /**
  * This step validates that an order can be updated with provided input.
@@ -62,10 +63,10 @@ export const updateOrderWorkflow = createWorkflow(
       })
     })
 
-    // emitEventStep({
-    //   eventName: OrderWorkflowEvents.SHIPPING_ADDRESS_UPDATED,
-    //   data: { id: input.order_id,  },
-    // })
+    emitEventStep({
+      eventName: OrderWorkflowEvents.UPDATED,
+      data: { id: input.id },
+    })
 
     return new WorkflowResponse(previewOrderChangeStep(input.id))
   }
