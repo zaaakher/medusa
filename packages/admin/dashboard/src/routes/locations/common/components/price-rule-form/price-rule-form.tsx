@@ -1,3 +1,4 @@
+import { zodResolver } from "@hookform/resolvers/zod"
 import { TriangleDownMini, XMarkMini } from "@medusajs/icons"
 import {
   Badge,
@@ -8,10 +9,9 @@ import {
   Text,
 } from "@medusajs/ui"
 import * as Accordion from "@radix-ui/react-accordion"
-import React, { ReactNode, useEffect, useRef, useState } from "react"
+import React, { ReactNode, useState } from "react"
 import {
   Control,
-  Controller,
   useFieldArray,
   useForm,
   useFormContext,
@@ -19,19 +19,18 @@ import {
 } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import { Divider } from "../../../../../components/common/divider"
-import {
-  StackedFocusModal,
-  useStackedModal,
-} from "../../../../../components/modals"
+import { Form } from "../../../../../components/common/form"
+import { StackedFocusModal } from "../../../../../components/modals"
+import { KeyboundForm } from "../../../../../components/utilities/keybound-form"
 import { castNumber } from "../../../../../lib/cast-number"
 import { CurrencyInfo } from "../../../../../lib/data/currencies"
 import { getLocaleAmount } from "../../../../../lib/money-amount-helpers"
-import { CreateShippingOptionSchemaType } from "../../../location-service-zone-shipping-option-create/components/create-shipping-options-form/schema"
-import { CONDITIONAL_PRICES_STACKED_MODAL_ID } from "../../constants"
 import {
-  ConditionalPriceInfo,
-  ConditionalShippingOptionPriceAccessor,
-} from "../../types"
+  CondtionalPriceRuleSchema,
+  CondtionalPriceRuleSchemaType,
+  CreateShippingOptionSchemaType,
+} from "../../../location-service-zone-shipping-option-create/components/create-shipping-options-form/schema"
+import { ConditionalPriceInfo } from "../../types"
 import { getCustomShippingOptionPriceFieldName } from "../../utils/get-custom-shipping-option-price-field-info"
 import { useShippingOptionPrice } from "../shipping-option-price-provider"
 
@@ -48,34 +47,31 @@ export const PriceRuleForm = ({ info }: PriceRuleFormProps) => {
   const { getValues, setValue: setFormValue } =
     useFormContext<CreateShippingOptionSchemaType>()
   const { onCloseConditionalPricesModal } = useShippingOptionPrice()
-  const { getIsOpen } = useStackedModal()
 
   const [value, setValue] = useState<string[]>([getRuleValue(0)])
 
   const { field, type, currency, name: header } = info
 
   const name = getCustomShippingOptionPriceFieldName(field, type)
-  const snapshot = useRef(getValues(name))
 
-  const tempForm = useForm({
+  const tempForm = useForm<CondtionalPriceRuleSchemaType>({
     defaultValues: {
-      [name]: snapshot.current,
+      prices: getValues(name) || [
+        {
+          amount: "",
+          gte: "",
+          lte: "",
+        },
+      ],
     },
+    resolver: zodResolver(CondtionalPriceRuleSchema),
   })
 
-  const open = getIsOpen(CONDITIONAL_PRICES_STACKED_MODAL_ID)
-
-  useEffect(() => {
-    if (open) {
-      tempForm.reset({
-        [name]: snapshot.current,
-      })
-    }
-  }, [open, name, tempForm])
+  console.log(tempForm.formState.errors)
 
   const { fields, append, remove } = useFieldArray({
     control: tempForm.control,
-    name,
+    name: "prices",
   })
 
   const handleAdd = () => {
@@ -92,69 +88,88 @@ export const PriceRuleForm = ({ info }: PriceRuleFormProps) => {
     remove(index)
   }
 
-  const handleSave = () => {
-    setFormValue(name, tempForm.getValues(name))
-    tempForm.reset()
-    onCloseConditionalPricesModal()
+  const handleOnSubmit = tempForm.handleSubmit(
+    (values) => {
+      setFormValue(name, values.prices, {
+        shouldDirty: true,
+        shouldValidate: true,
+        shouldTouch: true,
+      })
+      onCloseConditionalPricesModal()
+    },
+    (e) => console.log(e)
+  )
+
+  // Intercept the Cmd + Enter key to only save the inner form.
+  const handleOnKeyDown = (event: React.KeyboardEvent<HTMLFormElement>) => {
+    if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
+      event.preventDefault()
+      event.stopPropagation()
+
+      handleOnSubmit()
+    }
   }
 
   return (
-    <StackedFocusModal.Content>
-      <StackedFocusModal.Header />
-      <StackedFocusModal.Body>
-        <div className="flex w-full flex-1 flex-col items-center">
-          <div className="flex w-full max-w-[720px] flex-col gap-y-8 px-6 py-16">
-            <div className="flex w-full flex-col gap-y-6">
-              <div>
-                <StackedFocusModal.Title asChild>
-                  <Heading>Conditional Prices for {header}</Heading>
-                </StackedFocusModal.Title>
-                <StackedFocusModal.Description>
-                  <Text size="small" className="text-ui-fg-subtle">
-                    Set custom prices for this shipping option based on the cart
-                    total.
-                  </Text>
-                </StackedFocusModal.Description>
-              </div>
-              <PriceRuleList value={value} onValueChange={setValue}>
-                {fields.map((field, index) => (
-                  <PriceRuleItem
-                    key={field.id}
-                    index={index}
-                    accessor={name}
-                    onRemove={handleRemove}
-                    currency={currency}
-                    control={tempForm.control}
-                  />
-                ))}
-              </PriceRuleList>
-              <div className="flex items-center justify-end">
-                <Button
-                  variant="secondary"
-                  size="small"
-                  type="button"
-                  onClick={handleAdd}
-                >
-                  Add price
-                </Button>
+    <Form {...tempForm}>
+      <KeyboundForm onSubmit={handleOnSubmit} onKeyDown={handleOnKeyDown}>
+        <StackedFocusModal.Content>
+          <StackedFocusModal.Header />
+          <StackedFocusModal.Body>
+            <div className="flex w-full flex-1 flex-col items-center">
+              <div className="flex w-full max-w-[720px] flex-col gap-y-8 px-6 py-16">
+                <div className="flex w-full flex-col gap-y-6">
+                  <div>
+                    <StackedFocusModal.Title asChild>
+                      <Heading>Conditional Prices for {header}</Heading>
+                    </StackedFocusModal.Title>
+                    <StackedFocusModal.Description>
+                      <Text size="small" className="text-ui-fg-subtle">
+                        Set custom prices for this shipping option based on the
+                        cart total.
+                      </Text>
+                    </StackedFocusModal.Description>
+                  </div>
+                  <PriceRuleList value={value} onValueChange={setValue}>
+                    {fields.map((field, index) => (
+                      <PriceRuleItem
+                        key={field.id}
+                        index={index}
+                        onRemove={handleRemove}
+                        currency={currency}
+                        control={tempForm.control}
+                      />
+                    ))}
+                  </PriceRuleList>
+                  <div className="flex items-center justify-end">
+                    <Button
+                      variant="secondary"
+                      size="small"
+                      type="button"
+                      onClick={handleAdd}
+                    >
+                      Add price
+                    </Button>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      </StackedFocusModal.Body>
-      <StackedFocusModal.Footer>
-        <div className="flex items-center justify-end gap-2">
-          <StackedFocusModal.Close asChild>
-            <Button variant="secondary" size="small" type="button">
-              {t("actions.cancel")}
-            </Button>
-          </StackedFocusModal.Close>
-          <Button size="small" type="button" onClick={handleSave}>
-            {t("actions.save")}
-          </Button>
-        </div>
-      </StackedFocusModal.Footer>
-    </StackedFocusModal.Content>
+          </StackedFocusModal.Body>
+          <StackedFocusModal.Footer>
+            <div className="flex items-center justify-end gap-2">
+              <StackedFocusModal.Close asChild>
+                <Button variant="secondary" size="small" type="button">
+                  {t("actions.cancel")}
+                </Button>
+              </StackedFocusModal.Close>
+              <Button size="small" type="button" onClick={handleOnSubmit}>
+                {t("actions.save")}
+              </Button>
+            </div>
+          </StackedFocusModal.Footer>
+        </StackedFocusModal.Content>
+      </KeyboundForm>
+    </Form>
   )
 }
 
@@ -184,15 +199,13 @@ const PriceRuleList = ({
 
 interface PriceRuleItemProps {
   index: number
-  accessor: ConditionalShippingOptionPriceAccessor
   currency: CurrencyInfo
   onRemove: (index: number) => void
-  control: Control<CreateShippingOptionSchemaType>
+  control: Control<CondtionalPriceRuleSchemaType>
 }
 
 const PriceRuleItem = ({
   index,
-  accessor,
   currency,
   onRemove,
   control,
@@ -208,19 +221,19 @@ const PriceRuleItem = ({
       className="bg-ui-bg-component shadow-elevation-card-rest rounded-lg"
     >
       <Accordion.Trigger asChild>
-        <div className="flex w-full items-center justify-between p-3">
+        <div className="flex w-full cursor-pointer items-center justify-between p-3">
           <div>
             <AmountDisplay
-              accessor={accessor}
               index={index}
               currency={currency}
+              control={control}
             />
           </div>
           <div className="flex items-center gap-x-2">
             <ConditionDisplay
-              accessor={accessor}
               index={index}
               currency={currency}
+              control={control}
             />
             <IconButton
               size="small"
@@ -242,93 +255,115 @@ const PriceRuleItem = ({
       </Accordion.Trigger>
       <Accordion.Content className="text-ui-fg-subtle">
         <Divider variant="dashed" />
-        <div className="grid grid-cols-2 items-center gap-x-2 p-3">
-          <Text size="small" weight="plus">
-            Shipping option price
-          </Text>
-          <Controller
-            control={control}
-            name={`${accessor}.${index}.amount`}
-            render={({ field: { value, onChange, ...props } }) => {
-              return (
-                <CurrencyInput
-                  symbol={currency.symbol_native}
-                  code={currency.code}
-                  value={value}
-                  onValueChange={(_value, _name, values) =>
-                    onChange(values?.float)
-                  }
-                  {...props}
-                />
-              )
-            }}
-          />
-        </div>
+        <Form.Field
+          control={control}
+          name={`prices.${index}.amount`}
+          render={({ field: { value, onChange, ...props } }) => {
+            return (
+              <Form.Item>
+                <div className="grid grid-cols-2 items-center gap-x-2 p-3">
+                  <div className="flex h-8 items-center">
+                    <Form.Label>Shipping option price</Form.Label>
+                  </div>
+                  <div>
+                    <Form.Control>
+                      <CurrencyInput
+                        className="bg-ui-bg-field-component hover:bg-ui-bg-field-component-hover focus-visible:bg-ui-bg-field-component-hover"
+                        symbol={currency.symbol_native}
+                        code={currency.code}
+                        value={value}
+                        onValueChange={(_value, _name, values) =>
+                          onChange(values?.float || "")
+                        }
+                        {...props}
+                      />
+                    </Form.Control>
+                    <Form.ErrorMessage />
+                  </div>
+                </div>
+              </Form.Item>
+            )
+          }}
+        />
         <Divider variant="dashed" />
-        <div className="grid grid-cols-2 items-center gap-x-2 p-3">
-          <Text size="small" weight="plus">
-            Minimum cart total
-          </Text>
-          <Controller
-            control={control}
-            name={`${accessor}.${index}.gte`}
-            render={({ field: { value, onChange, ...props } }) => {
-              return (
-                <CurrencyInput
-                  symbol={currency.symbol_native}
-                  code={currency.code}
-                  value={value}
-                  onValueChange={(_value, _name, values) =>
-                    onChange(values?.float)
-                  }
-                  {...props}
-                />
-              )
-            }}
-          />
-        </div>
+        <Form.Field
+          control={control}
+          name={`prices.${index}.gte`}
+          render={({ field: { value, onChange, ...props } }) => {
+            return (
+              <Form.Item>
+                <div className="grid grid-cols-2 items-start gap-x-2 p-3">
+                  <div className="flex h-8 items-center">
+                    <Form.Label>Minimum cart total</Form.Label>
+                  </div>
+                  <div className="flex flex-col gap-y-1">
+                    <Form.Control>
+                      <CurrencyInput
+                        className="bg-ui-bg-field-component hover:bg-ui-bg-field-component-hover focus-visible:bg-ui-bg-field-component-hover"
+                        symbol={currency.symbol_native}
+                        code={currency.code}
+                        value={value}
+                        onValueChange={(_value, _name, values) =>
+                          onChange(values?.float || "")
+                        }
+                        {...props}
+                      />
+                    </Form.Control>
+                    <Form.ErrorMessage />
+                  </div>
+                </div>
+              </Form.Item>
+            )
+          }}
+        />
         <Divider variant="dashed" />
-        <div className="grid grid-cols-2 items-center gap-x-2 p-3">
-          <Text size="small" weight="plus">
-            Maximum cart total
-          </Text>
-          <Controller
-            control={control}
-            name={`${accessor}.${index}.lte`}
-            render={({ field: { value, onChange, ...props } }) => {
-              return (
-                <CurrencyInput
-                  symbol={currency.symbol_native}
-                  code={currency.code}
-                  value={value}
-                  onValueChange={(_value, _name, values) =>
-                    onChange(values?.float)
-                  }
-                  {...props}
-                />
-              )
-            }}
-          />
-        </div>
+        <Form.Field
+          control={control}
+          name={`prices.${index}.lte`}
+          render={({ field: { value, onChange, ...props } }) => {
+            return (
+              <Form.Item>
+                <div className="grid grid-cols-2 items-center gap-x-2 p-3">
+                  <div className="flex h-8 items-center">
+                    <Form.Label>Maximum cart total</Form.Label>
+                  </div>
+                  <div>
+                    <Form.Control>
+                      <CurrencyInput
+                        className="bg-ui-bg-field-component hover:bg-ui-bg-field-component-hover focus-visible:bg-ui-bg-field-component-hover"
+                        symbol={currency.symbol_native}
+                        code={currency.code}
+                        value={value}
+                        onValueChange={(_value, _name, values) =>
+                          onChange(values?.float || "")
+                        }
+                        {...props}
+                      />
+                    </Form.Control>
+                    <Form.ErrorMessage />
+                  </div>
+                </div>
+              </Form.Item>
+            )
+          }}
+        />
       </Accordion.Content>
     </Accordion.Item>
   )
 }
 
 const AmountDisplay = ({
-  accessor,
   index,
   currency,
+  control,
 }: {
-  accessor: ConditionalShippingOptionPriceAccessor
   index: number
   currency: CurrencyInfo
+  control: Control<CondtionalPriceRuleSchemaType>
 }) => {
-  const { control } = useFormContext<CreateShippingOptionSchemaType>()
-
   const amount = useWatch({
     control,
-    name: `${accessor}.${index}.amount`,
+    name: `prices.${index}.amount`,
   })
 
   if (amount === "" || amount === undefined) {
@@ -349,24 +384,22 @@ const AmountDisplay = ({
 }
 
 const ConditionDisplay = ({
-  accessor,
   index,
   currency,
+  control,
 }: {
-  accessor: ConditionalShippingOptionPriceAccessor
   index: number
   currency: CurrencyInfo
+  control: Control<CondtionalPriceRuleSchemaType>
 }) => {
-  const { control } = useFormContext<CreateShippingOptionSchemaType>()
-
   const gte = useWatch({
     control,
-    name: `${accessor}.${index}.gte`,
+    name: `prices.${index}.gte`,
   })
 
   const lte = useWatch({
     control,
-    name: `${accessor}.${index}.lte`,
+    name: `prices.${index}.lte`,
   })
 
   const renderCondition = () => {

@@ -3,6 +3,7 @@ import { UseFormReturn, useWatch } from "react-hook-form"
 
 import { DataGrid } from "../../../../../components/data-grid"
 import {
+  StackedFocusModal,
   useRouteModal,
   useStackedModal,
 } from "../../../../../components/modals"
@@ -88,21 +89,25 @@ export const CreateShippingOptionsPricesForm = ({
   }
 
   return (
-    <ShippingOptionPriceProvider
-      onOpenConditionalPricesModal={onOpenConditionalPricesModal}
-      onCloseConditionalPricesModal={onCloseConditionalPricesModal}
-    >
-      <div className="flex size-full flex-col divide-y overflow-hidden">
-        <DataGrid
-          isLoading={isLoading}
-          data={data}
-          columns={columns}
-          state={form}
-          onEditingChange={(editing) => setCloseOnEscape(!editing)}
-          disableInteractions={getIsOpen(CONDITIONAL_PRICES_STACKED_MODAL_ID)}
-        />
-        {selectedPrice && <PriceRuleForm info={selectedPrice} />}
-      </div>
-    </ShippingOptionPriceProvider>
+    <StackedFocusModal id={CONDITIONAL_PRICES_STACKED_MODAL_ID}>
+      <ShippingOptionPriceProvider
+        onOpenConditionalPricesModal={onOpenConditionalPricesModal}
+        onCloseConditionalPricesModal={onCloseConditionalPricesModal}
+      >
+        <div className="flex size-full flex-col divide-y overflow-hidden">
+          <DataGrid
+            isLoading={isLoading}
+            data={data}
+            columns={columns}
+            state={form}
+            onEditingChange={(editing) => setCloseOnEscape(!editing)}
+            disableInteractions={getIsOpen(CONDITIONAL_PRICES_STACKED_MODAL_ID)}
+          />
+          {selectedPrice && (
+            <PriceRuleForm key={selectedPrice?.field} info={selectedPrice} />
+          )}
+        </div>
+      </ShippingOptionPriceProvider>
+    </StackedFocusModal>
   )
 }
