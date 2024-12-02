@@ -152,12 +152,12 @@ medusaIntegrationTestRunner({
                 amount: 500,
                 rules: [
                   {
-                    attribute: "cart_total",
+                    attribute: "total",
                     operator: "gte",
                     value: 100,
                   },
                   {
-                    attribute: "cart_total",
+                    attribute: "total",
                     operator: "lte",
                     value: 200,
                   },
@@ -191,6 +191,7 @@ medusaIntegrationTestRunner({
                 max_quantity: null,
                 min_quantity: null,
                 price_list: null,
+                price_list_id: null,
                 price_set_id: expect.any(String),
                 raw_amount: {
                   precision: 20,
@@ -210,6 +211,7 @@ medusaIntegrationTestRunner({
                 max_quantity: null,
                 min_quantity: null,
                 price_list: null,
+                price_list_id: null,
                 price_set_id: expect.any(String),
                 raw_amount: {
                   precision: 20,
@@ -218,12 +220,12 @@ medusaIntegrationTestRunner({
                 rules_count: 2,
                 price_rules: expect.arrayContaining([
                   expect.objectContaining({
-                    attribute: "cart_total",
+                    attribute: "total",
                     operator: "gte",
                     value: "100",
                   }),
                   expect.objectContaining({
-                    attribute: "cart_total",
+                    attribute: "total",
                     operator: "lte",
                     value: "200",
                   }),
@@ -327,7 +329,7 @@ medusaIntegrationTestRunner({
                 amount: 500,
                 rules: [
                   {
-                    attribute: "cart_total",
+                    attribute: "total",
                     operator: "gt",
                     value: 200,
                   },
@@ -378,7 +380,7 @@ medusaIntegrationTestRunner({
                   rules_count: 2,
                   price_rules: expect.arrayContaining([
                     expect.objectContaining({
-                      attribute: "cart_total",
+                      attribute: "total",
                       operator: "gt",
                       value: "200",
                     }),
@@ -458,7 +460,7 @@ medusaIntegrationTestRunner({
                 amount: 500,
                 rules: [
                   {
-                    attribute: "cart_total",
+                    attribute: "total",
                     operator: "not_whitelisted",
                     value: 100,
                   },
@@ -496,7 +498,7 @@ medusaIntegrationTestRunner({
                 amount: 500,
                 rules: [
                   {
-                    attribute: "cart_total",
+                    attribute: "total",
                     operator: "gt",
                     value: "string",
                   },
@@ -626,7 +628,7 @@ medusaIntegrationTestRunner({
                 amount: 5,
                 rules: [
                   {
-                    attribute: "cart_total",
+                    attribute: "total",
                     operator: "gt",
                     value: 200,
                   },
@@ -702,7 +704,7 @@ medusaIntegrationTestRunner({
                   amount: 5,
                   price_rules: [
                     expect.objectContaining({
-                      attribute: "cart_total",
+                      attribute: "total",
                       operator: "gt",
                       value: "200",
                     }),

@@ -1,15 +1,16 @@
 import {
-  DMLSchema,
-  EntityCascades,
-  EntityIndex,
-  ExtractEntityRelations,
   IDmlEntity,
+  DMLSchema,
+  EntityIndex,
+  CheckConstraint,
+  EntityCascades,
+  QueryCondition,
   IDmlEntityConfig,
+  ExtractEntityRelations,
   InferDmlEntityNameFromConfig,
   InferSchemaFields,
-  QueryCondition,
 } from "@medusajs/types"
-import { isObject, isString, toCamelCase } from "../common"
+import { isObject, isString, toCamelCase, upperCaseFirst } from "../common"
 import { transformIndexWhere } from "./helpers/entity-builder/build-indexes"
 import { DMLSchemaWithBigNumber } from "./helpers/entity-builder/create-big-number-properties"
 import { DMLSchemaDefaults } from "./helpers/entity-builder/create-default-properties"
@@ -44,7 +45,9 @@ function extractEntityConfig<const Config extends IDmlEntityConfig>(
   if (isString(nameOrConfig)) {
     const [schema, ...rest] = nameOrConfig.split(".")
     const name = rest.length ? rest.join(".") : schema
-    result.name = toCamelCase(name) as InferDmlEntityNameFromConfig<Config>
+    result.name = upperCaseFirst(
+      toCamelCase(name)
+    ) as InferDmlEntityNameFromConfig<Config>
 
     result.tableName = nameOrConfig
   }
@@ -60,7 +63,9 @@ function extractEntityConfig<const Config extends IDmlEntityConfig>(
     const [schema, ...rest] = potentialName.split(".")
     const name = rest.length ? rest.join(".") : schema
 
-    result.name = toCamelCase(name) as InferDmlEntityNameFromConfig<Config>
+    result.name = upperCaseFirst(
+      toCamelCase(name)
+    ) as InferDmlEntityNameFromConfig<Config>
     result.tableName = nameOrConfig.tableName
     result.disableSoftDeleteFilter =
       nameOrConfig.disableSoftDeleteFilter ?? true
@@ -88,6 +93,7 @@ export class DmlEntity<
 
   #cascades: EntityCascades<string[]> = {}
   #indexes: EntityIndex<Schema>[] = []
+  #checks: CheckConstraint<Schema>[] = []
 
   /**
    * @experimental
@@ -129,6 +135,7 @@ export class DmlEntity<
     indexes: EntityIndex<Schema>[]
     params: Record<string, unknown>
     hooks: Hooks<Schema, TConfig>
+    checks: CheckConstraint<Schema>[]
   } {
     return {
       name: this.name,
@@ -138,6 +145,7 @@ export class DmlEntity<
       indexes: this.#indexes,
       params: this.#params,
       hooks: this.#hooks,
+      checks: this.#checks,
     }
   }
 
@@ -279,6 +287,11 @@ export class DmlEntity<
    */
   hooks(hooks: Hooks<Schema, TConfig>): this {
     this.#hooks = hooks
+    return this
+  }
+
+  checks(checks: CheckConstraint<Schema>[]) {
+    this.#checks = checks
     return this
   }
 }

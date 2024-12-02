@@ -13,9 +13,10 @@ import { DmlEntity } from "../entity"
 import { DuplicateIdPropertyError } from "../errors"
 import { IdProperty } from "../properties/id"
 import { applySearchable } from "./entity-builder/apply-searchable"
+import { applyChecks } from "./mikro-orm/apply-checks"
 import { defineProperty } from "./entity-builder/define-property"
-import { defineRelationship } from "./entity-builder/define-relationship"
 import { parseEntityName } from "./entity-builder/parse-entity-name"
+import { defineRelationship } from "./entity-builder/define-relationship"
 import { applyEntityIndexes, applyIndexes } from "./mikro-orm/apply-indexes"
 
 /**
@@ -53,6 +54,7 @@ function createMikrORMEntity() {
       indexes: entityIndexes = [],
       params,
       hooks = {},
+      checks,
     } = entity.parse()
 
     const { modelName, tableName } = parseEntityName(entity)
@@ -104,6 +106,7 @@ function createMikrORMEntity() {
     })
 
     applyEntityIndexes(MikroORMEntity, tableName, entityIndexes)
+    applyChecks(MikroORMEntity, checks)
 
     /**
      * @experimental
