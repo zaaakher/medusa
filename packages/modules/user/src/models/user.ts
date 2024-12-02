@@ -5,7 +5,7 @@ export const User = model
     id: model.id({ prefix: "user" }).primaryKey(),
     first_name: model.text().searchable().nullable(),
     last_name: model.text().searchable().nullable(),
-    email: model.text().searchable().searchable(),
+    email: model.text().searchable(),
     avatar_url: model.text().nullable(),
     metadata: model.json().nullable(),
   })
