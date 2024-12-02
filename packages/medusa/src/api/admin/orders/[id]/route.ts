@@ -39,9 +39,8 @@ export const POST = async (
   const variables = { id: req.params.id }
 
   await updateOrderWorkflow(req.scope).run({
-    // @ts-ignore - TODO: null/undefined issue
     input: {
-      ...req.body,
+      ...req.validatedBody,
       id: req.params.id,
     },
   })
