@@ -72,17 +72,17 @@ medusaIntegrationTestRunner({
         expect(orderChangesResult.length).toEqual(1)
         expect(orderChangesResult[0]).toEqual(
           expect.objectContaining({
-            version: 2, // TODO: should we bump the version here?
-            change_type: "shipping_address_change",
+            version: 1,
+            change_type: "update_order",
             status: "confirmed",
             confirmed_at: expect.any(String),
             actions: expect.arrayContaining([
               expect.objectContaining({
-                version: 2, // TODO: should we bump the version here?
+                version: 1,
                 applied: true,
                 reference_id: addressBefore.id,
                 reference: "shipping_address",
-                action: "UPDATE_ORDER",
+                action: "UPDATE_ORDER_PROPERTIES",
                 details: {
                   city: "New New York",
                   address_1: "New Main street 123",

@@ -2239,21 +2239,29 @@ export default class OrderModuleService<
     data: OrderTypes.RegisterOrderChangeDTO,
     sharedContext?: Context
   ): Promise<OrderTypes.OrderChangeDTO> {
+    const order = await this.orderService_.retrieve(
+      data.order_id,
+      { select: ["id", "version"] },
+      sharedContext
+    )
+
     return (await this.orderChangeService_.create(
       {
         order_id: data.order_id,
         change_type: data.change_type,
         internal_note: data.internal_note,
         description: data.description,
-        requested_at: new Date(),
         metadata: data.metadata,
-        status: OrderChangeStatus.REQUESTED,
+        confirmed_at: new Date(),
+        status: OrderChangeStatus.CONFIRMED,
+        version: order.version,
         actions: [
           {
             action: ChangeActionType.UPDATE_ORDER_PROPERTIES,
             details: data.details,
             reference: data.reference,
             reference_id: data.reference_id,
+            version: order.version,
             applied: true,
           },
         ],

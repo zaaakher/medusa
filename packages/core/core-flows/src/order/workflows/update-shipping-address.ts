@@ -79,7 +79,7 @@ export const updateOrderShippingAddressWorkflow = createWorkflow(
       update: updateInput,
     })
 
-    const orderChangeInput = transform({ input }, ({ input }) => {
+    const orderChangeInput = transform({ input, order }, ({ input, order }) => {
       return {
         change_type: "update_order" as const,
         order_id: input.order_id,
