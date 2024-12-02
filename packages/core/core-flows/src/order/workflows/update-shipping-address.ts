@@ -3,15 +3,41 @@ import {
   WorkflowData,
   WorkflowResponse,
   transform,
+  createStep,
 } from "@medusajs/framework/workflows-sdk"
-import { OrderWorkflow } from "@medusajs/framework/types"
+import { OrderDTO, OrderWorkflow } from "@medusajs/framework/types"
 
 import { useQueryGraphStep } from "../../common"
 import { createOrderChangeStep } from "../steps"
 import { updateOrdersStep } from "../steps/update-orders"
-import { ChangeActionType } from "@medusajs/framework/utils"
+import { ChangeActionType, MedusaError } from "@medusajs/framework/utils"
 import { createOrderChangeActionsWorkflow } from "./create-order-change-actions"
 import { confirmOrderChanges } from "../steps/confirm-order-changes"
+
+/**
+ * This step validates that an order can be updated with provided input.
+ */
+export const updateOrderShippingAddressValidationStep = createStep(
+  "update-order-shipping-address-validation",
+  async function ({
+    order,
+    input,
+  }: {
+    order: OrderDTO
+    input: OrderWorkflow.UpdateOrderShippingAddressWorkflowInput
+  }) {
+    if (
+      input.shipping_address?.country_code &&
+      order.shipping_address?.country_code !==
+        input.shipping_address?.country_code
+    ) {
+      throw new MedusaError(
+        MedusaError.Types.INVALID_DATA,
+        "Country code cannot be changed"
+      )
+    }
+  }
+)
 
 export const updateOrderShippingAddressWorkflowId =
   "update-order-shipping-address-workflow"
@@ -32,6 +58,8 @@ export const updateOrderShippingAddressWorkflow = createWorkflow(
       { orderQuery },
       ({ orderQuery }) => orderQuery.data[0]
     )
+
+    updateOrderShippingAddressValidationStep({ order, input })
 
     const updateInput = transform({ input, order }, ({ input, order }) => {
       const address = {

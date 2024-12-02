@@ -33,17 +33,18 @@ medusaIntegrationTestRunner({
       })
 
       it("should update shipping address on an order (by creating a new Address record)", async () => {
+        const addressBefore = order.shipping_address
+
         const response = await api.post(
           `/admin/orders/${order.id}`,
           {
             shipping_address: {
               city: "New New York",
+              address_1: "New Main street 123",
             },
           },
           adminHeaders
         )
-
-        const addressBefore = order.shipping_address
 
         expect(response.data.order.shipping_address.id).not.toEqual(
           addressBefore.id
@@ -54,7 +55,7 @@ medusaIntegrationTestRunner({
             company: addressBefore.company,
             first_name: addressBefore.first_name,
             last_name: addressBefore.last_name,
-            address_1: addressBefore.address_1,
+            address_1: "New Main street 123",
             address_2: addressBefore.address_2,
             city: "New New York",
             country_code: addressBefore.country_code,
@@ -85,6 +86,31 @@ medusaIntegrationTestRunner({
             ]),
           })
         )
+      })
+
+      it("should fail to update shipping address if country code has been changed", async () => {
+        const response = await api
+          .post(
+            `/admin/orders/${order.id}`,
+            {
+              shipping_address: {
+                country_code: "HR",
+              },
+            },
+            adminHeaders
+          )
+          .catch((e) => e)
+
+        expect(response.response.status).toBe(400)
+        expect(response.response.data.message).toBe(
+          "Country code cannot be changed"
+        )
+
+        const orderChangesResult = (
+          await api.get(`/admin/orders/${order.id}/changes`, adminHeaders)
+        ).data.order_changes
+
+        expect(orderChangesResult.length).toEqual(0)
       })
     })
 
