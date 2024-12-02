@@ -11,7 +11,6 @@ export const User = model
   })
   .indexes([
     {
-      name: "IDX_user_email",
       unique: true,
       on: ["email"],
       where: "deleted_at IS NULL",

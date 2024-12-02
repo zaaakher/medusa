@@ -11,13 +11,11 @@ export const Invite = model
   })
   .indexes([
     {
-      name: "IDX_invite_email",
       on: ["email"],
       unique: true,
       where: "deleted_at IS NULL",
     },
     {
-      name: "IDX_invite_token",
       on: ["token"],
       where: "deleted_at IS NULL",
     },
