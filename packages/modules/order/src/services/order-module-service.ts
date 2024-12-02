@@ -20,6 +20,7 @@ import {
 } from "@medusajs/framework/types"
 import {
   BigNumber,
+  ChangeActionType,
   createRawPropertiesFromBigNumber,
   DecorateCartLikeInputDTO,
   decorateCartTotals,
@@ -2233,6 +2234,33 @@ export default class OrderModuleService<
     await this.orderChangeService_.update(updates as any, sharedContext)
   }
 
+  @InjectManager()
+  async registerOrderChange(
+    data: OrderTypes.RegisterOrderChangeDTO,
+    sharedContext?: Context
+  ): Promise<OrderTypes.OrderChangeDTO> {
+    return (await this.orderChangeService_.create(
+      {
+        order_id: data.order_id,
+        change_type: data.change_type,
+        internal_note: data.internal_note,
+        description: data.description,
+        requested_at: new Date(),
+        metadata: data.metadata,
+        status: OrderChangeStatus.REQUESTED,
+        actions: [
+          {
+            action: ChangeActionType.UPDATE_ORDER_PROPERTIES,
+            details: data.details,
+            applied: true,
+          },
+        ],
+      } as CreateOrderChangeDTO,
+      sharedContext
+    )) as OrderTypes.OrderChangeDTO
+  }
+
+  @InjectManager()
   @InjectManager()
   async applyPendingOrderActions(
     orderId: string | string[],

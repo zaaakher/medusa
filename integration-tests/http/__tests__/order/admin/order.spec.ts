@@ -82,7 +82,7 @@ medusaIntegrationTestRunner({
                 applied: true,
                 reference_id: addressBefore.id,
                 reference: "shipping_address",
-                action: "CHANGE_SHIPPING_ADDRESS",
+                action: "UPDATE_ORDER",
                 details: {
                   city: "New New York",
                   address_1: "New Main street 123",

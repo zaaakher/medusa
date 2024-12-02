@@ -94,7 +94,7 @@ export const updateOrderShippingAddressWorkflow = createWorkflow(
         {
           order_change_id: change.id,
           order_id: input.order_id,
-          action: ChangeActionType.CHANGE_SHIPPING_ADDRESS,
+          action: ChangeActionType.UPDATE_ORDER,
           version: change.version,
           reference: "shipping_address",
           applied: true, // mark action as already applied so this action serves as a change record
