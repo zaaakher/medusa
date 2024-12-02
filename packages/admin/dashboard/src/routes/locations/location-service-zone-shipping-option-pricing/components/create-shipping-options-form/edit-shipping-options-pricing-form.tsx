@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useMemo } from "react"
+import { useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 import * as zod from "zod"
 
@@ -10,7 +10,9 @@ import { useTranslation } from "react-i18next"
 import { DataGrid } from "../../../../../components/data-grid"
 import {
   RouteFocusModal,
+  StackedFocusModal,
   useRouteModal,
+  useStackedModal,
 } from "../../../../../components/modals/index"
 import { KeyboundForm } from "../../../../../components/utilities/keybound-form"
 import { usePricePreferences } from "../../../../../hooks/api/price-preferences"
@@ -18,11 +20,17 @@ import { useRegions } from "../../../../../hooks/api/regions"
 import { useUpdateShippingOptions } from "../../../../../hooks/api/shipping-options"
 import { useStore } from "../../../../../hooks/api/store"
 import { castNumber } from "../../../../../lib/cast-number"
+import { PriceRuleForm } from "../../../common/components/price-rule-form"
+import { ShippingOptionPriceProvider } from "../../../common/components/shipping-option-price-provider"
+import { CONDITIONAL_PRICES_STACKED_MODAL_ID } from "../../../common/constants"
 import { useShippingOptionPriceColumns } from "../../../common/hooks/use-shipping-option-price-columns"
+import { ConditionalPriceInfo } from "../../../common/types"
 
 const getInitialCurrencyPrices = (
   prices: HttpTypes.AdminShippingOptionPrice[]
 ) => {
+  console.log("prices", prices)
+
   const ret: Record<string, number> = {}
   prices.forEach((p) => {
     if (p.price_rules!.length) {
@@ -75,6 +83,19 @@ export function EditShippingOptionsPricingForm({
 }: EditShippingOptionPricingFormProps) {
   const { t } = useTranslation()
   const { handleSuccess } = useRouteModal()
+  const { getIsOpen, setIsOpen } = useStackedModal()
+  const [selectedPrice, setSelectedPrice] =
+    useState<ConditionalPriceInfo | null>(null)
+
+  const onOpenConditionalPricesModal = (info: ConditionalPriceInfo) => {
+    setIsOpen(CONDITIONAL_PRICES_STACKED_MODAL_ID, true)
+    setSelectedPrice(info)
+  }
+
+  const onCloseConditionalPricesModal = () => {
+    setIsOpen(CONDITIONAL_PRICES_STACKED_MODAL_ID, false)
+    setSelectedPrice(null)
+  }
 
   const form = useForm<zod.infer<typeof EditShippingOptionPricingSchema>>({
     defaultValues: {
@@ -225,43 +246,56 @@ export function EditShippingOptionsPricingForm({
   }
 
   return (
-    <RouteFocusModal.Form form={form}>
-      <KeyboundForm
-        className="flex h-full flex-col overflow-hidden"
-        onSubmit={handleSubmit}
+    <StackedFocusModal id={CONDITIONAL_PRICES_STACKED_MODAL_ID}>
+      <ShippingOptionPriceProvider
+        onOpenConditionalPricesModal={onOpenConditionalPricesModal}
+        onCloseConditionalPricesModal={onCloseConditionalPricesModal}
       >
-        <RouteFocusModal.Header />
+        <RouteFocusModal.Form form={form}>
+          <KeyboundForm
+            className="flex h-full flex-col overflow-hidden"
+            onSubmit={handleSubmit}
+          >
+            <RouteFocusModal.Header />
 
-        <RouteFocusModal.Body>
-          <div className="flex size-full flex-col divide-y overflow-hidden">
-            <DataGrid
-              isLoading={isLoading}
-              data={data}
-              columns={columns}
-              state={form}
-              onEditingChange={(editing) => setCloseOnEscape(!editing)}
-            />
-          </div>
-        </RouteFocusModal.Body>
-        <RouteFocusModal.Footer>
-          <div className="flex items-center justify-end gap-x-2">
-            <RouteFocusModal.Close asChild>
-              <Button variant="secondary" size="small">
-                {t("actions.cancel")}
-              </Button>
-            </RouteFocusModal.Close>
-            <Button
-              size="small"
-              className="whitespace-nowrap"
-              isLoading={isPending}
-              onClick={handleSubmit}
-              type="button"
-            >
-              {t("actions.save")}
-            </Button>
-          </div>
-        </RouteFocusModal.Footer>
-      </KeyboundForm>
-    </RouteFocusModal.Form>
+            <RouteFocusModal.Body>
+              <div className="flex size-full flex-col divide-y overflow-hidden">
+                <DataGrid
+                  isLoading={isLoading}
+                  data={data}
+                  columns={columns}
+                  state={form}
+                  onEditingChange={(editing) => setCloseOnEscape(!editing)}
+                />
+              </div>
+              {selectedPrice && (
+                <PriceRuleForm
+                  key={selectedPrice?.field}
+                  info={selectedPrice}
+                />
+              )}
+            </RouteFocusModal.Body>
+            <RouteFocusModal.Footer>
+              <div className="flex items-center justify-end gap-x-2">
+                <RouteFocusModal.Close asChild>
+                  <Button variant="secondary" size="small">
+                    {t("actions.cancel")}
+                  </Button>
+                </RouteFocusModal.Close>
+                <Button
+                  size="small"
+                  className="whitespace-nowrap"
+                  isLoading={isPending}
+                  onClick={handleSubmit}
+                  type="button"
+                >
+                  {t("actions.save")}
+                </Button>
+              </div>
+            </RouteFocusModal.Footer>
+          </KeyboundForm>
+        </RouteFocusModal.Form>
+      </ShippingOptionPriceProvider>
+    </StackedFocusModal>
   )
 }
