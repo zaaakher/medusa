@@ -9,6 +9,8 @@ import { OrderTransaction } from "./transaction"
 const _Return = model
   .define("Return", {
     id: model.id({ prefix: "return" }).primaryKey(),
+    exchange_id: model.text().nullable(),
+    claim_id: model.text().nullable(),
     order_version: model.number(),
     display_id: model.autoincrement(),
     status: model.enum(ReturnStatus).default(ReturnStatus.OPEN),
@@ -24,13 +26,15 @@ const _Return = model
       mappedBy: "returns",
     }),
     exchange: model
-      .belongsTo<() => typeof OrderExchange>(() => OrderExchange, {
+      .hasOne<() => typeof OrderExchange>(() => OrderExchange, {
         mappedBy: "return",
+        fieldName: "exchange_id",
       })
       .nullable(),
     claim: model
-      .belongsTo<() => typeof OrderClaim>(() => OrderClaim, {
+      .hasOne<() => typeof OrderClaim>(() => OrderClaim, {
         mappedBy: "return",
+        fieldName: "claim_id",
       })
       .nullable(),
     items: model.hasMany<() => typeof ReturnItem>(() => ReturnItem, {

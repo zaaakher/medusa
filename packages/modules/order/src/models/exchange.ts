@@ -9,7 +9,6 @@ import { OrderTransaction } from "./transaction"
 const _OrderExchange = model
   .define("OrderExchange", {
     id: model.id({ prefix: "oexc" }).primaryKey(),
-    return_id: model.text().nullable(),
     order_version: model.number(),
     display_id: model.autoincrement(),
     no_notification: model.boolean().nullable(),
@@ -22,7 +21,7 @@ const _OrderExchange = model
       mappedBy: "exchanges",
     }),
     return: model
-      .hasOne<() => typeof Return>(() => Return, {
+      .belongsTo<() => typeof Return>(() => Return, {
         mappedBy: "exchange",
       })
       .nullable(),

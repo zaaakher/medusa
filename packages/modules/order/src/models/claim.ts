@@ -8,7 +8,6 @@ import { OrderTransaction } from "./transaction"
 const _OrderClaim = model
   .define("OrderClaim", {
     id: model.id({ prefix: "claim" }).primaryKey(),
-    return_id: model.text().nullable(),
     order_version: model.number(),
     display_id: model.autoincrement(),
     type: model.enum(ClaimType),
@@ -21,7 +20,7 @@ const _OrderClaim = model
       mappedBy: "claims",
     }),
     return: model
-      .hasOne<() => typeof Return>(() => Return, {
+      .belongsTo<() => typeof Return>(() => Return, {
         mappedBy: "claim",
       })
       .nullable(),
