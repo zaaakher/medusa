@@ -101,13 +101,13 @@ export const syncProductsWorkflowHighlight = [
 
   ```ts title="src/workflows/sync-products.ts" highlights={syncProductsWorkflowHighlight} collapsibleLines="1-16" expandButtonLabel="Show Imports"
   import { 
-    Modules
+    Modules,
   } from "@medusajs/framework/utils"
   import { 
     IProductModuleService, 
     IStoreModuleService, 
     ProductDTO, 
-    StoreDTO
+    StoreDTO,
   } from "@medusajs/framework/types"
   import { 
     StepResponse, 

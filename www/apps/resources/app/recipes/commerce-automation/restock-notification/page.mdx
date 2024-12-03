@@ -142,13 +142,13 @@ const RestockSubscription = model.define("restock_subscription", {
   variant_id: model.text(),
   sales_channel_id: model.text(),
   email: model.text(),
-  customer_id: model.text().nullable()
+  customer_id: model.text().nullable(),
 })
 .indexes([
   {
     on: ["variant_id", "sales_channel_id", "email"],
-    unique: true
-  }
+    unique: true,
+  },
 ])
 
 export default RestockSubscription
@@ -196,11 +196,11 @@ In this section, you'll create the Restock Module's service. Create the file `sr
 ![The directory structure of the Restock Module after adding this service.](https://res.cloudinary.com/dza7lstvk/image/upload/v1733224957/Medusa%20Resources/restock-dir-overview-4_pkypup.jpg)
 
 ```ts title="src/modules/restock/service.ts"
-import { MedusaService } from "@medusajs/framework/utils";
-import RestockSubscription from "./models/restock-subscription";
+import { MedusaService } from "@medusajs/framework/utils"
+import RestockSubscription from "./models/restock-subscription"
 
 class RestockModuleService extends MedusaService({
-  RestockSubscription
+  RestockSubscription,
 }) { }
 
 export default RestockModuleService
@@ -233,7 +233,7 @@ import RestockModuleService from "./service"
 export const RESTOCK_MODULE = "restock"
 
 export default Module(RESTOCK_MODULE, {
-  service: RestockModuleService
+  service: RestockModuleService,
 })
 ```
 
@@ -310,18 +310,18 @@ To create a link, create the file `src/links/restock-variant.ts` with the follow
 ![The directory structure of the Medusa Application after adding this link.](https://res.cloudinary.com/dza7lstvk/image/upload/v1733225402/Medusa%20Resources/restock-dir-overview-7_dln3fw.jpg)
 
 ```ts title="src/links/restock-variant.ts"
-import { defineLink } from "@medusajs/framework/utils";
+import { defineLink } from "@medusajs/framework/utils"
 import RestockModule from "../modules/restock"
-import ProductModule from "@medusajs/medusa/product";
+import ProductModule from "@medusajs/medusa/product"
 
 export default defineLink(
   {
     ...RestockModule.linkable.restockSubscription.id,
-    field: "variant_id"
+    field: "variant_id",
   },
   ProductModule.linkable.productVariant,
   {
-    readOnly: true
+    readOnly: true,
   }
 )
 ```
@@ -454,8 +454,8 @@ export const getEmailStep = createStep(
         entity: "customer",
         fields: ["email"],
         filters: {
-          id: customer_id
-        }
+          id: customer_id,
+        },
       })
 
       returnedEmail = customers[0].email
@@ -517,11 +517,11 @@ export const isVariantInStock = async (
       // @ts-ignore
       "inventory_items.inventory.location_levels.stock_locations.*",
       // @ts-ignore
-      "inventory_items.inventory.location_levels.stock_locations.sales_channels.*"
+      "inventory_items.inventory.location_levels.stock_locations.sales_channels.*",
     ],
     filters: {
-      id: variant_id
-    }
+      id: variant_id,
+    },
   })
 
   if (!variants.length) {
@@ -557,7 +557,7 @@ try {
         sales_channel_id,
         items: [{
           variant_id,
-          quantity: 1
+          quantity: 1,
         }],
       } as unknown as ConfirmVariantInventoryWorkflowInputDTO,
       context,
@@ -655,7 +655,7 @@ export const createRestockSubscriptionStep = createStep(
     )
 
     return new StepResponse(restockSubscription, restockSubscription)
-  },
+  }
 )
 ```
 
@@ -733,7 +733,7 @@ export const updateRestockSubscriptionStep = createStep(
     )
     const restockSubscription = await restockModuleService.updateRestockSubscriptions({
       id,
-      customer_id: oldData.customer_id || customer_id
+      customer_id: oldData.customer_id || customer_id,
     })
 
     return new StepResponse(restockSubscription, oldData)
@@ -793,13 +793,13 @@ export const createRestockSubscriptionWorkflow = createWorkflow(
   ({
     variant_id,
     sales_channel_id,
-    customer
+    customer,
   }: CreateRestockSubscriptionWorkflowInput) => {
     const email = getEmailStep(customer)
     
     validateVariantOutOfStockStep({
       variant_id,
-      sales_channel_id
+      sales_channel_id,
     })
 
     const { data } = useQueryGraphStep({
@@ -808,8 +808,8 @@ export const createRestockSubscriptionWorkflow = createWorkflow(
       filters: {
         email,
         variant_id,
-        sales_channel_id
-      }
+        sales_channel_id,
+      },
     })
 
     when({ data }, ({ data }) => {
@@ -820,7 +820,7 @@ export const createRestockSubscriptionWorkflow = createWorkflow(
         variant_id,
         sales_channel_id,
         email,
-        customer_id: customer.customer_id
+        customer_id: customer.customer_id,
       })
     })
 
@@ -830,7 +830,7 @@ export const createRestockSubscriptionWorkflow = createWorkflow(
     .then(() => {
       updateRestockSubscriptionStep({
         id: data[0].id,
-        customer_id: customer.customer_id
+        customer_id: customer.customer_id,
       })
     })
 
@@ -841,8 +841,8 @@ export const createRestockSubscriptionWorkflow = createWorkflow(
       filters: {
         email,
         variant_id,
-        sales_channel_id
-      }
+        sales_channel_id,
+      },
     }).config({ name: "retrieve-restock-subscription" })
 
     return new WorkflowResponse(
@@ -902,7 +902,7 @@ import { z } from "zod"
 export const PostStoreCreateRestockSubscription = z.object({
   variant_id: z.string(),
   email: z.string().optional(),
-  sales_channel_id: z.string().optional()
+  sales_channel_id: z.string().optional(),
 })
 ```
 
@@ -947,11 +947,11 @@ export const middlewaresHighlights = [
 import { 
   authenticate, 
   defineMiddlewares, 
-  validateAndTransformBody
-} from "@medusajs/framework/http";
+  validateAndTransformBody,
+} from "@medusajs/framework/http"
 import { 
-  PostStoreCreateRestockSubscription
-} from "./store/restock-subscriptions/validators";
+  PostStoreCreateRestockSubscription,
+} from "./store/restock-subscriptions/validators"
 
 export default defineMiddlewares({
   routes: [
@@ -960,12 +960,12 @@ export default defineMiddlewares({
       method: "POST",
       middlewares: [
         authenticate("customer", ["bearer", "session"], {
-          allowUnauthenticated: true
+          allowUnauthenticated: true,
         }),
-        validateAndTransformBody(PostStoreCreateRestockSubscription)
-      ]
-    }
-  ]
+        validateAndTransformBody(PostStoreCreateRestockSubscription),
+      ],
+    },
+  ],
 })
 ```
 
@@ -1037,9 +1037,9 @@ export async function POST(
         sales_channel_id: salesChannelId,
         customer: {
           email: req.validatedBody.email,
-          customer_id: req.auth_context?.actor_id
-        }
-      }
+          customer_id: req.auth_context?.actor_id,
+        },
+      },
     })
 
   return res.sendStatus(201)
@@ -1199,7 +1199,7 @@ module.exports = defineConfig({
         ],
       },
     },
-  ]
+  ],
 })
 
 ```
@@ -1230,7 +1230,7 @@ export const getRestockedStep = createStep(
       input.map(async (restockSubscription) => {
         const isInStock = await isVariantInStock({
           variant_id: restockSubscription.variant_id,
-          sales_channel_id: restockSubscription.sales_channel_id
+          sales_channel_id: restockSubscription.sales_channel_id,
         }, stepContext)
 
         if (isInStock) {
@@ -1276,8 +1276,8 @@ export const sendRestockNotificationStep = createStep(
       channel: "email",
       template: "variant-restock",
       data: {
-        variant: subscription.product_variant
-      }
+        variant: subscription.product_variant,
+      },
     }))
 
     await notificationModuleService.createNotifications(notificationData)
@@ -1354,11 +1354,11 @@ Create the file `src/workflows/send-restock-notifications/index.ts` with the fol
 ![The directory structure of the Medusa application after adding the workflow.](https://res.cloudinary.com/dza7lstvk/image/upload/v1733234507/Medusa%20Resources/restock-dir-overview-20_mcqkkx.jpg)
 
 ```ts title="src/workflows/send-restock-notifications/index.ts"
-import { createWorkflow, WorkflowResponse } from "@medusajs/framework/workflows-sdk";
-import { useQueryGraphStep } from "@medusajs/medusa/core-flows";
-import { getRestockedStep } from "./steps/get-restocked";
-import { sendRestockNotificationStep } from "./steps/send-restock-notification";
-import { deleteRestockSubscriptionStep } from "./steps/delete-restock-subscriptions";
+import { createWorkflow, WorkflowResponse } from "@medusajs/framework/workflows-sdk"
+import { useQueryGraphStep } from "@medusajs/medusa/core-flows"
+import { getRestockedStep } from "./steps/get-restocked"
+import { sendRestockNotificationStep } from "./steps/send-restock-notification"
+import { deleteRestockSubscriptionStep } from "./steps/delete-restock-subscriptions"
 
 export const sendRestockNotificationsWorkflow = createWorkflow(
   "send-restock-notifications",
@@ -1377,7 +1377,7 @@ export const sendRestockNotificationsWorkflow = createWorkflow(
     deleteRestockSubscriptionStep(restocked)
 
     return new WorkflowResponse({
-      restocked
+      restocked,
     })
   }
 )
@@ -1416,11 +1416,11 @@ A scheduled job is created in a TypeScript or JavaScript file under the `src/job
 
 ```ts title="src/jobs/check-restock.ts"
 import {
-  MedusaContainer
-} from "@medusajs/framework/types";
+  MedusaContainer,
+} from "@medusajs/framework/types"
 import { 
-  sendRestockNotificationsWorkflow
-} from "../workflows/send-restock-notifications";
+  sendRestockNotificationsWorkflow,
+} from "../workflows/send-restock-notifications"
 
 export default async function myCustomJob(container: MedusaContainer) {
   await sendRestockNotificationsWorkflow(container)

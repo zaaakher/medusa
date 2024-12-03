@@ -703,8 +703,8 @@ export const syncStep = createStep(
     const batchSize = 200
     const hasMore = true
     const offset = 0
-    let filters = input.product_ids ? {
-      id: input.product_ids
+    const filters = input.product_ids ? {
+      id: input.product_ids,
     } : {}
 
     while (hasMore) {
@@ -782,16 +782,16 @@ export const syncStep = createStep(
             const after = await sanityModule.upsertSyncDocument(
               "product", 
               prod as ProductDTO
-            );
+            )
   
             upsertMap.push({
               // @ts-ignore
               before: prod.sanity_product,
-              after
+              after,
             })
   
             return after
-          }),
+          })
         )
       } catch (e) {
         return StepResponse.permanentFailure(
