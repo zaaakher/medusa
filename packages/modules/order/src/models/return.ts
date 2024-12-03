@@ -28,13 +28,11 @@ const _Return = model
     exchange: model
       .hasOne<() => typeof OrderExchange>(() => OrderExchange, {
         mappedBy: "return",
-        fieldName: "exchange_id",
       })
       .nullable(),
     claim: model
       .hasOne<() => typeof OrderClaim>(() => OrderClaim, {
         mappedBy: "return",
-        fieldName: "claim_id",
       })
       .nullable(),
     items: model.hasMany<() => typeof ReturnItem>(() => ReturnItem, {
