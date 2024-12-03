@@ -4,7 +4,7 @@ import { Order } from "./order"
 const _OrderAddress = model
   .define(
     {
-      tableName: "OrderAddress",
+      tableName: "order_address",
       disableSoftDeleteFilter: true,
     },
     {
