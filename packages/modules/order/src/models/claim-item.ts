@@ -6,7 +6,7 @@ import { OrderLineItem } from "./line-item"
 const _OrderClaimItem = model
   .define(
     {
-      tableName: "OrderClaimItem",
+      tableName: "order_claim_item",
       disableSoftDeleteFilter: true,
     },
     {

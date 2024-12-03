@@ -4,7 +4,7 @@ import { OrderLineItem } from "./line-item"
 const _OrderLineItemTaxLine = model
   .define(
     {
-      tableName: "OrderLineItemTaxLine",
+      tableName: "order_line_item_tax_line",
       disableSoftDeleteFilter: true,
     },
     {

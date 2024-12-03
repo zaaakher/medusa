@@ -5,7 +5,7 @@ import { OrderLineItem } from "./line-item"
 const _OrderExchangeItem = model
   .define(
     {
-      tableName: "OrderExchangeItem",
+      tableName: "order_exchange_item",
       disableSoftDeleteFilter: true,
     },
     {

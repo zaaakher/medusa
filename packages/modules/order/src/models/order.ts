@@ -54,7 +54,7 @@ type OrderSchema = {
 const _Order = model
   .define(
     {
-      tableName: "Order",
+      tableName: "order",
       disableSoftDeleteFilter: true,
     },
     {

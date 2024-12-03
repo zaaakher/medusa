@@ -6,7 +6,7 @@ import { ReturnReason } from "./return-reason"
 const _ReturnItem = model
   .define(
     {
-      tableName: "ReturnItem",
+      tableName: "return_item",
       disableSoftDeleteFilter: true,
     },
     {
