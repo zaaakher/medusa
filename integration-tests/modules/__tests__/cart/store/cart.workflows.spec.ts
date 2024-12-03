@@ -814,13 +814,13 @@ medusaIntegrationTestRunner({
       })
 
       describe("UpdateCartWorkflow", () => {
-        it("should update price on regular line item and not on custom when region is updated", async () => {
+        it("should remove item with custom price when region is updated", async () => {
           const salesChannel = await scModuleService.createSalesChannels({
             name: "Webshop",
           })
 
           const location = await stockLocationModule.createStockLocations({
-            name: "Warehouse", 
+            name: "Warehouse",
           })
 
           const regions = await regionModuleService.createRegions([
@@ -993,26 +993,10 @@ medusaIntegrationTestRunner({
                   unit_price: 2000,
                   updated_at: expect.any(Date),
                 }),
-                expect.objectContaining({
-                  // Custom line item
-                  id: expect.any(String),
-                  is_discountable: false,
-                  is_tax_inclusive: false,
-                  is_custom_price: true,
-                  quantity: 1,
-                  metadata: {
-                    foo: "bar",
-                  },
-                  requires_shipping: true,
-                  subtitle: "Test subtitle",
-                  thumbnail: "some-url",
-                  title: "Test item",
-                  unit_price: 1500,
-                  updated_at: expect.any(Date),
-                }),
               ]),
             })
           )
+          expect(cart.items?.length).toEqual(1)
         })
       })
 
