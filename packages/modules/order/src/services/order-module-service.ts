@@ -2234,43 +2234,59 @@ export default class OrderModuleService<
     await this.orderChangeService_.update(updates as any, sharedContext)
   }
 
-  @InjectManager()
   async registerOrderChange(
     data: OrderTypes.RegisterOrderChangeDTO,
     sharedContext?: Context
-  ): Promise<OrderTypes.OrderChangeDTO> {
-    const order = await this.orderService_.retrieve(
-      data.order_id,
+  ): Promise<OrderTypes.OrderChangeDTO>
+  async registerOrderChange(
+    data: OrderTypes.RegisterOrderChangeDTO[],
+    sharedContext?: Context
+  ): Promise<OrderTypes.OrderChangeDTO[]>
+
+  @InjectManager()
+  async registerOrderChange(
+    data:
+      | OrderTypes.RegisterOrderChangeDTO
+      | OrderTypes.RegisterOrderChangeDTO[],
+    sharedContext?: Context
+  ): Promise<OrderTypes.OrderChangeDTO | OrderTypes.OrderChangeDTO[]> {
+    const inputData = Array.isArray(data) ? data : [data]
+
+    const orders = await this.orderService_.list(
+      { id: inputData.map((d) => d.order_id) },
       { select: ["id", "version"] },
       sharedContext
     )
 
-    return (await this.orderChangeService_.create(
-      {
-        order_id: data.order_id,
-        change_type: data.change_type,
-        internal_note: data.internal_note,
-        description: data.description,
-        metadata: data.metadata,
+    const orderVersionsMap = new Map(orders.map((o) => [o.id, o.version]))
+
+    const changes = (await this.orderChangeService_.create(
+      inputData.map((d) => ({
+        order_id: d.order_id,
+        change_type: d.change_type,
+        internal_note: d.internal_note,
+        description: d.description,
+        metadata: d.metadata,
         confirmed_at: new Date(),
         status: OrderChangeStatus.CONFIRMED,
-        version: order.version,
+        version: orderVersionsMap.get(d.order_id)!,
         actions: [
           {
             action: ChangeActionType.UPDATE_ORDER_PROPERTIES,
-            details: data.details,
-            reference: data.reference,
-            reference_id: data.reference_id,
-            version: order.version,
+            details: d.details,
+            reference: d.reference,
+            reference_id: d.reference_id,
+            version: orderVersionsMap.get(d.order_id)!,
             applied: true,
           },
         ],
-      } as CreateOrderChangeDTO,
+      })) as CreateOrderChangeDTO[],
       sharedContext
-    )) as OrderTypes.OrderChangeDTO
+    )) as OrderTypes.OrderChangeDTO[]
+
+    return Array.isArray(data) ? changes : changes[0]
   }
 
-  @InjectManager()
   @InjectManager()
   async applyPendingOrderActions(
     orderId: string | string[],

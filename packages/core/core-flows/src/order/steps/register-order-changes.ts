@@ -8,21 +8,24 @@ import { StepResponse, createStep } from "@medusajs/framework/workflows-sdk"
 export const registerOrderChangeStepId = "register-order-change"
 
 /**
- * This step registers an order change.
+ * This step registers an order changes.
  */
-export const registerOrderChangeStep = createStep(
+export const registerOrderChangesStep = createStep(
   registerOrderChangeStepId,
-  async (data: RegisterOrderChangeDTO, { container }) => {
+  async (data: RegisterOrderChangeDTO[], { container }) => {
     const service = container.resolve<IOrderModuleService>(
       ModuleRegistrationName.ORDER
     )
 
-    const orderChange = await service.registerOrderChange(data)
+    const orderChanges = await service.registerOrderChange(data)
 
-    return new StepResponse(void 0, orderChange.id)
+    return new StepResponse(
+      void 0,
+      orderChanges.map((c) => c.id)
+    )
   },
-  async (orderChangeId, { container }) => {
-    if (!orderChangeId) {
+  async (orderChangeIds, { container }) => {
+    if (!orderChangeIds?.length) {
       return
     }
 
@@ -30,6 +33,6 @@ export const registerOrderChangeStep = createStep(
       ModuleRegistrationName.ORDER
     )
 
-    await service.deleteOrderChanges([orderChangeId])
+    await service.deleteOrderChanges(orderChangeIds)
   }
 )

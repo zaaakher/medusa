@@ -5,15 +5,21 @@ import {
   createStep,
   createWorkflow,
   transform,
-  when,
 } from "@medusajs/framework/workflows-sdk"
-import { OrderPreviewDTO } from "@medusajs/types"
+import {
+  OrderPreviewDTO,
+  RegisterOrderChangeDTO,
+  UpdateOrderDTO,
+} from "@medusajs/types"
+import { MedusaError, OrderWorkflowEvents } from "@medusajs/framework/utils"
 
 import { throwIfOrderIsCancelled } from "../utils/order-validation"
-import { previewOrderChangeStep } from "../steps"
+import {
+  previewOrderChangeStep,
+  registerOrderChangesStep,
+  updateOrdersStep,
+} from "../steps"
 import { emitEventStep, useQueryGraphStep } from "../../common"
-import { updateOrderShippingAddressWorkflow } from "./update-shipping-address"
-import { OrderWorkflowEvents } from "@medusajs/framework/utils"
 
 /**
  * This step validates that an order can be updated with provided input.
@@ -28,6 +34,17 @@ export const updateOrderValidationStep = createStep(
     input: OrderWorkflow.UpdateOrderWorkflowInput
   }) {
     throwIfOrderIsCancelled({ order })
+
+    if (
+      input.shipping_address?.country_code &&
+      order.shipping_address?.country_code !==
+        input.shipping_address?.country_code
+    ) {
+      throw new MedusaError(
+        MedusaError.Types.INVALID_DATA,
+        "Country code cannot be changed"
+      )
+    }
   }
 )
 
@@ -42,7 +59,13 @@ export const updateOrderWorkflow = createWorkflow(
   ): WorkflowResponse<OrderPreviewDTO> {
     const orderQuery = useQueryGraphStep({
       entity: "order",
-      fields: ["id", "status"],
+      fields: [
+        "id",
+        "status",
+        "email",
+        "shipping_address.*",
+        "billing_address.*",
+      ],
       filters: { id: input.id },
       options: { throwIfKeyNotFound: true },
     }).config({ name: "order-query" })
@@ -54,14 +77,43 @@ export const updateOrderWorkflow = createWorkflow(
 
     updateOrderValidationStep({ order, input })
 
-    when({ input }, ({ input }) => !!input.shipping_address).then(() => {
-      updateOrderShippingAddressWorkflow.runAsStep({
-        input: {
-          order_id: input.id,
-          shipping_address: input.shipping_address!,
-        },
-      })
+    const updateInput = transform({ input, order }, ({ input, order }) => {
+      const update: UpdateOrderDTO = {}
+
+      if (input.shipping_address) {
+        const address = {
+          // we want to create a new address
+          ...order.shipping_address,
+          ...input.shipping_address,
+        }
+        delete address.id
+        update.shipping_address = address
+      }
+
+      return update
     })
+
+    updateOrdersStep({
+      selector: { id: input.id },
+      update: updateInput,
+    })
+
+    const orderChangeInput = transform({ input, order }, ({ input, order }) => {
+      const changes: RegisterOrderChangeDTO[] = []
+      if (input.shipping_address) {
+        changes.push({
+          change_type: "update_order" as const,
+          order_id: input.id,
+          reference: "shipping_address",
+          reference_id: order.shipping_address?.id, // save previous address id as reference
+          details: input.shipping_address as Record<string, unknown>, // save what changed on the address
+        })
+      }
+
+      return changes
+    })
+
+    registerOrderChangesStep(orderChangeInput)
 
     emitEventStep({
       eventName: OrderWorkflowEvents.UPDATED,

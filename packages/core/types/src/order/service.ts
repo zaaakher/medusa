@@ -2731,6 +2731,25 @@ export interface IOrderModuleService extends IModuleService {
   ): Promise<OrderChangeDTO>
 
   /**
+   * This method registers order changes.
+   *
+   * @param {RegisterOrderChangeDTO[]} data - The register order changes details.
+   * @param {Context} sharedContext - A context used to share resources, such as transaction manager, between the application and the module.
+   * @returns {Promise<OrderChangeReturn[]>} The item and shipping method changes made on the orders.
+   *
+   * @example
+   * await orderModuleService.registerOrderChange({
+   *   order_id: "123",
+   *   details: Record<string, unknown>
+   * })
+   *
+   */
+  registerOrderChange(
+    data: RegisterOrderChangeDTO[],
+    sharedContext?: Context
+  ): Promise<OrderChangeDTO[]>
+
+  /**
    * This method soft deletes order changes by their IDs.
    *
    * @param {string | string[]} orderChangeId - The IDs of order changes.
