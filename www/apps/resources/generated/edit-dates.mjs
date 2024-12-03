@@ -3442,5 +3442,6 @@ export const generatedEditDates = {
   "references/types/DmlTypes/types/types.DmlTypes.InferForeignKeys/page.mdx": "2024-11-27T16:33:39.170Z",
   "references/types/DmlTypes/types/types.DmlTypes.InferSchemaFields/page.mdx": "2024-11-27T16:33:39.173Z",
   "references/types/interfaces/types.BaseRepositoryService/page.mdx": "2024-11-27T16:33:39.153Z",
-  "app/events-reference/page.mdx": "2024-11-27T13:31:07.385Z"
+  "app/events-reference/page.mdx": "2024-11-27T13:31:07.385Z",
+  "app/recipes/commerce-automation/restock-notification/page.mdx": "2024-12-03T10:05:00.679Z"
 }
