@@ -4124,6 +4124,65 @@
           ],
           "additionalProperties": false
         },
+        "edit": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "requestSuccess": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "title",
+                "requestSuccess"
+              ],
+              "additionalProperties": false
+            },
+            "shippingAddress": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "requestSuccess": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "title",
+                "requestSuccess"
+              ],
+              "additionalProperties": false
+            },
+            "billingAddress": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "requestSuccess": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "title",
+                "requestSuccess"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "email",
+            "shippingAddress",
+            "billingAddress"
+          ],
+          "additionalProperties": false
+        },
         "returns": {
           "type": "object",
           "properties": {
@@ -5404,6 +5463,7 @@
         "transfer",
         "payment",
         "edits",
+        "edit",
         "returns",
         "claims",
         "exchanges",

@@ -997,6 +997,20 @@
         "quantityLowerThanFulfillment": "Cannot set quantity to be less then or equal to fulfilled quantity"
       }
     },
+    "edit": {
+      "email": {
+        "title": "Edit email",
+        "requestSuccess": "Order email updated to {{email}}."
+      },
+      "shippingAddress": {
+        "title": "Edit shipping address",
+        "requestSuccess": "Order shipping address updated."
+      },
+      "billingAddress": {
+        "title": "Edit billing address",
+        "requestSuccess": "Order billing address updated."
+      }
+    },
     "returns": {
       "create": "Create Return",
       "confirm": "Confirm Return",
