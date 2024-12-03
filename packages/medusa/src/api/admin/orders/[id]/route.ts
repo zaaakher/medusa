@@ -6,12 +6,11 @@ import {
   AuthenticatedMedusaRequest,
   MedusaResponse,
 } from "@medusajs/framework/http"
-import { HttpTypes } from "@medusajs/framework/types"
+import { AdminOrder, HttpTypes } from "@medusajs/framework/types"
 import {
   AdminGetOrdersOrderParamsType,
   AdminUpdateOrderType,
 } from "../validators"
-import { remoteQueryObjectFromString } from "@medusajs/framework/utils"
 import { ContainerRegistrationKeys } from "@medusajs/framework/utils"
 
 export const GET = async (
@@ -34,9 +33,7 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<AdminUpdateOrderType>,
   res: MedusaResponse<HttpTypes.AdminOrderResponse>
 ) => {
-  const remoteQuery = req.scope.resolve(ContainerRegistrationKeys.REMOTE_QUERY)
-
-  const variables = { id: req.params.id }
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
 
   await updateOrderWorkflow(req.scope).run({
     input: {
@@ -45,12 +42,11 @@ export const POST = async (
     },
   })
 
-  const queryObject = remoteQueryObjectFromString({
-    entryPoint: "order",
-    variables,
+  const result = await query.graph({
+    entity: "order",
+    filters: { id: req.params.id },
     fields: req.remoteQueryConfig.fields,
   })
 
-  const [order] = await remoteQuery(queryObject)
-  res.status(200).json({ order })
+  res.status(200).json({ order: result.data[0] as AdminOrder })
 }
