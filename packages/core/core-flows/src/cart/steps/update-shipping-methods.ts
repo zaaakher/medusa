@@ -9,10 +9,6 @@ import {
 } from "@medusajs/framework/utils"
 import { StepResponse, createStep } from "@medusajs/framework/workflows-sdk"
 
-export interface UpdateLineItemsStepInput {
-  id: string
-  items: UpdateLineItemWithSelectorDTO[]
-}
 
 export const updateShippingMethodsStepId = "update-shipping-methods-step"
 /**
