@@ -2835,6 +2835,7 @@ describe("Entity builder", () => {
           name: "user",
           nullable: false,
           onDelete: "cascade",
+          cascade: ["persist", "soft-remove"],
           owner: true,
           reference: "1:1",
         },
@@ -4418,7 +4419,8 @@ describe("Entity builder", () => {
       })
     })
 
-    test("throw error when other side relationship is missing", () => {
+    // We now allow the other side to not exists, maybe remove that test?
+    test.skip("throw error when other side relationship is missing", () => {
       const email = model.define("email", {
         email: model.text(),
         isVerified: model.boolean(),

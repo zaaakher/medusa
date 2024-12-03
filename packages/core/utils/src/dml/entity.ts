@@ -68,7 +68,7 @@ function extractEntityConfig<const Config extends IDmlEntityConfig>(
     ) as InferDmlEntityNameFromConfig<Config>
     result.tableName = nameOrConfig.tableName
     result.disableSoftDeleteFilter =
-      nameOrConfig.disableSoftDeleteFilter ?? true
+      nameOrConfig.disableSoftDeleteFilter ?? false
   }
 
   return result
