@@ -7,6 +7,7 @@ import {
 } from "@medusajs/types"
 import {
   BeforeCreate,
+  Cascade,
   ManyToMany,
   ManyToOne,
   OneToMany,
@@ -325,6 +326,20 @@ export function defineBelongsToRelationship(
   if (HasOne.isHasOne(otherSideRelation)) {
     const foreignKeyName = camelToSnakeCase(`${relationship.name}Id`)
 
+    const oneToOneOptions: Parameters<typeof OneToOne>[0] = {
+      entity: relatedModelName,
+      nullable: relationship.nullable,
+      mappedBy: mappedBy,
+      owner: true,
+      onDelete: shouldCascade ? "cascade" : undefined,
+    }
+
+    if (shouldCascade) {
+      oneToOneOptions.cascade = [Cascade.PERSIST, "soft-remove"] as any
+    }
+
+    OneToOne(oneToOneOptions)(MikroORMEntity.prototype, relationship.name)
+
     Object.defineProperty(MikroORMEntity.prototype, foreignKeyName, {
       value: null,
       configurable: true,
@@ -332,23 +347,12 @@ export function defineBelongsToRelationship(
       writable: true,
     })
 
-    const oneToOneOptions = {
-      entity: relatedModelName,
+    Property({
+      type: "string",
+      columnType: "text",
       nullable: relationship.nullable,
-      inversedBy: mappedBy,
-      fieldName: foreignKeyName,
-      owner: true,
-      onDelete: shouldCascade ? "cascade" : undefined,
-      mapToPk: true,
-    }
-
-    OneToOne(oneToOneOptions)(MikroORMEntity.prototype, foreignKeyName)
-
-    OneToOne({
-      ...oneToOneOptions,
-      mapToPk: false,
       persist: false,
-    })(MikroORMEntity.prototype, relationship.name)
+    })(MikroORMEntity.prototype, foreignKeyName)
 
     const { tableName } = parseEntityName(entity)
     applyEntityIndexes(MikroORMEntity, tableName, [

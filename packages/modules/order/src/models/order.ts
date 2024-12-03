@@ -71,8 +71,16 @@ const _Order = model
       no_notification: model.boolean().nullable(),
       metadata: model.json().nullable(),
       canceled_at: model.dateTime().nullable(),
-      shipping_address: model.belongsTo<any>(() => OrderAddress).nullable(),
-      billing_address: model.belongsTo<any>(() => OrderAddress).nullable(),
+      shipping_address: model
+        .belongsTo<any>(() => OrderAddress, {
+          mappedBy: "shipping_address_order",
+        })
+        .nullable(),
+      billing_address: model
+        .belongsTo<any>(() => OrderAddress, {
+          mappedBy: "billing_address_order",
+        })
+        .nullable(),
       summary: model.hasMany<any>(() => OrderSummary, {
         mappedBy: "order",
       }),
