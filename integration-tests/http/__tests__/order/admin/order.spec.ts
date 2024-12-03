@@ -117,6 +117,92 @@ medusaIntegrationTestRunner({
 
         expect(orderChangesResult.length).toEqual(0)
       })
+
+      it("should update billing address on an order (by creating a new Address record)", async () => {
+        const addressBefore = order.billing_address
+
+        const response = await api.post(
+          `/admin/orders/${order.id}`,
+          {
+            billing_address: {
+              city: "New New York",
+              address_1: "New Main street 123",
+            },
+          },
+          adminHeaders
+        )
+
+        expect(response.data.order.billing_address.id).not.toEqual(
+          addressBefore.id
+        ) // new addres created
+        expect(response.data.order.billing_address).toEqual(
+          expect.objectContaining({
+            customer_id: addressBefore.customer_id,
+            company: addressBefore.company,
+            first_name: addressBefore.first_name,
+            last_name: addressBefore.last_name,
+            address_1: "New Main street 123",
+            address_2: addressBefore.address_2,
+            city: "New New York",
+            country_code: addressBefore.country_code,
+            province: addressBefore.province,
+            postal_code: addressBefore.postal_code,
+            phone: addressBefore.phone,
+          })
+        )
+
+        const orderChangesResult = (
+          await api.get(`/admin/orders/${order.id}/changes`, adminHeaders)
+        ).data.order_changes
+
+        expect(orderChangesResult.length).toEqual(1)
+        expect(orderChangesResult[0]).toEqual(
+          expect.objectContaining({
+            version: 1,
+            change_type: "update_order",
+            status: "confirmed",
+            confirmed_at: expect.any(String),
+            actions: expect.arrayContaining([
+              expect.objectContaining({
+                version: 1,
+                applied: true,
+                reference_id: addressBefore.id,
+                reference: "billing_address",
+                action: "UPDATE_ORDER_PROPERTIES",
+                details: {
+                  city: "New New York",
+                  address_1: "New Main street 123",
+                },
+              }),
+            ]),
+          })
+        )
+      })
+
+      it("should fail to update billing address if country code has been changed", async () => {
+        const response = await api
+          .post(
+            `/admin/orders/${order.id}`,
+            {
+              billing_address: {
+                country_code: "HR",
+              },
+            },
+            adminHeaders
+          )
+          .catch((e) => e)
+
+        expect(response.response.status).toBe(400)
+        expect(response.response.data.message).toBe(
+          "Country code cannot be changed"
+        )
+
+        const orderChangesResult = (
+          await api.get(`/admin/orders/${order.id}/changes`, adminHeaders)
+        ).data.order_changes
+
+        expect(orderChangesResult.length).toEqual(0)
+      })
     })
 
     describe("POST /orders/:id/fulfillments", () => {

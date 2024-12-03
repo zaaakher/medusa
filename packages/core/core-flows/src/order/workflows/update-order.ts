@@ -45,6 +45,17 @@ export const updateOrderValidationStep = createStep(
         "Country code cannot be changed"
       )
     }
+
+    if (
+      input.billing_address?.country_code &&
+      order.billing_address?.country_code !==
+        input.billing_address?.country_code
+    ) {
+      throw new MedusaError(
+        MedusaError.Types.INVALID_DATA,
+        "Country code cannot be changed"
+      )
+    }
   }
 )
 
@@ -90,6 +101,15 @@ export const updateOrderWorkflow = createWorkflow(
         update.shipping_address = address
       }
 
+      if (input.billing_address) {
+        const address = {
+          ...order.billing_address,
+          ...input.billing_address,
+        }
+        delete address.id
+        update.billing_address = address
+      }
+
       return update
     })
 
@@ -107,6 +127,16 @@ export const updateOrderWorkflow = createWorkflow(
           reference: "shipping_address",
           reference_id: order.shipping_address?.id, // save previous address id as reference
           details: input.shipping_address as Record<string, unknown>, // save what changed on the address
+        })
+      }
+
+      if (input.billing_address) {
+        changes.push({
+          change_type: "update_order" as const,
+          order_id: input.id,
+          reference: "billing_address",
+          reference_id: order.billing_address?.id,
+          details: input.billing_address as Record<string, unknown>,
         })
       }
 
