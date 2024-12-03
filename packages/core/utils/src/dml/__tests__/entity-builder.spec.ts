@@ -77,7 +77,7 @@ describe("Entity builder", () => {
         phones: model.array(),
       })
 
-      expect(user.name).toEqual("user")
+      expect(user.name).toEqual("User")
       expect(user.parse().tableName).toEqual("user")
 
       const User = toMikroORMEntity(user)
@@ -216,7 +216,7 @@ describe("Entity builder", () => {
         }
       )
 
-      expect(user.name).toEqual("user")
+      expect(user.name).toEqual("User")
       expect(user.parse().tableName).toEqual("user_table")
 
       const User = toMikroORMEntity(user)
@@ -346,7 +346,7 @@ describe("Entity builder", () => {
         }
       )
 
-      expect(user.name).toEqual("userRole")
+      expect(user.name).toEqual("UserRole")
       expect(user.parse().tableName).toEqual("user_role")
 
       const User = toMikroORMEntity(user)
@@ -1355,7 +1355,7 @@ describe("Entity builder", () => {
         phones: model.json().default({ number: "22222222" }),
       })
 
-      expect(user.name).toEqual("user")
+      expect(user.name).toEqual("User")
       expect(user.parse().tableName).toEqual("user")
 
       const User = toMikroORMEntity(user)
@@ -4456,7 +4456,7 @@ describe("Entity builder", () => {
           })
 
       expect(defineEmail).toThrow(
-        'Cannot cascade delete "user" relationship(s) from "email" entity. Child to parent cascades are not allowed'
+        'Cannot cascade delete "user" relationship(s) from "Email" entity. Child to parent cascades are not allowed'
       )
     })
 
@@ -6888,6 +6888,106 @@ describe("Entity builder", () => {
       expect(() => toMikroORMEntity(user)).toThrow(
         `Invalid relationship reference for "User.teams". Define "pivotTable", "joinColumn", or "inverseJoinColumn" on only one side of the relationship`
       )
+    })
+  })
+
+  describe("Entity builder | checks", () => {
+    test("should define checks for an entity", () => {
+      const group = model
+        .define("group", {
+          id: model.number(),
+          name: model.text(),
+        })
+        .checks([
+          (columns) => {
+            expectTypeOf(columns).toEqualTypeOf<{
+              id: string
+              name: string
+              created_at: string
+              updated_at: string
+              deleted_at: string
+            }>()
+            return `${columns.id} > 1`
+          },
+        ])
+
+      const Group = toMikroORMEntity(group)
+      const metaData = MetadataStorage.getMetadataFromDecorator(Group)
+
+      expect(metaData.checks).toHaveLength(1)
+      expect(metaData.checks[0].expression.toString()).toMatchInlineSnapshot(`
+        "(columns)=>{
+                            (0, _expecttype.expectTypeOf)(columns).toEqualTypeOf();
+                            return \`\${columns.id} > 1\`;
+                        }"
+      `)
+    })
+
+    test("should define checks as an object", () => {
+      const group = model
+        .define("group", {
+          id: model.number(),
+          name: model.text(),
+        })
+        .checks([
+          {
+            name: "my_custom_check",
+            expression: (columns) => {
+              expectTypeOf(columns).toEqualTypeOf<{
+                id: string
+                name: string
+                created_at: string
+                updated_at: string
+                deleted_at: string
+              }>()
+              return `${columns.id} > 1`
+            },
+          },
+        ])
+
+      const Group = toMikroORMEntity(group)
+      const metaData = MetadataStorage.getMetadataFromDecorator(Group)
+
+      expect(metaData.checks).toHaveLength(1)
+      expect(metaData.checks[0].name).toEqual("my_custom_check")
+      expect(metaData.checks[0].expression.toString()).toMatchInlineSnapshot(`
+        "(columns)=>{
+                                (0, _expecttype.expectTypeOf)(columns).toEqualTypeOf();
+                                return \`\${columns.id} > 1\`;
+                            }"
+      `)
+    })
+
+    test("should infer foreign keys inside the checks callback", () => {
+      const group = model
+        .define("group", {
+          id: model.number(),
+          name: model.text(),
+          parent_group: model.belongsTo(() => group, {
+            mappedBy: "groups",
+          }),
+          groups: model.hasMany(() => group, {
+            mappedBy: "parent_group",
+          }),
+        })
+        .checks([
+          (columns) => {
+            expectTypeOf(columns).toEqualTypeOf<{
+              id: string
+              name: string
+              parent_group_id: string
+              created_at: string
+              updated_at: string
+              deleted_at: string
+            }>()
+            return `${columns.id} > 1`
+          },
+        ])
+
+      const Group = toMikroORMEntity(group)
+      const metaData = MetadataStorage.getMetadataFromDecorator(Group)
+
+      expect(metaData.checks).toHaveLength(1)
     })
   })
 })
