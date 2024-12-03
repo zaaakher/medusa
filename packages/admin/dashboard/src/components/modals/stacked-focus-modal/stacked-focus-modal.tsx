@@ -13,7 +13,10 @@ type StackedFocusModalProps = PropsWithChildren<{
    * when multiple stacked modals are registered to the same parent modal.
    */
   id: string
-  onOpenChangeHook?: (open: boolean) => void
+  /**
+   * An optional callback that is called when the modal is opened or closed.
+   */
+  onOpenChangeCallback?: (open: boolean) => void
 }>
 
 /**
@@ -21,7 +24,7 @@ type StackedFocusModalProps = PropsWithChildren<{
  */
 export const Root = ({
   id,
-  onOpenChangeHook,
+  onOpenChangeCallback,
   children,
 }: StackedFocusModalProps) => {
   const { register, unregister, getIsOpen, setIsOpen } = useStackedModal()
@@ -35,7 +38,7 @@ export const Root = ({
 
   const handleOpenChange = (open: boolean) => {
     setIsOpen(id, open)
-    onOpenChangeHook?.(open)
+    onOpenChangeCallback?.(open)
   }
 
   return (

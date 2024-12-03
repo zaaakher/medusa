@@ -1,6 +1,6 @@
 import { z } from "zod"
-import { castNumber } from "../../../../../lib/cast-number"
 import { ShippingOptionPriceType } from "../../../common/constants"
+import { ConditionalPriceSchema } from "../../../common/schema"
 
 export type CreateShippingOptionSchema = z.infer<
   typeof CreateShippingOptionSchema
@@ -14,61 +14,19 @@ export const CreateShippingOptionDetailsSchema = z.object({
   provider_id: z.string().min(1),
 })
 
-const ShippingOptionPriceSchema = z
-  .object({
-    amount: z.union([z.string(), z.number()]),
-    gte: z.union([z.string(), z.number()]).optional(),
-    lte: z.union([z.string(), z.number()]).optional(),
-  })
-  .refine(
-    (data) => {
-      return (
-        (data.gte !== undefined && data.gte !== "") ||
-        (data.lte !== undefined && data.lte !== "")
-      )
-    },
-    {
-      message: "At least one of minimum or maximum cart total must be defined",
-      path: ["gte"],
-    }
-  )
-  .refine(
-    (data) => {
-      if (data.gte !== undefined && data.lte !== undefined) {
-        const gte = castNumber(data.gte)
-        const lte = castNumber(data.lte)
-        return gte <= lte
-      }
-      return true
-    },
-    {
-      message:
-        "Minimum cart total must be less than or equal to maximum cart total",
-      path: ["gte"],
-    }
-  )
-
 export const ShippingOptionConditionalPriceSchema = z.object({
-  custom_region_prices: z.record(
+  conditional_region_prices: z.record(
     z.string(),
-    z.array(ShippingOptionPriceSchema).optional()
+    z.array(ConditionalPriceSchema).optional()
   ),
-  custom_currency_prices: z.record(
+  conditional_currency_prices: z.record(
     z.string(),
-    z.array(ShippingOptionPriceSchema).optional()
+    z.array(ConditionalPriceSchema).optional()
   ),
 })
 
 export type ShippingOptionConditionalPriceSchemaType = z.infer<
   typeof ShippingOptionConditionalPriceSchema
->
-
-export const CondtionalPriceRuleSchema = z.object({
-  prices: z.array(ShippingOptionPriceSchema),
-})
-
-export type CondtionalPriceRuleSchemaType = z.infer<
-  typeof CondtionalPriceRuleSchema
 >
 
 export const CreateShippingOptionSchema = z

@@ -51,8 +51,8 @@ export function CreateShippingOptionsForm({
       provider_id: "",
       region_prices: {},
       currency_prices: {},
-      custom_region_prices: {},
-      custom_currency_prices: {},
+      conditional_region_prices: {},
+      conditional_currency_prices: {},
     },
     resolver: zodResolver(CreateShippingOptionSchema),
   })
@@ -62,10 +62,34 @@ export function CreateShippingOptionsForm({
 
   const { mutateAsync, isPending: isLoading } = useCreateShippingOptions()
 
+  const createPriceRule = (
+    attribute: string,
+    operator: string,
+    value: string | number
+  ) => ({
+    attribute,
+    operator,
+    value: castNumber(value),
+  })
+
+  const buildRules = (rule: {
+    gte?: string | number | null
+    lte?: string | number | null
+  }) => {
+    const conditions = [
+      { value: rule.gte, operator: "gte" },
+      { value: rule.lte, operator: "lte" },
+    ]
+
+    return conditions
+      .filter(({ value }) => value)
+      .map(({ operator, value }) => createPriceRule("total", operator, value!))
+  }
+
   const handleSubmit = form.handleSubmit(async (data) => {
     const currencyPrices = Object.entries(data.currency_prices)
       .map(([code, value]) => {
-        if (value === "" || value === undefined) {
+        if (!value) {
           return undefined
         }
 
@@ -74,11 +98,11 @@ export function CreateShippingOptionsForm({
           amount: castNumber(value),
         }
       })
-      .filter((o) => !!o) as { currency_code: string; amount: number }[]
+      .filter((p): p is { currency_code: string; amount: number } => !!p)
 
     const regionPrices = Object.entries(data.region_prices)
       .map(([region_id, value]) => {
-        if (value === "" || value === undefined) {
+        if (!value) {
           return undefined
         }
 
@@ -87,71 +111,40 @@ export function CreateShippingOptionsForm({
           amount: castNumber(value),
         }
       })
-      .filter((o) => !!o) as { region_id: string; amount: number }[]
+      .filter((p): p is { region_id: string; amount: number } => !!p)
 
-    const conditionalRegionPrices = Object.entries(data.custom_region_prices)
-      .flatMap(([region_id, value]) => {
-        return value?.map((rule) => ({
-          region_id,
+    const conditionalRegionPrices = Object.entries(
+      data.conditional_region_prices
+    ).flatMap(([region_id, value]) => {
+      const prices: HttpTypes.AdminCreateShippingOptionPriceWithRegion[] =
+        value?.map((rule) => ({
+          region_id: region_id,
           amount: castNumber(rule.amount),
-          rules: [
-            ...(rule.gte
-              ? [
-                  {
-                    attribute: "total",
-                    operator: "gte",
-                    value: castNumber(rule.gte),
-                  },
-                ]
-              : []),
-            ...(rule.lte
-              ? [
-                  {
-                    attribute: "total",
-                    operator: "lte",
-                    value: castNumber(rule.lte),
-                  },
-                ]
-              : []),
-          ].filter((o) => !!o),
-        }))
-      })
-      .filter((o) => !!o)
+          rules: buildRules(rule),
+        })) || []
 
-    regionPrices.push(...conditionalRegionPrices)
+      return prices?.filter(Boolean)
+    })
 
     const conditionalCurrencyPrices = Object.entries(
-      data.custom_currency_prices
-    )
-      .flatMap(([currency_code, value]) => {
-        return value?.map((rule) => ({
+      data.conditional_currency_prices
+    ).flatMap(([currency_code, value]) => {
+      const prices: HttpTypes.AdminCreateShippingOptionPriceWithCurrency[] =
+        value?.map((rule) => ({
           currency_code,
           amount: castNumber(rule.amount),
-          rules: [
-            ...(rule.gte
-              ? [
-                  {
-                    attribute: "total",
-                    operator: "gte",
-                    value: castNumber(rule.gte),
-                  },
-                ]
-              : []),
-            ...(rule.lte
-              ? [
-                  {
-                    attribute: "total",
-                    operator: "lte",
-                    value: castNumber(rule.lte),
-                  },
-                ]
-              : []),
-          ].filter((o) => !!o),
-        }))
-      })
-      .filter((o) => !!o)
+          rules: buildRules(rule),
+        })) || []
 
-    currencyPrices.push(...conditionalCurrencyPrices)
+      return prices?.filter(Boolean)
+    })
+
+    const allPrices = [
+      ...currencyPrices,
+      ...conditionalCurrencyPrices,
+      ...regionPrices,
+      ...conditionalRegionPrices,
+    ]
 
     await mutateAsync(
       {
@@ -160,17 +153,17 @@ export function CreateShippingOptionsForm({
         service_zone_id: zone.id,
         shipping_profile_id: data.shipping_profile_id,
         provider_id: data.provider_id,
-        prices: [...currencyPrices, ...regionPrices],
+        prices: allPrices,
         rules: [
           {
             // eslint-disable-next-line
-            value: isReturn ? '"true"' : '"false"', // we want JSONB saved as string
+            value: isReturn ? '"true"' : '"false"',
             attribute: "is_return",
             operator: "eq",
           },
           {
             // eslint-disable-next-line
-            value: data.enabled_in_store ? '"true"' : '"false"', // we want JSONB saved as string
+            value: data.enabled_in_store ? '"true"' : '"false"',
             attribute: "enabled_in_store",
             operator: "eq",
           },
@@ -189,12 +182,9 @@ export function CreateShippingOptionsForm({
               `stockLocations.shippingOptions.create.${
                 isReturn ? "returns" : "shipping"
               }.successToast`,
-              {
-                name: shipping_option.name,
-              }
+              { name: shipping_option.name }
             )
           )
-
           handleSuccess(`/settings/locations/${locationId}`)
         },
         onError: (e) => {
@@ -259,12 +249,33 @@ export function CreateShippingOptionsForm({
 
   return (
     <RouteFocusModal.Form form={form}>
-      <ProgressTabs
-        value={activeTab}
-        className="flex h-full flex-col overflow-hidden"
-        onValueChange={(tab) => onTabChange(tab as Tab)}
+      <KeyboundForm
+        className="flex h-full flex-col"
+        onSubmit={handleSubmit}
+        onKeyDown={(e) => {
+          // We want to continue to the next tab on enter instead of saving immediately
+          if (e.key === "Enter") {
+            e.preventDefault()
+
+            if (e.metaKey || e.ctrlKey) {
+              if (activeTab !== Tab.PRICING) {
+                e.preventDefault()
+                e.stopPropagation()
+                onTabChange(Tab.PRICING)
+
+                return
+              }
+
+              handleSubmit()
+            }
+          }
+        }}
       >
-        <KeyboundForm className="flex h-full flex-col" onSubmit={handleSubmit}>
+        <ProgressTabs
+          value={activeTab}
+          className="flex h-full flex-col overflow-hidden"
+          onValueChange={(tab) => onTabChange(tab as Tab)}
+        >
           <RouteFocusModal.Header>
             <ProgressTabs.List className="border-ui-border-base -my-2 ml-2 min-w-0 flex-1 border-l">
               <ProgressTabs.Trigger
@@ -337,8 +348,8 @@ export function CreateShippingOptionsForm({
               )}
             </div>
           </RouteFocusModal.Footer>
-        </KeyboundForm>
-      </ProgressTabs>
+        </ProgressTabs>
+      </KeyboundForm>
     </RouteFocusModal.Form>
   )
 }

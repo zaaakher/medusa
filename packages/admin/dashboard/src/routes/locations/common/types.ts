@@ -1,8 +1,8 @@
 import { CurrencyInfo } from "../../../lib/data/currencies"
 
 export type ConditionalShippingOptionPriceAccessor =
-  | `custom_region_prices.${string}`
-  | `custom_currency_prices.${string}`
+  | `conditional_region_prices.${string}`
+  | `conditional_currency_prices.${string}`
 
 export type ConditionalPriceInfo = {
   type: "currency" | "region"

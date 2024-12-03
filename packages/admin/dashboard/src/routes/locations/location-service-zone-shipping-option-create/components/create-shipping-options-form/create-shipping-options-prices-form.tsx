@@ -10,7 +10,7 @@ import {
 import { usePricePreferences } from "../../../../../hooks/api/price-preferences"
 import { useRegions } from "../../../../../hooks/api/regions"
 import { useStore } from "../../../../../hooks/api/store"
-import { PriceRuleForm } from "../../../common/components/price-rule-form"
+import { ConditionalPriceForm } from "../../../common/components/conditional-price-form"
 import { ShippingOptionPriceProvider } from "../../../common/components/shipping-option-price-provider"
 import { CONDITIONAL_PRICES_STACKED_MODAL_ID } from "../../../common/constants"
 import { useShippingOptionPriceColumns } from "../../../common/hooks/use-shipping-option-price-columns"
@@ -89,7 +89,14 @@ export const CreateShippingOptionsPricesForm = ({
   }
 
   return (
-    <StackedFocusModal id={CONDITIONAL_PRICES_STACKED_MODAL_ID}>
+    <StackedFocusModal
+      id={CONDITIONAL_PRICES_STACKED_MODAL_ID}
+      onOpenChangeCallback={(open) => {
+        if (!open) {
+          setSelectedPrice(null)
+        }
+      }}
+    >
       <ShippingOptionPriceProvider
         onOpenConditionalPricesModal={onOpenConditionalPricesModal}
         onCloseConditionalPricesModal={onCloseConditionalPricesModal}
@@ -104,7 +111,7 @@ export const CreateShippingOptionsPricesForm = ({
             disableInteractions={getIsOpen(CONDITIONAL_PRICES_STACKED_MODAL_ID)}
           />
           {selectedPrice && (
-            <PriceRuleForm key={selectedPrice?.field} info={selectedPrice} />
+            <ConditionalPriceForm info={selectedPrice} variant="create" />
           )}
         </div>
       </ShippingOptionPriceProvider>

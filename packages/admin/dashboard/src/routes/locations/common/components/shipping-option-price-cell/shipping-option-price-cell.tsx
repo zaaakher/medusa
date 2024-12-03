@@ -1,4 +1,4 @@
-import { Adjustments, ArrowsPointingOut } from "@medusajs/icons"
+import { ArrowsPointingOut, CircleSliders } from "@medusajs/icons"
 import { clx } from "@medusajs/ui"
 import { useCallback, useEffect, useRef, useState } from "react"
 import CurrencyInput, {
@@ -118,7 +118,7 @@ const OuterComponent = ({
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (isAnchor && (e.metaKey || e.ctrlKey) && e.key === "c") {
+      if (isAnchor && (e.metaKey || e.ctrlKey) && e.key === "b") {
         e.preventDefault()
         buttonRef.current?.click()
       }
@@ -137,7 +137,7 @@ const OuterComponent = ({
     >
       {price?.length > 0 && !isAnchor && (
         <div className="flex size-[15px] items-center justify-center group-hover/container:hidden">
-          <Adjustments className="text-ui-fg-interactive" />
+          <CircleSliders className="text-ui-fg-interactive" />
         </div>
       )}
       <button
@@ -148,7 +148,12 @@ const OuterComponent = ({
           { flex: isAnchor }
         )}
         onClick={() =>
-          onOpenConditionalPricesModal({ type, field, currency, name: header })
+          onOpenConditionalPricesModal({
+            type,
+            field,
+            currency,
+            name: header,
+          })
         }
       >
         <ArrowsPointingOut />
