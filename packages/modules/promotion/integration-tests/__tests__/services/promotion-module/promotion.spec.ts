@@ -508,7 +508,7 @@ moduleIntegrationTestRunner({
           )
         })
 
-        it("should create a buyget promotion with rules successfully", async () => {
+        it("should create a budget promotion with rules successfully", async () => {
           const createdPromotion = await createDefaultPromotion(service, {
             type: PromotionType.BUYGET,
             application_method: {

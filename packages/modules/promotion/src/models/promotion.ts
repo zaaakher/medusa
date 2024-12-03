@@ -1,108 +1,114 @@
-import { DAL, PromotionTypeValues } from "@medusajs/framework/types"
-import {
-  DALUtils,
-  PromotionUtils,
-  Searchable,
-  generateEntityId,
-} from "@medusajs/framework/utils"
-import {
-  BeforeCreate,
-  Collection,
-  Entity,
-  Enum,
-  Filter,
-  Index,
-  ManyToMany,
-  ManyToOne,
-  OnInit,
-  OneToOne,
-  OptionalProps,
-  PrimaryKey,
-  Property,
-  Rel,
-  Unique,
-} from "@mikro-orm/core"
+import { PromotionUtils, model } from "@medusajs/framework/utils"
 import ApplicationMethod from "./application-method"
 import Campaign from "./campaign"
 import PromotionRule from "./promotion-rule"
 
-type OptionalFields = "is_automatic" | DAL.SoftDeletableModelDateColumns
-type OptionalRelations = "application_method" | "campaign"
-
-@Entity({ tableName: "promotion" })
-@Filter(DALUtils.mikroOrmSoftDeletableFilterOptions)
-export default class Promotion {
-  [OptionalProps]?: OptionalFields | OptionalRelations
-
-  @PrimaryKey({ columnType: "text" })
-  id!: string
-
-  @Searchable()
-  @Property({ columnType: "text" })
-  @Index({ name: "IDX_promotion_code" })
-  @Unique({
-    name: "IDX_promotion_code_unique",
-    properties: ["code"],
+const Promotion = model
+  .define("Promotion", {
+    id: model.id({ prefix: "promo" }).primaryKey(),
+    code: model
+      .text()
+      .searchable()
+      .unique("IDX_promotion_code_unique")
+      .index("IDX_promotion_code"),
+    is_automatic: model.boolean().default(false),
+    type: model.enum(PromotionUtils.PromotionType).index("IDX_promotion_type"),
+    campaign: model
+      .belongsTo(() => Campaign, {
+        mappedBy: "promotions",
+      })
+      .nullable(),
+    application_method: model.hasOne<() => typeof ApplicationMethod>(
+      () => ApplicationMethod,
+      {
+        mappedBy: "promotion",
+      }
+    ),
+    rules: model.manyToMany<() => typeof PromotionRule>(() => PromotionRule, {
+      pivotTable: "promotion_promotion_rule",
+      mappedBy: "promotions",
+    }),
   })
-  code: string
-
-  @ManyToOne(() => Campaign, {
-    columnType: "text",
-    fieldName: "campaign_id",
-    nullable: true,
-    mapToPk: true,
+  .cascades({
+    delete: ["application_method"],
   })
-  campaign_id: string | null = null
 
-  @ManyToOne(() => Campaign, { persist: false })
-  campaign: Rel<Campaign> | null
+// @Entity({ tableName: "promotion" })
+// @Filter(DALUtils.mikroOrmSoftDeletableFilterOptions)
+// export default class Promotion {
+//   [OptionalProps]?: OptionalFields | OptionalRelations
 
-  @Property({ columnType: "boolean", default: false })
-  is_automatic: boolean = false
+// @PrimaryKey({ columnType: "text" })
+// id!: string
 
-  @Index({ name: "IDX_promotion_type" })
-  @Enum(() => PromotionUtils.PromotionType)
-  type: PromotionTypeValues
+// @Searchable()
+// @Property({ columnType: "text" })
+// @Index({ name: "IDX_promotion_code" })
+// @Unique({
+//   name: "IDX_promotion_code_unique",
+//   properties: ["code"],
+// })
+// code: string
 
-  @OneToOne({
-    entity: () => ApplicationMethod,
-    mappedBy: (am) => am.promotion,
-    cascade: ["soft-remove"] as any,
-  })
-  application_method: Rel<ApplicationMethod>
+// @ManyToOne(() => Campaign, {
+//   columnType: "text",
+//   fieldName: "campaign_id",
+//   nullable: true,
+//   mapToPk: true,
+// })
+// campaign_id: string | null = null
 
-  @ManyToMany(() => PromotionRule, "promotions", {
-    owner: true,
-    pivotTable: "promotion_promotion_rule",
-    cascade: ["soft-remove"] as any,
-  })
-  rules = new Collection<Rel<PromotionRule>>(this)
+// @ManyToOne(() => Campaign, { persist: false })
+// campaign: Rel<Campaign> | null
 
-  @Property({
-    onCreate: () => new Date(),
-    columnType: "timestamptz",
-    defaultRaw: "now()",
-  })
-  created_at: Date
+// @Property({ columnType: "boolean", default: false })
+// is_automatic: boolean = false
 
-  @Property({
-    onCreate: () => new Date(),
-    onUpdate: () => new Date(),
-    columnType: "timestamptz",
-    defaultRaw: "now()",
-  })
-  updated_at: Date
+// @Index({ name: "IDX_promotion_type" })
+// @Enum(() => PromotionUtils.PromotionType)
+// type: PromotionTypeValues
 
-  @Property({ columnType: "timestamptz", nullable: true })
-  deleted_at: Date | null = null
+// @OneToOne({
+//   entity: () => ApplicationMethod,
+//   mappedBy: (am) => am.promotion,
+//   cascade: ["soft-remove"] as any,
+// })
+// application_method: Rel<ApplicationMethod>
 
-  @BeforeCreate()
-  onCreate() {
-    this.id = generateEntityId(this.id, "promo")
-  }
+// @ManyToMany(() => PromotionRule, "promotions", {
+//   owner: true,
+//   pivotTable: "promotion_promotion_rule",
+//   cascade: ["soft-remove"] as any,
+// })
+// rules = new Collection<Rel<PromotionRule>>(this)
 
-  @OnInit()
-  onInit() {
-    this.id = generateEntityId(this.id, "promo")
-  }
-}
+// @Property({
+//   onCreate: () => new Date(),
+//   columnType: "timestamptz",
+//   defaultRaw: "now()",
+// })
+// created_at: Date
+
+// @Property({
+//   onCreate: () => new Date(),
+//   onUpdate: () => new Date(),
+//   columnType: "timestamptz",
+//   defaultRaw: "now()",
+// })
+// updated_at: Date
+
+// @Property({ columnType: "timestamptz", nullable: true })
+// deleted_at: Date | null = null
+
+// @BeforeCreate()
+// onCreate() {
+//   this.id = generateEntityId(this.id, "promo")
+// }
+
+// @OnInit()
+// onInit() {
+//   this.id = generateEntityId(this.id, "promo")
+// }
+// }
+
+export default Promotion
