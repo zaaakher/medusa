@@ -28,8 +28,9 @@ medusaIntegrationTestRunner({
         })
         order = seeder.order
 
-        order = (await api.get(`/admin/orders/${order.id}`, adminHeaders)).data
-          .order
+        order = (
+          await api.get(`/admin/orders/${order.id}?fields=+email`, adminHeaders)
+        ).data.order
       })
 
       it("should update shipping address on an order (by creating a new Address record)", async () => {
@@ -196,6 +197,96 @@ medusaIntegrationTestRunner({
         expect(response.response.data.message).toBe(
           "Country code cannot be changed"
         )
+
+        const orderChangesResult = (
+          await api.get(`/admin/orders/${order.id}/changes`, adminHeaders)
+        ).data.order_changes
+
+        expect(orderChangesResult.length).toEqual(0)
+      })
+
+      it("should update orders email and shipping address and create 2 change records", async () => {
+        const response = await api.post(
+          `/admin/orders/${order.id}?fields=+email,*shipping_address`,
+          {
+            email: "new-email@example.com",
+            shipping_address: {
+              address_1: "New Main street 123",
+            },
+          },
+          adminHeaders
+        )
+
+        expect(response.data.order.email).toBe("new-email@example.com")
+        expect(response.data.order.shipping_address.id).not.toEqual(
+          order.shipping_address.id
+        )
+        expect(response.data.order.shipping_address).toEqual(
+          expect.objectContaining({
+            address_1: "New Main street 123",
+          })
+        )
+
+        const orderChangesResult = (
+          await api.get(`/admin/orders/${order.id}/changes`, adminHeaders)
+        ).data.order_changes
+
+        expect(orderChangesResult.length).toEqual(2)
+        expect(orderChangesResult).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              version: 1,
+              change_type: "update_order",
+              status: "confirmed",
+              confirmed_at: expect.any(String),
+              actions: expect.arrayContaining([
+                expect.objectContaining({
+                  version: 1,
+                  applied: true,
+                  reference_id: order.shipping_address.id,
+                  reference: "shipping_address",
+                  action: "UPDATE_ORDER_PROPERTIES",
+                  details: {
+                    address_1: "New Main street 123",
+                  },
+                }),
+              ]),
+            }),
+            expect.objectContaining({
+              version: 1,
+              change_type: "update_order",
+              status: "confirmed",
+              confirmed_at: expect.any(String),
+              actions: expect.arrayContaining([
+                expect.objectContaining({
+                  version: 1,
+                  applied: true,
+                  reference_id: order.email,
+                  reference: "email",
+                  action: "UPDATE_ORDER_PROPERTIES",
+                  details: {
+                    email: "new-email@example.com",
+                  },
+                }),
+              ]),
+            }),
+          ])
+        )
+      })
+
+      it("should fail to update email if it is invalid", async () => {
+        const response = await api
+          .post(
+            `/admin/orders/${order.id}`,
+            {
+              email: "invalid-email",
+            },
+            adminHeaders
+          )
+          .catch((e) => e)
+
+        expect(response.response.status).toBe(400)
+        expect(response.response.data.message).toBe("The email is not valid")
 
         const orderChangesResult = (
           await api.get(`/admin/orders/${order.id}/changes`, adminHeaders)

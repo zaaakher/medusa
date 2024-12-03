@@ -11,7 +11,11 @@ import {
   RegisterOrderChangeDTO,
   UpdateOrderDTO,
 } from "@medusajs/types"
-import { MedusaError, OrderWorkflowEvents } from "@medusajs/framework/utils"
+import {
+  MedusaError,
+  OrderWorkflowEvents,
+  validateEmail,
+} from "@medusajs/framework/utils"
 
 import { throwIfOrderIsCancelled } from "../utils/order-validation"
 import {
@@ -55,6 +59,10 @@ export const updateOrderValidationStep = createStep(
         MedusaError.Types.INVALID_DATA,
         "Country code cannot be changed"
       )
+    }
+
+    if (input.email) {
+      validateEmail(input.email)
     }
   }
 )
@@ -110,7 +118,7 @@ export const updateOrderWorkflow = createWorkflow(
         update.billing_address = address
       }
 
-      return update
+      return { ...input, ...update }
     })
 
     updateOrdersStep({
@@ -137,6 +145,16 @@ export const updateOrderWorkflow = createWorkflow(
           reference: "billing_address",
           reference_id: order.billing_address?.id,
           details: input.billing_address as Record<string, unknown>,
+        })
+      }
+
+      if (input.email) {
+        changes.push({
+          change_type: "update_order" as const,
+          order_id: input.id,
+          reference: "email",
+          reference_id: order.email,
+          details: { email: input.email },
         })
       }
 
