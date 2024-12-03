@@ -379,7 +379,7 @@ medusaIntegrationTestRunner({
                     amount: 0,
                     rules: [
                       {
-                        attribute: "total",
+                        attribute: "item_total",
                         operator: "gt",
                         value: 5000,
                       },
@@ -1757,7 +1757,7 @@ medusaIntegrationTestRunner({
                     amount: 500,
                     rules: [
                       {
-                        attribute: "total",
+                        attribute: "item_total",
                         operator: "gt",
                         value: 3000,
                       },
@@ -1874,7 +1874,7 @@ medusaIntegrationTestRunner({
 
           expect(response.data).toEqual({
             type: "invalid_data",
-            message: `Shipping option with ID ${shippingOption.id} do not have a price`,
+            message: `Shipping options with IDs ${shippingOption.id} do not have a price`,
           })
         })
 

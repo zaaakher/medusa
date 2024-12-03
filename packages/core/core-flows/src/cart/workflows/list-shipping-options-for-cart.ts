@@ -1,4 +1,9 @@
-import { deepFlatMap, isPresent, MedusaError } from "@medusajs/framework/utils"
+import {
+  deepFlatMap,
+  isDefined,
+  isPresent,
+  MedusaError,
+} from "@medusajs/framework/utils"
 import {
   createWorkflow,
   transform,
@@ -22,6 +27,9 @@ export const listShippingOptionsForCartWorkflow = createWorkflow(
       option_ids?: string[]
       is_return?: boolean
       enabled_in_store?: boolean
+      options?: {
+        shouldValidatePrices?: boolean
+      }
     }>
   ) => {
     const cartQuery = useQueryGraphStep({
@@ -36,6 +44,7 @@ export const listShippingOptionsForCartWorkflow = createWorkflow(
         "shipping_address.country_code",
         "shipping_address.province",
         "shipping_address.postal_code",
+        "item_total",
         "total",
       ],
       options: { throwIfKeyNotFound: true },
@@ -113,7 +122,7 @@ export const listShippingOptionsForCartWorkflow = createWorkflow(
     const queryVariables = transform(
       { input, fulfillmentSetIds, cart, pricingContext },
       ({ input, fulfillmentSetIds, cart, pricingContext }) => {
-        return {
+        const test = {
           id: input.option_ids,
 
           context: {
@@ -133,6 +142,8 @@ export const listShippingOptionsForCartWorkflow = createWorkflow(
 
           calculated_price: { context: pricingContext },
         }
+
+        return test
       }
     )
 
@@ -164,36 +175,46 @@ export const listShippingOptionsForCartWorkflow = createWorkflow(
       variables: queryVariables,
     }).config({ name: "shipping-options-query" })
 
-    transform({ shippingOptions }, ({ shippingOptions }) => {
-      const optionsMissingPrices: string[] = []
+    const updatedShippingOptions = transform(
+      { shippingOptions, input },
+      ({ shippingOptions, input }) => {
+        const optionsMissingPrices: string[] = []
 
-      const options = shippingOptions.map((shippingOption) => {
-        const { calculated_price, ...options } = shippingOption
+        const options = shippingOptions.map((shippingOption) => {
+          const { calculated_price, ...options } = shippingOption
 
-        if (options?.id && !isPresent(calculated_price?.calculated_amount)) {
-          optionsMissingPrices.push(options.id)
+          if (
+            shippingOption?.id &&
+            !isDefined(calculated_price?.calculated_amount)
+          ) {
+            optionsMissingPrices.push(options.id)
+          }
+
+          return {
+            ...shippingOption,
+            amount: calculated_price?.calculated_amount,
+            is_tax_inclusive:
+              !!calculated_price?.is_calculated_price_tax_inclusive,
+          }
+        })
+
+        const shouldValidatePrices = input.options?.shouldValidatePrices ?? true
+
+        if (optionsMissingPrices.length && shouldValidatePrices) {
+          const ids = optionsMissingPrices.join(", ")
+
+          throw new MedusaError(
+            MedusaError.Types.INVALID_DATA,
+            `Shipping options with IDs ${ids} do not have a price`
+          )
         }
 
-        return {
-          ...options,
-          amount: calculated_price?.calculated_amount,
-          is_tax_inclusive:
-            !!calculated_price?.is_calculated_price_tax_inclusive,
-        }
-      })
-
-      if (optionsMissingPrices.length) {
-        const ids = optionsMissingPrices.join(", ")
-
-        throw new MedusaError(
-          MedusaError.Types.INVALID_DATA,
-          `Shipping options with IDs ${ids} do not have a price`
+        return options.filter((option) =>
+          isDefined(option?.calculated_price?.calculated_amount)
         )
       }
+    )
 
-      return options
-    })
-
-    return new WorkflowResponse(shippingOptions)
+    return new WorkflowResponse(updatedShippingOptions)
   }
 )

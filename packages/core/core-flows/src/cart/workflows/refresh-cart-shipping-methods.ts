@@ -52,6 +52,7 @@ export const refreshCartShippingMethodsWorkflow = createWorkflow(
           option_ids: shippingOptionIds,
           cart_id: cart.id,
           is_return: false,
+          options: { shouldValidatePrices: false },
         },
       })
 
