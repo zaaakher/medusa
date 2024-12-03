@@ -6067,6 +6067,26 @@
                     "lt"
                   ],
                   "additionalProperties": false
+                },
+                "errors": {
+                  "type": "object",
+                  "properties": {
+                    "amountRequired": {
+                      "type": "string"
+                    },
+                    "minOrMaxRequired": {
+                      "type": "string"
+                    },
+                    "minGreaterThanMax": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "amountRequired",
+                    "minOrMaxRequired",
+                    "minGreaterThanMax"
+                  ],
+                  "additionalProperties": false
                 }
               },
               "required": [
@@ -6076,7 +6096,8 @@
                 "summaries",
                 "actions",
                 "rules",
-                "customRules"
+                "customRules",
+                "errors"
               ],
               "additionalProperties": false
             },

@@ -1,3 +1,4 @@
+import { t } from "i18next"
 import { z } from "zod"
 import { castNumber } from "../../../lib/cast-number"
 
@@ -9,6 +10,12 @@ export const ConditionalPriceSchema = z
     lt: z.number().nullish(),
     gt: z.number().nullish(),
     eq: z.number().nullish(),
+  })
+  .refine((data) => data.amount !== "", {
+    message: t(
+      "stockLocations.shippingOptions.conditionalPrices.errors.amountRequired"
+    ),
+    path: ["amount"],
   })
   .refine(
     (data) => {
@@ -26,7 +33,9 @@ export const ConditionalPriceSchema = z
       )
     },
     {
-      message: "At least one of minimum or maximum cart total must be defined",
+      message: t(
+        "stockLocations.shippingOptions.conditionalPrices.errors.minOrMaxRequired"
+      ),
       path: ["gte"],
     }
   )
@@ -45,8 +54,9 @@ export const ConditionalPriceSchema = z
       return true
     },
     {
-      message:
-        "Minimum cart total must be less than or equal to maximum cart total",
+      message: t(
+        "stockLocations.shippingOptions.conditionalPrices.errors.minGreaterThanMax"
+      ),
       path: ["gte"],
     }
   )

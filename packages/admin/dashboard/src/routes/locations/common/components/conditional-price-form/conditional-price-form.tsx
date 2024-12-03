@@ -17,9 +17,10 @@ import {
   Tooltip,
 } from "@medusajs/ui"
 import * as Accordion from "@radix-ui/react-accordion"
-import React, { Fragment, ReactNode, useState } from "react"
+import React, { Fragment, ReactNode, useRef, useState } from "react"
 import {
   Control,
+  ControllerRenderProps,
   useFieldArray,
   useForm,
   useFormContext,
@@ -32,6 +33,7 @@ import { Divider } from "../../../../../components/common/divider"
 import { Form } from "../../../../../components/common/form"
 import { StackedFocusModal } from "../../../../../components/modals"
 import { KeyboundForm } from "../../../../../components/utilities/keybound-form"
+import { useCombinedRefs } from "../../../../../hooks/use-combined-refs"
 import { castNumber } from "../../../../../lib/cast-number"
 import { CurrencyInfo } from "../../../../../lib/data/currencies"
 import { getLocaleAmount } from "../../../../../lib/money-amount-helpers"
@@ -250,7 +252,7 @@ const ConditionalPriceItem = ({
       className="bg-ui-bg-component shadow-elevation-card-rest rounded-lg"
     >
       <Accordion.Trigger asChild>
-        <div className="flex w-full cursor-pointer items-start justify-between gap-x-2 p-3">
+        <div className="group/trigger flex w-full cursor-pointer items-start justify-between gap-x-2 p-3">
           <div className="flex flex-1 flex-wrap items-center justify-between gap-2">
             <div className="flex h-7 items-center">
               <AmountDisplay
@@ -281,7 +283,7 @@ const ConditionalPriceItem = ({
               variant="transparent"
               className="text-ui-fg-muted hover:text-ui-fg-subtle focus-visible:text-ui-fg-subtle"
             >
-              <TriangleDownMini />
+              <TriangleDownMini className="transition-transform group-data-[state=open]/trigger:rotate-180" />
             </IconButton>
           </div>
         </div>
@@ -302,7 +304,7 @@ const ConditionalPriceItem = ({
                       )}
                     </Form.Label>
                   </div>
-                  <div>
+                  <div className="flex flex-col gap-y-1">
                     <Form.Control>
                       <CurrencyInput
                         className="bg-ui-bg-field-component hover:bg-ui-bg-field-component-hover focus-visible:bg-ui-bg-field-component-hover"
@@ -332,60 +334,16 @@ const ConditionalPriceItem = ({
         <Form.Field
           control={control}
           name={`prices.${index}.gte`}
-          render={({ field: { value, onChange, ...props } }) => {
-            const action = () => {
-              if (value === null) {
-                onChange("")
-                return
-              }
-
-              onChange(null)
-            }
-
-            const isNull = value === null
-
+          render={({ field }) => {
             return (
-              <Form.Item>
-                <div className="grid grid-cols-2 items-start gap-x-2 p-3">
-                  <div className="flex h-8 items-center gap-x-1">
-                    <IconButton
-                      size="2xsmall"
-                      variant="transparent"
-                      onClick={action}
-                    >
-                      {isNull ? <Plus /> : <XMark />}
-                    </IconButton>
-                    <Form.Label>
-                      {t(
-                        "stockLocations.shippingOptions.conditionalPrices.rules.gte"
-                      )}
-                    </Form.Label>
-                  </div>
-                  {!isNull && (
-                    <div className="flex flex-col gap-y-1">
-                      <Form.Control>
-                        <CurrencyInput
-                          className="bg-ui-bg-field-component hover:bg-ui-bg-field-component-hover focus-visible:bg-ui-bg-field-component-hover"
-                          placeholder={formatValue({
-                            value: "500",
-                            decimalScale: currency.decimal_digits,
-                          })}
-                          symbol={currency.symbol_native}
-                          decimalScale={currency.decimal_digits}
-                          code={currency.code}
-                          value={value}
-                          onValueChange={(_value, _name, values) =>
-                            onChange(values?.value ? values?.value : "")
-                          }
-                          autoFocus
-                          {...props}
-                        />
-                      </Form.Control>
-                      <Form.ErrorMessage />
-                    </div>
-                  )}
-                </div>
-              </Form.Item>
+              <OperatorInput
+                field={field}
+                label={t(
+                  "stockLocations.shippingOptions.conditionalPrices.rules.gte"
+                )}
+                currency={currency}
+                placeholder="1000"
+              />
             )
           }}
         />
@@ -393,60 +351,16 @@ const ConditionalPriceItem = ({
         <Form.Field
           control={control}
           name={`prices.${index}.lte`}
-          render={({ field: { value, onChange, ...props } }) => {
-            const action = () => {
-              if (value === null) {
-                onChange("")
-                return
-              }
-
-              onChange(null)
-            }
-
-            const isNull = value === null
-
+          render={({ field }) => {
             return (
-              <Form.Item>
-                <div className="grid grid-cols-2 items-start gap-x-2 p-3">
-                  <div className="flex h-8 items-center gap-x-1">
-                    <IconButton
-                      size="2xsmall"
-                      variant="transparent"
-                      onClick={action}
-                    >
-                      {isNull ? <Plus /> : <XMark />}
-                    </IconButton>
-                    <Form.Label>
-                      {t(
-                        "stockLocations.shippingOptions.conditionalPrices.rules.lte"
-                      )}
-                    </Form.Label>
-                  </div>
-                  {!isNull && (
-                    <div>
-                      <Form.Control>
-                        <CurrencyInput
-                          className="bg-ui-bg-field-component hover:bg-ui-bg-field-component-hover focus-visible:bg-ui-bg-field-component-hover"
-                          placeholder={formatValue({
-                            value: "1000",
-                            decimalScale: currency.decimal_digits,
-                          })}
-                          decimalScale={currency.decimal_digits}
-                          symbol={currency.symbol_native}
-                          code={currency.code}
-                          value={value}
-                          onValueChange={(_value, _name, values) =>
-                            onChange(values?.value ? values?.value : "")
-                          }
-                          autoFocus
-                          {...props}
-                        />
-                      </Form.Control>
-                      <Form.ErrorMessage />
-                    </div>
-                  )}
-                </div>
-              </Form.Item>
+              <OperatorInput
+                field={field}
+                label={t(
+                  "stockLocations.shippingOptions.conditionalPrices.rules.lte"
+                )}
+                currency={currency}
+                placeholder="1000"
+              />
             )
           }}
         />
@@ -457,6 +371,81 @@ const ConditionalPriceItem = ({
         />
       </Accordion.Content>
     </Accordion.Item>
+  )
+}
+
+interface OperatorInputProps {
+  currency: CurrencyInfo
+  placeholder: string
+  label: string
+  field: ControllerRenderProps<
+    CondtionalPriceRuleSchemaType,
+    `prices.${number}.lte` | `prices.${number}.gte`
+  >
+}
+
+const OperatorInput = ({
+  field,
+  label,
+  currency,
+  placeholder,
+}: OperatorInputProps) => {
+  const innerRef = useRef<HTMLInputElement>(null)
+
+  const { value, onChange, ref, ...props } = field
+
+  const refs = useCombinedRefs(innerRef, ref)
+
+  const action = () => {
+    if (value === null) {
+      onChange("")
+
+      requestAnimationFrame(() => {
+        innerRef.current?.focus()
+      })
+
+      return
+    }
+
+    onChange(null)
+  }
+
+  const isNull = value === null
+
+  return (
+    <Form.Item>
+      <div className="grid grid-cols-2 items-start gap-x-2 p-3">
+        <div className="flex h-8 items-center gap-x-1">
+          <IconButton size="2xsmall" variant="transparent" onClick={action}>
+            {isNull ? <Plus /> : <XMark />}
+          </IconButton>
+          <Form.Label>{label}</Form.Label>
+        </div>
+        {!isNull && (
+          <div className="flex flex-col gap-y-1">
+            <Form.Control>
+              <CurrencyInput
+                className="bg-ui-bg-field-component hover:bg-ui-bg-field-component-hover focus-visible:bg-ui-bg-field-component-hover"
+                placeholder={formatValue({
+                  value: placeholder,
+                  decimalScale: currency.decimal_digits,
+                })}
+                decimalScale={currency.decimal_digits}
+                symbol={currency.symbol_native}
+                code={currency.code}
+                value={value}
+                ref={refs}
+                onValueChange={(_value, _name, values) =>
+                  onChange(values?.value ? values?.value : "")
+                }
+                {...props}
+              />
+            </Form.Control>
+            <Form.ErrorMessage />
+          </div>
+        )}
+      </div>
+    </Form.Item>
   )
 }
 

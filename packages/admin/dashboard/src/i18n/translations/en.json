@@ -1465,6 +1465,11 @@
           "eq": "Cart item total must equal",
           "gt": "Cart item total must be greater than",
           "lt": "Cart item total must be less than"
+        },
+        "errors": {
+          "amountRequired": "Shipping option price is required",
+          "minOrMaxRequired": "At least one of minimum or maximum cart item total must be provided",
+          "minGreaterThanMax": "Minimum cart item total must be less than or equal to maximum cart item total"
         }
       },
       "fields": {
