@@ -2799,8 +2799,8 @@ export default class OrderModuleService
           "items.detail",
           "shipping_methods",
         ],
-      }
-      // sharedContext
+      },
+      sharedContext
       // TODO: investigate issue while using sharedContext in receive return action
     )
     orders = formatOrder(orders, {

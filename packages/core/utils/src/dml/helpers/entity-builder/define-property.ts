@@ -269,6 +269,7 @@ export function defineProperty(
       type: mikroOrmType.integer,
       nullable: true,
       fieldName: field.fieldName,
+      serializer: Number,
     })(MikroORMEntity.prototype, field.fieldName)
     return
   }
