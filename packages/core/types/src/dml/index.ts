@@ -19,15 +19,13 @@ export type IDmlEntityConfig =
     }
 
 export type InferDmlEntityNameFromConfig<TConfig extends IDmlEntityConfig> =
-  Capitalize<
-    TConfig extends string
-      ? CamelCase<TConfig>
-      : TConfig extends { name: string }
-      ? CamelCase<TConfig["name"]>
-      : TConfig extends { tableName: string }
-      ? CamelCase<TConfig["tableName"]>
-      : never
-  >
+  TConfig extends string
+    ? CamelCase<TConfig>
+    : TConfig extends { name: string }
+    ? CamelCase<TConfig["name"]>
+    : TConfig extends { tableName: string }
+    ? CamelCase<TConfig["tableName"]>
+    : never
 
 /**
  * Representation of a DML entity
