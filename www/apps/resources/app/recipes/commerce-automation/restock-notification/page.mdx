@@ -357,11 +357,17 @@ The workflow has the following steps:
     name: "createRestockSubscriptionWorkflow",
     steps: [
       {
-        type: "step",
-        name: "getEmailStep",
-        description: "Get the subscription email, either from the specified customer or from the input.",
-        depth: 1,
-        link: "#getemailstep"
+        type: "when",
+        condition: "!customer.email",
+        steps: [
+          {
+            type: "step",
+            name: "useQueryGraphStep",
+            description: "Retrieve the customer using Query if an email isn't provided.",
+            depth: 1,
+            link: "/references/helper-steps/useQueryGraphStep"
+          },
+        ]
       },
       {
         type: "step",
@@ -411,83 +417,9 @@ The workflow has the following steps:
 
 The `useQueryGraphStep` is from Medusa's workflows package. So, you'll only implement the other steps.
 
-### getEmailStep
-
-Both guest and registered customers can subscribe to a variant's restock notification. So, the first step you'll create returns the email to use in the subscription, based on whether an email or a customer ID is passed in the workflow's input.
-
-To create the step, create the file `src/workflows/create-restock-subscription/steps/get-email.ts` with the following content:
-
-![The Medusa application's directory structure after adding the step.](https://res.cloudinary.com/dza7lstvk/image/upload/v1733226166/Medusa%20Resources/restock-dir-overview-8_eg2bt0.jpg)
-
-export const getEmailHighlights = [
-  ["9", "createStep", "Create a step."],
-  ["11", "container", "The Medusa container to resolve resources."],
-  ["20", "query", "Resolve Query from the Medusa container."],
-  ["23", "graph", "Retrieve the customer by its ID to use its email."],
-  ["34", "StepResponse(returnedEmail)", "Return the email."]
-]
-
-```ts title="src/workflows/create-restock-subscription/steps/get-email.ts" highlights={getEmailHighlights}
-import { MedusaError } from "@medusajs/framework/utils"
-import { createStep, StepResponse } from "@medusajs/framework/workflows-sdk"
-
-type GetEmailStepInput = {
-  email?: string
-  customer_id?: string
-}
-
-export const getEmailStep = createStep(
-  "get-email",
-  async ({ email, customer_id }: GetEmailStepInput, { container }) => {
-    if (!email && !customer_id) {
-      throw new MedusaError(
-        MedusaError.Types.INVALID_DATA,
-        "Either `email` or `customer_id` is required."
-      )
-    }
-
-    let returnedEmail = email
-    const query = container.resolve("query")
-
-    if (!email) {
-      const { data: customers } = await query.graph({
-        entity: "customer",
-        fields: ["email"],
-        filters: {
-          id: customer_id,
-        },
-      })
-
-      returnedEmail = customers[0].email
-    }
-
-    return new StepResponse(returnedEmail)
-  }
-)
-```
-
-You define the `getEmailStep` using `createStep` from the Workflows SDK. `createStep` accepts two parameters:
-
-- A string indicating the step's unique name.
-- The step's function definition as a second parameter. It accepts the step's input as a first parameter, and an object of options as a second.
-
-The `container` property in the second parameter is an instance of the [Medusa container](!docs!/learn/basics/medusa-container), which is a registry of framework and commerce tools, such a module's service, that you can resolve to utilize their functionalities.
-
-<Note title="Tip">
-
-The Medusa container is accessible by all customizations, such as workflows and scheduled jobs, except for modules. Each module has its own container with framework tools like the [Logger utility](!docs!/learn/debugging-and-testing/logging).
-
-</Note>
-
-In the step function, you first check that at least an email or a customer is passed and throw an error otherwise. Then, you resolve [Query](!docs!/learn/advanced-development/module-links/query), a tool to retrieve data across modules, from the container.
-
-If the email isn't passed in the input, you use Query's `graph` method to retrieve the customer's email, filtering by the customer ID passed in the step input.
-
-The step returns an instance of `StepResponse`, which must be returned by any step. It accepts as a parameter the data to return to the workflow that executed this step, which is the customer's email.
-
 ### validateVariantOutOfStockStep
 
-The second step you'll create will validate that the variant is actually out of stock in the customer's sales channel.
+The second step in the workflow will validate that the variant is actually out of stock in the customer's sales channel.
 
 Before implementing the step, you'll add a utility function that checks whether the variant is out of stock in the specified sales channel. So, create the file `src/workflows/utils/is-variant-in-stock.ts` with the following content:
 
@@ -762,23 +694,16 @@ You can now finally add the workflow that uses all these steps. Create the file 
 
 ![The directory structure of the Medusa application after adding the workflow.](https://res.cloudinary.com/dza7lstvk/image/upload/v1733229373/Medusa%20Resources/restock-dir-overview-13_zdwawe.jpg)
 
-export const subscriptionWorkflowHighlights = [
-  ["17", "createWorkflow", "Create a workflow."],
-  ["24", "getEmailStep", "Get the subscriber's email."],
-  ["26", "validateVariantOutOfStockStep", "Validate that the variant is out of stock in the specified sales channel."],
-  ["31", "useQueryGraphStep", "Get the restock subscription to check if it already exists."],
-  ["41", "when", "Perform an action if the restock subscription doesn't exist."],
-  ["45", "createRestockSubscriptionStep", "Create the restock subscription if it doesn't exist."],
-  ["53", "when", "Perform an action if the restock subscription exists."],
-  ["57", "updateRestockSubscriptionStep", "Update the restock subscription if it exists."],
-  ["64", "useQueryGraphStep", "Retrieve the restock subscription again to return it."],
-  ["74", "WorkflowResponse", "Return the restock subscription."]
+export const subscriptionWorkflow1Highlights = [
+  ["16", "createWorkflow", "Create a workflow."],
+  ["23", "transform", "Set the customer ID to an empty string if not provided."],
+  ["28", "when", "If email is not set, try to retrieve customer by its ID."],
+  ["44", "transform", "Set the email either to the one in the input or the specified customer's email."],
 ]
 
-```ts title="src/workflows/create-restock-subscription/index.ts" highlights={subscriptionWorkflowHighlights}
-import { createWorkflow, when, WorkflowResponse } from "@medusajs/framework/workflows-sdk"
+```ts title="src/workflows/create-restock-subscription/index.ts" highlights={subscriptionWorkflow1Highlights}
+import { createWorkflow, transform, when, WorkflowResponse } from "@medusajs/framework/workflows-sdk"
 import { validateVariantOutOfStockStep } from "./steps/validate-variant-out-of-stock"
-import { getEmailStep } from "./steps/get-email"
 import { useQueryGraphStep } from "@medusajs/medusa/core-flows"
 import { createRestockSubscriptionStep } from "./steps/create-restock-subscription"
 import { updateRestockSubscriptionStep } from "./steps/update-restock-subscription"
@@ -797,82 +722,131 @@ export const createRestockSubscriptionWorkflow = createWorkflow(
   ({
     variant_id,
     sales_channel_id,
-    customer,
+    customer
   }: CreateRestockSubscriptionWorkflowInput) => {
-    const email = getEmailStep(customer)
+    const customerId = transform({
+      customer
+    }, (data) => {
+      return data.customer.customer_id || ""
+    })
+    const retrievedCustomer = when({ customer }, ({ customer }) => {
+      return !customer.email
+    }).then(() => {
+      // @ts-ignore
+      const { data } = useQueryGraphStep({
+        entity: "customer",
+        fields: ["email"],
+        filters: { id: customerId },
+        options: {
+          throwIfKeyNotFound: true
+        }
+      }).config({ name: "retrieve-customer" })
+
+      return data
+    })
     
-    validateVariantOutOfStockStep({
-      variant_id,
-      sales_channel_id,
+    const email = transform({ 
+      retrievedCustomer, 
+      customer
+    }, (data) => {
+      return data.customer?.email ?? data.retrievedCustomer?.[0].email
     })
-
-    const { data } = useQueryGraphStep({
-      entity: "restock_subscription",
-      fields: ["*"],
-      filters: {
-        email,
-        variant_id,
-        sales_channel_id,
-      },
-    })
-
-    when({ data }, ({ data }) => {
-      return data.length === 0
-    })
-    .then(() => {
-      createRestockSubscriptionStep({
-        variant_id,
-        sales_channel_id,
-        email,
-        customer_id: customer.customer_id,
-      })
-    })
-
-    when({ data }, ({ data }) => {
-      return data.length > 0
-    })
-    .then(() => {
-      updateRestockSubscriptionStep({
-        id: data[0].id,
-        customer_id: customer.customer_id,
-      })
-    })
-
-    // @ts-ignore
-    const { data: restockSubscription } = useQueryGraphStep({
-      entity: "restock_subscription",
-      fields: ["*"],
-      filters: {
-        email,
-        variant_id,
-        sales_channel_id,
-      },
-    }).config({ name: "retrieve-restock-subscription" })
-
-    return new WorkflowResponse(
-      restockSubscription
-    )
+    
+    // TODO add more steps
   }
 )
 ```
 
 You create a workflow using `createWorkflow` from the Workflows SDK. It accepts the workflow's unique name as a first parameter.
 
-It accepts as a second parameter a constructor function, which is the workflow's implementation. The workflow has the following steps:
+It accepts as a second parameter a constructor function, which is the workflow's implementation. In the workflow, you:
 
-- `getEmailStep` to retrieve the subscriber's email.
-- `validateVariantOutOfStockStep` to validate that the variant is out of stock in the specified sales channel. If not, an error is thrown, halting the workflow's execution.
-- `useQueryGraphStep` to retrieve the restock subscription in case it already exists.
-- Use the [when-then](!docs!/learn/advanced-development/workflows/conditions) from the Workflows SDK to perform an action if a condition is met.
-    - The first when-then block checks if the restock subscription doesn't exist, then creates it using the `createRestockSubscriptionStep`.
-    - The second when-then block checks if the restock subscription already exists, then updates it using the `updateRestockSubscriptionStep`.
-- `useQueryGraphStep` again to retrieve the restock subscription before returning it.
+- Use [transform](!docs!/learn/advanced-development/workflows/variable-manipulation) from the Workflows SDK to create a `customerId` variable. Its value is either the ID of the customer passed in the workflow's input if it's not `undefined`, or an empty string.
+- Use [when-then](!docs!/learn/advanced-development/workflows/conditions) from the Workflows SDK that performs steps if a condition is met. If the customer's email isn't set in the workflow's input, you retrieve the customer using `useQueryGraphStep` by its ID.
+- Use `transform` again to create an `email` variable whose value is either the email passed in the workflow's input or the retrieved customer's email.
 
 <Note title="Tip">
 
-A workflow's constructor function has some constraints in implementation, which is why you need to use `when-then` to perform steps based on a condition. Learn more about these constraints in [this documentation](!docs!/learn/advanced-development/workflows/constructor-constraints).
+A workflow's constructor function has some constraints in implementation, which is why you need to use `transform` for variable manipulation and `when-then` to perform steps based on a condition. Learn more about these constraints in [this documentation](!docs!/learn/advanced-development/workflows/constructor-constraints).
 
 </Note>
+
+Next, replace the `TODO` with the following:
+
+export const subscriptionWorkflow2Highlights = [
+  ["1", "validateVariantOutOfStockStep", "Validate that the variant is out of stock in the specified sales channel."],
+  ["7", "useQueryGraphStep", "Get the restock subscription to check if it already exists."],
+  ["17", "when", "Perform an action if the restock subscription doesn't exist."],
+  ["21", "createRestockSubscriptionStep", "Create the restock subscription if it doesn't exist."],
+  ["29", "when", "Perform an action if the restock subscription exists."],
+  ["33", "updateRestockSubscriptionStep", "Update the restock subscription if it exists."],
+  ["40", "useQueryGraphStep", "Retrieve the restock subscription again to return it."],
+  ["50", "WorkflowResponse", "Return the restock subscription."]
+]
+
+```ts title="src/workflows/create-restock-subscription/index.ts" highlights={subscriptionWorkflow2Highlights}
+validateVariantOutOfStockStep({
+  variant_id,
+  sales_channel_id
+})
+
+// @ts-ignore
+const { data: restockSubscriptions } = useQueryGraphStep({
+  entity: "restock_subscription",
+  fields: ["*"],
+  filters: {
+    email,
+    variant_id,
+    sales_channel_id
+  }
+}).config({ name: "retrieve-subscriptions" })
+
+when({ restockSubscriptions }, ({ restockSubscriptions }) => {
+  return restockSubscriptions.length === 0
+})
+.then(() => {
+  createRestockSubscriptionStep({
+    variant_id,
+    sales_channel_id,
+    email,
+    customer_id: customer.customer_id
+  })
+})
+
+when({ restockSubscriptions }, ({ restockSubscriptions }) => {
+  return restockSubscriptions.length > 0
+})
+.then(() => {
+  updateRestockSubscriptionStep({
+    id: restockSubscriptions[0].id,
+    customer_id: customer.customer_id
+  })
+})
+
+// @ts-ignore
+const { data: restockSubscription } = useQueryGraphStep({
+  entity: "restock_subscription",
+  fields: ["*"],
+  filters: {
+    email,
+    variant_id,
+    sales_channel_id
+  }
+}).config({ name: "retrieve-restock-subscription" })
+
+return new WorkflowResponse(
+  restockSubscription
+)
+```
+
+You add the following steps to the workflow:
+
+- `validateVariantOutOfStockStep` to validate that the variant is out of stock in the specified sales channel. If not, an error is thrown, halting the workflow's execution.
+- `useQueryGraphStep` to retrieve the restock subscription in case it already exists.
+- Use [when-then](!docs!/learn/advanced-development/workflows/conditions) to perform an action if a condition is met.
+    - The first when-then block checks if the restock subscription doesn't exist, then creates it using the `createRestockSubscriptionStep`.
+    - The second when-then block checks if the restock subscription already exists, then updates it using the `updateRestockSubscriptionStep`.
+- `useQueryGraphStep` again to retrieve the restock subscription before returning it.
 
 Workflows must return an instance of `WorkflowResponse`, passing as a parameter the data to return to the workflow's executor. The workflow returns the restock subscription.
 
