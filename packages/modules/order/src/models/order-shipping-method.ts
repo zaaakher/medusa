@@ -32,12 +32,12 @@ const _OrderShipping = model
           mappedBy: "shipping_methods",
         })
         .nullable(),
-      shipping_method: model.belongsTo<() => typeof OrderShippingMethod>(
-        () => OrderShippingMethod,
-        {
-          mappedBy: "shipping_methods",
-        }
-      ),
+      shipping_method: model
+        .hasOne<() => typeof OrderShippingMethod>(() => OrderShippingMethod, {
+          mappedBy: undefined,
+          foreignKey: true,
+        })
+        .nullable(),
     }
   )
   .indexes([
@@ -73,6 +73,7 @@ const _OrderShipping = model
     },
     {
       name: "IDX_order_shipping_shipping_method_id",
+      // @ts-ignore
       on: ["shipping_method_id"],
       unique: false,
       where: "deleted_at IS NOT NULL",

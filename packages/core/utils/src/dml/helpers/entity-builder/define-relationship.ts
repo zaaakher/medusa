@@ -148,13 +148,12 @@ export function defineHasOneRelationship(
     mappedBy = camelToSnakeCase(MikroORMEntity.name)
   }
 
-  console.log(relationship.options)
   if (relationship.options.foreignKey) {
     const foreignKeyName = camelToSnakeCase(`${relationship.name}Id`)
 
     const props = {
       entity: relatedModelName,
-      nullable: relationship.nullable,
+      nullable: true,
       ...(mappedBy ? { mappedBy } : {}),
       ...(relationship.options.extra ?? {}),
     } as any
@@ -168,13 +167,12 @@ export function defineHasOneRelationship(
     Property({
       type: "string",
       columnType: "text",
-      nullable: relationship.nullable,
+      nullable: !!relationship.nullable,
       persist: true,
     })(MikroORMEntity.prototype, foreignKeyName)
   } else {
     const props = {
       entity: relatedModelName,
-      nullable: relationship.nullable,
       ...(mappedBy ? { mappedBy } : {}),
       ...(relationship.options.extra ?? {}),
     } as any

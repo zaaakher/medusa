@@ -21,6 +21,7 @@ import { OrderAddress } from "./address"
 import { OrderItem } from "./order-item"
 import { OrderShipping } from "./order-shipping-method"
 import { OrderSummary } from "./order-summary"
+import { Return } from "./return"
 import { OrderTransaction } from "./transaction"
 
 type OrderSchema = {
@@ -71,6 +72,9 @@ const _Order = model
       no_notification: model.boolean().nullable(),
       metadata: model.json().nullable(),
       canceled_at: model.dateTime().nullable(),
+      returns: model.hasMany<any>(() => Return, {
+        mappedBy: "order",
+      }),
       shipping_address: model
         .belongsTo<any>(() => OrderAddress, {
           mappedBy: "shipping_address_order",

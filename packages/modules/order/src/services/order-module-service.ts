@@ -2047,6 +2047,7 @@ export default class OrderModuleService
         const actions = item.actions
         delete item.actions
 
+        //@ts-ignore
         const newItem = itemsToUpsert.find((d) => d.item_id === item.id)!
         const unitPrice = newItem?.unit_price ?? item.unit_price
         const compareAtUnitPrice =
@@ -2299,9 +2300,9 @@ export default class OrderModuleService
             applied: true,
           },
         ],
-      })) as CreateOrderChangeDTO[],
+      })),
       sharedContext
-    )) as OrderTypes.OrderChangeDTO[]
+    )) as unknown as OrderTypes.OrderChangeDTO[]
 
     return Array.isArray(data) ? changes : changes[0]
   }
