@@ -505,8 +505,14 @@ type IsVariantInStockInput = {
 }
 
 export const isVariantInStock = async (
-  { variant_id, sales_channel_id }: IsVariantInStockInput, 
-  { container, ...context }: StepExecutionContext) => {
+  { 
+    variant_id, 
+    sales_channel_id
+  }: IsVariantInStockInput, 
+  { 
+    container, 
+    ...context
+  }: StepExecutionContext) => {
   const query = container.resolve("query")
 
   const { data: variants } = await query.graph({
@@ -1107,10 +1113,10 @@ Then, to obtain an ID of a variant that's out of stock, access a product from th
 
 ![Click on the copy icon next to the ID field.](https://res.cloudinary.com/dza7lstvk/image/upload/v1733230981/Medusa%20Resources/Screenshot_2024-12-03_at_3.02.34_PM_ujyv5w.png)
 
-Finally, send a `POST` request to the `/store/restock-susbcriptions` API route:
+Finally, send a `POST` request to the `/store/restock-subscriptions` API route:
 
 ```bash
-curl -X POST http://localhost:9000/store/restock-susbcriptions \
+curl -X POST http://localhost:9000/store/restock-subscriptions \
 -H 'x-publishable-api-key: {api_key}' \
 --data '{
     "variant_id": "{variant_id}",
