@@ -2326,7 +2326,6 @@ describe("Entity builder", () => {
           reference: "1:1",
           name: "email",
           entity: "Email",
-          nullable: false,
           mappedBy: "user",
         },
         created_at: {
@@ -2508,7 +2507,6 @@ describe("Entity builder", () => {
           reference: "1:1",
           name: "email",
           entity: "Email",
-          nullable: false,
           mappedBy: "owner",
         },
         created_at: {
@@ -2600,7 +2598,6 @@ describe("Entity builder", () => {
           reference: "1:1",
           name: "email",
           entity: "Email",
-          nullable: false,
           mappedBy: "user",
           cascade: ["persist", "soft-remove"],
         },
@@ -2763,7 +2760,6 @@ describe("Entity builder", () => {
           reference: "1:1",
           name: "email",
           entity: "Email",
-          nullable: false,
           mappedBy: "user",
           cascade: ["persist", "soft-remove"],
         },
@@ -3710,7 +3706,6 @@ describe("Entity builder", () => {
           reference: "1:1",
           name: "email",
           entity: "Email",
-          nullable: false,
           mappedBy: "user",
         },
         created_at: {
@@ -3906,7 +3901,6 @@ describe("Entity builder", () => {
           reference: "1:1",
           name: "email",
           entity: "Email",
-          nullable: false,
           mappedBy: "user",
         },
         created_at: {
@@ -4537,7 +4531,6 @@ describe("Entity builder", () => {
           reference: "1:1",
           name: "email",
           entity: "Email",
-          nullable: false,
           mappedBy: "user",
         },
         created_at: {
@@ -4735,7 +4728,6 @@ describe("Entity builder", () => {
           reference: "1:1",
           name: "email",
           entity: "Email",
-          nullable: false,
           mappedBy: "user",
         },
         created_at: {
@@ -5043,7 +5035,6 @@ describe("Entity builder", () => {
           entity: "User",
           mappedBy: "parent",
           name: "child",
-          nullable: false,
           reference: "1:1",
         },
         created_at: {
