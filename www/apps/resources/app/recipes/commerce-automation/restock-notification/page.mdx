@@ -515,27 +515,25 @@ export const isVariantInStock = async (
   }: StepExecutionContext) => {
   const query = container.resolve("query")
 
-  const { data: variants } = await query.graph({
-    entity: "variant",
-    fields: [
-      "*", 
-      "inventory_items.*", 
-      // @ts-ignore
-      "inventory_items.inventory.location_levels.stock_locations.*",
-      // @ts-ignore
-      "inventory_items.inventory.location_levels.stock_locations.sales_channels.*",
-    ],
-    filters: {
-      id: variant_id,
+  const { data: variants } = await query.graph(
+    {
+      entity: "variant",
+      fields: [
+        "*", 
+        "inventory_items.*", 
+        // @ts-ignore
+        "inventory_items.inventory.location_levels.stock_locations.*",
+        // @ts-ignore
+        "inventory_items.inventory.location_levels.stock_locations.sales_channels.*"
+      ],
+      filters: {
+        id: variant_id
+      }
     },
-  })
-
-  if (!variants.length) {
-    throw new MedusaError(
-      MedusaError.Types.NOT_FOUND,
-      `Variant does not exist.`
-    )
-  }
+    {
+      throwIfKeyNotFound: true
+    }
+  )
 
   // TODO check if in stock
 }
@@ -894,11 +892,99 @@ Learn more about API routes in [this documentation](!docs!/learn/basics/api-rout
 
 </Note>
 
+### Implement API Route
+
+An API route is created in a `route.ts` file under a sub-directory of the `src/api` directory.
+
+The path of the API route is the file's path relative to `src/api`. So, to create the `/store/restock-subscriptions` API route, create the file `src/api/store/restock-subscriptions/route.ts` with the following content:
+
+![The directory structure of the Medusa application after adding the route file.](https://res.cloudinary.com/dza7lstvk/image/upload/v1733230210/Medusa%20Resources/restock-dir-overview-16_sv7yk2.jpg)
+
+export const routeHighlights = [
+  ["11", "POST", "Define a `POST` API route"],
+  ["12", "req", "The request's details."],
+  ["13", "res", "The object to manipulate and return a response."],
+  ["15", "salesChannelId", "Set the sales channel ID either to the request body parameter or the publishable API key's sales channel."],
+  ["15", "validatedBody", "Access body parameters in `validatedBody`."],
+  ["16", "publishable_key_context", "Access the customer's sales channels based on the specified publishable API key."],
+  ["26", "run", "Execute the `createRestockSubscriptionWorkflow`."],
+  ["27", "input", "Pass input to the workflow."],
+  ["32", "customer_id", "If the customer is logged in, their ID is stored in `req.auth_context.actor_id`."],
+  ["37", "sendStatus", "Return a response with `201` status code."]
+]
+
+```ts title="src/api/store/restock-subscriptions/route.ts" highlights={routeHighlights}
+import { AuthenticatedMedusaRequest, MedusaResponse } from "@medusajs/framework/http"
+import { MedusaError } from "@medusajs/framework/utils"
+import { createRestockSubscriptionWorkflow } from "../../../workflows/create-restock-subscription"
+
+type PostStoreCreateRestockSubscription = {
+  variant_id: string
+  email?: string
+  sales_channel_id?: string
+}
+
+export async function POST(
+  req: AuthenticatedMedusaRequest<PostStoreCreateRestockSubscription>,
+  res: MedusaResponse
+) {
+  const salesChannelId = req.validatedBody.sales_channel_id || (
+    req.publishable_key_context?.sales_channel_ids?.length ? 
+      req.publishable_key_context?.sales_channel_ids[0] : undefined
+  )
+  if (!salesChannelId) {
+    throw new MedusaError(
+      MedusaError.Types.INVALID_DATA,
+      "At least one sales channel ID is required, either associated with the publishable API key or in the request body."
+    )
+  }
+  const { result } = await createRestockSubscriptionWorkflow(req.scope)
+    .run({
+      input: {
+        variant_id: req.validatedBody.variant_id,
+        sales_channel_id: salesChannelId,
+        customer: {
+          email: req.validatedBody.email,
+          customer_id: req.auth_context?.actor_id,
+        },
+      },
+    })
+
+  return res.sendStatus(201)
+}
+
+```
+
+Since you export a `POST` function in this file, you're exposing a `POST` API route at `/store/restock-subscriptions`. The route handler function accepts two parameters:
+
+1. A request object with details and context on the request, such as body parameters or authenticated customer details.
+2. A response object to manipulate and send the response.
+
+<Note title="Tip">
+
+`AuthenticatedMedusaRequest` accepts the request body's type as a type argument.
+
+</Note>
+
+In the function, you first declare the sales channel ID either based on the parameter specified in the request body or the publishable API key's first sales channel. If the sales channel's ID is not set, an error is thrown.
+
+Then, you execute the `createRestockSubscriptionWorkflow` by invoking it, passing it the Medusa container which is stored in the `scope` property of the request object, and invoking its `run` method.
+
+The `run` method accepts an object having an `input` property, which is the input to pass to the workflow. You pass the following input:
+
+1. `variant_id`: The ID of the variant the customer is subscribing to. You access the request body parameters from the `validatedBody` property of the request object.
+2. `sales_channel_id`: The ID of the sales channel.
+3. `customer`: The subscriber customer's details:
+    - `email`: The email passed in the request body, if available.
+    - `customer_id`: The ID of the customer if they're authenticated.
+
+Finally, you return a `201` response code, indicating that the customer has subscribed to restock notifications of the specified variant.
+
 ### Add Validation Schema
 
-The API route will accept the variant ID and the customer email as request body parameters. So, you must create a schema to validate the request body.
+The API route accepts the variant ID, and optionally the customer email and sales channel ID as request body parameters. So, you'll create a schema to validate the request body.
 
-In Medusa, you create validation schemas using [Zod](https://zod.dev/) in a `validators.ts` file under the `src/api` directory. So, create the file `src/api/store/restock-subscriptions/validators.ts` with the following content:
+In Medusa, you create validation schemas using [Zod](https://zod.dev/) in a TypeScript file under the `src/api` directory. So, create the file `src/api/store/restock-subscriptions/validators.ts` with the following content:
 
 ![The directory structure of the Medusa application after adding the validator file.](https://res.cloudinary.com/dza7lstvk/image/upload/v1733229734/Medusa%20Resources/restock-dir-overview-14_au0h15.jpg)
 
@@ -923,6 +1009,19 @@ You create an object schema with the following properties:
 Learn more about creating schemas in [Zod's documentation](https://zod.dev/).
 
 </Note>
+
+You can now replace the `PostStoreCreateRestockSubscription` type in `src/api/store/restock-subscriptions/route.ts` with the following:
+
+```ts title="src/api/store/restock-subscriptions/route.ts"
+// ...
+import { z } from "zod"
+import { PostStoreCreateRestockSubscription } from "./validators"
+
+type PostStoreCreateRestockSubscription = z.infer<
+  typeof PostStoreCreateRestockSubscription
+>
+// ...
+```
 
 Next, you'll use this schema for validation.
 
@@ -989,88 +1088,6 @@ You pass in the `routes` array an object having the following properties:
     - `validateAndTransformBody`: A middleware to ensure the received request body is valid against the Zod schema you defined earlier.
 
 Any request sent to `/store/restock-subscriptions` will now automatically fail if its body parameters don't match the `PostStoreCreateRestockSubscription` validation schema.
-
-### Implement API Route
-
-An API route is created in a `route.ts` file under a sub-directory of the `src/api` directory.
-
-The path of the API route is the file's path relative to `src/api`. So, to create the `/store/restock-subscriptions` API route, create the file `src/api/store/restock-subscriptions/route.ts` with the following content:
-
-![The directory structure of the Medusa application after adding the route file.](https://res.cloudinary.com/dza7lstvk/image/upload/v1733230210/Medusa%20Resources/restock-dir-overview-16_sv7yk2.jpg)
-
-export const routeHighlights = [
-  ["11", "POST", "Define a `POST` API route"],
-  ["12", "req", "The request's details."],
-  ["13", "res", "The object to manipulate and return a response."],
-  ["15", "salesChannelId", "Set the sales channel ID either to the request body parameter or the publishable API key's sales channel."],
-  ["15", "validatedBody", "Access body parameters in `validatedBody`."],
-  ["16", "publishable_key_context", "Access the customer's sales channels based on the specified publishable API key."],
-  ["26", "run", "Execute the `createRestockSubscriptionWorkflow`."],
-  ["27", "input", "Pass input to the workflow."],
-  ["32", "customer_id", "If the customer is logged in, their ID is stored in `req.auth_context.actor_id`."],
-  ["37", "sendStatus", "Return a response with `201` status code."]
-]
-
-```ts title="src/api/store/restock-subscriptions/route.ts" highlights={routeHighlights}
-import { AuthenticatedMedusaRequest, MedusaResponse } from "@medusajs/framework/http"
-import { z } from "zod"
-import { PostStoreCreateRestockSubscription } from "./validators"
-import { MedusaError } from "@medusajs/framework/utils"
-import { createRestockSubscriptionWorkflow } from "../../../workflows/create-restock-subscription"
-
-type PostStoreCreateRestockSubscription = z.infer<
-  typeof PostStoreCreateRestockSubscription
->
-
-export async function POST(
-  req: AuthenticatedMedusaRequest<PostStoreCreateRestockSubscription>,
-  res: MedusaResponse
-) {
-  const salesChannelId = req.validatedBody.sales_channel_id || (
-    req.publishable_key_context?.sales_channel_ids?.length ? 
-      req.publishable_key_context?.sales_channel_ids[0] : undefined
-  )
-  if (!salesChannelId) {
-    throw new MedusaError(
-      MedusaError.Types.INVALID_DATA,
-      "At least one sales channel ID is required, either associated with the publishable API key or in the request body."
-    )
-  }
-  const { result } = await createRestockSubscriptionWorkflow(req.scope)
-    .run({
-      input: {
-        variant_id: req.validatedBody.variant_id,
-        sales_channel_id: salesChannelId,
-        customer: {
-          email: req.validatedBody.email,
-          customer_id: req.auth_context?.actor_id,
-        },
-      },
-    })
-
-  return res.sendStatus(201)
-}
-
-```
-
-Since you export a `POST` function in this file, you're exposing a `POST` API route at `/store/restock-subscriptions`. The route handler function accepts two parameters:
-
-1. A request object with details and context on the request, such as body parameters or authenticated customer details.
-2. A response object to manipulate and send the response.
-
-In the function, you first declare the sales channel ID either based on the parameter specified in the request body or the publishable API key's first sales channel. If the sales channel's ID is not set, an error is thrown.
-
-Then, you execute the `createRestockSubscriptionWorkflow` by invoking it, passing it the Medusa container which is stored in the `scope` property of the request object, and invoking its `run` method.
-
-The `run` method accepts an object having an `input` property, which is the input to pass to the workflow. You pass the following input:
-
-1. `variant_id`: The ID of the variant the customer is subscribing to. You access the request body parameters from the `validatedBody` property of the request object.
-2. `sales_channel_id`: The ID of the sales channel.
-3. `customer`: The subscriber customer's details:
-    - `email`: The email passed in the request body, if available.
-    - `customer_id`: The ID of the customer if they're authenticated. Since you apply the `authenticate` middleware, the ID of the authenticated customer is stored in the `auth_context.actor_id` property of the request object.
-
-Finally, you return a `201` response code, indicating that the customer has subscribed to restock notifications of the specified variant.
 
 ### Test API Route
 
