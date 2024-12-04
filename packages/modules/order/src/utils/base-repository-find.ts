@@ -29,10 +29,6 @@ export function setFindMethods<T>(klass: Constructor<T>, entity: any) {
       }
     }
 
-    // Object.assign(findOptions_.options, {
-    //   strategy: LoadStrategy.SELECT_IN,
-    // })
-
     const isRelatedEntity = entity !== Order
     const config = mapRepositoryToOrderModel(findOptions_, isRelatedEntity)
     config.options ??= {}

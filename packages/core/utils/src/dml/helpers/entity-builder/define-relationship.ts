@@ -140,18 +140,51 @@ export function defineHasOneRelationship(
 ) {
   const shouldRemoveRelated = !!cascades.delete?.includes(relationship.name)
 
-  const options: Parameters<typeof OneToOne>[0] = {
-    entity: relatedModelName,
-    nullable: relationship.nullable,
-    fieldName: relationship.options.fieldName,
-    mappedBy: relationship.mappedBy || camelToSnakeCase(MikroORMEntity.name),
+  let mappedBy: string | undefined
+
+  if ("mappedBy" in relationship) {
+    mappedBy = relationship.mappedBy
+  } else {
+    mappedBy = camelToSnakeCase(MikroORMEntity.name)
   }
 
-  if (shouldRemoveRelated) {
-    options.cascade = ["persist", "soft-remove"] as any
-  }
+  console.log(relationship.options)
+  if (relationship.options.foreignKey) {
+    const foreignKeyName = camelToSnakeCase(`${relationship.name}Id`)
 
-  OneToOne(options)(MikroORMEntity.prototype, relationship.name)
+    const props = {
+      entity: relatedModelName,
+      nullable: relationship.nullable,
+      ...(mappedBy ? { mappedBy } : {}),
+      ...(relationship.options.extra ?? {}),
+    } as any
+
+    if (shouldRemoveRelated) {
+      props.cascade = ["persist", "soft-remove"] as any
+    }
+
+    OneToOne(props)(MikroORMEntity.prototype, relationship.name)
+
+    Property({
+      type: "string",
+      columnType: "text",
+      nullable: relationship.nullable,
+      persist: true,
+    })(MikroORMEntity.prototype, foreignKeyName)
+  } else {
+    const props = {
+      entity: relatedModelName,
+      nullable: relationship.nullable,
+      ...(mappedBy ? { mappedBy } : {}),
+      ...(relationship.options.extra ?? {}),
+    } as any
+
+    if (shouldRemoveRelated) {
+      props.cascade = ["persist", "soft-remove"] as any
+    }
+
+    OneToOne(props)(MikroORMEntity.prototype, relationship.name)
+  }
 }
 
 /**

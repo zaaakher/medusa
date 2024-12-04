@@ -9,8 +9,8 @@ import { OrderTransaction } from "./transaction"
 const _Return = model
   .define("Return", {
     id: model.id({ prefix: "return" }).primaryKey(),
-    exchange_id: model.text().nullable(),
-    claim_id: model.text().nullable(),
+    //exchange_id: model.text().nullable(),
+    //claim_id: model.text().nullable(),
     order_version: model.number(),
     display_id: model.autoincrement(),
     status: model.enum(ReturnStatus).default(ReturnStatus.OPEN),
@@ -28,11 +28,13 @@ const _Return = model
     exchange: model
       .hasOne<() => typeof OrderExchange>(() => OrderExchange, {
         mappedBy: "return",
+        foreignKey: true,
       })
       .nullable(),
     claim: model
       .hasOne<() => typeof OrderClaim>(() => OrderClaim, {
         mappedBy: "return",
+        foreignKey: true,
       })
       .nullable(),
     items: model.hasMany<() => typeof ReturnItem>(() => ReturnItem, {
@@ -75,12 +77,14 @@ const _Return = model
     },
     {
       name: "IDX_return_exchange_id",
+      // @ts-ignore
       on: ["exchange_id"],
       unique: false,
       where: "exchange_id IS NOT NULL AND deleted_at IS NOT NULL",
     },
     {
       name: "IDX_return_claim_id",
+      // @ts-ignore
       on: ["claim_id"],
       unique: false,
       where: "claim_id IS NOT NULL AND deleted_at IS NOT NULL",
