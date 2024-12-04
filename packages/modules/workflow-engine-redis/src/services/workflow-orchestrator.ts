@@ -149,6 +149,7 @@ export class WorkflowOrchestratorService {
   private async triggerParentStep(transaction, result) {
     const metadata = transaction.flow.metadata
     const { parentStepIdempotencyKey } = metadata ?? {}
+
     if (parentStepIdempotencyKey) {
       const hasFailed = [
         TransactionState.REVERTED,
@@ -209,6 +210,9 @@ export class WorkflowOrchestratorService {
       throw new Error(`Workflow with id "${workflowId}" not found.`)
     }
 
+    const originalOnFinishHandler = events.onFinish
+    delete events.onFinish
+
     const ret = await exportedWorkflow.run({
       input,
       throwOnError: false,
@@ -235,7 +239,7 @@ export class WorkflowOrchestratorService {
       hasFailed,
     }
 
-    if (ret.transaction.hasFinished()) {
+    if (hasFinished) {
       const { result, errors } = ret
 
       await this.notify({
@@ -247,6 +251,14 @@ export class WorkflowOrchestratorService {
       })
 
       await this.triggerParentStep(ret.transaction, result)
+
+      if (originalOnFinishHandler) {
+        await originalOnFinishHandler({
+          transaction: ret.transaction,
+          result,
+          errors,
+        })
+      }
     }
 
     if (throwOnError && ret.thrownError) {
@@ -327,6 +339,9 @@ export class WorkflowOrchestratorService {
       workflowId,
     })
 
+    const originalOnFinishHandler = events.onFinish
+    delete events.onFinish
+
     const ret = await exportedWorkflow.registerStepSuccess({
       idempotencyKey: idempotencyKey_,
       context,
@@ -350,6 +365,14 @@ export class WorkflowOrchestratorService {
       })
 
       await this.triggerParentStep(ret.transaction, result)
+
+      if (originalOnFinishHandler) {
+        await originalOnFinishHandler({
+          transaction: ret.transaction,
+          result,
+          errors,
+        })
+      }
     }
 
     if (throwOnError && ret.thrownError) {
@@ -397,6 +420,9 @@ export class WorkflowOrchestratorService {
       workflowId,
     })
 
+    const originalOnFinishHandler = events.onFinish
+    delete events.onFinish
+
     const ret = await exportedWorkflow.registerStepFailure({
       idempotencyKey: idempotencyKey_,
       context,
@@ -420,6 +446,14 @@ export class WorkflowOrchestratorService {
       })
 
       await this.triggerParentStep(ret.transaction, result)
+
+      if (originalOnFinishHandler) {
+        await originalOnFinishHandler({
+          transaction: ret.transaction,
+          result,
+          errors,
+        })
+      }
     }
 
     if (throwOnError && ret.thrownError) {
@@ -555,6 +589,11 @@ export class WorkflowOrchestratorService {
     if (transactionId) {
       const transactionSubscribers = subscribers.get(transactionId) ?? []
       notifySubscribers(transactionSubscribers)
+
+      // removes transaction id subscribers on finish
+      if (eventType === "onFinish") {
+        subscribers.delete(transactionId)
+      }
     }
 
     const workflowSubscribers = subscribers.get(AnySubscriber) ?? []
@@ -613,7 +652,10 @@ export class WorkflowOrchestratorService {
         await notify({ eventType: "onCompensateBegin" })
       },
       onFinish: async ({ transaction, result, errors }) => {
-        // TODO: unsubscribe transaction handlers on finish
+        console.log(
+          "----------------------ON FINISH CALLED ----",
+          transaction.getFlow()
+        )
         customEventHandlers?.onFinish?.({ transaction, result, errors })
       },
 

@@ -359,7 +359,7 @@ moduleIntegrationTestRunner<IWorkflowEngineService>({
           ).toBe(true)
         })
 
-        it.skip("should complete an async workflow that returns a StepResponse", (done) => {
+        it.only("should complete an async workflow that returns a StepResponse", (done) => {
           const transactionId = "transaction_1"
           void workflowOrcModule
             .run("workflow_async_background", {
@@ -380,6 +380,7 @@ moduleIntegrationTestRunner<IWorkflowEngineService>({
             workflowId: "workflow_async_background",
             transactionId,
             subscriber: (event) => {
+              console.log(event.eventType, event.step.id)
               if (event.eventType === "onFinish") {
                 done()
               }
@@ -413,6 +414,29 @@ moduleIntegrationTestRunner<IWorkflowEngineService>({
           })
 
           expect(onFinish).toHaveBeenCalledTimes(0)
+        })
+
+        it.skip("should not skip step if condition is true", function (done) {
+          console.log("calling it")
+          void workflowOrcModule.run("wf-when", {
+            input: {
+              callSubFlow: true,
+            },
+            transactionId: "trx_123_when",
+            throwOnError: true,
+            logOnError: true,
+          })
+
+          console.log("SUBSCRIBED")
+          void workflowOrcModule.subscribe({
+            workflowId: "wf-when",
+            subscriber: (event) => {
+              console.log(event.eventType, event.step.id)
+              if (event.eventType === "onFinish") {
+                done()
+              }
+            },
+          })
         })
       })
 
