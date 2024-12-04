@@ -638,7 +638,7 @@ moduleIntegrationTestRunner({
               application_method: expect.objectContaining({
                 target_type: "order",
                 allocation: "across",
-                max_quantity: 0,
+                max_quantity: null,
               }),
             })
           )

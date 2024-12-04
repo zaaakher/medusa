@@ -142,7 +142,7 @@ export function defineHasOneRelationship(
 
   OneToOne({
     entity: relatedModelName,
-    nullable: relationship.nullable,
+    ...(relationship.nullable ? { nullable: relationship.nullable } : {}),
     mappedBy: relationship.mappedBy || camelToSnakeCase(MikroORMEntity.name),
     cascade: shouldRemoveRelated
       ? (["persist", "soft-remove"] as any)
