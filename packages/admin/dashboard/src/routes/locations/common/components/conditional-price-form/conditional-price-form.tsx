@@ -122,6 +122,8 @@ export const ConditionalPriceForm = ({
   // Intercept the Cmd + Enter key to only save the inner form.
   const handleOnKeyDown = (event: React.KeyboardEvent<HTMLFormElement>) => {
     if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
+      console.log("Fired")
+
       event.preventDefault()
       event.stopPropagation()
 
@@ -131,11 +133,15 @@ export const ConditionalPriceForm = ({
 
   return (
     <Form {...conditionalPriceForm}>
-      <KeyboundForm onSubmit={handleOnSubmit} onKeyDown={handleOnKeyDown}>
+      <KeyboundForm
+        onSubmit={handleOnSubmit}
+        onKeyDown={handleOnKeyDown}
+        className="flex h-full flex-col"
+      >
         <StackedFocusModal.Content>
           <StackedFocusModal.Header />
-          <StackedFocusModal.Body>
-            <div className="flex w-full flex-1 flex-col items-center">
+          <StackedFocusModal.Body className="size-full overflow-hidden">
+            <div className="flex size-full flex-1 flex-col items-center overflow-y-auto">
               <div className="flex w-full max-w-[720px] flex-col gap-y-8 px-6 py-16">
                 <div className="flex w-full flex-col gap-y-6">
                   <div>

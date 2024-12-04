@@ -385,14 +385,6 @@ export const useDataGridKeydownEvent = <
         return
       }
 
-      /**
-       * If the user is holding the meta key, we don't want to handle the event
-       * as it's used to submit forms.
-       */
-      if (e.metaKey || e.ctrlKey) {
-        return
-      }
-
       e.preventDefault()
 
       const type = matrix.getCellType(anchor)

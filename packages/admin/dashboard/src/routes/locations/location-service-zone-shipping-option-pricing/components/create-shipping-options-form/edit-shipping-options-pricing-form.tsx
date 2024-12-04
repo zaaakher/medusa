@@ -249,26 +249,26 @@ export function EditShippingOptionsPricingForm({
   }
 
   return (
-    <StackedFocusModal
-      id={CONDITIONAL_PRICES_STACKED_MODAL_ID}
-      onOpenChangeCallback={(open) => {
-        if (!open) {
-          setSelectedPrice(null)
-        }
-      }}
-    >
-      <ShippingOptionPriceProvider
-        onOpenConditionalPricesModal={onOpenConditionalPricesModal}
-        onCloseConditionalPricesModal={onCloseConditionalPricesModal}
+    <RouteFocusModal.Form form={form}>
+      <KeyboundForm
+        className="flex h-full flex-col overflow-hidden"
+        onSubmit={handleSubmit}
       >
-        <RouteFocusModal.Form form={form}>
-          <KeyboundForm
-            className="flex h-full flex-col overflow-hidden"
-            onSubmit={handleSubmit}
-          >
-            <RouteFocusModal.Header />
+        <RouteFocusModal.Header />
 
-            <RouteFocusModal.Body>
+        <RouteFocusModal.Body>
+          <StackedFocusModal
+            id={CONDITIONAL_PRICES_STACKED_MODAL_ID}
+            onOpenChangeCallback={(open) => {
+              if (!open) {
+                setSelectedPrice(null)
+              }
+            }}
+          >
+            <ShippingOptionPriceProvider
+              onOpenConditionalPricesModal={onOpenConditionalPricesModal}
+              onCloseConditionalPricesModal={onCloseConditionalPricesModal}
+            >
               <div className="flex size-full flex-col divide-y overflow-hidden">
                 <DataGrid
                   isLoading={isLoading}
@@ -284,29 +284,29 @@ export function EditShippingOptionsPricingForm({
               {selectedPrice && (
                 <ConditionalPriceForm info={selectedPrice} variant="update" />
               )}
-            </RouteFocusModal.Body>
-            <RouteFocusModal.Footer>
-              <div className="flex items-center justify-end gap-x-2">
-                <RouteFocusModal.Close asChild>
-                  <Button variant="secondary" size="small">
-                    {t("actions.cancel")}
-                  </Button>
-                </RouteFocusModal.Close>
-                <Button
-                  size="small"
-                  className="whitespace-nowrap"
-                  isLoading={isPending}
-                  onClick={handleSubmit}
-                  type="button"
-                >
-                  {t("actions.save")}
-                </Button>
-              </div>
-            </RouteFocusModal.Footer>
-          </KeyboundForm>
-        </RouteFocusModal.Form>
-      </ShippingOptionPriceProvider>
-    </StackedFocusModal>
+            </ShippingOptionPriceProvider>
+          </StackedFocusModal>
+        </RouteFocusModal.Body>
+        <RouteFocusModal.Footer>
+          <div className="flex items-center justify-end gap-x-2">
+            <RouteFocusModal.Close asChild>
+              <Button variant="secondary" size="small">
+                {t("actions.cancel")}
+              </Button>
+            </RouteFocusModal.Close>
+            <Button
+              size="small"
+              className="whitespace-nowrap"
+              isLoading={isPending}
+              onClick={handleSubmit}
+              type="button"
+            >
+              {t("actions.save")}
+            </Button>
+          </div>
+        </RouteFocusModal.Footer>
+      </KeyboundForm>
+    </RouteFocusModal.Form>
   )
 }
 
@@ -314,7 +314,7 @@ const findRuleValue = (
   rules: HttpTypes.AdminShippingOptionPriceRule[],
   operator: string
 ) => {
-  const fallbackValue = ["eq", "gt", "lt"].includes(operator) ? undefined : ""
+  const fallbackValue = ["eq", "gt", "lt"].includes(operator) ? undefined : null
 
   return (
     rules?.find((r) => r.attribute === "total" && r.operator === operator)

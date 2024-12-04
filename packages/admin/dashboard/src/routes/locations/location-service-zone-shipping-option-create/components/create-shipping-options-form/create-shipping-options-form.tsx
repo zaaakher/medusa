@@ -253,22 +253,27 @@ export function CreateShippingOptionsForm({
         className="flex h-full flex-col"
         onSubmit={handleSubmit}
         onKeyDown={(e) => {
-          // We want to continue to the next tab on enter instead of saving immediately
-          if (e.key === "Enter") {
-            e.preventDefault()
+          const isEnterKey = e.key === "Enter"
+          const isModifierPressed = e.metaKey || e.ctrlKey
+          const shouldContinueToPricing =
+            activeTab !== Tab.PRICING && !isCalculatedPriceType
 
-            if (e.metaKey || e.ctrlKey) {
-              if (activeTab !== Tab.PRICING) {
-                e.preventDefault()
-                e.stopPropagation()
-                onTabChange(Tab.PRICING)
-
-                return
-              }
-
-              handleSubmit()
-            }
+          if (!isEnterKey) {
+            return
           }
+          e.preventDefault()
+
+          if (!isModifierPressed) {
+            return
+          }
+
+          if (shouldContinueToPricing) {
+            e.stopPropagation()
+            onTabChange(Tab.PRICING)
+            return
+          }
+
+          handleSubmit()
         }}
       >
         <ProgressTabs
