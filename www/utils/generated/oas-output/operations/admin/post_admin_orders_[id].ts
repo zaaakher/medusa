@@ -1,9 +1,8 @@
 /**
- * @oas [post] /admin/orders/{id}/transfer/cancel
- * operationId: PostOrdersIdTransferCancel
- * summary: Cancel Transfer Request
- * x-sidebar-summary: Cancel Transfer
- * description: Cancel a request to transfer an order to another customer.
+ * @oas [post] /admin/orders/{id}
+ * operationId: PostOrdersId
+ * summary: Update Order
+ * description: Update an order's details.
  * x-authenticated: true
  * parameters:
  *   - name: id
@@ -30,11 +29,16 @@
  *   - api_token: []
  *   - cookie_auth: []
  *   - jwt_token: []
+ * requestBody:
+ *   content:
+ *     application/json:
+ *       schema:
+ *         $ref: "#/components/schemas/AdminUpdateOrder"
  * x-codeSamples:
  *   - lang: Shell
  *     label: cURL
  *     source: |-
- *       curl -X POST '{backend_url}/admin/orders/{id}/transfer/cancel' \
+ *       curl -X POST '{backend_url}/admin/orders/{id}' \
  *       -H 'Authorization: Bearer {access_token}'
  * tags:
  *   - Orders
@@ -57,7 +61,7 @@
  *     $ref: "#/components/responses/invalid_request_error"
  *   "500":
  *     $ref: "#/components/responses/500_error"
- * x-workflow: cancelOrderTransferRequestWorkflow
+ * x-workflow: updateOrderWorkflow
  * 
 */
 
