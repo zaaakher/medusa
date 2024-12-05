@@ -11,17 +11,19 @@ import {
   ManyToOne,
   OneToMany,
   OneToOne,
+  OneToOneOptions,
   OnInit,
   Property,
   rel,
 } from "@mikro-orm/core"
-import { DmlEntity } from "../../entity"
-import { HasOne } from "../../relations/has-one"
-import { HasMany } from "../../relations/has-many"
-import { parseEntityName } from "./parse-entity-name"
 import { camelToSnakeCase, pluralize } from "../../../common"
-import { applyEntityIndexes } from "../mikro-orm/apply-indexes"
+import { DmlEntity } from "../../entity"
+import { HasMany } from "../../relations/has-many"
+import { HasOne } from "../../relations/has-one"
 import { ManyToMany as DmlManyToMany } from "../../relations/many-to-many"
+import { applyEntityIndexes } from "../mikro-orm/apply-indexes"
+import { parseEntityName } from "./parse-entity-name"
+import { HasOneWithForeignKey } from "../../relations/has-one-fk"
 
 type Context = {
   MANY_TO_MANY_TRACKED_RELATIONS: Record<string, boolean>
@@ -140,14 +142,54 @@ export function defineHasOneRelationship(
 ) {
   const shouldRemoveRelated = !!cascades.delete?.includes(relationship.name)
 
+  let mappedBy: string | undefined = camelToSnakeCase(MikroORMEntity.name)
+  if ("mappedBy" in relationship) {
+    mappedBy = relationship.mappedBy
+  }
+
   OneToOne({
     entity: relatedModelName,
     nullable: relationship.nullable,
-    mappedBy: relationship.mappedBy || camelToSnakeCase(MikroORMEntity.name),
+    ...(mappedBy ? { mappedBy } : {}),
     cascade: shouldRemoveRelated
       ? (["persist", "soft-remove"] as any)
       : undefined,
-  })(MikroORMEntity.prototype, relationship.name)
+  } as OneToOneOptions<any, any>)(MikroORMEntity.prototype, relationship.name)
+}
+
+/**
+ * Defines has one relationship with Foreign key on the MikroORM
+ * entity
+ */
+export function defineHasOneWithFKRelationship(
+  MikroORMEntity: EntityConstructor<any>,
+  relationship: RelationshipMetadata,
+  { relatedModelName }: { relatedModelName: string },
+  cascades: EntityCascades<string[]>
+) {
+  const foreignKeyName = camelToSnakeCase(`${relationship.name}Id`)
+  const shouldRemoveRelated = !!cascades.delete?.includes(relationship.name)
+
+  let mappedBy: string | undefined = camelToSnakeCase(MikroORMEntity.name)
+  if ("mappedBy" in relationship) {
+    mappedBy = relationship.mappedBy
+  }
+
+  OneToOne({
+    entity: relatedModelName,
+    nullable: relationship.nullable,
+    ...(mappedBy ? { mappedBy } : {}),
+    cascade: shouldRemoveRelated
+      ? (["persist", "soft-remove"] as any)
+      : undefined,
+  } as OneToOneOptions<any, any>)(MikroORMEntity.prototype, relationship.name)
+
+  Property({
+    type: "string",
+    columnType: "text",
+    nullable: relationship.nullable,
+    persist: true,
+  })(MikroORMEntity.prototype, foreignKeyName)
 }
 
 /**
@@ -225,7 +267,10 @@ export function defineBelongsToRelationship(
        * to associate a relation (through the relation or the foreign key) we need to handle it
        * specifically
        */
-      if (HasOne.isHasOne(otherSideRelation)) {
+      if (
+        HasOne.isHasOne(otherSideRelation) ||
+        HasOneWithForeignKey.isHasOneWithForeignKey(otherSideRelation)
+      ) {
         const relationMeta = this.__meta.relations.find(
           (relation) => relation.name === relationship.name
         ).targetMeta
@@ -317,7 +362,10 @@ export function defineBelongsToRelationship(
   /**
    * Otherside is a has one. Hence we should defined a OneToOne
    */
-  if (HasOne.isHasOne(otherSideRelation)) {
+  if (
+    HasOne.isHasOne(otherSideRelation) ||
+    HasOneWithForeignKey.isHasOneWithForeignKey(otherSideRelation)
+  ) {
     const foreignKeyName = camelToSnakeCase(`${relationship.name}Id`)
 
     OneToOne({
@@ -594,6 +642,14 @@ export function defineRelationship(
   switch (relationship.type) {
     case "hasOne":
       defineHasOneRelationship(
+        MikroORMEntity,
+        relationship,
+        relatedEntityInfo,
+        cascades
+      )
+      break
+    case "hasOneWithFK":
+      defineHasOneWithFKRelationship(
         MikroORMEntity,
         relationship,
         relatedEntityInfo,
