@@ -79,7 +79,6 @@ export class RedisDistributedTransactionStorage
     this.worker = new Worker(
       this.queueName,
       async (job) => {
-        console.log("JOB", job.name, job.data)
         if (allowedJobs.includes(job.name as JobType)) {
           await this.executeTransaction(
             job.data.workflowId,
@@ -271,15 +270,6 @@ export class RedisDistributedTransactionStorage
     timestamp: number,
     interval: number
   ): Promise<void> {
-    console.log("SCHEDULE", {
-      workflowId: transaction.modelId,
-      transactionId: transaction.transactionId,
-      stepId: step.id,
-      delay: interval > 0 ? interval * 1000 : undefined,
-      jobId: this.getJobId(JobType.RETRY, transaction, step),
-      removeOnComplete: true,
-    })
-
     await this.queue.add(
       JobType.RETRY,
       {
