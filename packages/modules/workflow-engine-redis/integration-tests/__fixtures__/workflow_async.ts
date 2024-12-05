@@ -1,7 +1,6 @@
 import {
   createStep,
   createWorkflow,
-  parallelize,
   StepResponse,
   WorkflowResponse,
 } from "@medusajs/framework/workflows-sdk"
@@ -13,8 +12,11 @@ const step_1_background = createStep(
     async: true,
   },
   jest.fn(async (input) => {
-    await setTimeout(Math.random() * 300)
+    const rdn = Math.random() * 3000
+    console.log("step_1_background", rdn)
+    await setTimeout(rdn)
 
+    console.log("DONE", input)
     return new StepResponse(input)
   })
 )
@@ -35,6 +37,7 @@ createWorkflow(
     name: "workflow_async_background",
   },
   function (input) {
+    /*
     const [ret] = parallelize(
       nestedWorkflow
         .runAsStep({
@@ -57,6 +60,11 @@ createWorkflow(
         })
         .config({ name: "step_sub_flow_4" })
     )
+    
+    */
+    const ret = nestedWorkflow.runAsStep({
+      input,
+    })
 
     return new WorkflowResponse(ret)
   }

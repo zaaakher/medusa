@@ -150,6 +150,7 @@ export class WorkflowOrchestratorService {
     const metadata = transaction.flow.metadata
     const { parentStepIdempotencyKey } = metadata ?? {}
 
+    console.log("TRIGGER PARENT STEP", parentStepIdempotencyKey)
     if (parentStepIdempotencyKey) {
       const hasFailed = [
         TransactionState.REVERTED,
@@ -160,11 +161,17 @@ export class WorkflowOrchestratorService {
         await this.setStepFailure({
           idempotencyKey: parentStepIdempotencyKey,
           stepResponse: result,
+          options: {
+            logOnError: true,
+          },
         })
       } else {
         await this.setStepSuccess({
           idempotencyKey: parentStepIdempotencyKey,
           stepResponse: result,
+          options: {
+            logOnError: true,
+          },
         })
       }
     }
@@ -352,6 +359,8 @@ export class WorkflowOrchestratorService {
       response: stepResponse,
       container: container ?? this.container_,
     })
+
+    console.log("ASYNC CONTINUATION", ret.transaction.hasFinished())
 
     if (ret.transaction.hasFinished()) {
       const { result, errors } = ret
@@ -652,10 +661,6 @@ export class WorkflowOrchestratorService {
         await notify({ eventType: "onCompensateBegin" })
       },
       onFinish: async ({ transaction, result, errors }) => {
-        console.log(
-          "----------------------ON FINISH CALLED ----",
-          transaction.getFlow()
-        )
         customEventHandlers?.onFinish?.({ transaction, result, errors })
       },
 
