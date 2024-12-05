@@ -5,7 +5,6 @@ import {
   StepResponse,
   WorkflowResponse,
 } from "@medusajs/framework/workflows-sdk"
-import { setTimeout } from "timers/promises"
 
 const step_1_background = createStep(
   {
@@ -13,7 +12,6 @@ const step_1_background = createStep(
     async: true,
   },
   jest.fn(async (input) => {
-    console.log("DONE", input)
     return new StepResponse(input)
   })
 )

@@ -36,13 +36,17 @@ const subWorkflow = createWorkflow(
 
 createWorkflow("wf-when", function (input: { callSubFlow: boolean }) {
   step1()
-  const subWorkflowRes = when({ input }, ({ input }) => {
+  const subWorkflowRes = when("sub-flow", { input }, ({ input }) => {
     return input.callSubFlow
   }).then(() => {
-    return subWorkflow.runAsStep({
+    const res = subWorkflow.runAsStep({
       input: "hi from outside",
     })
-  })
 
-  return new WorkflowResponse(step3(subWorkflowRes!.result))
+    return {
+      result: res,
+    }
+  }) as any
+
+  return new WorkflowResponse(step3(subWorkflowRes.result))
 })
