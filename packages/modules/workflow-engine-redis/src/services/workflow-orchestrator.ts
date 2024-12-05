@@ -9,6 +9,7 @@ import {
 import {
   ContainerLike,
   Context,
+  Logger,
   MedusaContainer,
 } from "@medusajs/framework/types"
 import {
@@ -24,6 +25,7 @@ import {
   ReturnWorkflow,
 } from "@medusajs/framework/workflows-sdk"
 import Redis from "ioredis"
+import { setTimeout } from "timers"
 import { ulid } from "ulid"
 import type { RedisDistributedTransactionStorage } from "../utils"
 
@@ -92,6 +94,8 @@ export class WorkflowOrchestratorService {
   private subscribers: Subscribers = new Map()
   private activeStepsCount: number = 0
 
+  readonly #logger: Logger
+
   protected redisDistributedTransactionStorage_: RedisDistributedTransactionStorage
 
   constructor({
@@ -111,6 +115,9 @@ export class WorkflowOrchestratorService {
     this.container_ = sharedContainer
     this.redisPublisher = redisPublisher
     this.redisSubscriber = redisSubscriber
+
+    this.#logger =
+      this.container_.resolve("logger", { allowUnregistered: true }) ?? console
 
     redisDistributedTransactionStorage.setWorkflowOrchestratorService(this)
 
@@ -150,7 +157,6 @@ export class WorkflowOrchestratorService {
     const metadata = transaction.flow.metadata
     const { parentStepIdempotencyKey } = metadata ?? {}
 
-    console.log("TRIGGER PARENT STEP", parentStepIdempotencyKey)
     if (parentStepIdempotencyKey) {
       const hasFailed = [
         TransactionState.REVERTED,
@@ -217,7 +223,7 @@ export class WorkflowOrchestratorService {
       throw new Error(`Workflow with id "${workflowId}" not found.`)
     }
 
-    const originalOnFinishHandler = events.onFinish
+    const originalOnFinishHandler = events.onFinish!
     delete events.onFinish
 
     const ret = await exportedWorkflow.run({
@@ -249,23 +255,13 @@ export class WorkflowOrchestratorService {
     if (hasFinished) {
       const { result, errors } = ret
 
-      await this.notify({
-        eventType: "onFinish",
-        workflowId,
-        transactionId: context.transactionId,
+      await originalOnFinishHandler({
+        transaction: ret.transaction,
         result,
         errors,
       })
 
       await this.triggerParentStep(ret.transaction, result)
-
-      if (originalOnFinishHandler) {
-        await originalOnFinishHandler({
-          transaction: ret.transaction,
-          result,
-          errors,
-        })
-      }
     }
 
     if (throwOnError && ret.thrownError) {
@@ -346,7 +342,7 @@ export class WorkflowOrchestratorService {
       workflowId,
     })
 
-    const originalOnFinishHandler = events.onFinish
+    const originalOnFinishHandler = events.onFinish!
     delete events.onFinish
 
     const ret = await exportedWorkflow.registerStepSuccess({
@@ -360,28 +356,16 @@ export class WorkflowOrchestratorService {
       container: container ?? this.container_,
     })
 
-    console.log("ASYNC CONTINUATION", ret.transaction.hasFinished())
-
     if (ret.transaction.hasFinished()) {
       const { result, errors } = ret
 
-      await this.notify({
-        eventType: "onFinish",
-        workflowId,
-        transactionId,
+      await originalOnFinishHandler({
+        transaction: ret.transaction,
         result,
         errors,
       })
 
       await this.triggerParentStep(ret.transaction, result)
-
-      if (originalOnFinishHandler) {
-        await originalOnFinishHandler({
-          transaction: ret.transaction,
-          result,
-          errors,
-        })
-      }
     }
 
     if (throwOnError && ret.thrownError) {
@@ -429,7 +413,7 @@ export class WorkflowOrchestratorService {
       workflowId,
     })
 
-    const originalOnFinishHandler = events.onFinish
+    const originalOnFinishHandler = events.onFinish!
     delete events.onFinish
 
     const ret = await exportedWorkflow.registerStepFailure({
@@ -446,23 +430,13 @@ export class WorkflowOrchestratorService {
     if (ret.transaction.hasFinished()) {
       const { result, errors } = ret
 
-      await this.notify({
-        eventType: "onFinish",
-        workflowId,
-        transactionId,
+      await originalOnFinishHandler({
+        transaction: ret.transaction,
         result,
         errors,
       })
 
       await this.triggerParentStep(ret.transaction, result)
-
-      if (originalOnFinishHandler) {
-        await originalOnFinishHandler({
-          transaction: ret.transaction,
-          result,
-          errors,
-        })
-      }
     }
 
     if (throwOnError && ret.thrownError) {
@@ -560,7 +534,6 @@ export class WorkflowOrchestratorService {
 
     if (publish) {
       const channel = this.getChannelName(options.workflowId)
-
       const message = JSON.stringify({
         instanceId: this.instanceId,
         data: options,
@@ -583,7 +556,7 @@ export class WorkflowOrchestratorService {
 
     const notifySubscribers = (handlers: SubscriberHandler[]) => {
       handlers.forEach((handler) => {
-        handler({
+        const args = {
           eventType,
           workflowId,
           transactionId,
@@ -591,7 +564,19 @@ export class WorkflowOrchestratorService {
           response,
           result,
           errors,
-        })
+        }
+        const isPromise = "then" in handler
+        if (isPromise) {
+          ;(handler(args) as unknown as Promise<any>).catch((e) => {
+            this.#logger.error(e)
+          })
+        } else {
+          try {
+            handler(args)
+          } catch (e) {
+            this.#logger.error(e)
+          }
+        }
       })
     }
 
@@ -662,6 +647,7 @@ export class WorkflowOrchestratorService {
       },
       onFinish: async ({ transaction, result, errors }) => {
         customEventHandlers?.onFinish?.({ transaction, result, errors })
+        await notify({ eventType: "onFinish" })
       },
 
       onStepBegin: async ({ step, transaction }) => {

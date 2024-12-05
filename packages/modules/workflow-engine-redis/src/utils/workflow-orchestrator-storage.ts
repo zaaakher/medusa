@@ -95,7 +95,10 @@ export class RedisDistributedTransactionStorage
           )
         }
       },
-      { connection: this.redisWorkerConnection }
+      {
+        connection:
+          this.redisWorkerConnection /*, runRetryDelay: 100000 for tests */,
+      }
     )
   }
 
@@ -128,7 +131,6 @@ export class RedisDistributedTransactionStorage
   }
 
   private async executeTransaction(workflowId: string, transactionId: string) {
-    console.log("CONTINUE", workflowId, transactionId)
     return await this.workflowOrchestratorService_.run(workflowId, {
       transactionId,
       logOnError: true,
