@@ -120,17 +120,12 @@ export const sidebar = numberSidebarItems(
           children: [
             {
               type: "link",
-              title: "Define Link",
+              title: "Link Brands and Products",
               path: "/learn/customization/extend-features/define-link",
             },
             {
               type: "link",
-              title: "Create Links Between Records",
-              path: "/learn/customization/extend-features/create-links",
-            },
-            {
-              type: "link",
-              title: "Extend Route",
+              title: "Extend Core Flow",
               path: "/learn/customization/extend-features/extend-create-product",
             },
             {
@@ -369,6 +364,11 @@ export const sidebar = numberSidebarItems(
               type: "link",
               path: "/learn/advanced-development/data-models/index",
               title: "Define Index",
+            },
+            {
+              type: "link",
+              path: "/learn/advanced-development/data-models/check-constraints",
+              title: "Check Constraints",
             },
             {
               type: "link",

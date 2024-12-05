@@ -650,7 +650,7 @@ export const generatedSidebar = [
                     "isPathHref": true,
                     "type": "category",
                     "title": "Data Models",
-                    "autogenerate_path": "/references/auth_models/classes",
+                    "autogenerate_path": "/references/auth_models/variables",
                     "children": [
                       {
                         "loaded": true,
@@ -3587,6 +3587,14 @@ export const generatedSidebar = [
                         "loaded": true,
                         "isPathHref": true,
                         "type": "link",
+                        "path": "/references/order/registerOrderChange",
+                        "title": "registerOrderChange",
+                        "children": []
+                      },
+                      {
+                        "loaded": true,
+                        "isPathHref": true,
+                        "type": "link",
                         "path": "/references/order/registerShipment",
                         "title": "registerShipment",
                         "children": []
@@ -5197,7 +5205,7 @@ export const generatedSidebar = [
                     "type": "category",
                     "title": "Data Models",
                     "hasTitleStyling": true,
-                    "autogenerate_path": "/references/pricing_models/classes",
+                    "autogenerate_path": "/references/pricing_models/variables",
                     "children": [
                       {
                         "loaded": true,
@@ -5934,14 +5942,6 @@ export const generatedSidebar = [
                         "loaded": true,
                         "isPathHref": true,
                         "type": "link",
-                        "path": "/references/product/models/Image",
-                        "title": "Image",
-                        "children": []
-                      },
-                      {
-                        "loaded": true,
-                        "isPathHref": true,
-                        "type": "link",
                         "path": "/references/product/models/Product",
                         "title": "Product",
                         "children": []
@@ -5960,6 +5960,14 @@ export const generatedSidebar = [
                         "type": "link",
                         "path": "/references/product/models/ProductCollection",
                         "title": "ProductCollection",
+                        "children": []
+                      },
+                      {
+                        "loaded": true,
+                        "isPathHref": true,
+                        "type": "link",
+                        "path": "/references/product/models/ProductImage",
+                        "title": "ProductImage",
                         "children": []
                       },
                       {
@@ -7706,7 +7714,7 @@ export const generatedSidebar = [
                     "type": "category",
                     "title": "Data Models",
                     "hasTitleStyling": true,
-                    "autogenerate_path": "/references/user_models/classes",
+                    "autogenerate_path": "/references/user_models/variables",
                     "children": [
                       {
                         "loaded": true,
@@ -9925,6 +9933,14 @@ export const generatedSidebar = [
             "type": "link",
             "path": "/references/helper-steps/useRemoteQueryStep",
             "title": "useRemoteQueryStep",
+            "children": []
+          },
+          {
+            "loaded": true,
+            "isPathHref": true,
+            "type": "link",
+            "path": "/references/helper-steps/validatePresenceOfStep",
+            "title": "validatePresenceOfStep",
             "children": []
           }
         ]
