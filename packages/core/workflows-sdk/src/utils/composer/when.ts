@@ -1,4 +1,4 @@
-import { OrchestrationUtils } from "@medusajs/utils"
+import { isDefined, OrchestrationUtils } from "@medusajs/utils"
 import { ulid } from "ulid"
 import { createStep } from "./create-step"
 import { StepResponse } from "./helpers/step-response"
@@ -39,7 +39,7 @@ export function when(...args) {
   if (args.length === 2) {
     condition = input
     input = name
-    name = "when-then-" + ulid()
+    name = undefined
   }
 
   if (typeof condition !== "function") {
@@ -68,7 +68,21 @@ export function when(...args) {
       const applyCondition =
         global[OrchestrationUtils.SymbolMedusaWorkflowComposerCondition].steps
 
-      if (ret?.__type !== OrchestrationUtils.SymbolWorkflowStep) {
+      if (
+        isDefined(ret) &&
+        ret?.__type !== OrchestrationUtils.SymbolWorkflowStep
+      ) {
+        if (!isDefined(name)) {
+          name = "when-then-" + ulid()
+          const context =
+            global[OrchestrationUtils.SymbolMedusaWorkflowComposerContext]
+
+          console.warn(
+            `${context.workflowId}: "when" name should be defined. A random one will be assigned to it, which is not recommended for production.\n`,
+            condition.toString()
+          )
+        }
+
         const retStep = createStep(
           name,
           ({ input }: { input: any }) => new StepResponse(input)
