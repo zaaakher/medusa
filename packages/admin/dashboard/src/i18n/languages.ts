@@ -23,6 +23,12 @@ import { Language } from "./types"
 
 export const languages: Language[] = [
   {
+    code: "ar",
+    display_name: "عربي",
+    ltr: false,
+    date_locale: ar,
+  },
+  {
     code: "en",
     display_name: "English",
     ltr: true,
