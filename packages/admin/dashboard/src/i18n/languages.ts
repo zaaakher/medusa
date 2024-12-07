@@ -1,12 +1,12 @@
-import { de, enUS, es, fr, it, pl, ptBR, th, tr ,arSA} from "date-fns/locale"
+import { de, enUS, es, fr, it, pl, ptBR, th, tr ,ar} from "date-fns/locale"
 import { Language } from "./types"
 
 export const languages: Language[] = [
   {
     code: "ar",
-    display_name: "عربي",
-    ltr: true,
-    date_locale: arSA,
+    display_name: "العربية",
+    ltr: false,
+    date_locale: ar,
   },
   {
     code: "en",
