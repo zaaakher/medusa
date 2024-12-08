@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import {
   de,
   enUS,
@@ -19,12 +20,19 @@ import {
   cs,
   ru
 } from "date-fns/locale"
+=======
+import { de, enUS, es, fr, it, pl, ptBR, th, tr ,ar} from "date-fns/locale"
+>>>>>>> b4c4f36c2c (feat(dashboard): set `ltr` to false + add changeset)
 import { Language } from "./types"
 
 export const languages: Language[] = [
   {
     code: "ar",
+<<<<<<< HEAD
     display_name: "عربي",
+=======
+    display_name: "العربية",
+>>>>>>> b4c4f36c2c (feat(dashboard): set `ltr` to false + add changeset)
     ltr: false,
     date_locale: ar,
   },
