@@ -9137,7 +9137,7 @@ export const generatedSidebar = [
         "isPathHref": true,
         "type": "link",
         "path": "/nextjs-starter",
-        "title": "Next.js Starter",
+        "title": "Next.js Starter Storefront",
         "children": []
       }
     ]
