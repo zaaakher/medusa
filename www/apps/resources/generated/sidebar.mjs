@@ -337,7 +337,7 @@ export const generatedSidebar = [
                     "type": "category",
                     "title": "Data Models",
                     "hasTitleStyling": true,
-                    "autogenerate_path": "/references/api_key_models/classes",
+                    "autogenerate_path": "/references/api_key_models/variables",
                     "children": [
                       {
                         "loaded": true,
@@ -1168,6 +1168,14 @@ export const generatedSidebar = [
                         "path": "/references/cart/updateLineItems",
                         "title": "updateLineItems",
                         "children": []
+                      },
+                      {
+                        "loaded": true,
+                        "isPathHref": true,
+                        "type": "link",
+                        "path": "/references/cart/updateShippingMethods",
+                        "title": "updateShippingMethods",
+                        "children": []
                       }
                     ]
                   }
@@ -1187,7 +1195,7 @@ export const generatedSidebar = [
                     "isPathHref": true,
                     "type": "category",
                     "title": "Data Models",
-                    "autogenerate_path": "/references/cart_models/classes",
+                    "autogenerate_path": "/references/cart_models/variables",
                     "children": [
                       {
                         "loaded": true,
@@ -6789,7 +6797,7 @@ export const generatedSidebar = [
                     "isPathHref": true,
                     "type": "category",
                     "title": "Data Models",
-                    "autogenerate_path": "/references/sales_channel_models/classes",
+                    "autogenerate_path": "/references/sales_channel_models/variables",
                     "children": [
                       {
                         "loaded": true,
@@ -7127,7 +7135,7 @@ export const generatedSidebar = [
                     "isPathHref": true,
                     "type": "category",
                     "title": "Data Models",
-                    "autogenerate_path": "/references/store_models/classes",
+                    "autogenerate_path": "/references/store_models/variables",
                     "children": [
                       {
                         "loaded": true,
@@ -9573,14 +9581,6 @@ export const generatedSidebar = [
                 "type": "link",
                 "path": "/references/workflows/transform",
                 "title": "transform",
-                "children": []
-              },
-              {
-                "loaded": true,
-                "isPathHref": true,
-                "type": "link",
-                "path": "/references/workflows/when",
-                "title": "when",
                 "children": []
               }
             ]
