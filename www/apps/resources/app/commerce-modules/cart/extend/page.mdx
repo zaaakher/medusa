@@ -567,8 +567,8 @@ Next, replace the new `TODO` with the following:
 
 ```ts title="src/workflows/update-custom-from-cart/index.ts"
 const deleted = when(
-  "delete-cart-custom-link"
-    {
+  "delete-cart-custom-link",
+  {
     input,
     carts,
   }, (data) => 

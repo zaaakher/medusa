@@ -542,8 +542,8 @@ Next, replace the `TODO` with the following:
 
 ```ts title="src/workflows/update-custom-from-customer/index.ts"
 const created = when(
-  "create-customer-custom-link"
-    {
+  "create-customer-custom-link",
+  {
     input,
     customers,
   }, (data) => 
