@@ -9309,6 +9309,14 @@ export const generatedSidebar = [
                 "path": "/troubleshooting/dist-imports",
                 "title": "Importing from /dist",
                 "children": []
+              },
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "link",
+                "path": "/troubleshooting/workflow-errors",
+                "title": "Workflow Errors",
+                "children": []
               }
             ]
           },
