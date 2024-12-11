@@ -2296,8 +2296,7 @@ const workflow = createWorkflow(
         return input.is_active
       }
     ).then(() => {
-      const stepResult = isActiveStep()
-      return stepResult
+      return isActiveStep()
     })
 
     // executed without condition
