@@ -1669,11 +1669,11 @@ export const createDpoWorkflowHighlights = [
   ["27", "completeCartWorkflow", "Create an order for the cart."],
   ["33", "useQueryGraphStep", "Retrieve the order's items and their associated variants and linked digital products."],
   ["57", "when", "Check whether the order has any digital products."],
-  ["60", "then", "Perform the callback function if an order has digital products."],
-  ["63", "createDigitalProductOrderStep", "Create the digital product order."],
-  ["67", "createRemoteLinkStep", "Link the digital product order to the Medusa order."],
-  ["76", "createOrderFulfillmentWorkflow", "Create a fulfillment for the digital products in the order."],
-  ["90", "emitEventStep", "Emit the `digital_product_order.created` event."]
+  ["63", "then", "Perform the callback function if an order has digital products."],
+  ["66", "createDigitalProductOrderStep", "Create the digital product order."],
+  ["70", "createRemoteLinkStep", "Link the digital product order to the Medusa order."],
+  ["79", "createOrderFulfillmentWorkflow", "Create a fulfillment for the digital products in the order."],
+  ["93", "emitEventStep", "Emit the `digital_product_order.created` event."]
 ]
 
 ```ts title="src/workflows/create-digital-product-order/index.ts" highlights={createDpoWorkflowHighlights} collapsibleLines="1-17" expandMoreLabel="Show Imports"
@@ -1733,10 +1733,13 @@ const createDigitalProductOrderWorkflow = createWorkflow(
       }
     )
 
-    const digital_product_order = when(itemsWithDigitalProducts, (itemsWithDigitalProducts) => {
-      return itemsWithDigitalProducts.length
-    })
-    .then(() => {
+    const digital_product_order = when(
+      "create-digital-product-order-condition", 
+      itemsWithDigitalProducts, 
+      (itemsWithDigitalProducts) => {
+        return itemsWithDigitalProducts.length
+      }
+    ).then(() => {
       const { 
         digital_product_order,
       } = createDigitalProductOrderStep({

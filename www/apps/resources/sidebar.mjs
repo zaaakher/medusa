@@ -2249,6 +2249,11 @@ export const sidebar = sidebarAttachHrefCommonOptions([
                 path: "/troubleshooting/dist-imports",
                 title: "Importing from /dist",
               },
+              {
+                type: "link",
+                path: "/troubleshooting/workflow-errors",
+                title: "Workflow Errors",
+              },
             ],
           },
           {

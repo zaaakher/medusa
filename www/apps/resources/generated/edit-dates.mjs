@@ -126,7 +126,7 @@ export const generatedEditDates = {
   "app/nextjs-starter/page.mdx": "2024-12-10T08:44:33.783Z",
   "app/recipes/b2b/page.mdx": "2024-10-03T13:07:44.153Z",
   "app/recipes/commerce-automation/page.mdx": "2024-10-16T08:52:01.585Z",
-  "app/recipes/digital-products/examples/standard/page.mdx": "2024-12-09T16:18:45.973Z",
+  "app/recipes/digital-products/examples/standard/page.mdx": "2024-12-11T08:46:17.435Z",
   "app/recipes/digital-products/page.mdx": "2024-10-03T13:07:44.147Z",
   "app/recipes/ecommerce/page.mdx": "2024-10-22T11:01:01.218Z",
   "app/recipes/integrate-ecommerce-stack/page.mdx": "2024-12-09T13:03:35.846Z",
@@ -5687,5 +5687,6 @@ export const generatedEditDates = {
   "references/modules/sales_channel_models/page.mdx": "2024-12-10T14:55:13.205Z",
   "references/types/DmlTypes/types/types.DmlTypes.KnownDataTypes/page.mdx": "2024-12-10T14:54:55.434Z",
   "references/types/DmlTypes/types/types.DmlTypes.RelationshipTypes/page.mdx": "2024-12-10T14:54:55.435Z",
-  "app/recipes/commerce-automation/restock-notification/page.mdx": "2024-12-10T14:15:39.178Z"
+  "app/recipes/commerce-automation/restock-notification/page.mdx": "2024-12-11T08:47:27.471Z",
+  "app/troubleshooting/workflow-errors/page.mdx": "2024-12-11T08:44:36.598Z"
 }
