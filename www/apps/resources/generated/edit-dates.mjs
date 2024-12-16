@@ -2182,7 +2182,7 @@ export const generatedEditDates = {
   "app/commerce-modules/api-key/links-to-other-modules/page.mdx": "2024-10-08T08:05:36.596Z",
   "app/commerce-modules/cart/extend/page.mdx": "2024-12-11T09:05:37.041Z",
   "app/commerce-modules/cart/links-to-other-modules/page.mdx": "2024-10-08T08:22:35.190Z",
-  "app/commerce-modules/customer/extend/page.mdx": "2024-12-11T09:05:35.368Z",
+  "app/commerce-modules/customer/extend/page.mdx": "2024-12-16T14:11:47.517Z",
   "app/commerce-modules/fulfillment/links-to-other-modules/page.mdx": "2024-10-08T14:58:24.935Z",
   "app/commerce-modules/inventory/links-to-other-modules/page.mdx": "2024-10-08T15:18:30.109Z",
   "app/commerce-modules/pricing/links-to-other-modules/page.mdx": "2024-10-09T13:51:49.986Z",
