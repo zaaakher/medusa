@@ -2172,7 +2172,7 @@ export const generatedEditDates = {
   "app/admin-components/components/header/page.mdx": "2024-10-07T11:16:47.407Z",
   "app/admin-components/components/json-view-section/page.mdx": "2024-10-07T11:15:58.833Z",
   "app/admin-components/components/section-row/page.mdx": "2024-10-07T11:15:58.832Z",
-  "app/admin-components/components/table/page.mdx": "2024-10-07T11:15:58.833Z",
+  "app/admin-components/components/table/page.mdx": "2024-12-16T15:28:59.428Z",
   "app/admin-components/page.mdx": "2024-10-07T11:09:49.493Z",
   "app/admin-components/layouts/single-column/page.mdx": "2024-10-07T11:16:06.435Z",
   "app/admin-components/layouts/two-column/page.mdx": "2024-10-07T11:16:10.092Z",
