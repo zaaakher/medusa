@@ -53,7 +53,7 @@ export const generatedEditDates = {
   "app/commerce-modules/payment/payment/page.mdx": "2024-10-09T10:59:08.463Z",
   "app/commerce-modules/payment/payment-collection/page.mdx": "2024-10-09T10:56:49.510Z",
   "app/commerce-modules/payment/payment-flow/page.mdx": "2024-10-09T11:18:53.332Z",
-  "app/commerce-modules/payment/payment-provider/stripe/page.mdx": "2024-12-12T12:46:28.557Z",
+  "app/commerce-modules/payment/payment-provider/stripe/page.mdx": "2024-12-16T13:21:03.554Z",
   "app/commerce-modules/payment/payment-provider/page.mdx": "2024-10-09T11:07:27.269Z",
   "app/commerce-modules/payment/payment-session/page.mdx": "2024-10-09T10:58:00.960Z",
   "app/commerce-modules/payment/webhook-events/page.mdx": "2024-11-19T11:45:02.167Z",
