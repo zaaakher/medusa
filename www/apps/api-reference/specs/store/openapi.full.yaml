@@ -5927,7 +5927,7 @@ components:
         - id
       properties:
         promotion:
-          $ref: '#/components/schemas/AdminPromotion'
+          type: object
         target_rules:
           type: array
           description: The application method's target rules.
@@ -14220,7 +14220,7 @@ components:
         - deleted_at
       properties:
         application_method:
-          type: object
+          $ref: '#/components/schemas/AdminApplicationMethod'
         rules:
           type: array
           description: The promotion's rules.
