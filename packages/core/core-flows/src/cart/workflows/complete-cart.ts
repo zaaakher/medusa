@@ -18,9 +18,9 @@ import {
 import {
   createRemoteLinkStep,
   emitEventStep,
+  useQueryGraphStep,
   useRemoteQueryStep,
 } from "../../common"
-import { useQueryStep } from "../../common/steps/use-query"
 import { createOrdersStep } from "../../order/steps/create-orders"
 import { authorizePaymentSessionStep } from "../../payment/steps/authorize-payment-session"
 import { registerUsageStep } from "../../promotion/steps/register-usage"
@@ -55,7 +55,7 @@ export const completeCartWorkflow = createWorkflow(
   (
     input: WorkflowData<CompleteCartWorkflowInput>
   ): WorkflowResponse<{ id: string }> => {
-    const orderCart = useQueryStep({
+    const orderCart = useQueryGraphStep({
       entity: "order_cart",
       fields: ["cart_id", "order_id"],
       filters: { cart_id: input.id },
