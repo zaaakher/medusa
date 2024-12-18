@@ -94,7 +94,11 @@ export const addShippingMethodToCartWorkflow = createWorkflow(
     )
 
     const shippingMethodInput = transform(
-      { input, shippingOptions, validatedMethodData },
+      {
+        input,
+        shippingOptions,
+        validatedMethodData,
+      },
       (data) => {
         const options = (data.input.options ?? []).map((option) => {
           const shippingOption = data.shippingOptions.find(
