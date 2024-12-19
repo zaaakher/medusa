@@ -7215,11 +7215,13 @@ __metadata:
   dependencies:
     "@types/node": ^20.11.20
     docs-utils: "*"
-    remark-rehype-plugins: "*"
     rimraf: ^5.0.5
+    tags: "*"
     tsconfig: "*"
     types: "*"
     typescript: ^5.3.3
+  peerDependencies:
+    docs-utils: "*"
   languageName: unknown
   linkType: soft
 
@@ -14643,20 +14645,14 @@ __metadata:
   dependencies:
     "@cloudinary/url-gen": ^1.17.0
     "@types/node": ^20.11.20
-    docs-ui: "*"
     docs-utils: "*"
-    remark-frontmatter: ^5.0.0
-    remark-parse: ^11.0.0
-    remark-stringify: ^11.0.0
     rimraf: ^5.0.5
-    to-vfile: ^8.0.0
     tsconfig: "*"
     types: "*"
     typescript: ^5.3.3
     unified: ^11.0.4
     unist-builder: 3.0.0
     unist-util-visit: 4.1.2
-    vfile-matter: ^5.0.0
   languageName: unknown
   linkType: soft
 

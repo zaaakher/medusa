@@ -1,6 +1,6 @@
 import { statSync, readdirSync } from "fs"
 import path from "path"
-import { getFileSlug } from "../../../packages/docs-utils/dist"
+import { getFileSlug } from "docs-utils"
 
 const monoRepoPath = path.resolve("..", "..", "..")
 

@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "turbo run build",
-    "build:docs": "turbo run build --filter=docs-v2",
+    "build:docs": "turbo run build --filter=book",
     "build:resources": "turbo run build --filter=resources",
     "build:user-guide": "turbo run build --filter=user-guide",
     "build:packages": "turbo run build --filter='./packages/*'",

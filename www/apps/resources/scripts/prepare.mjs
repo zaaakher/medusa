@@ -6,11 +6,11 @@ import { sidebar } from "../sidebar.mjs"
 import path from "path"
 
 async function main() {
+  await generateTags(path.resolve("..", "..", "packages", "tags"))
   await generateSidebar(sidebar)
   await generateSlugChanges()
   await generateFilesMap()
   await generateEditedDates()
-  await generateTags(path.resolve("..", "..", "packages", "tags"))
 }
 
 void main()

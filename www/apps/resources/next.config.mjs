@@ -126,16 +126,12 @@ const nextConfig = {
       },
     ]
   },
-  // Redirects shouldn't be necessary anymore since we have remark / rehype
-  // plugins that fix links. But leaving this here in case we need it again.
-  // async redirects() {
-  //   // redirect original file paths to the rewrite
-  //   return slugChanges.map((item) => ({
-  //     source: item.origSlug,
-  //     destination: item.newSlug,
-  //     permanent: true,
-  //   }))
-  // },
+  experimental: {
+    outputFileTracingExcludes: {
+      "*": ["node_modules/@medusajs/icons"],
+    },
+  },
+  optimizePackageImports: ["@medusajs/icons", "@medusajs/ui"],
 }
 
 const withBundleAnalyzer = bundleAnalyzer({

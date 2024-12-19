@@ -1,4 +1,4 @@
-import { getFrontMatter, findPageTitle } from "../../../docs-utils/dist/index.js"
+import { getFrontMatter, findPageTitle } from "docs-utils"
 import { ItemsToAdd, sidebarAttachHrefCommonOptions } from "../index.js"
 import { InteractiveSidebarItem } from "types"
 

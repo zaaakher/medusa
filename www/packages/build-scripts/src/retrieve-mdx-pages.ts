@@ -1,6 +1,6 @@
 import { readdirSync } from "fs"
 import path from "path"
-import { getFileSlugSync } from "../../docs-utils/dist/index.js"
+import { getFileSlugSync } from "docs-utils"
 
 type Options = {
   basePath: string
