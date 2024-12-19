@@ -1,5 +1,5 @@
 {
-  "name": "types",
+  "name": "docs-utils",
   "version": "0.0.0",
   "private": true,
   "license": "MIT",
@@ -15,10 +15,6 @@
       "import": {
         "types": "./dist/index.d.ts",
         "default": "./dist/index.js"
-      },
-      "require": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
       }
     }
   },
@@ -31,16 +27,22 @@
     "clean": "rimraf dist",
     "watch": "tsc --watch"
   },
+  "dependencies": {
+    "remark-frontmatter": "^5.0.0",
+    "remark-parse": "^11.0.0",
+    "remark-stringify": "^11.0.0",
+    "to-vfile": "^8.0.0",
+    "unified": "^11.0.4",
+    "vfile-matter": "^5.0.0"
+  },
   "devDependencies": {
     "@types/node": "^20.11.20",
     "rimraf": "^5.0.5",
     "tsconfig": "*",
+    "types": "*",
     "typescript": "^5.3.3"
   },
   "engines": {
     "node": ">=18.17.0"
-  },
-  "dependencies": {
-    "@medusajs/icons": "^2.0.0"
   }
 }

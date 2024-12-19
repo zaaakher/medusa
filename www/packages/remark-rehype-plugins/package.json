@@ -24,10 +24,12 @@
   ],
   "scripts": {
     "build": "yarn clean && tsc",
-    "clean": "rimraf dist"
+    "clean": "rimraf dist",
+    "watch": "tsc --watch"
   },
   "dependencies": {
     "@cloudinary/url-gen": "^1.17.0",
+    "docs-utils": "*",
     "remark-frontmatter": "^5.0.0",
     "remark-parse": "^11.0.0",
     "remark-stringify": "^11.0.0",

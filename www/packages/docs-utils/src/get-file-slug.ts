@@ -1,12 +1,12 @@
-import { getFrontMatterUtil } from "./get-front-matter.js"
 import { matter } from "vfile-matter"
 import { readSync } from "to-vfile"
-import { FrontMatter } from "../types/index.js"
+import { FrontMatter } from "types"
+import { getFrontMatter } from "./get-front-matter.js"
 
-export async function getFileSlugUtil(
+export async function getFileSlug(
   filePath: string
 ): Promise<string | undefined> {
-  const fileFrontmatter = await getFrontMatterUtil(filePath)
+  const fileFrontmatter = await getFrontMatter(filePath)
 
   if (fileFrontmatter.slug) {
     // add to slugs array
@@ -14,7 +14,7 @@ export async function getFileSlugUtil(
   }
 }
 
-export function getFileSlugSyncUtil(filePath: string): string | undefined {
+export function getFileSlugSync(filePath: string): string | undefined {
   const content = readSync(filePath)
 
   matter(content)

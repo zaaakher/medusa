@@ -1,14 +1,14 @@
 {
-  "extends": ["tsconfig/base.json"],
+  "extends": "tsconfig/base.json",
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
     "tsBuildInfoFile": "./dist/.tsbuildinfo-client",
     "noEmit": false,
     "lib": ["es2022"],
-    "target": "es2022",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
+    "target": "ESNext",
     "declaration": true,
     "declarationMap": true,
     "esModuleInterop": true,
@@ -16,5 +16,10 @@
     "skipLibCheck": true,
     "resolveJsonModule": true
   },
-  "include": ["src"]
+  "include": ["src"],
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node",
+    "transpileOnly": true
+  }
 }

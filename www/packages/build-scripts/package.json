@@ -24,13 +24,15 @@
   ],
   "scripts": {
     "build": "yarn clean && tsc",
-    "clean": "rimraf dist"
+    "clean": "rimraf dist",
+    "watch": "tsc --watch"
   },
   "dependencies": {
     "remark-rehype-plugins": "*"
   },
   "devDependencies": {
     "@types/node": "^20.11.20",
+    "docs-utils": "*",
     "rimraf": "^5.0.5",
     "tsconfig": "*",
     "types": "*",
