@@ -401,7 +401,7 @@ export class Store {
      * Learn more about the `fields` property in the [API reference](https://docs.medusajs.com/api/store#select-fields-and-relations).
      */
     list: async (
-      query?: HttpTypes.StoreProductParams,
+      query?: HttpTypes.StoreProductListParams,
       headers?: ClientHeaders
     ) => {
       return this.client.fetch<HttpTypes.StoreProductListResponse>(
@@ -451,7 +451,7 @@ export class Store {
      */
     retrieve: async (
       id: string,
-      query?: SelectParams,
+      query?: HttpTypes.StoreProductParams,
       headers?: ClientHeaders
     ) => {
       return this.client.fetch<HttpTypes.StoreProductResponse>(
