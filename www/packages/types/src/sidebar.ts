@@ -12,6 +12,7 @@ export type SidebarItemCommon = {
   loaded?: boolean
   additionalElms?: React.ReactNode
   chapterTitle?: string
+  hideChildren?: boolean
 }
 
 export type SidebarItemLink = SidebarItemCommon & {
