@@ -280,15 +280,22 @@ export class MarkdownTheme extends Theme {
   }
 
   getRelativeUrl(absolute: string) {
+    let url = ""
     if (MarkdownTheme.URL_PREFIX.test(absolute)) {
-      return absolute
+      url = absolute
     } else {
       const relative = path.relative(
         path.dirname(this.location),
         path.dirname(absolute)
       )
-      return path.join(relative, path.basename(absolute)).replace(/\\/g, "/")
+      url = path.join(relative, path.basename(absolute)).replace(/\\/g, "/")
     }
+
+    if (url === `page.${this.mdxOutput ? "mdx" : "md"}`) {
+      url = `./${url}`
+    }
+
+    return url
   }
 
   getReflectionTemplate() {
