@@ -680,14 +680,6 @@
  *             type: string
  *             title: category_id
  *             description: A product category's ID.
- *   - name: currency_code
- *     in: query
- *     description: The currency code to retrieve prices in.
- *     required: false
- *     schema:
- *       type: string
- *       title: currency_code
- *       description: The currency code to retrieve prices in.
  *   - name: variants
  *     in: query
  *     description: Filter the products' variants.
@@ -712,6 +704,22 @@
  *               type: string
  *               title: value
  *               description: Filter by a value of the option.
+ *   - name: country_code
+ *     in: query
+ *     description: The product's country code.
+ *     required: false
+ *     schema:
+ *       type: string
+ *       title: country_code
+ *       description: The product's country code.
+ *   - name: cart_id
+ *     in: query
+ *     description: The product's cart id.
+ *     required: false
+ *     schema:
+ *       type: string
+ *       title: cart_id
+ *       description: The product's cart id.
  * x-codeSamples:
  *   - lang: Shell
  *     label: cURL

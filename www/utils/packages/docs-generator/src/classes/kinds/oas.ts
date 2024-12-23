@@ -67,6 +67,7 @@ class OasKindGenerator extends FunctionKindGenerator {
     "AuthenticatedMedusaRequest",
     "MedusaStoreRequest",
   ]
+  readonly REQUEST_CHECK_QUERY_ARGS = ["RequestWithContext"]
   // as it's not always possible to detect authenticated request
   // use this to override the default detection logic.
   readonly AUTH_REQUESTS: AuthRequests[] = [
@@ -1081,17 +1082,26 @@ class OasKindGenerator extends FunctionKindGenerator {
 
     const requestTypeArguments =
       requestType.typeArguments || requestType.aliasTypeArguments
+    const shouldCheckTypeArgumentForQuery =
+      this.REQUEST_CHECK_QUERY_ARGS.includes(
+        node.parameters[0].type.typeName.getText()
+      )
 
-    if (!requestTypeArguments || requestTypeArguments.length < 2) {
+    if (
+      !requestTypeArguments ||
+      (requestTypeArguments.length < 2 && !shouldCheckTypeArgumentForQuery)
+    ) {
       return {
         queryParameters,
         requestSchema,
       }
     }
 
+    const checkQueryIndex = requestTypeArguments.length >= 2 ? 1 : 0
     // Not all routes support a second type argument yet,
     // so the query param may be passed in the first type argument
-    const hasQueryParams = requestTypeArguments[1].getProperties().length > 0
+    const hasQueryParams =
+      requestTypeArguments[checkQueryIndex].getProperties().length > 0
     // Not all routes support a second type argument yet,
     // so we have to support routes that pass the query parameters type
     // in the first type argument
@@ -1103,7 +1113,7 @@ class OasKindGenerator extends FunctionKindGenerator {
     })
     const zodObjectQueryTypeName = getCorrectZodTypeName({
       typeReferenceNode: node.parameters[0].type,
-      itemType: requestTypeArguments[1],
+      itemType: requestTypeArguments[checkQueryIndex],
     })
 
     const requestBodyParameterSchema = this.typeToSchema({
@@ -1118,10 +1128,12 @@ class OasKindGenerator extends FunctionKindGenerator {
     })
     const queryParameterSchema = hasQueryParams
       ? this.typeToSchema({
-          itemType: requestTypeArguments[1],
+          itemType: requestTypeArguments[checkQueryIndex],
           descriptionOptions: {
             parentName: tagName,
-            rawParentName: this.checker.typeToString(requestTypeArguments[1]),
+            rawParentName: this.checker.typeToString(
+              requestTypeArguments[checkQueryIndex]
+            ),
           },
           zodObjectTypeName: zodObjectQueryTypeName,
           context: "query",
