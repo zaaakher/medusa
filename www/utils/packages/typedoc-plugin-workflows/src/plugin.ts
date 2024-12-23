@@ -14,7 +14,7 @@ import {
 } from "typedoc"
 import ts, { SyntaxKind, VariableStatement } from "typescript"
 import { WorkflowManager, WorkflowDefinition } from "@medusajs/orchestration"
-import Helper, { WORKFLOW_AS_STEP_SUFFIX } from "./utils/helper"
+import Helper, { WORKFLOW_AS_STEP_SUFFIX } from "./utils/helper.js"
 import {
   findReflectionInNamespaces,
   isWorkflow,
@@ -23,7 +23,7 @@ import {
   getResolvedResourcesOfStep,
   getUniqueStrArray,
 } from "utils"
-import { StepType } from "./types"
+import { StepType } from "./types.js"
 
 type ParsedStep = {
   stepReflection: DeclarationReflection

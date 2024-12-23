@@ -613,7 +613,8 @@ export const sidebar = sidebarAttachHrefCommonOptions([
                     type: "category",
                     title: "Data Models",
                     hasTitleStyling: true,
-                    autogenerate_path: "/references/fulfillment_models/classes",
+                    autogenerate_path:
+                      "/references/fulfillment_models/variables",
                   },
                 ],
               },

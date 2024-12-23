@@ -42,5 +42,97 @@ export const cart = [
   {
     "title": "Checkout Step 3: Choose Shipping Method",
     "path": "/app/storefront-development/checkout/shipping"
+  },
+  {
+    "title": "addShippingMethodToCartStep",
+    "path": "/references/medusa-workflows/steps/addShippingMethodToCartStep"
+  },
+  {
+    "title": "createCartsStep",
+    "path": "/references/medusa-workflows/steps/createCartsStep"
+  },
+  {
+    "title": "createLineItemAdjustmentsStep",
+    "path": "/references/medusa-workflows/steps/createLineItemAdjustmentsStep"
+  },
+  {
+    "title": "createLineItemsStep",
+    "path": "/references/medusa-workflows/steps/createLineItemsStep"
+  },
+  {
+    "title": "createShippingMethodAdjustmentsStep",
+    "path": "/references/medusa-workflows/steps/createShippingMethodAdjustmentsStep"
+  },
+  {
+    "title": "getLineItemActionsStep",
+    "path": "/references/medusa-workflows/steps/getLineItemActionsStep"
+  },
+  {
+    "title": "removeLineItemAdjustmentsStep",
+    "path": "/references/medusa-workflows/steps/removeLineItemAdjustmentsStep"
+  },
+  {
+    "title": "removeShippingMethodAdjustmentsStep",
+    "path": "/references/medusa-workflows/steps/removeShippingMethodAdjustmentsStep"
+  },
+  {
+    "title": "removeShippingMethodFromCartStep",
+    "path": "/references/medusa-workflows/steps/removeShippingMethodFromCartStep"
+  },
+  {
+    "title": "setTaxLinesForItemsStep",
+    "path": "/references/medusa-workflows/steps/setTaxLinesForItemsStep"
+  },
+  {
+    "title": "updateCartsStep",
+    "path": "/references/medusa-workflows/steps/updateCartsStep"
+  },
+  {
+    "title": "updateLineItemsStep",
+    "path": "/references/medusa-workflows/steps/updateLineItemsStep"
+  },
+  {
+    "title": "addShippingMethodToCartWorkflow",
+    "path": "/references/medusa-workflows/addShippingMethodToCartWorkflow"
+  },
+  {
+    "title": "addToCartWorkflow",
+    "path": "/references/medusa-workflows/addToCartWorkflow"
+  },
+  {
+    "title": "createCartWorkflow",
+    "path": "/references/medusa-workflows/createCartWorkflow"
+  },
+  {
+    "title": "transferCartCustomerWorkflow",
+    "path": "/references/medusa-workflows/transferCartCustomerWorkflow"
+  },
+  {
+    "title": "updateCartPromotionsWorkflow",
+    "path": "/references/medusa-workflows/updateCartPromotionsWorkflow"
+  },
+  {
+    "title": "updateCartWorkflow",
+    "path": "/references/medusa-workflows/updateCartWorkflow"
+  },
+  {
+    "title": "updateLineItemInCartWorkflow",
+    "path": "/references/medusa-workflows/updateLineItemInCartWorkflow"
+  },
+  {
+    "title": "updateTaxLinesWorkflow",
+    "path": "/references/medusa-workflows/updateTaxLinesWorkflow"
+  },
+  {
+    "title": "deleteLineItemsStep",
+    "path": "/references/medusa-workflows/steps/deleteLineItemsStep"
+  },
+  {
+    "title": "updateLineItemsStepWithSelector",
+    "path": "/references/medusa-workflows/steps/updateLineItemsStepWithSelector"
+  },
+  {
+    "title": "deleteLineItemsWorkflow",
+    "path": "/references/medusa-workflows/deleteLineItemsWorkflow"
   }
 ]

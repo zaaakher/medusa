@@ -2383,7 +2383,7 @@ export const generatedSidebar = [
                     "type": "category",
                     "title": "Data Models",
                     "hasTitleStyling": true,
-                    "autogenerate_path": "/references/fulfillment_models/classes",
+                    "autogenerate_path": "/references/fulfillment_models/variables",
                     "children": [
                       {
                         "loaded": true,
@@ -4154,6 +4154,14 @@ export const generatedSidebar = [
                         "type": "link",
                         "path": "/references/order/models/OrderClaimItemImage",
                         "title": "OrderClaimItemImage",
+                        "children": []
+                      },
+                      {
+                        "loaded": true,
+                        "isPathHref": true,
+                        "type": "link",
+                        "path": "/references/order/models/OrderCreditLine",
+                        "title": "OrderCreditLine",
                         "children": []
                       },
                       {
@@ -15111,6 +15119,14 @@ export const generatedSidebar = [
                     "type": "link",
                     "path": "/references/medusa-workflows/steps/deleteTaxRegionsStep",
                     "title": "deleteTaxRegionsStep",
+                    "children": []
+                  },
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "link",
+                    "path": "/references/medusa-workflows/steps/getItemTaxLinesStep",
+                    "title": "getItemTaxLinesStep",
                     "children": []
                   },
                   {

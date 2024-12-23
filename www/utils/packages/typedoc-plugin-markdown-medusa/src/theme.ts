@@ -18,8 +18,8 @@ import {
   reflectionTemplate,
   registerHelpers,
   registerPartials,
-} from "./render-utils"
-import { formatContents } from "./utils"
+} from "./render-utils.js"
+import { formatContents } from "./utils.js"
 
 import type {
   AllowedProjectDocumentsOption,
@@ -27,7 +27,8 @@ import type {
   FormattingOptionsType,
   ParameterStyle,
 } from "types"
-import { Mapping } from "./types"
+import { Mapping } from "./types.js"
+import { getAlias } from "./utils/reflection-template-strings.js"
 
 export class MarkdownTheme extends Theme {
   allPropertyReflectionsHaveOwnDocument!: string[]
@@ -148,7 +149,7 @@ export class MarkdownTheme extends Theme {
       reflection.parent && !reflection.parent.isProject()
         ? this.getAliasPath(reflection.parent)
         : "",
-      reflection.getAlias()
+      getAlias(reflection)
     )
   }
 
@@ -215,7 +216,7 @@ export class MarkdownTheme extends Theme {
     directory: string
     relative?: Reflection
   }): string {
-    let url = reflection.getAlias()
+    let url = getAlias(reflection)
 
     if (
       reflection.parent &&
