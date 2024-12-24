@@ -232,6 +232,10 @@ export const filesMap = [
     "pathname": "/commerce-modules/currency/examples"
   },
   {
+    "filePath": "/www/apps/resources/app/commerce-modules/currency/links-to-other-modules/page.mdx",
+    "pathname": "/commerce-modules/currency/links-to-other-modules"
+  },
+  {
     "filePath": "/www/apps/resources/app/commerce-modules/currency/page.mdx",
     "pathname": "/commerce-modules/currency"
   },
@@ -254,6 +258,10 @@ export const filesMap = [
   {
     "filePath": "/www/apps/resources/app/commerce-modules/customer/extend/page.mdx",
     "pathname": "/commerce-modules/customer/extend"
+  },
+  {
+    "filePath": "/www/apps/resources/app/commerce-modules/customer/links-to-other-modules/page.mdx",
+    "pathname": "/commerce-modules/customer/links-to-other-modules"
   },
   {
     "filePath": "/www/apps/resources/app/commerce-modules/customer/page.mdx",
@@ -590,6 +598,10 @@ export const filesMap = [
   {
     "filePath": "/www/apps/resources/app/commerce-modules/store/examples/page.mdx",
     "pathname": "/commerce-modules/store/examples"
+  },
+  {
+    "filePath": "/www/apps/resources/app/commerce-modules/store/links-to-other-modules/page.mdx",
+    "pathname": "/commerce-modules/store/links-to-other-modules"
   },
   {
     "filePath": "/www/apps/resources/app/commerce-modules/store/page.mdx",

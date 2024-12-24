@@ -29,6 +29,11 @@ export const customerSidebar = [
             path: "/commerce-modules/customer/customer-accounts",
             title: "Customer Accounts",
           },
+          {
+            type: "link",
+            path: "/commerce-modules/customer/links-to-other-modules",
+            title: "Link to Modules",
+          },
         ],
       },
       {

@@ -17,6 +17,17 @@ export const currencySidebar = [
       },
       {
         type: "sub-category",
+        title: "Concepts",
+        children: [
+          {
+            type: "link",
+            path: "/commerce-modules/currency/links-to-other-modules",
+            title: "Link to Modules",
+          },
+        ],
+      },
+      {
+        type: "sub-category",
         title: "References",
         children: [
           {

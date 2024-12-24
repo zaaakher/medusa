@@ -17,6 +17,17 @@ export const storeSidebar = [
       },
       {
         type: "sub-category",
+        title: "Concepts",
+        children: [
+          {
+            type: "link",
+            path: "/commerce-modules/store/links-to-other-modules",
+            title: "Link to Modules",
+          },
+        ],
+      },
+      {
+        type: "sub-category",
         title: "References",
         children: [
           {

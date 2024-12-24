@@ -1328,6 +1328,22 @@ export const generatedSidebar = [
             "loaded": true,
             "isPathHref": true,
             "type": "sub-category",
+            "title": "Concepts",
+            "children": [
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "link",
+                "path": "/commerce-modules/currency/links-to-other-modules",
+                "title": "Link to Modules",
+                "children": []
+              }
+            ]
+          },
+          {
+            "loaded": true,
+            "isPathHref": true,
+            "type": "sub-category",
             "title": "References",
             "children": [
               {
@@ -1449,6 +1465,14 @@ export const generatedSidebar = [
                 "type": "link",
                 "path": "/commerce-modules/customer/customer-accounts",
                 "title": "Customer Accounts",
+                "children": []
+              },
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "link",
+                "path": "/commerce-modules/customer/links-to-other-modules",
+                "title": "Link to Modules",
                 "children": []
               }
             ]
@@ -7214,6 +7238,22 @@ export const generatedSidebar = [
             "path": "/commerce-modules/store/examples",
             "title": "Examples",
             "children": []
+          },
+          {
+            "loaded": true,
+            "isPathHref": true,
+            "type": "sub-category",
+            "title": "Concepts",
+            "children": [
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "link",
+                "path": "/commerce-modules/store/links-to-other-modules",
+                "title": "Link to Modules",
+                "children": []
+              }
+            ]
           },
           {
             "loaded": true,
