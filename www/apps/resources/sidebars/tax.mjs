@@ -58,6 +58,11 @@ export const taxSidebar = [
         children: [
           {
             type: "link",
+            path: "/commerce-modules/tax/admin-widget-zones",
+            title: "Admin Widget Zones",
+          },
+          {
+            type: "link",
             path: "/references/tax",
             title: "Main Service Reference",
             isChildSidebar: true,

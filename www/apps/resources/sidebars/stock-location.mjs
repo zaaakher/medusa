@@ -37,6 +37,11 @@ export const stockLocationSidebar = [
         children: [
           {
             type: "link",
+            path: "/commerce-modules/stock-location/admin-widget-zones",
+            title: "Admin Widget Zones",
+          },
+          {
+            type: "link",
             path: "/references/stock-location-next",
             title: "Main Service Reference",
             isChildSidebar: true,

@@ -57,6 +57,11 @@ export const promotionSidebar = [
         children: [
           {
             type: "link",
+            path: "/commerce-modules/promotion/admin-widget-zones",
+            title: "Admin Widget Zones",
+          },
+          {
+            type: "link",
             path: "/references/promotion",
             title: "Main Service Reference",
             isChildSidebar: true,

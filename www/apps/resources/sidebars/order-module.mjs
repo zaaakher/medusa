@@ -82,6 +82,11 @@ export const orderSidebar = [
           },
           {
             type: "link",
+            path: "/commerce-modules/order/admin-widget-zones",
+            title: "Admin Widget Zones",
+          },
+          {
+            type: "link",
             path: "/references/order",
             title: "Main Service Reference",
             isChildSidebar: true,

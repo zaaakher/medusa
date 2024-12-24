@@ -42,6 +42,11 @@ export const userSidebar = [
           },
           {
             type: "link",
+            path: "/commerce-modules/user/admin-widget-zones",
+            title: "Admin Widget Zones",
+          },
+          {
+            type: "link",
             path: "/references/user",
             title: "Main Service Reference",
             isChildSidebar: true,

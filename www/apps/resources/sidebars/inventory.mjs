@@ -42,6 +42,11 @@ export const inventorySidebar = [
         children: [
           {
             type: "link",
+            path: "/commerce-modules/inventory/admin-widget-zones",
+            title: "Admin Widget Zones",
+          },
+          {
+            type: "link",
             path: "/references/inventory-next",
             title: "Main Service Reference",
             isChildSidebar: true,

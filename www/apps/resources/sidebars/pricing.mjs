@@ -52,6 +52,11 @@ export const pricingSidebar = [
         children: [
           {
             type: "link",
+            path: "/commerce-modules/pricing/admin-widget-zones",
+            title: "Admin Widget Zones",
+          },
+          {
+            type: "link",
             path: "/references/pricing",
             title: "Main Service Reference",
             isChildSidebar: true,

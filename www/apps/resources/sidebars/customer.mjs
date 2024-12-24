@@ -42,6 +42,11 @@ export const customerSidebar = [
           },
           {
             type: "link",
+            path: "/commerce-modules/customer/admin-widget-zones",
+            title: "Admin Widget Zones",
+          },
+          {
+            type: "link",
             path: "/references/customer",
             title: "Main Service Reference",
             isChildSidebar: true,

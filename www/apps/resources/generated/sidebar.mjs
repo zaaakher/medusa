@@ -233,6 +233,14 @@ export const generatedSidebar = [
                 "loaded": true,
                 "isPathHref": true,
                 "type": "link",
+                "path": "/commerce-modules/api-key/admin-widget-zones",
+                "title": "Admin Widget Zones",
+                "children": []
+              },
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "link",
                 "path": "/references/api-key",
                 "title": "Main Service Reference",
                 "isChildSidebar": true,
@@ -502,6 +510,14 @@ export const generatedSidebar = [
                 "type": "link",
                 "path": "/commerce-modules/auth/events",
                 "title": "Events Reference",
+                "children": []
+              },
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "link",
+                "path": "/commerce-modules/auth/admin-widget-zones",
+                "title": "Admin Widget Zones",
                 "children": []
               },
               {
@@ -1455,6 +1471,14 @@ export const generatedSidebar = [
                 "loaded": true,
                 "isPathHref": true,
                 "type": "link",
+                "path": "/commerce-modules/customer/admin-widget-zones",
+                "title": "Admin Widget Zones",
+                "children": []
+              },
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "link",
                 "path": "/references/customer",
                 "title": "Main Service Reference",
                 "isChildSidebar": true,
@@ -1820,6 +1844,14 @@ export const generatedSidebar = [
             "type": "sub-category",
             "title": "References",
             "children": [
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "link",
+                "path": "/commerce-modules/fulfillment/admin-widget-zones",
+                "title": "Admin Widget Zones",
+                "children": []
+              },
               {
                 "loaded": true,
                 "isPathHref": true,
@@ -2578,6 +2610,14 @@ export const generatedSidebar = [
                 "loaded": true,
                 "isPathHref": true,
                 "type": "link",
+                "path": "/commerce-modules/inventory/admin-widget-zones",
+                "title": "Admin Widget Zones",
+                "children": []
+              },
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "link",
                 "path": "/references/inventory-next",
                 "title": "Main Service Reference",
                 "isChildSidebar": true,
@@ -3045,6 +3085,14 @@ export const generatedSidebar = [
                 "type": "link",
                 "path": "/commerce-modules/order/events",
                 "title": "Events Reference",
+                "children": []
+              },
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "link",
+                "path": "/commerce-modules/order/admin-widget-zones",
+                "title": "Admin Widget Zones",
                 "children": []
               },
               {
@@ -4902,6 +4950,14 @@ export const generatedSidebar = [
                 "loaded": true,
                 "isPathHref": true,
                 "type": "link",
+                "path": "/commerce-modules/pricing/admin-widget-zones",
+                "title": "Admin Widget Zones",
+                "children": []
+              },
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "link",
                 "path": "/references/pricing",
                 "title": "Main Service Reference",
                 "isChildSidebar": true,
@@ -5427,6 +5483,14 @@ export const generatedSidebar = [
                 "type": "link",
                 "path": "/commerce-modules/product/events",
                 "title": "Events Reference",
+                "children": []
+              },
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "link",
+                "path": "/commerce-modules/product/admin-widget-zones",
+                "title": "Admin Widget Zones",
                 "children": []
               },
               {
@@ -6195,6 +6259,14 @@ export const generatedSidebar = [
                 "loaded": true,
                 "isPathHref": true,
                 "type": "link",
+                "path": "/commerce-modules/promotion/admin-widget-zones",
+                "title": "Admin Widget Zones",
+                "children": []
+              },
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "link",
                 "path": "/references/promotion",
                 "title": "Main Service Reference",
                 "isChildSidebar": true,
@@ -6574,6 +6646,14 @@ export const generatedSidebar = [
                 "loaded": true,
                 "isPathHref": true,
                 "type": "link",
+                "path": "/commerce-modules/region/admin-widget-zones",
+                "title": "Admin Widget Zones",
+                "children": []
+              },
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "link",
                 "path": "/references/region",
                 "title": "Main Service Reference",
                 "isChildSidebar": true,
@@ -6791,6 +6871,14 @@ export const generatedSidebar = [
                 "loaded": true,
                 "isPathHref": true,
                 "type": "link",
+                "path": "/commerce-modules/sales-channel/admin-widget-zones",
+                "title": "Admin Widget Zones",
+                "children": []
+              },
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "link",
                 "path": "/references/sales-channel",
                 "title": "Main Service Reference",
                 "isChildSidebar": true,
@@ -6968,6 +7056,14 @@ export const generatedSidebar = [
                 "loaded": true,
                 "isPathHref": true,
                 "type": "link",
+                "path": "/commerce-modules/stock-location/admin-widget-zones",
+                "title": "Admin Widget Zones",
+                "children": []
+              },
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "link",
                 "path": "/references/stock-location-next",
                 "title": "Main Service Reference",
                 "isChildSidebar": true,
@@ -7125,6 +7221,14 @@ export const generatedSidebar = [
             "type": "sub-category",
             "title": "References",
             "children": [
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "link",
+                "path": "/commerce-modules/store/admin-widget-zones",
+                "title": "Admin Widget Zones",
+                "children": []
+              },
               {
                 "loaded": true,
                 "isPathHref": true,
@@ -7342,6 +7446,14 @@ export const generatedSidebar = [
             "type": "sub-category",
             "title": "References",
             "children": [
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "link",
+                "path": "/commerce-modules/tax/admin-widget-zones",
+                "title": "Admin Widget Zones",
+                "children": []
+              },
               {
                 "loaded": true,
                 "isPathHref": true,
@@ -7645,6 +7757,14 @@ export const generatedSidebar = [
                 "type": "link",
                 "path": "/commerce-modules/user/events",
                 "title": "Events Reference",
+                "children": []
+              },
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "link",
+                "path": "/commerce-modules/user/admin-widget-zones",
+                "title": "Admin Widget Zones",
                 "children": []
               },
               {

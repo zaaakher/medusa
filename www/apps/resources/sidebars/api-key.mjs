@@ -37,6 +37,11 @@ export const apiKeySidebar = [
         children: [
           {
             type: "link",
+            path: "/commerce-modules/api-key/admin-widget-zones",
+            title: "Admin Widget Zones",
+          },
+          {
+            type: "link",
             path: "/references/api-key",
             title: "Main Service Reference",
             isChildSidebar: true,
