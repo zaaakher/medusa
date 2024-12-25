@@ -223,7 +223,10 @@ class WorkflowsPlugin {
       stepDepth++
     })
 
-    const uniqueResources = addTagsToReflection(parentReflection, resources)
+    const uniqueResources = addTagsToReflection(parentReflection, [
+      ...resources,
+      "workflow",
+    ])
     this.updateWorkflowsTagsMap(workflowId, uniqueResources)
   }
 
@@ -560,7 +563,9 @@ class WorkflowsPlugin {
         },
       ])
     )
-    addTagsToReflection(stepReflection, resources)
+    const resourcesForType =
+      stepType === "step" || stepType === "hook" ? [stepType] : []
+    addTagsToReflection(stepReflection, [...resources, ...resourcesForType])
 
     if (parentReflection.isDocument()) {
       parentReflection.addChild(documentReflection)
