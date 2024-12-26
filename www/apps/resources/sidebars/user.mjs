@@ -24,6 +24,8 @@ export const userSidebar = [
         autogenerate_tags: "server+user",
         initialOpen: false,
         autogenerate_as_ref: true,
+        description:
+          "Learn how to use the User Module in your customizations on the Medusa application server.",
         children: [
           {
             type: "link",
@@ -35,16 +37,20 @@ export const userSidebar = [
       {
         type: "category",
         title: "Storefront Guides",
-        autogenerate_tags: "storefront+user",
+        autogenerate_tags: "storefront+user,-jsSdk",
         initialOpen: false,
         autogenerate_as_ref: true,
+        description:
+          "Learn how to integrate the User Module's features into your storefront.",
       },
       {
         type: "category",
         title: "Admin Guides",
-        autogenerate_tags: "admin+user",
+        autogenerate_tags: "admin+user,-jsSdk",
         initialOpen: false,
         autogenerate_as_ref: true,
+        description:
+          "Learn how to utilize administative features of the User Module.",
       },
       {
         type: "category",
@@ -52,6 +58,8 @@ export const userSidebar = [
         autogenerate_tags: "userGuides+user",
         initialOpen: false,
         autogenerate_as_ref: true,
+        description:
+          "Learn how to utilize and manage User features in the Medusa Admin dashboard.",
       },
       {
         type: "category",
@@ -69,8 +77,31 @@ export const userSidebar = [
       },
       {
         type: "category",
+        title: "JS SDK",
+        initialOpen: false,
+        description:
+          "The [JS SDK](/js-sdk) allows you to send requests to the Medusa server application from your client applications, such as a storefront or the Medusa Admin dashboard.",
+        children: [
+          {
+            type: "sub-category",
+            title: "Store",
+            autogenerate_tags: "jsSdk+storefront+user",
+            autogenerate_as_ref: true,
+          },
+          {
+            type: "sub-category",
+            title: "Admin",
+            autogenerate_tags: "jsSdk+admin+user",
+            autogenerate_as_ref: true,
+          },
+        ],
+      },
+      {
+        type: "category",
         title: "References",
         initialOpen: false,
+        description:
+          "Find references for data models, methods, and more. These are useful for your customizations.",
         children: [
           {
             type: "link",

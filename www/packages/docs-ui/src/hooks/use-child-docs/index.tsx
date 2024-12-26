@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useMemo } from "react"
+import React, { useCallback, useMemo } from "react"
 import {
   Card,
   CardList,
@@ -9,6 +9,7 @@ import {
   H4,
   Hr,
   isSidebarItemLink,
+  MarkdownContent,
   useSidebar,
 } from "../.."
 import { InteractiveSidebarItem, SidebarItem, SidebarItemLink } from "types"
@@ -25,6 +26,7 @@ export type UseChildDocsProps = {
   hideItems?: string[]
   showItems?: string[]
   hideTitle?: boolean
+  hideDescription?: boolean
   titleLevel?: number
   childLevel?: number
   itemsPerRow?: number
@@ -36,25 +38,29 @@ export const useChildDocs = ({
   showItems,
   type = "sidebar",
   hideTitle = false,
+  hideDescription = false,
   titleLevel = 2,
   childLevel = 1,
   itemsPerRow,
 }: UseChildDocsProps) => {
   const { currentItems, activeItem } = useSidebar()
-  const TitleHeaderComponent: HeadingComponent = useMemo(() => {
-    switch (titleLevel) {
-      case 3:
-        return H3
-      case 4:
-        return H4
-      case 5:
-        return MDXComponents["h5"] as HeadingComponent
-      case 6:
-        return MDXComponents["h6"] as HeadingComponent
-      default:
-        return H2
-    }
-  }, [titleLevel])
+  const TitleHeaderComponent = useCallback(
+    (level: number): HeadingComponent => {
+      switch (level) {
+        case 3:
+          return H3
+        case 4:
+          return H4
+        case 5:
+          return MDXComponents["h5"] as HeadingComponent
+        case 6:
+          return MDXComponents["h6"] as HeadingComponent
+        default:
+          return H2
+      }
+    },
+    []
+  )
   const filterType = useMemo(() => {
     return showItems !== undefined
       ? "show"
@@ -180,37 +186,57 @@ export const useChildDocs = ({
     )
   }
 
-  const getAllLevelsElms = (items?: SidebarItem[]) => {
+  const getAllLevelsElms = (
+    items?: SidebarItem[],
+    headerLevel = titleLevel
+  ) => {
     const filteredItems = filterNonInteractiveItems(items)
     return filteredItems.map((item, key) => {
       const itemChildren = getChildrenForLevel(item)
       const HeadingComponent = itemChildren?.length
-        ? TitleHeaderComponent
+        ? TitleHeaderComponent(headerLevel)
         : undefined
+      const isChildrenCategory = itemChildren?.every(
+        (child) => child.type === "category" || child.type === "sub-category"
+      )
 
       return (
         <React.Fragment key={key}>
           {HeadingComponent && (
             <>
               {!hideTitle && (
-                <HeadingComponent id={slugify(item.title.toLowerCase())}>
-                  {item.title}
-                </HeadingComponent>
+                <>
+                  <HeadingComponent id={slugify(item.title.toLowerCase())}>
+                    {item.title}
+                  </HeadingComponent>
+                  {!hideDescription && item.description && (
+                    <MarkdownContent
+                      allowedElements={["a", "code", "ul", "ol", "p"]}
+                    >
+                      {item.description}
+                    </MarkdownContent>
+                  )}
+                </>
               )}
-              <CardList
-                items={
-                  itemChildren?.map((childItem) => ({
-                    title: childItem.title,
-                    href: isSidebarItemLink(childItem) ? childItem.path : "",
-                  })) || []
-                }
-                itemsPerRow={itemsPerRow}
-              />
-              {key !== filteredItems.length - 1 && <Hr />}
+              {isChildrenCategory &&
+                getAllLevelsElms(itemChildren, headerLevel + 1)}
+              {!isChildrenCategory && (
+                <CardList
+                  items={
+                    itemChildren?.map((childItem) => ({
+                      title: childItem.title,
+                      href: isSidebarItemLink(childItem) ? childItem.path : "",
+                      text: childItem.description,
+                    })) || []
+                  }
+                  itemsPerRow={itemsPerRow}
+                />
+              )}
+              {key !== filteredItems.length - 1 && headerLevel === 2 && <Hr />}
             </>
           )}
           {!HeadingComponent && isSidebarItemLink(item) && (
-            <Card title={item.title} href={item.path} />
+            <Card title={item.title} href={item.path} text={item.description} />
           )}
         </React.Fragment>
       )

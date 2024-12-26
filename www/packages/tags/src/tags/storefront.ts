@@ -162,5 +162,41 @@ export const storefront = [
   {
     "title": "Storefront Development Tips",
     "path": "/storefront-development/tips"
+  },
+  {
+    "title": "cart",
+    "path": "/references/js-sdk/store/cart"
+  },
+  {
+    "title": "category",
+    "path": "/references/js-sdk/store/category"
+  },
+  {
+    "title": "collection",
+    "path": "/references/js-sdk/store/collection"
+  },
+  {
+    "title": "customer",
+    "path": "/references/js-sdk/store/customer"
+  },
+  {
+    "title": "fulfillment",
+    "path": "/references/js-sdk/store/fulfillment"
+  },
+  {
+    "title": "order",
+    "path": "/references/js-sdk/store/order"
+  },
+  {
+    "title": "payment",
+    "path": "/references/js-sdk/store/payment"
+  },
+  {
+    "title": "product",
+    "path": "/references/js-sdk/store/product"
+  },
+  {
+    "title": "region",
+    "path": "/references/js-sdk/store/region"
   }
 ]

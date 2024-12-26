@@ -186,5 +186,29 @@ export const fulfillment = [
   {
     "title": "createLocationFulfillmentSetWorkflow",
     "path": "/references/medusa-workflows/createLocationFulfillmentSetWorkflow"
+  },
+  {
+    "title": "fulfillment",
+    "path": "/references/js-sdk/admin/fulfillment"
+  },
+  {
+    "title": "fulfillmentProvider",
+    "path": "/references/js-sdk/admin/fulfillmentProvider"
+  },
+  {
+    "title": "fulfillmentSet",
+    "path": "/references/js-sdk/admin/fulfillmentSet"
+  },
+  {
+    "title": "shippingOption",
+    "path": "/references/js-sdk/admin/shippingOption"
+  },
+  {
+    "title": "shippingProfile",
+    "path": "/references/js-sdk/admin/shippingProfile"
+  },
+  {
+    "title": "fulfillment",
+    "path": "/references/js-sdk/store/fulfillment"
   }
 ]

@@ -225,8 +225,9 @@ export const generatedSidebar = [
             "type": "category",
             "title": "Storefront Guides",
             "initialOpen": false,
-            "autogenerate_tags": "storefront+apiKey",
+            "autogenerate_tags": "storefront+apiKey,-jsSdk",
             "autogenerate_as_ref": true,
+            "description": "Learn how to integrate the API Key Module's features into your storefront.",
             "children": [
               {
                 "loaded": true,
@@ -328,8 +329,37 @@ export const generatedSidebar = [
             "loaded": true,
             "isPathHref": true,
             "type": "category",
+            "title": "JS SDK",
+            "initialOpen": false,
+            "description": "The [JS SDK](/js-sdk) allows you to send requests to the Medusa server application from your client applications, such as a storefront or the Medusa Admin dashboard.",
+            "children": [
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "sub-category",
+                "title": "Admin",
+                "autogenerate_tags": "jsSdk+admin+apiKey",
+                "autogenerate_as_ref": true,
+                "children": [
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "apiKey",
+                    "path": "/references/js-sdk/admin/apiKey",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "loaded": true,
+            "isPathHref": true,
+            "type": "category",
             "title": "References",
             "initialOpen": false,
+            "description": "Find references for data models, methods, and more. These are useful for your customizations.",
             "children": [
               {
                 "loaded": true,
@@ -540,6 +570,7 @@ export const generatedSidebar = [
             "autogenerate_tags": "server+auth",
             "initialOpen": false,
             "autogenerate_as_ref": true,
+            "description": "Learn how to use the Auth Module in your customizations on the Medusa application server.",
             "children": [
               {
                 "loaded": true,
@@ -572,9 +603,10 @@ export const generatedSidebar = [
             "isPathHref": true,
             "type": "category",
             "title": "Storefront Guides",
-            "autogenerate_tags": "storefront+auth",
+            "autogenerate_tags": "storefront+auth,-jsSdk",
             "initialOpen": false,
             "autogenerate_as_ref": true,
+            "description": "Learn how to integrate the Auth Module's features into your storefront.",
             "children": [
               {
                 "loaded": true,
@@ -733,8 +765,77 @@ export const generatedSidebar = [
             "loaded": true,
             "isPathHref": true,
             "type": "category",
+            "title": "JS SDK",
+            "initialOpen": false,
+            "autogenerate_tags": "jsSdk+auth",
+            "autogenerate_as_ref": true,
+            "description": "The [JS SDK](/js-sdk) allows you to send requests to the Medusa server application from your client applications, such as a storefront or the Medusa Admin dashboard.",
+            "children": [
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "ref",
+                "title": "callback",
+                "path": "/references/js-sdk/auth/callback",
+                "children": []
+              },
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "ref",
+                "title": "login",
+                "path": "/references/js-sdk/auth/login",
+                "children": []
+              },
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "ref",
+                "title": "logout",
+                "path": "/references/js-sdk/auth/logout",
+                "children": []
+              },
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "ref",
+                "title": "refresh",
+                "path": "/references/js-sdk/auth/refresh",
+                "children": []
+              },
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "ref",
+                "title": "register",
+                "path": "/references/js-sdk/auth/register",
+                "children": []
+              },
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "ref",
+                "title": "resetPassword",
+                "path": "/references/js-sdk/auth/resetPassword",
+                "children": []
+              },
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "ref",
+                "title": "updateProvider",
+                "path": "/references/js-sdk/auth/updateProvider",
+                "children": []
+              }
+            ]
+          },
+          {
+            "loaded": true,
+            "isPathHref": true,
+            "type": "category",
             "title": "References",
             "initialOpen": false,
+            "description": "Find references for data models, methods, and more. These are useful for your customizations.",
             "children": [
               {
                 "loaded": true,
@@ -999,6 +1100,7 @@ export const generatedSidebar = [
             "autogenerate_tags": "server+cart",
             "initialOpen": false,
             "autogenerate_as_ref": true,
+            "description": "Learn how to use the Cart Module in your customizations on the Medusa application server.",
             "children": [
               {
                 "loaded": true,
@@ -1015,9 +1117,10 @@ export const generatedSidebar = [
             "isPathHref": true,
             "type": "category",
             "title": "Storefront Guides",
-            "autogenerate_tags": "storefront+cart",
+            "autogenerate_tags": "storefront+cart,-jsSdk",
             "initialOpen": false,
             "autogenerate_as_ref": true,
+            "description": "Learn how to integrate the Cart Module's features into your storefront.",
             "children": [
               {
                 "loaded": true,
@@ -1319,8 +1422,37 @@ export const generatedSidebar = [
             "loaded": true,
             "isPathHref": true,
             "type": "category",
+            "title": "JS SDK",
+            "initialOpen": false,
+            "description": "The [JS SDK](/js-sdk) allows you to send requests to the Medusa server application from your client applications, such as a storefront or the Medusa Admin dashboard.",
+            "children": [
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "sub-category",
+                "title": "Store",
+                "autogenerate_tags": "jsSdk+storefront+cart",
+                "autogenerate_as_ref": true,
+                "children": [
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "cart",
+                    "path": "/references/js-sdk/store/cart",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "loaded": true,
+            "isPathHref": true,
+            "type": "category",
             "title": "References",
             "initialOpen": false,
+            "description": "Find references for data models, methods, and more. These are useful for your customizations.",
             "children": [
               {
                 "loaded": true,
@@ -1884,9 +2016,38 @@ export const generatedSidebar = [
           {
             "loaded": true,
             "isPathHref": true,
+            "type": "category",
+            "title": "JS SDK",
+            "initialOpen": false,
+            "description": "The [JS SDK](/js-sdk) allows you to send requests to the Medusa server application from your client applications, such as a storefront or the Medusa Admin dashboard.",
+            "children": [
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "sub-category",
+                "title": "Admin",
+                "autogenerate_tags": "jsSdk+admin+currency",
+                "autogenerate_as_ref": true,
+                "children": [
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "currency",
+                    "path": "/references/js-sdk/admin/currency",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "loaded": true,
+            "isPathHref": true,
             "type": "sub-category",
             "title": "References",
             "initialOpen": false,
+            "description": "Find references for data models, methods, and more. These are useful for your customizations.",
             "children": [
               {
                 "loaded": true,
@@ -2015,6 +2176,7 @@ export const generatedSidebar = [
             "autogenerate_tags": "server+customer",
             "initialOpen": false,
             "autogenerate_as_ref": true,
+            "description": "Learn how to use the Customer Module in your customizations on the Medusa application server.",
             "children": [
               {
                 "loaded": true,
@@ -2031,9 +2193,10 @@ export const generatedSidebar = [
             "isPathHref": true,
             "type": "category",
             "title": "Storefront Guides",
-            "autogenerate_tags": "storefront+customer",
+            "autogenerate_tags": "storefront+customer,-jsSdk",
             "initialOpen": false,
             "autogenerate_as_ref": true,
+            "description": "Learn how to integrate the Customer Module's features into your storefront.",
             "children": [
               {
                 "loaded": true,
@@ -2407,8 +2570,63 @@ export const generatedSidebar = [
             "loaded": true,
             "isPathHref": true,
             "type": "category",
+            "title": "JS SDK",
+            "initialOpen": false,
+            "description": "The [JS SDK](/js-sdk) allows you to send requests to the Medusa server application from your client applications, such as a storefront or the Medusa Admin dashboard.",
+            "children": [
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "sub-category",
+                "title": "Store",
+                "autogenerate_tags": "jsSdk+storefront+customer",
+                "autogenerate_as_ref": true,
+                "children": [
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "customer",
+                    "path": "/references/js-sdk/store/customer",
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "sub-category",
+                "title": "Admin",
+                "autogenerate_tags": "jsSdk+admin+customer",
+                "autogenerate_as_ref": true,
+                "children": [
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "customer",
+                    "path": "/references/js-sdk/admin/customer",
+                    "children": []
+                  },
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "customerGroup",
+                    "path": "/references/js-sdk/admin/customerGroup",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "loaded": true,
+            "isPathHref": true,
+            "type": "category",
             "title": "References",
             "initialOpen": false,
+            "description": "Find references for data models, methods, and more. These are useful for your customizations.",
             "children": [
               {
                 "loaded": true,
@@ -2777,6 +2995,7 @@ export const generatedSidebar = [
             "autogenerate_tags": "server+fulfillment",
             "initialOpen": false,
             "autogenerate_as_ref": true,
+            "description": "Learn how to use the Fulfillment Module in your customizations on the Medusa application server.",
             "children": [
               {
                 "loaded": true,
@@ -2801,9 +3020,10 @@ export const generatedSidebar = [
             "isPathHref": true,
             "type": "category",
             "title": "Storefront Guides",
-            "autogenerate_tags": "storefront+fulfillment",
+            "autogenerate_tags": "storefront+fulfillment,-jsSdk",
             "initialOpen": false,
             "autogenerate_as_ref": true,
+            "description": "Learn how to integrate the Fulfillment Module's features into your storefront.",
             "children": [
               {
                 "loaded": true,
@@ -3209,8 +3429,87 @@ export const generatedSidebar = [
             "loaded": true,
             "isPathHref": true,
             "type": "category",
+            "title": "JS SDK",
+            "initialOpen": false,
+            "description": "The [JS SDK](/js-sdk) allows you to send requests to the Medusa server application from your client applications, such as a storefront or the Medusa Admin dashboard.",
+            "children": [
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "sub-category",
+                "title": "Store",
+                "autogenerate_tags": "jsSdk+storefront+fulfillment",
+                "autogenerate_as_ref": true,
+                "children": [
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "fulfillment",
+                    "path": "/references/js-sdk/store/fulfillment",
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "sub-category",
+                "title": "Admin",
+                "autogenerate_tags": "jsSdk+admin+fulfillment",
+                "autogenerate_as_ref": true,
+                "children": [
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "fulfillment",
+                    "path": "/references/js-sdk/admin/fulfillment",
+                    "children": []
+                  },
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "fulfillmentProvider",
+                    "path": "/references/js-sdk/admin/fulfillmentProvider",
+                    "children": []
+                  },
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "fulfillmentSet",
+                    "path": "/references/js-sdk/admin/fulfillmentSet",
+                    "children": []
+                  },
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "shippingOption",
+                    "path": "/references/js-sdk/admin/shippingOption",
+                    "children": []
+                  },
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "shippingProfile",
+                    "path": "/references/js-sdk/admin/shippingProfile",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "loaded": true,
+            "isPathHref": true,
+            "type": "category",
             "title": "References",
             "initialOpen": false,
+            "description": "Find references for data models, methods, and more. These are useful for your customizations.",
             "children": [
               {
                 "loaded": true,
@@ -3969,9 +4268,10 @@ export const generatedSidebar = [
             "isPathHref": true,
             "type": "category",
             "title": "Storefront Guides",
-            "autogenerate_tags": "storefront+inventory",
+            "autogenerate_tags": "storefront+inventory,-jsSdk",
             "initialOpen": false,
             "autogenerate_as_ref": true,
+            "description": "Learn how to integrate the Inventory Module's features into your storefront.",
             "children": [
               {
                 "loaded": true,
@@ -4377,8 +4677,45 @@ export const generatedSidebar = [
             "loaded": true,
             "isPathHref": true,
             "type": "category",
+            "title": "JS SDK",
+            "initialOpen": false,
+            "description": "The [JS SDK](/js-sdk) allows you to send requests to the Medusa server application from your client applications, such as a storefront or the Medusa Admin dashboard.",
+            "children": [
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "sub-category",
+                "title": "Admin",
+                "autogenerate_tags": "jsSdk+admin+inventory",
+                "autogenerate_as_ref": true,
+                "children": [
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "inventoryItem",
+                    "path": "/references/js-sdk/admin/inventoryItem",
+                    "children": []
+                  },
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "reservation",
+                    "path": "/references/js-sdk/admin/reservation",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "loaded": true,
+            "isPathHref": true,
+            "type": "category",
             "title": "References",
             "initialOpen": false,
+            "description": "Find references for data models, methods, and more. These are useful for your customizations.",
             "children": [
               {
                 "loaded": true,
@@ -4856,9 +5193,10 @@ export const generatedSidebar = [
             "isPathHref": true,
             "type": "category",
             "title": "Storefront Guides",
-            "autogenerate_tags": "storefront+order",
+            "autogenerate_tags": "storefront+order,-jsSdk",
             "initialOpen": false,
             "autogenerate_as_ref": true,
+            "description": "Learn how to integrate the Order Module's features into your storefront.",
             "children": [
               {
                 "loaded": true,
@@ -5872,8 +6210,103 @@ export const generatedSidebar = [
             "loaded": true,
             "isPathHref": true,
             "type": "category",
+            "title": "JS SDK",
+            "initialOpen": false,
+            "description": "The [JS SDK](/js-sdk) allows you to send requests to the Medusa server application from your client applications, such as a storefront or the Medusa Admin dashboard.",
+            "children": [
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "sub-category",
+                "title": "Store",
+                "autogenerate_tags": "jsSdk+storefront+order",
+                "autogenerate_as_ref": true,
+                "children": [
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "order",
+                    "path": "/references/js-sdk/store/order",
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "sub-category",
+                "title": "Admin",
+                "autogenerate_tags": "jsSdk+admin+order",
+                "autogenerate_as_ref": true,
+                "children": [
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "claim",
+                    "path": "/references/js-sdk/admin/claim",
+                    "children": []
+                  },
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "exchange",
+                    "path": "/references/js-sdk/admin/exchange",
+                    "children": []
+                  },
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "order",
+                    "path": "/references/js-sdk/admin/order",
+                    "children": []
+                  },
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "orderEdit",
+                    "path": "/references/js-sdk/admin/orderEdit",
+                    "children": []
+                  },
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "refundReason",
+                    "path": "/references/js-sdk/admin/refundReason",
+                    "children": []
+                  },
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "return",
+                    "path": "/references/js-sdk/admin/return",
+                    "children": []
+                  },
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "returnReason",
+                    "path": "/references/js-sdk/admin/returnReason",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "loaded": true,
+            "isPathHref": true,
+            "type": "category",
             "title": "References",
             "initialOpen": false,
+            "description": "Find references for data models, methods, and more. These are useful for your customizations.",
             "children": [
               {
                 "loaded": true,
@@ -7259,6 +7692,7 @@ export const generatedSidebar = [
             "autogenerate_tags": "server+payment",
             "initialOpen": false,
             "autogenerate_as_ref": true,
+            "description": "Learn how to use the Payment Module in your customizations on the Medusa application server.",
             "children": [
               {
                 "loaded": true,
@@ -7283,9 +7717,10 @@ export const generatedSidebar = [
             "isPathHref": true,
             "type": "category",
             "title": "Storefront Guides",
-            "autogenerate_tags": "storefront+payment",
+            "autogenerate_tags": "storefront+payment,-jsSdk",
             "initialOpen": false,
             "autogenerate_as_ref": true,
+            "description": "Learn how to integrate the Payment Module's features into your storefront.",
             "children": [
               {
                 "loaded": true,
@@ -7548,8 +7983,63 @@ export const generatedSidebar = [
             "loaded": true,
             "isPathHref": true,
             "type": "category",
+            "title": "JS SDK",
+            "initialOpen": false,
+            "description": "The [JS SDK](/js-sdk) allows you to send requests to the Medusa server application from your client applications, such as a storefront or the Medusa Admin dashboard.",
+            "children": [
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "sub-category",
+                "title": "Store",
+                "autogenerate_tags": "jsSdk+storefront+payment",
+                "autogenerate_as_ref": true,
+                "children": [
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "payment",
+                    "path": "/references/js-sdk/store/payment",
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "sub-category",
+                "title": "Admin",
+                "autogenerate_tags": "jsSdk+admin+payment",
+                "autogenerate_as_ref": true,
+                "children": [
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "payment",
+                    "path": "/references/js-sdk/admin/payment",
+                    "children": []
+                  },
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "paymentCollection",
+                    "path": "/references/js-sdk/admin/paymentCollection",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "loaded": true,
+            "isPathHref": true,
+            "type": "category",
             "title": "References",
             "initialOpen": false,
+            "description": "Find references for data models, methods, and more. These are useful for your customizations.",
             "children": [
               {
                 "loaded": true,
@@ -7990,6 +8480,7 @@ export const generatedSidebar = [
             "autogenerate_tags": "server+pricing",
             "initialOpen": false,
             "autogenerate_as_ref": true,
+            "description": "Learn how to use the Pricing Module in your customizations on the Medusa application server.",
             "children": [
               {
                 "loaded": true,
@@ -8014,9 +8505,10 @@ export const generatedSidebar = [
             "isPathHref": true,
             "type": "category",
             "title": "Storefront Guides",
-            "autogenerate_tags": "storefront+pricing",
+            "autogenerate_tags": "storefront+pricing,-jsSdk",
             "initialOpen": false,
             "autogenerate_as_ref": true,
+            "description": "Learn how to integrate the Pricing Module's features into your storefront.",
             "children": [
               {
                 "loaded": true,
@@ -8382,8 +8874,45 @@ export const generatedSidebar = [
             "loaded": true,
             "isPathHref": true,
             "type": "category",
+            "title": "JS SDK",
+            "initialOpen": false,
+            "description": "The [JS SDK](/js-sdk) allows you to send requests to the Medusa server application from your client applications, such as a storefront or the Medusa Admin dashboard.",
+            "children": [
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "sub-category",
+                "title": "Admin",
+                "autogenerate_tags": "jsSdk+admin+pricing",
+                "autogenerate_as_ref": true,
+                "children": [
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "priceList",
+                    "path": "/references/js-sdk/admin/priceList",
+                    "children": []
+                  },
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "pricePreference",
+                    "path": "/references/js-sdk/admin/pricePreference",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "loaded": true,
+            "isPathHref": true,
+            "type": "category",
             "title": "References",
             "initialOpen": false,
+            "description": "Find references for data models, methods, and more. These are useful for your customizations.",
             "children": [
               {
                 "loaded": true,
@@ -8881,6 +9410,7 @@ export const generatedSidebar = [
             "autogenerate_tags": "server+product",
             "initialOpen": false,
             "autogenerate_as_ref": true,
+            "description": "Learn how to use the Product Module in your customizations on the Medusa application server.",
             "children": [
               {
                 "loaded": true,
@@ -8913,9 +9443,10 @@ export const generatedSidebar = [
             "isPathHref": true,
             "type": "category",
             "title": "Storefront Guides",
-            "autogenerate_tags": "storefront+product",
+            "autogenerate_tags": "storefront+product,-jsSdk",
             "initialOpen": false,
             "autogenerate_as_ref": true,
+            "description": "Learn how to integrate the Product Module's features into your storefront.",
             "children": [
               {
                 "loaded": true,
@@ -9465,8 +9996,111 @@ export const generatedSidebar = [
             "loaded": true,
             "isPathHref": true,
             "type": "category",
+            "title": "JS SDK",
+            "initialOpen": false,
+            "description": "The [JS SDK](/js-sdk) allows you to send requests to the Medusa server application from your client applications, such as a storefront or the Medusa Admin dashboard.",
+            "children": [
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "sub-category",
+                "title": "Store",
+                "autogenerate_tags": "jsSdk+storefront+product",
+                "autogenerate_as_ref": true,
+                "children": [
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "category",
+                    "path": "/references/js-sdk/store/category",
+                    "children": []
+                  },
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "collection",
+                    "path": "/references/js-sdk/store/collection",
+                    "children": []
+                  },
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "product",
+                    "path": "/references/js-sdk/store/product",
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "sub-category",
+                "title": "Admin",
+                "autogenerate_tags": "jsSdk+admin+product",
+                "autogenerate_as_ref": true,
+                "children": [
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "product",
+                    "path": "/references/js-sdk/admin/product",
+                    "children": []
+                  },
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "productCategory",
+                    "path": "/references/js-sdk/admin/productCategory",
+                    "children": []
+                  },
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "productCollection",
+                    "path": "/references/js-sdk/admin/productCollection",
+                    "children": []
+                  },
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "productTag",
+                    "path": "/references/js-sdk/admin/productTag",
+                    "children": []
+                  },
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "productType",
+                    "path": "/references/js-sdk/admin/productType",
+                    "children": []
+                  },
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "productVariant",
+                    "path": "/references/js-sdk/admin/productVariant",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "loaded": true,
+            "isPathHref": true,
+            "type": "category",
             "title": "References",
             "initialOpen": false,
+            "description": "Find references for data models, methods, and more. These are useful for your customizations.",
             "children": [
               {
                 "loaded": true,
@@ -10236,6 +10870,7 @@ export const generatedSidebar = [
             "autogenerate_tags": "server+promotion",
             "initialOpen": false,
             "autogenerate_as_ref": true,
+            "description": "Learn how to use the Promotion Module in your customizations on the Medusa application server.",
             "children": [
               {
                 "loaded": true,
@@ -10497,8 +11132,45 @@ export const generatedSidebar = [
             "loaded": true,
             "isPathHref": true,
             "type": "category",
+            "title": "JS SDK",
+            "initialOpen": false,
+            "description": "The [JS SDK](/js-sdk) allows you to send requests to the Medusa server application from your client applications, such as a storefront or the Medusa Admin dashboard.",
+            "children": [
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "sub-category",
+                "title": "Admin",
+                "autogenerate_tags": "jsSdk+admin+promotion",
+                "autogenerate_as_ref": true,
+                "children": [
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "campaign",
+                    "path": "/references/js-sdk/admin/campaign",
+                    "children": []
+                  },
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "promotion",
+                    "path": "/references/js-sdk/admin/promotion",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "loaded": true,
+            "isPathHref": true,
+            "type": "category",
             "title": "References",
             "initialOpen": false,
+            "description": "Find references for data models, methods, and more. These are useful for your customizations.",
             "children": [
               {
                 "loaded": true,
@@ -10874,9 +11546,10 @@ export const generatedSidebar = [
             "isPathHref": true,
             "type": "category",
             "title": "Storefront Guides",
-            "autogenerate_tags": "storefront+region",
+            "autogenerate_tags": "storefront+region,-jsSdk",
             "initialOpen": false,
             "autogenerate_as_ref": true,
+            "description": "Learn how to integrate the Region Module's features into your storefront.",
             "children": [
               {
                 "loaded": true,
@@ -11066,8 +11739,55 @@ export const generatedSidebar = [
             "loaded": true,
             "isPathHref": true,
             "type": "category",
+            "title": "JS SDK",
+            "initialOpen": false,
+            "description": "The [JS SDK](/js-sdk) allows you to send requests to the Medusa server application from your client applications, such as a storefront or the Medusa Admin dashboard.",
+            "children": [
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "sub-category",
+                "title": "Store",
+                "autogenerate_tags": "jsSdk+storefront+region",
+                "autogenerate_as_ref": true,
+                "children": [
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "region",
+                    "path": "/references/js-sdk/store/region",
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "sub-category",
+                "title": "Admin",
+                "autogenerate_tags": "jsSdk+admin+region",
+                "autogenerate_as_ref": true,
+                "children": [
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "region",
+                    "path": "/references/js-sdk/admin/region",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "loaded": true,
+            "isPathHref": true,
+            "type": "category",
             "title": "References",
             "initialOpen": false,
+            "description": "Find references for data models, methods, and more. These are useful for your customizations.",
             "children": [
               {
                 "loaded": true,
@@ -11289,9 +12009,10 @@ export const generatedSidebar = [
             "isPathHref": true,
             "type": "category",
             "title": "Storefront Guides",
-            "autogenerate_tags": "storefront+salesChannel",
+            "autogenerate_tags": "storefront+salesChannel,-jsSdk",
             "initialOpen": false,
             "autogenerate_as_ref": true,
+            "description": "Learn how to integrate the Sales Channel Module's features into your storefront.",
             "children": [
               {
                 "loaded": true,
@@ -11489,8 +12210,37 @@ export const generatedSidebar = [
             "loaded": true,
             "isPathHref": true,
             "type": "category",
+            "title": "JS SDK",
+            "initialOpen": false,
+            "description": "The [JS SDK](/js-sdk) allows you to send requests to the Medusa server application from your client applications, such as a storefront or the Medusa Admin dashboard.",
+            "children": [
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "sub-category",
+                "title": "Admin",
+                "autogenerate_tags": "jsSdk+admin+salesChannel",
+                "autogenerate_as_ref": true,
+                "children": [
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "salesChannel",
+                    "path": "/references/js-sdk/admin/salesChannel",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "loaded": true,
+            "isPathHref": true,
+            "type": "category",
             "title": "References",
             "initialOpen": false,
+            "description": "Find references for data models, methods, and more. These are useful for your customizations.",
             "children": [
               {
                 "loaded": true,
@@ -11749,8 +12499,37 @@ export const generatedSidebar = [
             "loaded": true,
             "isPathHref": true,
             "type": "category",
+            "title": "JS SDK",
+            "initialOpen": false,
+            "description": "The [JS SDK](/js-sdk) allows you to send requests to the Medusa server application from your client applications, such as a storefront or the Medusa Admin dashboard.",
+            "children": [
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "sub-category",
+                "title": "Admin",
+                "autogenerate_tags": "jsSdk+admin+stockLocation",
+                "autogenerate_as_ref": true,
+                "children": [
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "stockLocation",
+                    "path": "/references/js-sdk/admin/stockLocation",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "loaded": true,
+            "isPathHref": true,
+            "type": "category",
             "title": "References",
             "initialOpen": false,
+            "description": "Find references for data models, methods, and more. These are useful for your customizations.",
             "children": [
               {
                 "loaded": true,
@@ -12089,8 +12868,37 @@ export const generatedSidebar = [
             "loaded": true,
             "isPathHref": true,
             "type": "category",
+            "title": "JS SDK",
+            "initialOpen": false,
+            "description": "The [JS SDK](/js-sdk) allows you to send requests to the Medusa server application from your client applications, such as a storefront or the Medusa Admin dashboard.",
+            "children": [
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "sub-category",
+                "title": "Admin",
+                "autogenerate_tags": "jsSdk+admin+store",
+                "autogenerate_as_ref": true,
+                "children": [
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "store",
+                    "path": "/references/js-sdk/admin/store",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "loaded": true,
+            "isPathHref": true,
+            "type": "category",
             "title": "References",
             "initialOpen": false,
+            "description": "Find references for data models, methods, and more. These are useful for your customizations.",
             "children": [
               {
                 "loaded": true,
@@ -12299,6 +13107,7 @@ export const generatedSidebar = [
             "autogenerate_tags": "server+tax",
             "initialOpen": false,
             "autogenerate_as_ref": true,
+            "description": "Learn how to use the Tax Module in your customizations on the Medusa application server.",
             "children": [
               {
                 "loaded": true,
@@ -12323,9 +13132,10 @@ export const generatedSidebar = [
             "isPathHref": true,
             "type": "category",
             "title": "Storefront Guides",
-            "autogenerate_tags": "storefront+tax",
+            "autogenerate_tags": "storefront+tax,-jsSdk",
             "initialOpen": false,
             "autogenerate_as_ref": true,
+            "description": "Learn how to integrate the Tax Module's features into your storefront.",
             "children": [
               {
                 "loaded": true,
@@ -12587,8 +13397,45 @@ export const generatedSidebar = [
             "loaded": true,
             "isPathHref": true,
             "type": "category",
+            "title": "JS SDK",
+            "initialOpen": false,
+            "description": "The [JS SDK](/js-sdk) allows you to send requests to the Medusa server application from your client applications, such as a storefront or the Medusa Admin dashboard.",
+            "children": [
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "sub-category",
+                "title": "Admin",
+                "autogenerate_tags": "jsSdk+admin+tax",
+                "autogenerate_as_ref": true,
+                "children": [
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "taxRate",
+                    "path": "/references/js-sdk/admin/taxRate",
+                    "children": []
+                  },
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "taxRegion",
+                    "path": "/references/js-sdk/admin/taxRegion",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "loaded": true,
+            "isPathHref": true,
+            "type": "category",
             "title": "References",
             "initialOpen": false,
+            "description": "Find references for data models, methods, and more. These are useful for your customizations.",
             "children": [
               {
                 "loaded": true,
@@ -12876,6 +13723,7 @@ export const generatedSidebar = [
             "autogenerate_tags": "server+user",
             "initialOpen": false,
             "autogenerate_as_ref": true,
+            "description": "Learn how to use the User Module in your customizations on the Medusa application server.",
             "children": [
               {
                 "loaded": true,
@@ -13041,8 +13889,45 @@ export const generatedSidebar = [
             "loaded": true,
             "isPathHref": true,
             "type": "category",
+            "title": "JS SDK",
+            "initialOpen": false,
+            "description": "The [JS SDK](/js-sdk) allows you to send requests to the Medusa server application from your client applications, such as a storefront or the Medusa Admin dashboard.",
+            "children": [
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "sub-category",
+                "title": "Admin",
+                "autogenerate_tags": "jsSdk+admin+user",
+                "autogenerate_as_ref": true,
+                "children": [
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "invite",
+                    "path": "/references/js-sdk/admin/invite",
+                    "children": []
+                  },
+                  {
+                    "loaded": true,
+                    "isPathHref": true,
+                    "type": "ref",
+                    "title": "user",
+                    "path": "/references/js-sdk/admin/user",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "loaded": true,
+            "isPathHref": true,
+            "type": "category",
             "title": "References",
             "initialOpen": false,
+            "description": "Find references for data models, methods, and more. These are useful for your customizations.",
             "children": [
               {
                 "loaded": true,

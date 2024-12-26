@@ -986,5 +986,9 @@ export const workflow = [
   {
     "title": "updateUsersWorkflow",
     "path": "/references/medusa-workflows/updateUsersWorkflow"
+  },
+  {
+    "title": "workflowExecution",
+    "path": "/references/js-sdk/admin/workflowExecution"
   }
 ]

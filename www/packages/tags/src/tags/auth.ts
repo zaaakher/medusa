@@ -46,5 +46,33 @@ export const auth = [
   {
     "title": "removeUserAccountWorkflow",
     "path": "/references/medusa-workflows/removeUserAccountWorkflow"
+  },
+  {
+    "title": "callback",
+    "path": "/references/js-sdk/auth/callback"
+  },
+  {
+    "title": "login",
+    "path": "/references/js-sdk/auth/login"
+  },
+  {
+    "title": "logout",
+    "path": "/references/js-sdk/auth/logout"
+  },
+  {
+    "title": "refresh",
+    "path": "/references/js-sdk/auth/refresh"
+  },
+  {
+    "title": "register",
+    "path": "/references/js-sdk/auth/register"
+  },
+  {
+    "title": "resetPassword",
+    "path": "/references/js-sdk/auth/resetPassword"
+  },
+  {
+    "title": "updateProvider",
+    "path": "/references/js-sdk/auth/updateProvider"
   }
 ]

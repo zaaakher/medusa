@@ -22,5 +22,9 @@ export const stockLocation = [
   {
     "title": "updateStockLocationsWorkflow",
     "path": "/references/medusa-workflows/updateStockLocationsWorkflow"
+  },
+  {
+    "title": "stockLocation",
+    "path": "/references/js-sdk/admin/stockLocation"
   }
 ]

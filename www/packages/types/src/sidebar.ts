@@ -13,6 +13,8 @@ export type SidebarItemCommon = {
   additionalElms?: React.ReactNode
   chapterTitle?: string
   hideChildren?: boolean
+  // can be used to hold any description relevant when showing cards, etc...
+  description?: string
 }
 
 export type SidebarItemLink = SidebarItemCommon & {

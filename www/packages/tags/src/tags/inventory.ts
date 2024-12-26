@@ -186,5 +186,13 @@ export const inventory = [
   {
     "title": "updateReservationsWorkflow",
     "path": "/references/medusa-workflows/updateReservationsWorkflow"
+  },
+  {
+    "title": "inventoryItem",
+    "path": "/references/js-sdk/admin/inventoryItem"
+  },
+  {
+    "title": "reservation",
+    "path": "/references/js-sdk/admin/reservation"
   }
 ]

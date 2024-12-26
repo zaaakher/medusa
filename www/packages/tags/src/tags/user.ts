@@ -62,5 +62,13 @@ export const user = [
   {
     "title": "updateUsersWorkflow",
     "path": "/references/medusa-workflows/updateUsersWorkflow"
+  },
+  {
+    "title": "invite",
+    "path": "/references/js-sdk/admin/invite"
+  },
+  {
+    "title": "user",
+    "path": "/references/js-sdk/admin/user"
   }
 ]

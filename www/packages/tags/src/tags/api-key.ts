@@ -34,5 +34,9 @@ export const apiKey = [
   {
     "title": "updateApiKeysWorkflow",
     "path": "/references/medusa-workflows/updateApiKeysWorkflow"
+  },
+  {
+    "title": "apiKey",
+    "path": "/references/js-sdk/admin/apiKey"
   }
 ]

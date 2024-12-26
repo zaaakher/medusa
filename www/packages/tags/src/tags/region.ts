@@ -78,5 +78,13 @@ export const region = [
   {
     "title": "updateRegionsWorkflow",
     "path": "/references/medusa-workflows/updateRegionsWorkflow"
+  },
+  {
+    "title": "region",
+    "path": "/references/js-sdk/admin/region"
+  },
+  {
+    "title": "region",
+    "path": "/references/js-sdk/store/region"
   }
 ]

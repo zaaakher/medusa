@@ -110,5 +110,13 @@ export const promotion = [
   {
     "title": "updatePromotionsWorkflow",
     "path": "/references/medusa-workflows/updatePromotionsWorkflow"
+  },
+  {
+    "title": "campaign",
+    "path": "/references/js-sdk/admin/campaign"
+  },
+  {
+    "title": "promotion",
+    "path": "/references/js-sdk/admin/promotion"
   }
 ]

@@ -106,5 +106,17 @@ export const payment = [
   {
     "title": "updateRefundReasonsWorkflow",
     "path": "/references/medusa-workflows/updateRefundReasonsWorkflow"
+  },
+  {
+    "title": "payment",
+    "path": "/references/js-sdk/admin/payment"
+  },
+  {
+    "title": "paymentCollection",
+    "path": "/references/js-sdk/admin/paymentCollection"
+  },
+  {
+    "title": "payment",
+    "path": "/references/js-sdk/store/payment"
   }
 ]

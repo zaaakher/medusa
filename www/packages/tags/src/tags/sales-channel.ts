@@ -82,5 +82,9 @@ export const salesChannel = [
   {
     "title": "updateSalesChannelsWorkflow",
     "path": "/references/medusa-workflows/updateSalesChannelsWorkflow"
+  },
+  {
+    "title": "salesChannel",
+    "path": "/references/js-sdk/admin/salesChannel"
   }
 ]

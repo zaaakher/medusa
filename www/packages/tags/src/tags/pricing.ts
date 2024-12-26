@@ -174,5 +174,13 @@ export const pricing = [
   {
     "title": "updateStoresWorkflow",
     "path": "/references/medusa-workflows/updateStoresWorkflow"
+  },
+  {
+    "title": "priceList",
+    "path": "/references/js-sdk/admin/priceList"
+  },
+  {
+    "title": "pricePreference",
+    "path": "/references/js-sdk/admin/pricePreference"
   }
 ]

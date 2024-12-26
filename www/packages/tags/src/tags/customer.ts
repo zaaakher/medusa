@@ -170,5 +170,17 @@ export const customer = [
   {
     "title": "orderExchangeAddNewItemWorkflow",
     "path": "/references/medusa-workflows/orderExchangeAddNewItemWorkflow"
+  },
+  {
+    "title": "customer",
+    "path": "/references/js-sdk/admin/customer"
+  },
+  {
+    "title": "customerGroup",
+    "path": "/references/js-sdk/admin/customerGroup"
+  },
+  {
+    "title": "customer",
+    "path": "/references/js-sdk/store/customer"
   }
 ]

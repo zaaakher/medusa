@@ -10,7 +10,8 @@ type CommerceModuleSectionsProps = {
 export const CommerceModuleSections = ({
   name,
 }: CommerceModuleSectionsProps) => {
-  const components: (JSX.Element | JSX.Element[])[] = []
+  const guideComponents: (JSX.Element | JSX.Element[])[] = []
+  const referenceComponents: (JSX.Element | JSX.Element[])[] = []
   const { items: workflowItems, component: workflowsComponent } = useChildDocs({
     showItems: ["Workflows"],
     titleLevel: 3,
@@ -32,7 +33,7 @@ export const CommerceModuleSections = ({
       itemsPerRow: 2,
     })
   if (serverGuideItems?.default.length) {
-    components.push(serverGuidesComponent)
+    guideComponents.push(serverGuidesComponent)
   }
   const { items: storefrontGuideItems, component: storefrontGuidesComponent } =
     useChildDocs({
@@ -40,7 +41,7 @@ export const CommerceModuleSections = ({
       itemsPerRow: 2,
     })
   if (storefrontGuideItems?.default.length) {
-    components.push(storefrontGuidesComponent)
+    guideComponents.push(storefrontGuidesComponent)
   }
   const { items: adminGuideItems, component: adminGuidesComponent } =
     useChildDocs({
@@ -48,7 +49,7 @@ export const CommerceModuleSections = ({
       itemsPerRow: 2,
     })
   if (adminGuideItems?.default.length) {
-    components.push(adminGuidesComponent)
+    guideComponents.push(adminGuidesComponent)
   }
   const { items: userGuideItems, component: userGuidesComponent } =
     useChildDocs({
@@ -56,7 +57,14 @@ export const CommerceModuleSections = ({
       itemsPerRow: 2,
     })
   if (userGuideItems?.default.length) {
-    components.push(userGuidesComponent)
+    guideComponents.push(userGuidesComponent)
+  }
+  const { items: jsSdkItems, component: jsSdkComponent } = useChildDocs({
+    showItems: ["JS SDK"],
+    itemsPerRow: 2,
+  })
+  if (jsSdkItems?.default.length) {
+    referenceComponents.push(jsSdkComponent)
   }
   const { items: referenceItems, component: referencesComponent } =
     useChildDocs({
@@ -64,13 +72,22 @@ export const CommerceModuleSections = ({
       itemsPerRow: 2,
     })
   if (referenceItems?.default.length) {
-    components.push(referencesComponent)
+    referenceComponents.push(referencesComponent)
   }
 
   return (
     <>
+      {guideComponents.map((component, i) => (
+        <React.Fragment key={i}>
+          <>
+            {i !== 0 && <Hr />}
+            {component}
+          </>
+        </React.Fragment>
+      ))}
       {!hideWorkflowsSection && (
         <>
+          {guideComponents.length > 0 && <Hr />}
           <H2 id="medusa-workflows-and-steps">Medusa Workflows and Steps</H2>
           <p>
             Medusa provides the following workflows and steps that use the{" "}
@@ -81,11 +98,10 @@ export const CommerceModuleSections = ({
           {stepsComponent}
         </>
       )}
-
-      {components.map((component, i) => (
+      {referenceComponents.map((component, i) => (
         <React.Fragment key={i}>
           <>
-            {i !== 0 || !hideWorkflowsSection ? <Hr /> : null}
+            {(i !== 0 || !hideWorkflowsSection) && <Hr />}
             {component}
           </>
         </React.Fragment>

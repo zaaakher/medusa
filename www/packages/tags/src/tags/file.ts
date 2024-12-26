@@ -22,5 +22,9 @@ export const file = [
   {
     "title": "exportProductsWorkflow",
     "path": "/references/medusa-workflows/exportProductsWorkflow"
+  },
+  {
+    "title": "upload",
+    "path": "/references/js-sdk/admin/upload"
   }
 ]

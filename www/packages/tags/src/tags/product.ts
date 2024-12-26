@@ -266,5 +266,41 @@ export const product = [
   {
     "title": "updateProductCategoriesWorkflow",
     "path": "/references/medusa-workflows/updateProductCategoriesWorkflow"
+  },
+  {
+    "title": "product",
+    "path": "/references/js-sdk/admin/product"
+  },
+  {
+    "title": "productCategory",
+    "path": "/references/js-sdk/admin/productCategory"
+  },
+  {
+    "title": "productCollection",
+    "path": "/references/js-sdk/admin/productCollection"
+  },
+  {
+    "title": "productTag",
+    "path": "/references/js-sdk/admin/productTag"
+  },
+  {
+    "title": "productType",
+    "path": "/references/js-sdk/admin/productType"
+  },
+  {
+    "title": "productVariant",
+    "path": "/references/js-sdk/admin/productVariant"
+  },
+  {
+    "title": "category",
+    "path": "/references/js-sdk/store/category"
+  },
+  {
+    "title": "collection",
+    "path": "/references/js-sdk/store/collection"
+  },
+  {
+    "title": "product",
+    "path": "/references/js-sdk/store/product"
   }
 ]

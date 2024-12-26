@@ -41,20 +41,26 @@ export const inventorySidebar = [
         autogenerate_tags: "server+inventory",
         initialOpen: false,
         autogenerate_as_ref: true,
+        description:
+          "Learn how to use the Inventory Module in your customizations on the Medusa application server.",
       },
       {
         type: "category",
         title: "Storefront Guides",
-        autogenerate_tags: "storefront+inventory",
+        autogenerate_tags: "storefront+inventory,-jsSdk",
         initialOpen: false,
         autogenerate_as_ref: true,
+        description:
+          "Learn how to integrate the Inventory Module's features into your storefront.",
       },
       {
         type: "category",
         title: "Admin Guides",
-        autogenerate_tags: "admin+inventory",
+        autogenerate_tags: "admin+inventory,-jsSdk",
         initialOpen: false,
         autogenerate_as_ref: true,
+        description:
+          "Learn how to utilize administative features of the Inventory Module.",
       },
       {
         type: "category",
@@ -62,6 +68,8 @@ export const inventorySidebar = [
         autogenerate_tags: "userGuides+inventory",
         initialOpen: false,
         autogenerate_as_ref: true,
+        description:
+          "Learn how to utilize and manage Inventory features in the Medusa Admin dashboard.",
       },
       {
         type: "category",
@@ -79,8 +87,31 @@ export const inventorySidebar = [
       },
       {
         type: "category",
+        title: "JS SDK",
+        initialOpen: false,
+        description:
+          "The [JS SDK](/js-sdk) allows you to send requests to the Medusa server application from your client applications, such as a storefront or the Medusa Admin dashboard.",
+        children: [
+          {
+            type: "sub-category",
+            title: "Store",
+            autogenerate_tags: "jsSdk+storefront+inventory",
+            autogenerate_as_ref: true,
+          },
+          {
+            type: "sub-category",
+            title: "Admin",
+            autogenerate_tags: "jsSdk+admin+inventory",
+            autogenerate_as_ref: true,
+          },
+        ],
+      },
+      {
+        type: "category",
         title: "References",
         initialOpen: false,
+        description:
+          "Find references for data models, methods, and more. These are useful for your customizations.",
         children: [
           {
             type: "link",

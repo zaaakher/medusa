@@ -134,5 +134,9 @@ export const cart = [
   {
     "title": "deleteLineItemsWorkflow",
     "path": "/references/medusa-workflows/deleteLineItemsWorkflow"
+  },
+  {
+    "title": "cart",
+    "path": "/references/js-sdk/store/cart"
   }
 ]

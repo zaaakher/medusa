@@ -118,5 +118,13 @@ export const tax = [
   {
     "title": "updateTaxRatesWorkflow",
     "path": "/references/medusa-workflows/updateTaxRatesWorkflow"
+  },
+  {
+    "title": "taxRate",
+    "path": "/references/js-sdk/admin/taxRate"
+  },
+  {
+    "title": "taxRegion",
+    "path": "/references/js-sdk/admin/taxRegion"
   }
 ]

@@ -66,5 +66,9 @@ export const store = [
   {
     "title": "updateStoresWorkflow",
     "path": "/references/medusa-workflows/updateStoresWorkflow"
+  },
+  {
+    "title": "store",
+    "path": "/references/js-sdk/admin/store"
   }
 ]
