@@ -45,7 +45,7 @@ type SchemaDescriptionOptions = {
 
 export type OasArea = "admin" | "store"
 
-type ParameterType = "query" | "path"
+type ParameterType = "query" | "path" | "header"
 
 type AuthRequests = {
   exact?: string
@@ -281,6 +281,10 @@ class OasKindGenerator extends FunctionKindGenerator {
       security: [],
     }
 
+    // get header params
+    const headerParams = this.getHeaderParameters(oasPath)
+    oas.parameters?.push(...headerParams)
+
     // retreive query and request parameters
     const { queryParameters, requestSchema } = this.getRequestParameters({
       node,
@@ -471,6 +475,11 @@ class OasKindGenerator extends FunctionKindGenerator {
 
     // update path parameters
     const newPathParameters = this.getPathParameters({ oasPath, tagName })
+
+    // get header params
+    const headerParams = this.getHeaderParameters(oasPath)
+    newPathParameters.push(...headerParams)
+
     oas.parameters = this.updateParameters({
       oldParameters: oas.parameters as OpenAPIV3.ParameterObject[],
       newParameters: newPathParameters,
@@ -902,7 +911,7 @@ class OasKindGenerator extends FunctionKindGenerator {
     /**
      * The parameter type.
      */
-    type: "path" | "query"
+    type: ParameterType
     /**
      * The name of the parameter.
      */
@@ -1182,6 +1191,33 @@ class OasKindGenerator extends FunctionKindGenerator {
       queryParameters,
       requestSchema,
     }
+  }
+
+  /**
+   * Retrieve the header parameters of the OAS route.
+   *
+   * @param oasPath - The OAS path.
+   * @returns The header parameters of the route.
+   */
+  getHeaderParameters(oasPath: string): OpenAPIV3.ParameterObject[] {
+    if (!oasPath.startsWith("store")) {
+      return []
+    }
+
+    return [
+      this.getParameterObject({
+        type: "header",
+        name: "x-publishable-api-key",
+        description: "Publishable API Key created in the Medusa Admin.",
+        required: true,
+        schema: {
+          type: "string",
+          externalDocs: {
+            url: "https://docs.medusajs.com/api/store#publishable-api-key",
+          },
+        },
+      }),
+    ]
   }
 
   /**
@@ -1895,9 +1931,13 @@ class OasKindGenerator extends FunctionKindGenerator {
     if (!oldParameters) {
       return newParameters || []
     }
-    const oppositeParamType = type === "query" ? "path" : "query"
+    const oppositeParamType = ["path", "query", "header"].filter(
+      (item) => item !== type
+    ) as ParameterType[]
     const oppositeParams: OpenAPIV3.ParameterObject[] =
-      oldParameters?.filter((param) => param.in === oppositeParamType) || []
+      oldParameters?.filter((param) =>
+        oppositeParamType.includes(param.in as ParameterType)
+      ) || []
     // check and update/add parameters if necessary
     const existingParams: OpenAPIV3.ParameterObject[] =
       oldParameters?.filter((param) => param.in === type) || []
@@ -1979,7 +2019,9 @@ class OasKindGenerator extends FunctionKindGenerator {
       ...oppositeParams,
       ...(existingParams?.filter(
         (parameter) =>
-          (parameter as OpenAPIV3.ParameterObject).in === oppositeParamType ||
+          oppositeParamType.includes(
+            (parameter as OpenAPIV3.ParameterObject).in as ParameterType
+          ) ||
           !paramsToRemove.has((parameter as OpenAPIV3.ParameterObject).name)
       ) || []),
     ]
