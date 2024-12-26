@@ -1,12 +1,12 @@
 {
-	"id": 41499,
+	"id": 0,
 	"name": "payment-provider",
 	"variant": "project",
 	"kind": 1,
 	"flags": {},
 	"children": [
 		{
-			"id": 41503,
+			"id": 4,
 			"name": "AbstractPaymentProvider",
 			"variant": "declaration",
 			"kind": 128,
@@ -15,7 +15,7 @@
 			},
 			"children": [
 				{
-					"id": 41504,
+					"id": 5,
 					"name": "validateOptions",
 					"variant": "declaration",
 					"kind": 2048,
@@ -24,7 +24,7 @@
 					},
 					"signatures": [
 						{
-							"id": 41505,
+							"id": 6,
 							"name": "validateOptions",
 							"variant": "signature",
 							"kind": 4096,
@@ -58,7 +58,7 @@
 							},
 							"parameters": [
 								{
-									"id": 41506,
+									"id": 7,
 									"name": "options",
 									"variant": "param",
 									"kind": 32768,
@@ -100,7 +100,7 @@
 					]
 				},
 				{
-					"id": 41512,
+					"id": 13,
 					"name": "constructor",
 					"variant": "declaration",
 					"kind": 512,
@@ -109,7 +109,7 @@
 					},
 					"signatures": [
 						{
-							"id": 41513,
+							"id": 14,
 							"name": "AbstractPaymentProvider",
 							"variant": "signature",
 							"kind": 16384,
@@ -118,15 +118,7 @@
 								"summary": [
 									{
 										"kind": "text",
-										"text": "You can use the "
-									},
-									{
-										"kind": "code",
-										"text": "`constructor`"
-									},
-									{
-										"kind": "text",
-										"text": " of the provider's service to access resources in your module's container.\n\nYou can also use the constructor to initialize your integration with the third-party provider. For example, if you use a client to connect to the third-party provider’s APIs,\nyou can initialize it in the constructor and use it in other methods in the service.\n\nThe provider can also access the module's options as a second parameter."
+										"text": "The constructor allows you to access resources from the [module's container](https://docs.medusajs.com/learn/fundamentals/modules/container) \nusing the first parameter, and the module's options using the second parameter.\n\n:::note\n\nA module's options are passed when you register it in the Medusa application.\n\n:::"
 									}
 								],
 								"blockTags": [
@@ -135,7 +127,7 @@
 										"content": [
 											{
 												"kind": "code",
-												"text": "```ts\nimport {\n  AbstractPaymentProvider\n} from \"@medusajs/framework/utils\"\nimport { Logger } from \"@medusajs/framework/types\"\n\ntype InjectedDependencies = {\n  logger: Logger\n}\n\ntype Options = {\n  apiKey: string\n}\n\nclass MyPaymentProviderService extends AbstractPaymentProvider<\n  Options\n> {\n  static identifier = \"my-payment\"\n  protected logger_: Logger\n  protected options_: Options\n  // Assuming you're using a client to integrate\n  // with a third-party service\n  protected client\n\n  constructor(\n    { logger }: InjectedDependencies,\n    options: Options\n  ) {\n    // @ts-ignore\n    super(...arguments)\n\n    this.logger_ = logger\n    this.options_ = options\n\n    // Assuming you're initializing a client\n    this.client = new Client(options)\n  }\n\n  // ...\n}\n\nexport default MyPaymentProviderService\n```"
+												"text": "```ts\nimport { AbstractPaymentProvider } from \"@medusajs/framework/utils\"\nimport { Logger } from \"@medusajs/framework/types\"\n\ntype Options = {\n  apiKey: string\n}\n\ntype InjectedDependencies = {\n  logger: Logger\n}\n\nclass MyPaymentProviderService extends AbstractPaymentProvider<Options> {\n  protected logger_: Logger\n  protected options_: Options\n  // assuming you're initializing a client\n  protected client\n\n  constructor(\n    container: InjectedDependencies,\n    options: Options\n  ) {\n    super(container, options)\n\n    this.logger_ = container.logger\n    this.options_ = options\n\n    // TODO initialize your client\n  }\n  // ...\n}\n\nexport default MyPaymentProviderService\n```"
 											}
 										]
 									}
@@ -143,11 +135,19 @@
 							},
 							"typeParameters": [
 								{
-									"id": 41514,
+									"id": 15,
 									"name": "TConfig",
 									"variant": "typeParam",
 									"kind": 131072,
 									"flags": {},
+									"comment": {
+										"summary": [
+											{
+												"kind": "text",
+												"text": "The type of the provider's options passed as a second parameter."
+											}
+										]
+									},
 									"default": {
 										"type": "reference",
 										"target": {
@@ -171,7 +171,7 @@
 							],
 							"parameters": [
 								{
-									"id": 41515,
+									"id": 16,
 									"name": "cradle",
 									"variant": "param",
 									"kind": 32768,
@@ -207,11 +207,11 @@
 							],
 							"type": {
 								"type": "reference",
-								"target": 41503,
+								"target": 4,
 								"typeArguments": [
 									{
 										"type": "reference",
-										"target": 41514,
+										"target": 15,
 										"name": "TConfig",
 										"package": "@medusajs/utils",
 										"qualifiedName": "AbstractPaymentProvider.TConfig",
@@ -225,7 +225,7 @@
 					]
 				},
 				{
-					"id": 41511,
+					"id": 12,
 					"name": "identifier",
 					"variant": "declaration",
 					"kind": 1024,
@@ -290,7 +290,7 @@
 					}
 				},
 				{
-					"id": 41521,
+					"id": 22,
 					"name": "capturePayment",
 					"variant": "declaration",
 					"kind": 2048,
@@ -299,7 +299,7 @@
 					},
 					"signatures": [
 						{
-							"id": 41522,
+							"id": 23,
 							"name": "capturePayment",
 							"variant": "signature",
 							"kind": 4096,
@@ -314,7 +314,7 @@
 										"kind": "inline-tag",
 										"tag": "@link",
 										"text": "authorizePayment",
-										"target": 41524
+										"target": 25
 									},
 									{
 										"kind": "text",
@@ -352,7 +352,7 @@
 										"content": [
 											{
 												"kind": "code",
-												"text": "```ts\n// other imports...\nimport {\n  PaymentProviderError,\n  PaymentProviderSessionResponse,\n} from \"@medusajs/framework/types\"\n\nclass MyPaymentProviderService extends AbstractPaymentProvider<\n  Options\n> {\n  async capturePayment(\n    paymentData: Record<string, unknown>\n  ): Promise<PaymentProviderError | PaymentProviderSessionResponse[\"data\"]> {\n    const externalId = paymentData.id\n\n    try {\n      const newData = await this.client.capturePayment(externalId)\n\n      return {\n        ...newData,\n        id: externalId\n      }\n    } catch (e) {\n      return {\n        error: e,\n        code: \"unknown\",\n        detail: e\n      }\n    }\n  }\n\n  // ...\n}\n```"
+												"text": "```ts\n// other imports...\nimport {\n  PaymentProviderError,\n  PaymentProviderSessionResponse,\n} from \"@medusajs/framework/types\"\n\nclass MyPaymentProviderService extends AbstractPaymentProvider<\n  Options\n> {\n  async capturePayment(\n    paymentData: Record<string, unknown>\n  ): Promise<PaymentProviderError | PaymentProviderSessionResponse[\"data\"]> {\n    const externalId = paymentData.id\n\n    try {\n      // assuming you have a client that captures the payment\n      const newData = await this.client.capturePayment(externalId)\n\n      return {\n        ...newData,\n        id: externalId\n      }\n    } catch (e) {\n      return {\n        error: e,\n        code: \"unknown\",\n        detail: e\n      }\n    }\n  }\n\n  // ...\n}\n```"
 											}
 										]
 									}
@@ -360,7 +360,7 @@
 							},
 							"parameters": [
 								{
-									"id": 41523,
+									"id": 24,
 									"name": "paymentData",
 									"variant": "param",
 									"kind": 32768,
@@ -460,7 +460,7 @@
 					}
 				},
 				{
-					"id": 41524,
+					"id": 25,
 					"name": "authorizePayment",
 					"variant": "declaration",
 					"kind": 2048,
@@ -469,7 +469,7 @@
 					},
 					"signatures": [
 						{
-							"id": 41525,
+							"id": 26,
 							"name": "authorizePayment",
 							"variant": "signature",
 							"kind": 4096,
@@ -484,7 +484,7 @@
 										"kind": "inline-tag",
 										"tag": "@link",
 										"text": "capturePayment",
-										"target": 41521
+										"target": 22
 									},
 									{
 										"kind": "text",
@@ -530,7 +530,7 @@
 										"content": [
 											{
 												"kind": "code",
-												"text": "```ts\n// other imports...\nimport {\n  PaymentProviderError,\n  PaymentProviderSessionResponse,\n  PaymentSessionStatus\n} from \"@medusajs/framework/types\"\n\n\nclass MyPaymentProviderService extends AbstractPaymentProvider<\n  Options\n> {\n  async authorizePayment(\n    paymentSessionData: Record<string, unknown>,\n    context: Record<string, unknown>\n  ): Promise<\n    PaymentProviderError | {\n      status: PaymentSessionStatus\n      data: PaymentProviderSessionResponse[\"data\"]\n    }\n  > {\n    const externalId = paymentSessionData.id\n\n    try {\n      const paymentData = await this.client.authorizePayment(externalId)\n\n      return {\n        data: {\n          ...paymentData,\n          id: externalId\n        },\n        status: \"authorized\"\n      }\n    } catch (e) {\n      return {\n        error: e,\n        code: \"unknown\",\n        detail: e\n      }\n    }\n  }\n\n  // ...\n}\n```"
+												"text": "```ts\n// other imports...\nimport {\n  PaymentProviderError,\n  PaymentProviderSessionResponse,\n  PaymentSessionStatus\n} from \"@medusajs/framework/types\"\n\n\nclass MyPaymentProviderService extends AbstractPaymentProvider<\n  Options\n> {\n  async authorizePayment(\n    paymentSessionData: Record<string, unknown>,\n    context: Record<string, unknown>\n  ): Promise<\n    PaymentProviderError | {\n      status: PaymentSessionStatus\n      data: PaymentProviderSessionResponse[\"data\"]\n    }\n  > {\n    const externalId = paymentSessionData.id\n\n    try {\n      // assuming you have a client that authorizes the payment\n      const paymentData = await this.client.authorizePayment(externalId)\n\n      return {\n        data: {\n          ...paymentData,\n          id: externalId\n        },\n        status: \"authorized\"\n      }\n    } catch (e) {\n      return {\n        error: e,\n        code: \"unknown\",\n        detail: e\n      }\n    }\n  }\n\n  // ...\n}\n```"
 											}
 										]
 									}
@@ -538,7 +538,7 @@
 							},
 							"parameters": [
 								{
-									"id": 41526,
+									"id": 27,
 									"name": "paymentSessionData",
 									"variant": "param",
 									"kind": 32768,
@@ -580,7 +580,7 @@
 									}
 								},
 								{
-									"id": 41527,
+									"id": 28,
 									"name": "context",
 									"variant": "param",
 									"kind": 32768,
@@ -644,14 +644,14 @@
 											{
 												"type": "reflection",
 												"declaration": {
-													"id": 41528,
+													"id": 29,
 													"name": "__type",
 													"variant": "declaration",
 													"kind": 65536,
 													"flags": {},
 													"children": [
 														{
-															"id": 41529,
+															"id": 30,
 															"name": "status",
 															"variant": "declaration",
 															"kind": 1024,
@@ -675,7 +675,7 @@
 															}
 														},
 														{
-															"id": 41530,
+															"id": 31,
 															"name": "data",
 															"variant": "declaration",
 															"kind": 1024,
@@ -721,8 +721,8 @@
 														{
 															"title": "Properties",
 															"children": [
-																41529,
-																41530
+																30,
+																31
 															]
 														}
 													]
@@ -748,7 +748,7 @@
 					}
 				},
 				{
-					"id": 41531,
+					"id": 32,
 					"name": "cancelPayment",
 					"variant": "declaration",
 					"kind": 2048,
@@ -757,7 +757,7 @@
 					},
 					"signatures": [
 						{
-							"id": 41532,
+							"id": 33,
 							"name": "cancelPayment",
 							"variant": "signature",
 							"kind": 4096,
@@ -784,7 +784,7 @@
 										"content": [
 											{
 												"kind": "code",
-												"text": "```ts\n// other imports...\nimport {\n  PaymentProviderError,\n  PaymentProviderSessionResponse,\n} from \"@medusajs/framework/types\"\n\n\nclass MyPaymentProviderService extends AbstractPaymentProvider<\n  Options\n> {\n  async cancelPayment(\n    paymentData: Record<string, unknown>\n  ): Promise<PaymentProviderError | PaymentProviderSessionResponse[\"data\"]> {\n    const externalId = paymentData.id\n\n    try {\n      const paymentData = await this.client.cancelPayment(externalId)\n    } catch (e) {\n      return {\n        error: e,\n        code: \"unknown\",\n        detail: e\n      }\n    }\n  }\n\n  // ...\n}\n```"
+												"text": "```ts\n// other imports...\nimport {\n  PaymentProviderError,\n  PaymentProviderSessionResponse,\n} from \"@medusajs/framework/types\"\n\n\nclass MyPaymentProviderService extends AbstractPaymentProvider<\n  Options\n> {\n  async cancelPayment(\n    paymentData: Record<string, unknown>\n  ): Promise<PaymentProviderError | PaymentProviderSessionResponse[\"data\"]> {\n    const externalId = paymentData.id\n\n    try {\n      // assuming you have a client that cancels the payment\n      const paymentData = await this.client.cancelPayment(externalId)\n    } catch (e) {\n      return {\n        error: e,\n        code: \"unknown\",\n        detail: e\n      }\n    }\n  }\n\n  // ...\n}\n```"
 											}
 										]
 									}
@@ -792,7 +792,7 @@
 							},
 							"parameters": [
 								{
-									"id": 41533,
+									"id": 34,
 									"name": "paymentData",
 									"variant": "param",
 									"kind": 32768,
@@ -892,7 +892,7 @@
 					}
 				},
 				{
-					"id": 41534,
+					"id": 35,
 					"name": "initiatePayment",
 					"variant": "declaration",
 					"kind": 2048,
@@ -901,7 +901,7 @@
 					},
 					"signatures": [
 						{
-							"id": 41535,
+							"id": 36,
 							"name": "initiatePayment",
 							"variant": "signature",
 							"kind": 4096,
@@ -944,7 +944,7 @@
 										"content": [
 											{
 												"kind": "code",
-												"text": "```ts\n// other imports...\nimport {\n  PaymentProviderError,\n  PaymentProviderSessionResponse,\n} from \"@medusajs/framework/types\"\n\n\nclass MyPaymentProviderService extends AbstractPaymentProvider<\n  Options\n> {\n  async initiatePayment(\n    context: CreatePaymentProviderSession\n  ): Promise<PaymentProviderError | PaymentProviderSessionResponse> {\n    const {\n      amount,\n      currency_code,\n      context: customerDetails\n    } = context\n\n    try {\n      const response = await this.client.init(\n        amount, currency_code, customerDetails\n      )\n\n      return {\n        ...response,\n        data: {\n          id: response.id\n        }\n      }\n    } catch (e) {\n      return {\n        error: e,\n        code: \"unknown\",\n        detail: e\n      }\n    }\n  }\n\n  // ...\n}\n```"
+												"text": "```ts\n// other imports...\nimport {\n  PaymentProviderError,\n  PaymentProviderSessionResponse,\n} from \"@medusajs/framework/types\"\n\n\nclass MyPaymentProviderService extends AbstractPaymentProvider<\n  Options\n> {\n  async initiatePayment(\n    context: CreatePaymentProviderSession\n  ): Promise<PaymentProviderError | PaymentProviderSessionResponse> {\n    const {\n      amount,\n      currency_code,\n      context: customerDetails\n    } = context\n\n    try {\n      // assuming you have a client that initializes the payment\n      const response = await this.client.init(\n        amount, currency_code, customerDetails\n      )\n\n      return {\n        ...response,\n        data: {\n          id: response.id\n        }\n      }\n    } catch (e) {\n      return {\n        error: e,\n        code: \"unknown\",\n        detail: e\n      }\n    }\n  }\n\n  // ...\n}\n```"
 											}
 										]
 									}
@@ -952,7 +952,7 @@
 							},
 							"parameters": [
 								{
-									"id": 41536,
+									"id": 37,
 									"name": "context",
 									"variant": "param",
 									"kind": 32768,
@@ -1024,7 +1024,7 @@
 					}
 				},
 				{
-					"id": 41537,
+					"id": 38,
 					"name": "deletePayment",
 					"variant": "declaration",
 					"kind": 2048,
@@ -1033,7 +1033,7 @@
 					},
 					"signatures": [
 						{
-							"id": 41538,
+							"id": 39,
 							"name": "deletePayment",
 							"variant": "signature",
 							"kind": 4096,
@@ -1060,7 +1060,7 @@
 										"content": [
 											{
 												"kind": "code",
-												"text": "```ts\n// other imports...\nimport {\n  PaymentProviderError,\n  PaymentProviderSessionResponse,\n} from \"@medusajs/framework/types\"\n\n\nclass MyPaymentProviderService extends AbstractPaymentProvider<\n  Options\n> {\n  async deletePayment(\n    paymentSessionData: Record<string, unknown>\n  ): Promise<\n    PaymentProviderError | PaymentProviderSessionResponse[\"data\"]\n  > {\n    const externalId = paymentSessionData.id\n\n    try {\n      await this.client.cancelPayment(externalId)\n    } catch (e) {\n      return {\n        error: e,\n        code: \"unknown\",\n        detail: e\n      }\n    }\n  }\n\n  // ...\n}\n```"
+												"text": "```ts\n// other imports...\nimport {\n  PaymentProviderError,\n  PaymentProviderSessionResponse,\n} from \"@medusajs/framework/types\"\n\n\nclass MyPaymentProviderService extends AbstractPaymentProvider<\n  Options\n> {\n  async deletePayment(\n    paymentSessionData: Record<string, unknown>\n  ): Promise<\n    PaymentProviderError | PaymentProviderSessionResponse[\"data\"]\n  > {\n    const externalId = paymentSessionData.id\n\n    try {\n      // assuming you have a client that cancels the payment\n      await this.client.cancelPayment(externalId)\n    } catch (e) {\n      return {\n        error: e,\n        code: \"unknown\",\n        detail: e\n      }\n    }\n  }\n\n  // ...\n}\n```"
 											}
 										]
 									}
@@ -1068,7 +1068,7 @@
 							},
 							"parameters": [
 								{
-									"id": 41539,
+									"id": 40,
 									"name": "paymentSessionData",
 									"variant": "param",
 									"kind": 32768,
@@ -1168,7 +1168,7 @@
 					}
 				},
 				{
-					"id": 41540,
+					"id": 41,
 					"name": "getPaymentStatus",
 					"variant": "declaration",
 					"kind": 2048,
@@ -1177,7 +1177,7 @@
 					},
 					"signatures": [
 						{
-							"id": 41541,
+							"id": 42,
 							"name": "getPaymentStatus",
 							"variant": "signature",
 							"kind": 4096,
@@ -1204,7 +1204,7 @@
 										"content": [
 											{
 												"kind": "code",
-												"text": "```ts\n// other imports...\nimport {\n  PaymentSessionStatus\n} from \"@medusajs/framework/types\"\n\n\nclass MyPaymentProviderService extends AbstractPaymentProvider<\n  Options\n> {\n  async getPaymentStatus(\n    paymentSessionData: Record<string, unknown>\n  ): Promise<PaymentSessionStatus> {\n    const externalId = paymentSessionData.id\n\n    try {\n      const status = await this.client.getStatus(externalId)\n\n      switch (status) {\n        case \"requires_capture\":\n          return \"authorized\"\n        case \"success\":\n          return \"captured\"\n        case \"canceled\":\n          return \"canceled\"\n        default:\n          return \"pending\"\n      }\n    } catch (e) {\n      return \"error\"\n    }\n  }\n\n  // ...\n}\n```"
+												"text": "```ts\n// other imports...\nimport {\n  PaymentSessionStatus\n} from \"@medusajs/framework/types\"\n\n\nclass MyPaymentProviderService extends AbstractPaymentProvider<\n  Options\n> {\n  async getPaymentStatus(\n    paymentSessionData: Record<string, unknown>\n  ): Promise<PaymentSessionStatus> {\n    const externalId = paymentSessionData.id\n\n    try {\n      // assuming you have a client that retrieves the payment status\n      const status = await this.client.getStatus(externalId)\n\n      switch (status) {\n        case \"requires_capture\":\n          return \"authorized\"\n        case \"success\":\n          return \"captured\"\n        case \"canceled\":\n          return \"canceled\"\n        default:\n          return \"pending\"\n      }\n    } catch (e) {\n      return \"error\"\n    }\n  }\n\n  // ...\n}\n```"
 											}
 										]
 									}
@@ -1212,7 +1212,7 @@
 							},
 							"parameters": [
 								{
-									"id": 41542,
+									"id": 43,
 									"name": "paymentSessionData",
 									"variant": "param",
 									"kind": 32768,
@@ -1288,7 +1288,7 @@
 					}
 				},
 				{
-					"id": 41543,
+					"id": 44,
 					"name": "refundPayment",
 					"variant": "declaration",
 					"kind": 2048,
@@ -1297,7 +1297,7 @@
 					},
 					"signatures": [
 						{
-							"id": 41544,
+							"id": 45,
 							"name": "refundPayment",
 							"variant": "signature",
 							"kind": 4096,
@@ -1332,7 +1332,7 @@
 										"content": [
 											{
 												"kind": "code",
-												"text": "```ts\n// other imports...\nimport {\n  PaymentProviderError,\n  PaymentProviderSessionResponse,\n} from \"@medusajs/framework/types\"\n\n\nclass MyPaymentProviderService extends AbstractPaymentProvider<\n  Options\n> {\n  async refundPayment(\n    paymentData: Record<string, unknown>,\n    refundAmount: number\n  ): Promise<\n    PaymentProviderError | PaymentProviderSessionResponse[\"data\"]\n  > {\n    const externalId = paymentData.id\n\n    try {\n      const newData = await this.client.refund(\n        externalId,\n        refundAmount\n      )\n\n      return {\n        ...newData,\n        id: externalId\n      }\n    } catch (e) {\n      return {\n        error: e,\n        code: \"unknown\",\n        detail: e\n      }\n    }\n  }\n\n  // ...\n}\n```"
+												"text": "```ts\n// other imports...\nimport {\n  PaymentProviderError,\n  PaymentProviderSessionResponse,\n} from \"@medusajs/framework/types\"\n\n\nclass MyPaymentProviderService extends AbstractPaymentProvider<\n  Options\n> {\n  async refundPayment(\n    paymentData: Record<string, unknown>,\n    refundAmount: number\n  ): Promise<\n    PaymentProviderError | PaymentProviderSessionResponse[\"data\"]\n  > {\n    const externalId = paymentData.id\n\n    try {\n      // assuming you have a client that refunds the payment\n      const newData = await this.client.refund(\n        externalId,\n        refundAmount\n      )\n\n      return {\n        ...newData,\n        id: externalId\n      }\n    } catch (e) {\n      return {\n        error: e,\n        code: \"unknown\",\n        detail: e\n      }\n    }\n  }\n\n  // ...\n}\n```"
 											}
 										]
 									}
@@ -1340,7 +1340,7 @@
 							},
 							"parameters": [
 								{
-									"id": 41545,
+									"id": 46,
 									"name": "paymentData",
 									"variant": "param",
 									"kind": 32768,
@@ -1382,7 +1382,7 @@
 									}
 								},
 								{
-									"id": 41546,
+									"id": 47,
 									"name": "refundAmount",
 									"variant": "param",
 									"kind": 32768,
@@ -1459,7 +1459,7 @@
 					}
 				},
 				{
-					"id": 41547,
+					"id": 48,
 					"name": "retrievePayment",
 					"variant": "declaration",
 					"kind": 2048,
@@ -1468,7 +1468,7 @@
 					},
 					"signatures": [
 						{
-							"id": 41548,
+							"id": 49,
 							"name": "retrievePayment",
 							"variant": "signature",
 							"kind": 4096,
@@ -1503,7 +1503,7 @@
 										"content": [
 											{
 												"kind": "code",
-												"text": "```ts\n// other imports...\nimport {\n  PaymentProviderError,\n  PaymentProviderSessionResponse,\n} from \"@medusajs/framework/types\"\n\n\nclass MyPaymentProviderService extends AbstractPaymentProvider<\n  Options\n> {\n  async retrievePayment(\n    paymentSessionData: Record<string, unknown>\n  ): Promise<\n    PaymentProviderError | PaymentProviderSessionResponse[\"data\"]\n  > {\n    const externalId = paymentSessionData.id\n\n    try {\n      return await this.client.retrieve(externalId)\n    } catch (e) {\n      return {\n        error: e,\n        code: \"unknown\",\n        detail: e\n      }\n    }\n  }\n\n  // ...\n}\n```"
+												"text": "```ts\n// other imports...\nimport {\n  PaymentProviderError,\n  PaymentProviderSessionResponse,\n} from \"@medusajs/framework/types\"\n\n\nclass MyPaymentProviderService extends AbstractPaymentProvider<\n  Options\n> {\n  async retrievePayment(\n    paymentSessionData: Record<string, unknown>\n  ): Promise<\n    PaymentProviderError | PaymentProviderSessionResponse[\"data\"]\n  > {\n    const externalId = paymentSessionData.id\n\n    try {\n      // assuming you have a client that retrieves the payment\n      return await this.client.retrieve(externalId)\n    } catch (e) {\n      return {\n        error: e,\n        code: \"unknown\",\n        detail: e\n      }\n    }\n  }\n\n  // ...\n}\n```"
 											}
 										]
 									}
@@ -1511,7 +1511,7 @@
 							},
 							"parameters": [
 								{
-									"id": 41549,
+									"id": 50,
 									"name": "paymentSessionData",
 									"variant": "param",
 									"kind": 32768,
@@ -1611,7 +1611,7 @@
 					}
 				},
 				{
-					"id": 41550,
+					"id": 51,
 					"name": "updatePayment",
 					"variant": "declaration",
 					"kind": 2048,
@@ -1620,7 +1620,7 @@
 					},
 					"signatures": [
 						{
-							"id": 41551,
+							"id": 52,
 							"name": "updatePayment",
 							"variant": "signature",
 							"kind": 4096,
@@ -1635,7 +1635,7 @@
 										"kind": "inline-tag",
 										"tag": "@link",
 										"text": "initiatePayment",
-										"target": 41534
+										"target": 35
 									},
 									{
 										"kind": "text",
@@ -1673,7 +1673,7 @@
 										"content": [
 											{
 												"kind": "code",
-												"text": "```ts\n// other imports...\nimport {\n  UpdatePaymentProviderSession,\n  PaymentProviderError,\n  PaymentProviderSessionResponse,\n} from \"@medusajs/framework/types\"\n\n\nclass MyPaymentProviderService extends AbstractPaymentProvider<\n  Options\n> {\n  async updatePayment(\n    context: UpdatePaymentProviderSession\n  ): Promise<PaymentProviderError | PaymentProviderSessionResponse> {\n    const {\n      amount,\n      currency_code,\n      context: customerDetails,\n      data\n    } = context\n    const externalId = data.id\n\n    try {\n      const response = await this.client.update(\n        externalId,\n        {\n          amount,\n          currency_code,\n          customerDetails\n        }\n      )\n\n      return {\n        ...response,\n        data: {\n          id: response.id\n        }\n      }\n    } catch (e) {\n      return {\n        error: e,\n        code: \"unknown\",\n        detail: e\n      }\n    }\n  }\n\n  // ...\n}\n```"
+												"text": "```ts\n// other imports...\nimport {\n  UpdatePaymentProviderSession,\n  PaymentProviderError,\n  PaymentProviderSessionResponse,\n} from \"@medusajs/framework/types\"\n\n\nclass MyPaymentProviderService extends AbstractPaymentProvider<\n  Options\n> {\n  async updatePayment(\n    context: UpdatePaymentProviderSession\n  ): Promise<PaymentProviderError | PaymentProviderSessionResponse> {\n    const {\n      amount,\n      currency_code,\n      context: customerDetails,\n      data\n    } = context\n    const externalId = data.id\n\n    try {\n      // assuming you have a client that updates the payment\n      const response = await this.client.update(\n        externalId,\n        {\n          amount,\n          currency_code,\n          customerDetails\n        }\n      )\n\n      return {\n        ...response,\n        data: {\n          id: response.id\n        }\n      }\n    } catch (e) {\n      return {\n        error: e,\n        code: \"unknown\",\n        detail: e\n      }\n    }\n  }\n\n  // ...\n}\n```"
 											}
 										]
 									}
@@ -1681,7 +1681,7 @@
 							},
 							"parameters": [
 								{
-									"id": 41552,
+									"id": 53,
 									"name": "context",
 									"variant": "param",
 									"kind": 32768,
@@ -1753,7 +1753,7 @@
 					}
 				},
 				{
-					"id": 41553,
+					"id": 54,
 					"name": "getWebhookActionAndData",
 					"variant": "declaration",
 					"kind": 2048,
@@ -1762,7 +1762,7 @@
 					},
 					"signatures": [
 						{
-							"id": 41554,
+							"id": 55,
 							"name": "getWebhookActionAndData",
 							"variant": "signature",
 							"kind": 4096,
@@ -1829,7 +1829,7 @@
 							},
 							"parameters": [
 								{
-									"id": 41555,
+									"id": 56,
 									"name": "data",
 									"variant": "param",
 									"kind": 32768,
@@ -1845,14 +1845,14 @@
 									"type": {
 										"type": "reflection",
 										"declaration": {
-											"id": 41556,
+											"id": 57,
 											"name": "__type",
 											"variant": "declaration",
 											"kind": 65536,
 											"flags": {},
 											"children": [
 												{
-													"id": 41557,
+													"id": 58,
 													"name": "data",
 													"variant": "declaration",
 													"kind": 1024,
@@ -1886,7 +1886,7 @@
 													}
 												},
 												{
-													"id": 41558,
+													"id": 59,
 													"name": "rawData",
 													"variant": "declaration",
 													"kind": 1024,
@@ -1920,7 +1920,7 @@
 													}
 												},
 												{
-													"id": 41559,
+													"id": 60,
 													"name": "headers",
 													"variant": "declaration",
 													"kind": 1024,
@@ -1958,9 +1958,9 @@
 												{
 													"title": "Properties",
 													"children": [
-														41557,
-														41558,
-														41559
+														58,
+														59,
+														60
 													]
 												}
 											]
@@ -2006,35 +2006,35 @@
 				{
 					"title": "Constructors",
 					"children": [
-						41512
+						13
 					]
 				},
 				{
 					"title": "Properties",
 					"children": [
-						41511
+						12
 					]
 				},
 				{
 					"title": "Methods",
 					"children": [
-						41504,
-						41521,
-						41524,
-						41531,
-						41534,
-						41537,
-						41540,
-						41543,
-						41547,
-						41550,
-						41553
+						5,
+						22,
+						25,
+						32,
+						35,
+						38,
+						41,
+						44,
+						48,
+						51,
+						54
 					]
 				}
 			],
 			"typeParameters": [
 				{
-					"id": 41560,
+					"id": 61,
 					"name": "TConfig",
 					"variant": "typeParam",
 					"kind": 131072,
@@ -2077,209 +2077,209 @@
 		{
 			"title": "Classes",
 			"children": [
-				41503
+				4
 			]
 		}
 	],
 	"packageName": "@medusajs/utils",
 	"symbolIdMap": {
-		"41499": {
+		"0": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": ""
 		},
-		"41503": {
+		"4": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "AbstractPaymentProvider"
 		},
-		"41504": {
+		"5": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "AbstractPaymentProvider.validateOptions"
 		},
-		"41505": {
+		"6": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "AbstractPaymentProvider.validateOptions"
 		},
-		"41506": {
+		"7": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "options"
 		},
-		"41511": {
+		"12": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "AbstractPaymentProvider.identifier"
 		},
-		"41512": {
+		"13": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "AbstractPaymentProvider.__constructor"
 		},
-		"41513": {
+		"14": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "AbstractPaymentProvider"
 		},
-		"41514": {
+		"15": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "AbstractPaymentProvider.TConfig"
 		},
-		"41515": {
+		"16": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "cradle"
 		},
-		"41521": {
+		"22": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "AbstractPaymentProvider.capturePayment"
 		},
-		"41522": {
+		"23": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "AbstractPaymentProvider.capturePayment"
 		},
-		"41523": {
+		"24": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "paymentData"
 		},
-		"41524": {
+		"25": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "AbstractPaymentProvider.authorizePayment"
 		},
-		"41525": {
+		"26": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "AbstractPaymentProvider.authorizePayment"
 		},
-		"41526": {
+		"27": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "paymentSessionData"
 		},
-		"41527": {
+		"28": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "context"
 		},
-		"41528": {
+		"29": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "__type"
 		},
-		"41529": {
+		"30": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "__type.status"
 		},
-		"41530": {
+		"31": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "__type.data"
 		},
-		"41531": {
+		"32": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "AbstractPaymentProvider.cancelPayment"
 		},
-		"41532": {
+		"33": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "AbstractPaymentProvider.cancelPayment"
 		},
-		"41533": {
+		"34": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "paymentData"
 		},
-		"41534": {
+		"35": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "AbstractPaymentProvider.initiatePayment"
 		},
-		"41535": {
+		"36": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "AbstractPaymentProvider.initiatePayment"
 		},
-		"41536": {
+		"37": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "context"
 		},
-		"41537": {
+		"38": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "AbstractPaymentProvider.deletePayment"
 		},
-		"41538": {
+		"39": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "AbstractPaymentProvider.deletePayment"
 		},
-		"41539": {
+		"40": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "paymentSessionData"
 		},
-		"41540": {
+		"41": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "AbstractPaymentProvider.getPaymentStatus"
 		},
-		"41541": {
+		"42": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "AbstractPaymentProvider.getPaymentStatus"
 		},
-		"41542": {
+		"43": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "paymentSessionData"
 		},
-		"41543": {
+		"44": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "AbstractPaymentProvider.refundPayment"
 		},
-		"41544": {
+		"45": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "AbstractPaymentProvider.refundPayment"
 		},
-		"41545": {
+		"46": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "paymentData"
 		},
-		"41546": {
+		"47": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "refundAmount"
 		},
-		"41547": {
+		"48": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "AbstractPaymentProvider.retrievePayment"
 		},
-		"41548": {
+		"49": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "AbstractPaymentProvider.retrievePayment"
 		},
-		"41549": {
+		"50": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "paymentSessionData"
 		},
-		"41550": {
+		"51": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "AbstractPaymentProvider.updatePayment"
 		},
-		"41551": {
+		"52": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "AbstractPaymentProvider.updatePayment"
 		},
-		"41552": {
+		"53": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "context"
 		},
-		"41553": {
+		"54": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "AbstractPaymentProvider.getWebhookActionAndData"
 		},
-		"41554": {
+		"55": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "AbstractPaymentProvider.getWebhookActionAndData"
 		},
-		"41555": {
+		"56": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "data"
 		},
-		"41556": {
+		"57": {
 			"sourceFileName": "../../../../packages/core/types/src/payment/mutations.ts",
 			"qualifiedName": "__type"
 		},
-		"41557": {
+		"58": {
 			"sourceFileName": "../../../../packages/core/types/src/payment/mutations.ts",
 			"qualifiedName": "__type.data"
 		},
-		"41558": {
+		"59": {
 			"sourceFileName": "../../../../packages/core/types/src/payment/mutations.ts",
 			"qualifiedName": "__type.rawData"
 		},
-		"41559": {
+		"60": {
 			"sourceFileName": "../../../../packages/core/types/src/payment/mutations.ts",
 			"qualifiedName": "__type.headers"
 		},
-		"41560": {
+		"61": {
 			"sourceFileName": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts",
 			"qualifiedName": "AbstractPaymentProvider.TConfig"
 		}
@@ -2289,7 +2289,7 @@
 			"1": "../../../../packages/core/utils/src/payment/abstract-payment-provider.ts"
 		},
 		"reflections": {
-			"1": 41499
+			"1": 0
 		}
 	}
 }
