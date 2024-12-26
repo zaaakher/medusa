@@ -27,12 +27,9 @@ const getIntersectionTags = (tags: string): Tag => {
     .map((tagName) => getTagItems(tagName))
     .filter((tag) => tag !== undefined) as Tag[]
 
-  if (!tagsToIntersect.length) {
+  if (tagsToIntersect.length < 2) {
+    // if there are less than 2 tags to intersect, return an empty array
     return []
-  }
-
-  if (tagsToIntersect.length === 1) {
-    return tagsToIntersect[0]
   }
 
   return tagsToIntersect[0].filter((tagItem) => {

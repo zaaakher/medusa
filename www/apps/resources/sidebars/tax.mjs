@@ -16,13 +16,12 @@ export const taxSidebar = [
         title: "Module Options",
       },
       {
-        type: "link",
-        path: "/commerce-modules/tax/examples",
-        title: "Examples",
+        type: "separator",
       },
       {
-        type: "sub-category",
+        type: "category",
         title: "Concepts",
+        initialOpen: false,
         children: [
           {
             type: "link",
@@ -42,8 +41,11 @@ export const taxSidebar = [
         ],
       },
       {
-        type: "sub-category",
-        title: "Guides",
+        type: "category",
+        title: "Server Guides",
+        autogenerate_tags: "server+tax",
+        initialOpen: false,
+        autogenerate_as_ref: true,
         children: [
           {
             type: "link",
@@ -53,8 +55,44 @@ export const taxSidebar = [
         ],
       },
       {
-        type: "sub-category",
+        type: "category",
+        title: "Storefront Guides",
+        autogenerate_tags: "storefront+tax",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "Admin Guides",
+        autogenerate_tags: "admin+tax",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "User Guides",
+        autogenerate_tags: "userGuides+tax",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "Workflows",
+        autogenerate_tags: "workflow+tax",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "Steps",
+        autogenerate_tags: "step+tax",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
         title: "References",
+        initialOpen: false,
         children: [
           {
             type: "link",

@@ -11,13 +11,12 @@ export const stockLocationSidebar = [
         title: "Overview",
       },
       {
-        type: "link",
-        path: "/commerce-modules/stock-location/examples",
-        title: "Examples",
+        type: "separator",
       },
       {
-        type: "sub-category",
+        type: "category",
         title: "Concepts",
+        initialOpen: false,
         children: [
           {
             type: "link",
@@ -32,8 +31,51 @@ export const stockLocationSidebar = [
         ],
       },
       {
-        type: "sub-category",
+        type: "category",
+        title: "Server Guides",
+        autogenerate_tags: "server+stockLocation",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "Storefront Guides",
+        autogenerate_tags: "storefront+stockLocation",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "Admin Guides",
+        autogenerate_tags: "admin+stockLocation",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "User Guides",
+        autogenerate_tags: "userGuides+stockLocation",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "Workflows",
+        autogenerate_tags: "workflow+stockLocation",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "Steps",
+        autogenerate_tags: "step+stockLocation",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
         title: "References",
+        initialOpen: false,
         children: [
           {
             type: "link",

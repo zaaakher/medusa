@@ -49,8 +49,8 @@ To retrieve the return, pass `return.*` in `fields`.
 const { data: fulfillments } = await query.graph({
   entity: "fulfillment",
   fields: [
-    "order.*"
-  ]
+    "order.*",
+  ],
 })
 
 // fulfillments.order
@@ -67,8 +67,8 @@ import { useQueryGraphStep } from "@medusajs/medusa/core-flows"
 const { data: fulfillments } = useQueryGraphStep({
   entity: "fulfillment",
   fields: [
-    "order.*"
-  ]
+    "order.*",
+  ],
 })
 
 // fulfillments.order
@@ -142,8 +142,8 @@ To retrieve the price set of a shipping option with [Query](!docs!/learn/fundame
 const { data: shippingOptions } = await query.graph({
   entity: "shipping_option",
   fields: [
-    "price_set.*"
-  ]
+    "price_set.*",
+  ],
 })
 
 // shippingOptions.price_set
@@ -160,8 +160,8 @@ import { useQueryGraphStep } from "@medusajs/medusa/core-flows"
 const { data: shippingOptions } = useQueryGraphStep({
   entity: "shipping_option",
   fields: [
-    "price_set.*"
-  ]
+    "price_set.*",
+  ],
 })
 
 // shippingOptions.price_set
@@ -245,8 +245,8 @@ To retrieve the stock location of a fulfillment provider, pass `locations.*` in 
 const { data: fulfillmentSets } = await query.graph({
   entity: "fulfillment_set",
   fields: [
-    "location.*"
-  ]
+    "location.*",
+  ],
 })
 
 // fulfillmentSets.location
@@ -263,8 +263,8 @@ import { useQueryGraphStep } from "@medusajs/medusa/core-flows"
 const { data: fulfillmentSets } = useQueryGraphStep({
   entity: "fulfillment_set",
   fields: [
-    "location.*"
-  ]
+    "location.*",
+  ],
 })
 
 // fulfillmentSets.location

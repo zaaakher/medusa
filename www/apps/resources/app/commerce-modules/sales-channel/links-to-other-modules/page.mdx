@@ -45,8 +45,8 @@ To retrieve the API keys associated with a sales channel with [Query](!docs!/lea
 const { data: salesChannels } = await query.graph({
   entity: "sales_channel",
   fields: [
-    "publishable_api_keys.*"
-  ]
+    "publishable_api_keys.*",
+  ],
 })
 
 // salesChannels.publishable_api_keys
@@ -63,8 +63,8 @@ import { useQueryGraphStep } from "@medusajs/medusa/core-flows"
 const { data: salesChannels } = useQueryGraphStep({
   entity: "sales_channel",
   fields: [
-    "publishable_api_keys.*"
-  ]
+    "publishable_api_keys.*",
+  ],
 })
 
 // salesChannels.publishable_api_keys
@@ -134,8 +134,8 @@ To retrieve the carts of a sales channel with [Query](!docs!/learn/fundamentals/
 const { data: salesChannels } = await query.graph({
   entity: "sales_channel",
   fields: [
-    "carts.*"
-  ]
+    "carts.*",
+  ],
 })
 
 // salesChannels.carts
@@ -152,8 +152,8 @@ import { useQueryGraphStep } from "@medusajs/medusa/core-flows"
 const { data: salesChannels } = useQueryGraphStep({
   entity: "sales_channel",
   fields: [
-    "carts.*"
-  ]
+    "carts.*",
+  ],
 })
 
 // salesChannels.carts
@@ -179,8 +179,8 @@ To retrieve the orders of a sales channel with [Query](!docs!/learn/fundamentals
 const { data: salesChannels } = await query.graph({
   entity: "sales_channel",
   fields: [
-    "orders.*"
-  ]
+    "orders.*",
+  ],
 })
 
 // salesChannels.orders
@@ -197,8 +197,8 @@ import { useQueryGraphStep } from "@medusajs/medusa/core-flows"
 const { data: salesChannels } = useQueryGraphStep({
   entity: "sales_channel",
   fields: [
-    "orders.*"
-  ]
+    "orders.*",
+  ],
 })
 
 // salesChannels.orders
@@ -228,8 +228,8 @@ To retrieve the products of a sales channel with [Query](!docs!/learn/fundamenta
 const { data: salesChannels } = await query.graph({
   entity: "sales_channel",
   fields: [
-    "products.*"
-  ]
+    "products.*",
+  ],
 })
 
 // salesChannels.products
@@ -246,8 +246,8 @@ import { useQueryGraphStep } from "@medusajs/medusa/core-flows"
 const { data: salesChannels } = useQueryGraphStep({
   entity: "sales_channel",
   fields: [
-    "products.*"
-  ]
+    "products.*",
+  ],
 })
 
 // salesChannels.products
@@ -321,8 +321,8 @@ To retrieve the stock locations of a sales channel with [Query](!docs!/learn/fun
 const { data: salesChannels } = await query.graph({
   entity: "sales_channel",
   fields: [
-    "stock_locations.*"
-  ]
+    "stock_locations.*",
+  ],
 })
 
 // salesChannels.stock_locations
@@ -339,8 +339,8 @@ import { useQueryGraphStep } from "@medusajs/medusa/core-flows"
 const { data: salesChannels } = useQueryGraphStep({
   entity: "sales_channel",
   fields: [
-    "stock_locations.*"
-  ]
+    "stock_locations.*",
+  ],
 })
 
 // salesChannels.stock_locations

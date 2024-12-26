@@ -11,13 +11,12 @@ export const storeSidebar = [
         title: "Overview",
       },
       {
-        type: "link",
-        path: "/commerce-modules/store/examples",
-        title: "Examples",
+        type: "separator",
       },
       {
-        type: "sub-category",
+        type: "category",
         title: "Concepts",
+        initialOpen: false,
         children: [
           {
             type: "link",
@@ -27,8 +26,51 @@ export const storeSidebar = [
         ],
       },
       {
-        type: "sub-category",
+        type: "category",
+        title: "Server Guides",
+        autogenerate_tags: "server+store",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "Storefront Guides",
+        autogenerate_tags: "storefront+store",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "Admin Guides",
+        autogenerate_tags: "admin+store",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "User Guides",
+        autogenerate_tags: "userGuides+store",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "Workflows",
+        autogenerate_tags: "workflow+store",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "Steps",
+        autogenerate_tags: "step+store",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
         title: "References",
+        initialOpen: false,
         children: [
           {
             type: "link",

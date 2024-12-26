@@ -11,18 +11,12 @@ export const productSidebar = [
         title: "Overview",
       },
       {
-        type: "link",
-        path: "/commerce-modules/product/examples",
-        title: "Examples",
+        type: "separator",
       },
       {
-        type: "link",
-        path: "/commerce-modules/product/extend",
-        title: "Extend Module",
-      },
-      {
-        type: "sub-category",
+        type: "category",
         title: "Concepts",
+        initialOpen: false,
         children: [
           {
             type: "link",
@@ -32,13 +26,68 @@ export const productSidebar = [
         ],
       },
       {
-        type: "sub-category",
-        title: "Guides",
-        autogenerate_path: "/commerce-modules/product/guides",
+        type: "category",
+        title: "Server Guides",
+        autogenerate_tags: "server+product",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+        children: [
+          {
+            type: "link",
+            path: "/commerce-modules/product/extend",
+            title: "Extend Module",
+          },
+          {
+            type: "link",
+            path: "/commerce-modules/product/guides/price",
+            title: "Get Variant Prices",
+          },
+          {
+            type: "link",
+            path: "/commerce-modules/product/guides/price-with-taxes",
+            title: "Get Variant Price with Taxes",
+          },
+        ],
       },
       {
-        type: "sub-category",
+        type: "category",
+        title: "Storefront Guides",
+        autogenerate_tags: "storefront+product",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "Admin Guides",
+        autogenerate_tags: "admin+product",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "User Guides",
+        autogenerate_tags: "userGuides+product",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "Workflows",
+        autogenerate_tags: "workflow+product",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "Steps",
+        autogenerate_tags: "step+product",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
         title: "References",
+        initialOpen: false,
         children: [
           {
             type: "link",

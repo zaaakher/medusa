@@ -36,8 +36,8 @@ To retrieve the shipping option of a price set with [Query](!docs!/learn/fundame
 const { data: priceSets } = await query.graph({
   entity: "price_set",
   fields: [
-    "shipping_option.*"
-  ]
+    "shipping_option.*",
+  ],
 })
 
 // priceSets.shipping_option
@@ -54,8 +54,8 @@ import { useQueryGraphStep } from "@medusajs/medusa/core-flows"
 const { data: priceSets } = useQueryGraphStep({
   entity: "price_set",
   fields: [
-    "shipping_option.*"
-  ]
+    "shipping_option.*",
+  ],
 })
 
 // priceSets.shipping_option
@@ -133,8 +133,8 @@ To retrieve the variant of a price set with [Query](!docs!/learn/fundamentals/mo
 const { data: priceSets } = await query.graph({
   entity: "price_set",
   fields: [
-    "variant.*"
-  ]
+    "variant.*",
+  ],
 })
 
 // priceSets.variant
@@ -151,8 +151,8 @@ import { useQueryGraphStep } from "@medusajs/medusa/core-flows"
 const { data: priceSets } = useQueryGraphStep({
   entity: "price_set",
   fields: [
-    "variant.*"
-  ]
+    "variant.*",
+  ],
 })
 
 // priceSets.variant

@@ -47,8 +47,8 @@ To retrieve the customer of an order with [Query](!docs!/learn/fundamentals/modu
 const { data: orders } = await query.graph({
   entity: "order",
   fields: [
-    "customer.*"
-  ]
+    "customer.*",
+  ],
 })
 
 // orders.customer
@@ -65,8 +65,8 @@ import { useQueryGraphStep } from "@medusajs/medusa/core-flows"
 const { data: orders } = useQueryGraphStep({
   entity: "order",
   fields: [
-    "customer.*"
-  ]
+    "customer.*",
+  ],
 })
 
 // orders.customer
@@ -96,8 +96,8 @@ To retrieve the cart of an order with [Query](!docs!/learn/fundamentals/module-l
 const { data: orders } = await query.graph({
   entity: "order",
   fields: [
-    "cart.*"
-  ]
+    "cart.*",
+  ],
 })
 
 // orders.cart
@@ -114,8 +114,8 @@ import { useQueryGraphStep } from "@medusajs/medusa/core-flows"
 const { data: orders } = useQueryGraphStep({
   entity: "order",
   fields: [
-    "cart.*"
-  ]
+    "cart.*",
+  ],
 })
 
 // orders.cart
@@ -197,8 +197,8 @@ To retrieve the fulfillments of a return, pass `fulfillments.*` in `fields`.
 const { data: orders } = await query.graph({
   entity: "order",
   fields: [
-    "fulfillments.*"
-  ]
+    "fulfillments.*",
+  ],
 })
 
 // orders.fulfillments
@@ -215,8 +215,8 @@ import { useQueryGraphStep } from "@medusajs/medusa/core-flows"
 const { data: orders } = useQueryGraphStep({
   entity: "order",
   fields: [
-    "fulfillments.*"
-  ]
+    "fulfillments.*",
+  ],
 })
 
 // orders.fulfillments
@@ -290,8 +290,8 @@ To retrieve the payment collections of an order, order exchange, or order claim 
 const { data: orders } = await query.graph({
   entity: "order",
   fields: [
-    "payment_collections.*"
-  ]
+    "payment_collections.*",
+  ],
 })
 
 // orders.payment_collections
@@ -308,8 +308,8 @@ import { useQueryGraphStep } from "@medusajs/medusa/core-flows"
 const { data: orders } = useQueryGraphStep({
   entity: "order",
   fields: [
-    "payment_collections.*"
-  ]
+    "payment_collections.*",
+  ],
 })
 
 // orders.payment_collections
@@ -388,8 +388,8 @@ To retrieve the product, pass `product.*` in `fields`.
 const { data: lineItems } = await query.graph({
   entity: "order_line_item",
   fields: [
-    "variant.*"
-  ]
+    "variant.*",
+  ],
 })
 
 // lineItems.variant
@@ -406,8 +406,8 @@ import { useQueryGraphStep } from "@medusajs/medusa/core-flows"
 const { data: lineItems } = useQueryGraphStep({
   entity: "order_line_item",
   fields: [
-    "variant.*"
-  ]
+    "variant.*",
+  ],
 })
 
 // lineItems.variant
@@ -435,8 +435,8 @@ To retrieve the promotion applied on an order with [Query](!docs!/learn/fundamen
 const { data: orders } = await query.graph({
   entity: "order",
   fields: [
-    "promotion.*"
-  ]
+    "promotion.*",
+  ],
 })
 
 // orders.promotion
@@ -453,8 +453,8 @@ import { useQueryGraphStep } from "@medusajs/medusa/core-flows"
 const { data: orders } = useQueryGraphStep({
   entity: "order",
   fields: [
-    "promotion.*"
-  ]
+    "promotion.*",
+  ],
 })
 
 // orders.promotion
@@ -524,8 +524,8 @@ To retrieve the region of an order with [Query](!docs!/learn/fundamentals/module
 const { data: orders } = await query.graph({
   entity: "order",
   fields: [
-    "region.*"
-  ]
+    "region.*",
+  ],
 })
 
 // orders.region
@@ -542,8 +542,8 @@ import { useQueryGraphStep } from "@medusajs/medusa/core-flows"
 const { data: orders } = useQueryGraphStep({
   entity: "order",
   fields: [
-    "region.*"
-  ]
+    "region.*",
+  ],
 })
 
 // orders.region
@@ -569,8 +569,8 @@ To retrieve the sales channel of an order with [Query](!docs!/learn/fundamentals
 const { data: orders } = await query.graph({
   entity: "order",
   fields: [
-    "sales_channel.*"
-  ]
+    "sales_channel.*",
+  ],
 })
 
 // orders.sales_channel
@@ -587,8 +587,8 @@ import { useQueryGraphStep } from "@medusajs/medusa/core-flows"
 const { data: orders } = useQueryGraphStep({
   entity: "order",
   fields: [
-    "sales_channel.*"
-  ]
+    "sales_channel.*",
+  ],
 })
 
 // orders.sales_channel

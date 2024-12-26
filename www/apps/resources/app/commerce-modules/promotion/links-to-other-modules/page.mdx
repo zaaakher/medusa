@@ -49,8 +49,8 @@ To retrieve the line item adjustments of a promotion, pass `line_item_adjustment
 const { data: promotions } = await query.graph({
   entity: "promotion",
   fields: [
-    "carts.*"
-  ]
+    "carts.*",
+  ],
 })
 
 // promotions.carts
@@ -67,8 +67,8 @@ import { useQueryGraphStep } from "@medusajs/medusa/core-flows"
 const { data: promotions } = useQueryGraphStep({
   entity: "promotion",
   fields: [
-    "carts.*"
-  ]
+    "carts.*",
+  ],
 })
 
 // promotions.carts
@@ -140,8 +140,8 @@ To retrieve the orders a promotion is applied on with [Query](!docs!/learn/funda
 const { data: promotions } = await query.graph({
   entity: "promotion",
   fields: [
-    "orders.*"
-  ]
+    "orders.*",
+  ],
 })
 
 // promotions.orders
@@ -158,8 +158,8 @@ import { useQueryGraphStep } from "@medusajs/medusa/core-flows"
 const { data: promotions } = useQueryGraphStep({
   entity: "promotion",
   fields: [
-    "orders.*"
-  ]
+    "orders.*",
+  ],
 })
 
 // promotions.orders

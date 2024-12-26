@@ -42,8 +42,8 @@ To retrieve the product variants of an inventory item with [Query](!docs!/learn/
 const { data: inventoryItems } = await query.graph({
   entity: "inventory_item",
   fields: [
-    "variants.*"
-  ]
+    "variants.*",
+  ],
 })
 
 // inventoryItems.variants
@@ -60,8 +60,8 @@ import { useQueryGraphStep } from "@medusajs/medusa/core-flows"
 const { data: inventoryItems } = useQueryGraphStep({
   entity: "inventory_item",
   fields: [
-    "variants.*"
-  ]
+    "variants.*",
+  ],
 })
 
 // inventoryItems.variants
@@ -131,8 +131,8 @@ To retrieve the stock locations of an inventory level with [Query](!docs!/learn/
 const { data: inventoryLevels } = await query.graph({
   entity: "inventory_level",
   fields: [
-    "stock_locations.*"
-  ]
+    "stock_locations.*",
+  ],
 })
 
 // inventoryLevels.stock_locations
@@ -149,8 +149,8 @@ import { useQueryGraphStep } from "@medusajs/medusa/core-flows"
 const { data: inventoryLevels } = useQueryGraphStep({
   entity: "inventory_level",
   fields: [
-    "stock_locations.*"
-  ]
+    "stock_locations.*",
+  ],
 })
 
 // inventoryLevels.stock_locations

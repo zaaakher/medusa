@@ -1,5 +1,9 @@
 export const salesChannel = [
   {
+    "title": "Use a Publishable API Key in the Storefront",
+    "path": "/storefront-development/publishable-api-keys"
+  },
+  {
     "title": "validateSalesChannelsExistStep",
     "path": "/references/medusa-workflows/steps/validateSalesChannelsExistStep"
   },

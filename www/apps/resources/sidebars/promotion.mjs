@@ -11,18 +11,12 @@ export const promotionSidebar = [
         title: "Overview",
       },
       {
-        type: "link",
-        path: "/commerce-modules/promotion/examples",
-        title: "Examples",
+        type: "separator",
       },
       {
-        type: "link",
-        path: "/commerce-modules/promotion/extend",
-        title: "Extend Module",
-      },
-      {
-        type: "sub-category",
+        type: "category",
         title: "Concepts",
+        initialOpen: false,
         children: [
           {
             type: "link",
@@ -52,8 +46,58 @@ export const promotionSidebar = [
         ],
       },
       {
-        type: "sub-category",
+        type: "category",
+        title: "Server Guides",
+        autogenerate_tags: "server+promotion",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+        children: [
+          {
+            type: "link",
+            path: "/commerce-modules/promotion/extend",
+            title: "Extend Module",
+          },
+        ],
+      },
+      {
+        type: "category",
+        title: "Storefront Guides",
+        autogenerate_tags: "storefront+promotion",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "Admin Guides",
+        autogenerate_tags: "admin+promotion",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "User Guides",
+        autogenerate_tags: "userGuides+promotion",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "Workflows",
+        autogenerate_tags: "workflow+promotion",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "Steps",
+        autogenerate_tags: "step+promotion",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
         title: "References",
+        initialOpen: false,
         children: [
           {
             type: "link",

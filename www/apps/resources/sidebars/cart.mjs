@@ -11,18 +11,12 @@ export const cartSidebar = [
         title: "Overview",
       },
       {
-        type: "link",
-        path: "/commerce-modules/cart/examples",
-        title: "Examples",
+        type: "separator",
       },
       {
-        type: "link",
-        path: "/commerce-modules/cart/extend",
-        title: "Extend Module",
-      },
-      {
-        type: "sub-category",
+        type: "category",
         title: "Concepts",
+        initialOpen: false,
         children: [
           {
             type: "link",
@@ -47,8 +41,58 @@ export const cartSidebar = [
         ],
       },
       {
-        type: "sub-category",
+        type: "category",
+        title: "Server Guides",
+        autogenerate_tags: "server+cart",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+        children: [
+          {
+            type: "link",
+            path: "/commerce-modules/cart/extend",
+            title: "Extend Module",
+          },
+        ],
+      },
+      {
+        type: "category",
+        title: "Storefront Guides",
+        autogenerate_tags: "storefront+cart",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "Admin Guides",
+        autogenerate_tags: "admin+cart",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "User Guides",
+        autogenerate_tags: "userGuides+cart",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "Workflows",
+        autogenerate_tags: "workflow+cart",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "Steps",
+        autogenerate_tags: "step+cart",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
         title: "References",
+        initialOpen: false,
         children: [
           {
             type: "link",

@@ -11,18 +11,12 @@ export const customerSidebar = [
         title: "Overview",
       },
       {
-        type: "link",
-        path: "/commerce-modules/customer/examples",
-        title: "Examples",
+        type: "separator",
       },
       {
-        type: "link",
-        path: "/commerce-modules/customer/extend",
-        title: "Extend Module",
-      },
-      {
-        type: "sub-category",
+        type: "category",
         title: "Concepts",
+        initialOpen: false,
         children: [
           {
             type: "link",
@@ -37,8 +31,58 @@ export const customerSidebar = [
         ],
       },
       {
-        type: "sub-category",
+        type: "category",
+        title: "Server Guides",
+        autogenerate_tags: "server+customer",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+        children: [
+          {
+            type: "link",
+            path: "/commerce-modules/customer/extend",
+            title: "Extend Module",
+          },
+        ],
+      },
+      {
+        type: "category",
+        title: "Storefront Guides",
+        autogenerate_tags: "storefront+customer",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "Admin Guides",
+        autogenerate_tags: "admin+customer",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "User Guides",
+        autogenerate_tags: "userGuides+customer",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "Workflows",
+        autogenerate_tags: "workflow+customer",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "Steps",
+        autogenerate_tags: "step+customer",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
         title: "References",
+        initialOpen: false,
         children: [
           {
             type: "link",

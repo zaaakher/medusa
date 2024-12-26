@@ -50,8 +50,8 @@ To retrieve the line items of a product, pass `line_items.*` in `fields`.
 const { data: variants } = await query.graph({
   entity: "variant",
   fields: [
-    "line_items.*"
-  ]
+    "line_items.*",
+  ],
 })
 
 // variants.line_items
@@ -68,8 +68,8 @@ import { useQueryGraphStep } from "@medusajs/medusa/core-flows"
 const { data: variants } = useQueryGraphStep({
   entity: "variant",
   fields: [
-    "line_items.*"
-  ]
+    "line_items.*",
+  ],
 })
 
 // variants.line_items
@@ -101,8 +101,8 @@ To retrieve the inventory items of a product variant with [Query](!docs!/learn/f
 const { data: variants } = await query.graph({
   entity: "variant",
   fields: [
-    "inventory_items.*"
-  ]
+    "inventory_items.*",
+  ],
 })
 
 // variants.inventory_items
@@ -119,8 +119,8 @@ import { useQueryGraphStep } from "@medusajs/medusa/core-flows"
 const { data: variants } = useQueryGraphStep({
   entity: "variant",
   fields: [
-    "inventory_items.*"
-  ]
+    "inventory_items.*",
+  ],
 })
 
 // variants.inventory_items
@@ -199,8 +199,8 @@ To retrieve a product's order line items, pass `order_items.*` in `fields`.
 const { data: variants } = await query.graph({
   entity: "variant",
   fields: [
-    "order_items.*"
-  ]
+    "order_items.*",
+  ],
 })
 
 // variants.order_items
@@ -217,8 +217,8 @@ import { useQueryGraphStep } from "@medusajs/medusa/core-flows"
 const { data: variants } = useQueryGraphStep({
   entity: "variant",
   fields: [
-    "order_items.*"
-  ]
+    "order_items.*",
+  ],
 })
 
 // variants.order_items
@@ -250,8 +250,8 @@ To retrieve the price set of a variant with [Query](!docs!/learn/fundamentals/mo
 const { data: variants } = await query.graph({
   entity: "variant",
   fields: [
-    "price_set.*"
-  ]
+    "price_set.*",
+  ],
 })
 
 // variants.price_set
@@ -268,8 +268,8 @@ import { useQueryGraphStep } from "@medusajs/medusa/core-flows"
 const { data: variants } = useQueryGraphStep({
   entity: "variant",
   fields: [
-    "price_set.*"
-  ]
+    "price_set.*",
+  ],
 })
 
 // variants.price_set
@@ -343,8 +343,8 @@ To retrieve the sales channels of a product with [Query](!docs!/learn/fundamenta
 const { data: products } = await query.graph({
   entity: "product",
   fields: [
-    "sales_channels.*"
-  ]
+    "sales_channels.*",
+  ],
 })
 
 // products.sales_channels
@@ -361,8 +361,8 @@ import { useQueryGraphStep } from "@medusajs/medusa/core-flows"
 const { data: products } = useQueryGraphStep({
   entity: "product",
   fields: [
-    "sales_channels.*"
-  ]
+    "sales_channels.*",
+  ],
 })
 
 // products.sales_channels

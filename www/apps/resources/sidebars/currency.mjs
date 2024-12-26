@@ -11,13 +11,12 @@ export const currencySidebar = [
         title: "Overview",
       },
       {
-        type: "link",
-        path: "/commerce-modules/currency/examples",
-        title: "Examples",
+        type: "separator",
       },
       {
         type: "sub-category",
         title: "Concepts",
+        initialOpen: false,
         children: [
           {
             type: "link",
@@ -27,15 +26,58 @@ export const currencySidebar = [
         ],
       },
       {
+        type: "category",
+        title: "Server Guides",
+        autogenerate_tags: "server+currency",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "Storefront Guides",
+        autogenerate_tags: "storefront+currency",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "Admin Guides",
+        autogenerate_tags: "admin+currency",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "User Guides",
+        autogenerate_tags: "userGuides+currency",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "Workflows",
+        autogenerate_tags: "workflow+currency",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "Steps",
+        autogenerate_tags: "step+currency",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
         type: "sub-category",
         title: "References",
+        initialOpen: false,
         children: [
           {
             type: "link",
             path: "/references/currency",
             title: "Main Service Reference",
             isChildSidebar: true,
-            childSidebarTitle: "Cart Module's Main Service Reference",
+            childSidebarTitle: "Currency Module's Main Service Reference",
             children: [
               {
                 type: "category",

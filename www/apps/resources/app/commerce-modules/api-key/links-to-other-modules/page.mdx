@@ -37,8 +37,8 @@ To retrieve the sales channels of an API key with [Query](!docs!/learn/fundament
 const { data: apiKeys } = await query.graph({
   entity: "api_key",
   fields: [
-    "sales_channels.*"
-  ]
+    "sales_channels.*",
+  ],
 })
 
 // apiKeys.sales_channels
@@ -55,8 +55,8 @@ import { useQueryGraphStep } from "@medusajs/medusa/core-flows"
 const { data: apiKeys } = useQueryGraphStep({
   entity: "api_key",
   fields: [
-    "sales_channels.*"
-  ]
+    "sales_channels.*",
+  ],
 })
 
 // apiKeys.sales_channels

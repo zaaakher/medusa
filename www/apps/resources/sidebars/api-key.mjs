@@ -11,13 +11,12 @@ export const apiKeySidebar = [
         title: "Overview",
       },
       {
-        type: "link",
-        path: "/commerce-modules/api-key/examples",
-        title: "Examples",
+        type: "separator",
       },
       {
-        type: "sub-category",
+        type: "category",
         title: "Concepts",
+        initialOpen: false,
         children: [
           {
             type: "link",
@@ -32,8 +31,44 @@ export const apiKeySidebar = [
         ],
       },
       {
-        type: "sub-category",
+        type: "category",
+        title: "Storefront Guides",
+        initialOpen: false,
+        autogenerate_tags: "storefront+apiKey",
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "Admin Guides",
+        initialOpen: false,
+        autogenerate_tags: "admin+apiKey",
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "User Guides",
+        initialOpen: false,
+        autogenerate_tags: "userGuide+apiKey",
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "Workflows",
+        initialOpen: false,
+        autogenerate_tags: "workflow+apiKey",
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "Steps",
+        initialOpen: false,
+        autogenerate_tags: "step+apiKey",
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
         title: "References",
+        initialOpen: false,
         children: [
           {
             type: "link",

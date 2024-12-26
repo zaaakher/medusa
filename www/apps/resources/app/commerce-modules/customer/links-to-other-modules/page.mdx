@@ -38,8 +38,8 @@ To retrieve a customer's carts with [Query](!docs!/learn/fundamentals/module-lin
 const { data: customers } = await query.graph({
   entity: "customer",
   fields: [
-    "carts.*"
-  ]
+    "carts.*",
+  ],
 })
 
 // customers.carts
@@ -56,8 +56,8 @@ import { useQueryGraphStep } from "@medusajs/medusa/core-flows"
 const { data: customers } = useQueryGraphStep({
   entity: "customer",
   fields: [
-    "carts.*"
-  ]
+    "carts.*",
+  ],
 })
 
 // customers.carts
@@ -83,8 +83,8 @@ To retrieve a customer's orders with [Query](!docs!/learn/fundamentals/module-li
 const { data: customers } = await query.graph({
   entity: "customer",
   fields: [
-    "orders.*"
-  ]
+    "orders.*",
+  ],
 })
 
 // customers.orders
@@ -101,8 +101,8 @@ import { useQueryGraphStep } from "@medusajs/medusa/core-flows"
 const { data: customers } = useQueryGraphStep({
   entity: "customer",
   fields: [
-    "orders.*"
-  ]
+    "orders.*",
+  ],
 })
 
 // customers.orders

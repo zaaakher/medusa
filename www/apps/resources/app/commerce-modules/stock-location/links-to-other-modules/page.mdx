@@ -54,8 +54,8 @@ To retrieve the fulfillment providers, pass `fulfillment_providers.*` in `fields
 const { data: stockLocations } = await query.graph({
   entity: "stock_location",
   fields: [
-    "fulfillment_sets.*"
-  ]
+    "fulfillment_sets.*",
+  ],
 })
 
 // stockLocations.fulfillment_sets
@@ -72,8 +72,8 @@ import { useQueryGraphStep } from "@medusajs/medusa/core-flows"
 const { data: stockLocations } = useQueryGraphStep({
   entity: "stock_location",
   fields: [
-    "fulfillment_sets.*"
-  ]
+    "fulfillment_sets.*",
+  ],
 })
 
 // stockLocations.fulfillment_sets
@@ -143,8 +143,8 @@ To retrieve the inventory levels of a stock location with [Query](!docs!/learn/f
 const { data: stockLocations } = await query.graph({
   entity: "stock_location",
   fields: [
-    "inventory_levels.*"
-  ]
+    "inventory_levels.*",
+  ],
 })
 
 // stockLocations.inventory_levels
@@ -161,8 +161,8 @@ import { useQueryGraphStep } from "@medusajs/medusa/core-flows"
 const { data: stockLocations } = useQueryGraphStep({
   entity: "stock_location",
   fields: [
-    "inventory_levels.*"
-  ]
+    "inventory_levels.*",
+  ],
 })
 
 // stockLocations.inventory_levels
@@ -192,8 +192,8 @@ To retrieve the sales channels of a stock location with [Query](!docs!/learn/fun
 const { data: stockLocations } = await query.graph({
   entity: "stock_location",
   fields: [
-    "sales_channels.*"
-  ]
+    "sales_channels.*",
+  ],
 })
 
 // stockLocations.sales_channels
@@ -210,8 +210,8 @@ import { useQueryGraphStep } from "@medusajs/medusa/core-flows"
 const { data: stockLocations } = useQueryGraphStep({
   entity: "stock_location",
   fields: [
-    "sales_channels.*"
-  ]
+    "sales_channels.*",
+  ],
 })
 
 // stockLocations.sales_channels

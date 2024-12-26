@@ -16,8 +16,12 @@ export const fulfillmentSidebar = [
         title: "Module Options",
       },
       {
-        type: "sub-category",
+        type: "separator",
+      },
+      {
+        type: "category",
         title: "Concepts",
+        initialOpen: false,
         children: [
           {
             type: "link",
@@ -47,8 +51,11 @@ export const fulfillmentSidebar = [
         ],
       },
       {
-        type: "sub-category",
-        title: "Guides",
+        type: "category",
+        title: "Server Guides",
+        autogenerate_tags: "server+fulfillment",
+        initialOpen: false,
+        autogenerate_as_ref: true,
         children: [
           {
             type: "link",
@@ -56,15 +63,51 @@ export const fulfillmentSidebar = [
             title: "Create Fulfillment Provider Module",
           },
           {
-            type: "link",
+            type: "ref",
             path: "/integrations/guides/shipstation",
             title: "Integrate ShipStation",
           },
         ],
       },
       {
-        type: "sub-category",
+        type: "category",
+        title: "Storefront Guides",
+        autogenerate_tags: "storefront+fulfillment",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "Admin Guides",
+        autogenerate_tags: "admin+fulfillment",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "User Guides",
+        autogenerate_tags: "userGuides+fulfillment",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "Workflows",
+        autogenerate_tags: "workflow+fulfillment",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
+        title: "Steps",
+        autogenerate_tags: "step+fulfillment",
+        initialOpen: false,
+        autogenerate_as_ref: true,
+      },
+      {
+        type: "category",
         title: "References",
+        initialOpen: false,
         children: [
           {
             type: "link",
