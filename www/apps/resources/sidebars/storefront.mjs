@@ -48,11 +48,6 @@ export const storefrontGuidesSidebar = [
     children: [
       {
         type: "link",
-        path: "/storefront-development/products",
-        title: "Overview",
-      },
-      {
-        type: "link",
         path: "/storefront-development/products/list",
         title: "List Products",
       },
@@ -77,54 +72,52 @@ export const storefrontGuidesSidebar = [
         path: "/storefront-development/products/inventory",
         title: "Retrieve Variant Inventory",
       },
+    ],
+  },
+  {
+    type: "category",
+    title: "Product Categories",
+    children: [
       {
         type: "link",
-        path: "/storefront-development/products/categories",
-        title: "Categories",
-        children: [
-          {
-            type: "link",
-            path: "/storefront-development/products/categories/list",
-            title: "List Categories",
-          },
-          {
-            type: "link",
-            path: "/storefront-development/products/categories/retrieve",
-            title: "Retrieve a Category",
-          },
-          {
-            type: "link",
-            path: "/storefront-development/products/categories/products",
-            title: "Retrieve a Category's Products",
-          },
-          {
-            type: "link",
-            path: "/storefront-development/products/categories/nested-categories",
-            title: "Retrieve Nested Categories",
-          },
-        ],
+        path: "/storefront-development/products/categories/list",
+        title: "List Categories",
       },
       {
         type: "link",
-        path: "/storefront-development/products/collections",
-        title: "Collections",
-        children: [
-          {
-            type: "link",
-            path: "/storefront-development/products/collections/list",
-            title: "List Collections",
-          },
-          {
-            type: "link",
-            path: "/storefront-development/products/collections/retrieve",
-            title: "Retrieve a Collection",
-          },
-          {
-            type: "link",
-            path: "/storefront-development/products/collections/products",
-            title: "Retrieve a Collection's Products",
-          },
-        ],
+        path: "/storefront-development/products/categories/retrieve",
+        title: "Retrieve a Category",
+      },
+      {
+        type: "link",
+        path: "/storefront-development/products/categories/products",
+        title: "Retrieve a Category's Products",
+      },
+      {
+        type: "link",
+        path: "/storefront-development/products/categories/nested-categories",
+        title: "Retrieve Nested Categories",
+      },
+    ],
+  },
+  {
+    type: "category",
+    title: "Product Collections",
+    children: [
+      {
+        type: "link",
+        path: "/storefront-development/products/collections/list",
+        title: "List Collections",
+      },
+      {
+        type: "link",
+        path: "/storefront-development/products/collections/retrieve",
+        title: "Retrieve a Collection",
+      },
+      {
+        type: "link",
+        path: "/storefront-development/products/collections/products",
+        title: "Retrieve a Collection's Products",
       },
     ],
   },

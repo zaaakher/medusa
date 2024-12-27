@@ -14606,14 +14606,6 @@ export const generatedSidebar = [
             "loaded": true,
             "isPathHref": true,
             "type": "link",
-            "path": "/storefront-development/products",
-            "title": "Overview",
-            "children": []
-          },
-          {
-            "loaded": true,
-            "isPathHref": true,
-            "type": "link",
             "path": "/storefront-development/products/list",
             "title": "List Products",
             "children": []
@@ -14675,80 +14667,78 @@ export const generatedSidebar = [
             "path": "/storefront-development/products/inventory",
             "title": "Retrieve Variant Inventory",
             "children": []
+          }
+        ]
+      },
+      {
+        "loaded": true,
+        "isPathHref": true,
+        "type": "category",
+        "title": "Product Categories",
+        "children": [
+          {
+            "loaded": true,
+            "isPathHref": true,
+            "type": "link",
+            "path": "/storefront-development/products/categories/list",
+            "title": "List Categories",
+            "children": []
           },
           {
             "loaded": true,
             "isPathHref": true,
             "type": "link",
-            "path": "/storefront-development/products/categories",
-            "title": "Categories",
-            "children": [
-              {
-                "loaded": true,
-                "isPathHref": true,
-                "type": "link",
-                "path": "/storefront-development/products/categories/list",
-                "title": "List Categories",
-                "children": []
-              },
-              {
-                "loaded": true,
-                "isPathHref": true,
-                "type": "link",
-                "path": "/storefront-development/products/categories/retrieve",
-                "title": "Retrieve a Category",
-                "children": []
-              },
-              {
-                "loaded": true,
-                "isPathHref": true,
-                "type": "link",
-                "path": "/storefront-development/products/categories/products",
-                "title": "Retrieve a Category's Products",
-                "children": []
-              },
-              {
-                "loaded": true,
-                "isPathHref": true,
-                "type": "link",
-                "path": "/storefront-development/products/categories/nested-categories",
-                "title": "Retrieve Nested Categories",
-                "children": []
-              }
-            ]
+            "path": "/storefront-development/products/categories/retrieve",
+            "title": "Retrieve a Category",
+            "children": []
           },
           {
             "loaded": true,
             "isPathHref": true,
             "type": "link",
-            "path": "/storefront-development/products/collections",
-            "title": "Collections",
-            "children": [
-              {
-                "loaded": true,
-                "isPathHref": true,
-                "type": "link",
-                "path": "/storefront-development/products/collections/list",
-                "title": "List Collections",
-                "children": []
-              },
-              {
-                "loaded": true,
-                "isPathHref": true,
-                "type": "link",
-                "path": "/storefront-development/products/collections/retrieve",
-                "title": "Retrieve a Collection",
-                "children": []
-              },
-              {
-                "loaded": true,
-                "isPathHref": true,
-                "type": "link",
-                "path": "/storefront-development/products/collections/products",
-                "title": "Retrieve a Collection's Products",
-                "children": []
-              }
-            ]
+            "path": "/storefront-development/products/categories/products",
+            "title": "Retrieve a Category's Products",
+            "children": []
+          },
+          {
+            "loaded": true,
+            "isPathHref": true,
+            "type": "link",
+            "path": "/storefront-development/products/categories/nested-categories",
+            "title": "Retrieve Nested Categories",
+            "children": []
+          }
+        ]
+      },
+      {
+        "loaded": true,
+        "isPathHref": true,
+        "type": "category",
+        "title": "Product Collections",
+        "children": [
+          {
+            "loaded": true,
+            "isPathHref": true,
+            "type": "link",
+            "path": "/storefront-development/products/collections/list",
+            "title": "List Collections",
+            "children": []
+          },
+          {
+            "loaded": true,
+            "isPathHref": true,
+            "type": "link",
+            "path": "/storefront-development/products/collections/retrieve",
+            "title": "Retrieve a Collection",
+            "children": []
+          },
+          {
+            "loaded": true,
+            "isPathHref": true,
+            "type": "link",
+            "path": "/storefront-development/products/collections/products",
+            "title": "Retrieve a Collection's Products",
+            "children": []
           }
         ]
       },
