@@ -241,11 +241,19 @@ you can retrieve the calculated price of the shipping method.
 ```ts
 class MyFulfillmentProviderService extends AbstractFulfillmentProviderService {
   // ...
-  async calculatePrice(optionData: any, data: any, context: any): Promise<number> {
+  async calculatePrice(
+    optionData: CalculateShippingOptionPriceDTO["optionData"],
+    data: CalculateShippingOptionPriceDTO["data"],
+    context: CalculateShippingOptionPriceDTO["context"]
+  ): Promise<CalculatedShippingOptionPrice> {
     // assuming the client can calculate the price using
     // the third-party service
     const price = await this.client.calculate(data)
-    return price
+    return {
+      calculated_amount: price,
+      // update this boolean value based on your logic
+      is_calculated_price_tax_inclusive: true
+    }
   }
 }
 ```
