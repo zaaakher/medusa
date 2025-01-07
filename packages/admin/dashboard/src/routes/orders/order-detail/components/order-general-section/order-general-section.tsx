@@ -6,6 +6,7 @@ import {
   Heading,
   StatusBadge,
   Text,
+  toast,
   usePrompt,
 } from "@medusajs/ui"
 import { format } from "date-fns"
@@ -43,7 +44,14 @@ export const OrderGeneralSection = ({ order }: OrderGeneralSectionProps) => {
       return
     }
 
-    await cancelOrder()
+    await cancelOrder(undefined, {
+      onSuccess: () => {
+        toast.success(t("orders.orderCanceled"))
+      },
+      onError: (e) => {
+        toast.error(e.message)
+      },
+    })
   }
 
   return (
