@@ -29,12 +29,18 @@ The steps are:
 ![Diagram showcasing the basic authentication flow between the frontend and the Medusa application](https://res.cloudinary.com/dza7lstvk/image/upload/v1725539370/Medusa%20Resources/basic-auth-routes_pgpjch.jpg)
 
 1. Register the user with the [Register Route](#register-route).
-5. Use the authentication token to create the user with their respective API route.
+2. Use the authentication token to create the user with their respective API route.
     - For example, for customers you would use the [Create Customer API route](!api!/store#customers_postcustomers).
     - For admin users, you accept an invite using the [Accept Invite API route](!api!/admin#invites_postinvitesaccept)
-2. Authenticate the user with the [Auth Route](#auth-route).
+3. Authenticate the user with the [Auth Route](#auth-route).
 
 After registration, you only use the [Auth Route](#auth-route) for subsequent authentication.
+
+<Note>
+
+To handle errors related to existing identities, refer to [this section](#handling-existing-identities).
+
+</Note>
 
 ### 2. Third-Party Service Authenticate Flow
 
@@ -114,6 +120,35 @@ If the authentication is successful, you'll receive a `token` field in the respo
 ```
 
 Use that token in the header of subsequent requests to send authenticated requests.
+
+### Handling Existing Identities
+
+An auth identity with the same email may already exist in Medusa. This can happen if:
+
+- Another actor type is using that email. For example, an admin user is trying to register as a customer.
+- The same email belongs to a record of the same actor type. For example, another customer has the same email.
+
+In these scenarios, the Register Route will return an error instead of a token:
+
+```json
+{
+  "type": "unauthorized",
+  "message": "Identity with email already exists"
+}
+```
+
+To handle these scenarios, you can use the [Login Route](#login-route) to validate that the email and password match the existing identity. If so, you can allow the admin user, for example, to register as a customer.
+
+Otherwise, if the email and password don't match the existing identity, such as when the email belongs to another customer, the [Login Route](#login-route) returns an error:
+
+```json
+{
+  "type": "unauthorized",
+  "message": "Invalid email or password"
+}
+```
+
+You can show that error message to the customer.
 
 ---
 
