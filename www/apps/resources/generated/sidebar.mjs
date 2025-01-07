@@ -14768,14 +14768,6 @@ export const generatedSidebar = [
             "loaded": true,
             "isPathHref": true,
             "type": "link",
-            "path": "/storefront-development/cart",
-            "title": "Overview",
-            "children": []
-          },
-          {
-            "loaded": true,
-            "isPathHref": true,
-            "type": "link",
             "path": "/storefront-development/cart/create",
             "title": "Create Cart",
             "children": []
@@ -14885,14 +14877,6 @@ export const generatedSidebar = [
         "type": "category",
         "title": "Customers",
         "children": [
-          {
-            "loaded": true,
-            "isPathHref": true,
-            "type": "link",
-            "path": "/storefront-development/customers",
-            "title": "Overview",
-            "children": []
-          },
           {
             "loaded": true,
             "isPathHref": true,
