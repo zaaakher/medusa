@@ -644,7 +644,7 @@ export const generatedSidebar = [
                 "loaded": true,
                 "isPathHref": true,
                 "type": "ref",
-                "title": "Retrieve Logged-In Customer in Storefront",
+                "title": "Retrieve Customer in Storefront",
                 "path": "/storefront-development/customers/retrieve",
                 "children": []
               },
@@ -2258,7 +2258,7 @@ export const generatedSidebar = [
                 "loaded": true,
                 "isPathHref": true,
                 "type": "ref",
-                "title": "Retrieve Logged-In Customer in Storefront",
+                "title": "Retrieve Customer in Storefront",
                 "path": "/storefront-development/customers/retrieve",
                 "children": []
               },
