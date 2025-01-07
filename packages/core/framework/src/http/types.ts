@@ -112,7 +112,7 @@ export interface MedusaRequest<
   /**
    * An object containing fields and variables to be used with the remoteQuery
    * 
-   * @version 2.1.4
+   * @version 2.2.0
    */
   queryConfig: {
     fields: string[]
