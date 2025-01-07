@@ -110,7 +110,7 @@ The third-party service authentication method requires using the `authenticate` 
 
 ```ts
 const { success, authIdentity, location } = await authModuleService.authenticate(
-  "emailpass",
+  "google",
   // passed to auth provider
   {
     // ...
@@ -133,6 +133,21 @@ If the `authenticate` method returns a `location` property, the authentication p
 For example, when using the `google` provider, the `location` is the URL that the user is navigated to login.
 
 ![Diagram showcasing the first part of the third-party authentication flow](https://res.cloudinary.com/dza7lstvk/image/upload/v1711374847/Medusa%20Resources/third-party-auth-1_enyedy.jpg)
+
+### Overriding Callback URL
+
+The Google and GitHub providers allow you to override their `callbackUrl` option during authentication. This is useful when you redirect the user after authentication to a URL based on its actor type. For example, you redirect admin users and customers to different pages.
+
+```ts
+const { success, authIdentity, location } = await authModuleService.authenticate(
+  "google",
+  // passed to auth provider
+  {
+    // ...
+    callback_url: "example.com"
+  }
+)
+```
 
 ### validateCallback
 
