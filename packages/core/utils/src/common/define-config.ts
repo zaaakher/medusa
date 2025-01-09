@@ -74,7 +74,8 @@ type Config = Partial<
  * to override configuration as needed.
  */
 export function defineConfig(config: Config = {}): ConfigModule {
-  const { http, ...restOfProjectConfig } = config.projectConfig || {}
+  const { http, redisOptions, ...restOfProjectConfig } =
+    config.projectConfig || {}
 
   /**
    * The defaults to use for the project config. They are shallow merged
@@ -92,6 +93,23 @@ export function defineConfig(config: Config = {}): ConfigModule {
         store: DEFAULT_STORE_RESTRICTED_FIELDS,
       },
       ...http,
+    },
+    redisOptions: {
+      retryStrategy(retries) {
+        /**
+         * Exponentially increase delay with every retry
+         * attempt. Max to 4s
+         */
+        const delay = Math.min(Math.pow(2, retries) * 50, 4000)
+
+        /**
+         * Add a random jitter to not choke the server when multiple
+         * clients are retrying at the same time
+         */
+        const jitter = Math.floor(Math.random() * 200)
+        return delay + jitter
+      },
+      ...redisOptions,
     },
     ...restOfProjectConfig,
   }
