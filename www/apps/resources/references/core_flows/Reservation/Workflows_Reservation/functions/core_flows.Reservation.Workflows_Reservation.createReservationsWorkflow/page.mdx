@@ -15,7 +15,7 @@ This documentation provides a reference to the `createReservationsWorkflow`. It 
 
 This workflow creates one or more reservations.
 
-<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1758bfb8d042fa9fc82f23c36ccd61e4a439448e/packages/core/core-flows/src/reservation/workflows/create-reservations.ts#L14" />
+<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1b86c17b7293f3b810c062d78ec6ef563f968366/packages/core/core-flows/src/reservation/workflows/create-reservations.ts#L14" />
 
 <CodeTabs group="workflow-exection">
     <CodeTab label="Another Workflow" value="another-workflow">
@@ -33,7 +33,7 @@ const myWorkflow = createWorkflow(
           "reservations": [{
             "inventory_item_id": "{value}",
             "location_id": "{value}",
-            "quantity": 20
+            "quantity": 15
           }]
         }
       })
@@ -61,7 +61,7 @@ export async function POST(
         "reservations": [{
           "inventory_item_id": "{value}",
           "location_id": "{value}",
-          "quantity": 20
+          "quantity": 15
         }]
       }
     })
@@ -90,7 +90,7 @@ export default async function handleOrderPlaced({
         "reservations": [{
           "inventory_item_id": "{value}",
           "location_id": "{value}",
-          "quantity": 20
+          "quantity": 15
         }]
       }
     })
@@ -119,7 +119,7 @@ export default async function myCustomJob(
         "reservations": [{
           "inventory_item_id": "{value}",
           "location_id": "{value}",
-          "quantity": 20
+          "quantity": 15
         }]
       }
     })

@@ -23,7 +23,7 @@ This documentation provides a reference to the `completeCartWorkflow`. It belong
 
 This workflow completes a cart.
 
-<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1758bfb8d042fa9fc82f23c36ccd61e4a439448e/packages/core/core-flows/src/cart/workflows/complete-cart.ts#L48" />
+<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1b86c17b7293f3b810c062d78ec6ef563f968366/packages/core/core-flows/src/cart/workflows/complete-cart.ts#L48" />
 
 <CodeTabs group="workflow-exection">
     <CodeTab label="Another Workflow" value="another-workflow">
@@ -38,7 +38,7 @@ const myWorkflow = createWorkflow(
     const result = completeCartWorkflow
       .runAsStep({
         input: {
-          "id": "id_zLtCGWkU8AW"
+          "id": "id_9q9ZC6uMIpc99zWSXD"
         }
       })
   }
@@ -62,7 +62,7 @@ export async function POST(
   const { result } = await completeCartWorkflow(req.scope)
     .run({
       input: {
-        "id": "id_zLtCGWkU8AW"
+        "id": "id_9q9ZC6uMIpc99zWSXD"
       }
     })
 
@@ -87,7 +87,7 @@ export default async function handleOrderPlaced({
   const { result } = await completeCartWorkflow(container)
     .run({
       input: {
-        "id": "id_zLtCGWkU8AW"
+        "id": "id_9q9ZC6uMIpc99zWSXD"
       }
     })
 
@@ -112,7 +112,7 @@ export default async function myCustomJob(
   const { result } = await completeCartWorkflow(container)
     .run({
       input: {
-        "id": "id_zLtCGWkU8AW"
+        "id": "id_9q9ZC6uMIpc99zWSXD"
       }
     })
 

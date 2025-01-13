@@ -15,7 +15,7 @@ This documentation provides a reference to the `createPriceListPricesWorkflow`. 
 
 This workflow creates prices in price lists.
 
-<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1758bfb8d042fa9fc82f23c36ccd61e4a439448e/packages/core/core-flows/src/price-list/workflows/create-price-list-prices.ts#L19" />
+<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1b86c17b7293f3b810c062d78ec6ef563f968366/packages/core/core-flows/src/price-list/workflows/create-price-list-prices.ts#L19" />
 
 <CodeTabs group="workflow-exection">
     <CodeTab label="Another Workflow" value="another-workflow">
@@ -31,9 +31,9 @@ const myWorkflow = createWorkflow(
       .runAsStep({
         input: {
           "data": [{
-            "id": "id_p2aG3MLENhTZ63",
+            "id": "id_zXurVk5yn6QDucPnh",
             "prices": [{
-              "amount": 21,
+              "amount": 9,
               "currency_code": "{value}",
               "variant_id": "{value}"
             }]
@@ -62,9 +62,9 @@ export async function POST(
     .run({
       input: {
         "data": [{
-          "id": "id_p2aG3MLENhTZ63",
+          "id": "id_zXurVk5yn6QDucPnh",
           "prices": [{
-            "amount": 21,
+            "amount": 9,
             "currency_code": "{value}",
             "variant_id": "{value}"
           }]
@@ -94,9 +94,9 @@ export default async function handleOrderPlaced({
     .run({
       input: {
         "data": [{
-          "id": "id_p2aG3MLENhTZ63",
+          "id": "id_zXurVk5yn6QDucPnh",
           "prices": [{
-            "amount": 21,
+            "amount": 9,
             "currency_code": "{value}",
             "variant_id": "{value}"
           }]
@@ -126,9 +126,9 @@ export default async function myCustomJob(
     .run({
       input: {
         "data": [{
-          "id": "id_p2aG3MLENhTZ63",
+          "id": "id_zXurVk5yn6QDucPnh",
           "prices": [{
-            "amount": 21,
+            "amount": 9,
             "currency_code": "{value}",
             "variant_id": "{value}"
           }]

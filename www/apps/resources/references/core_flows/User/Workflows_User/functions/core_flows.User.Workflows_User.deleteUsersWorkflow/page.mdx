@@ -15,7 +15,7 @@ This documentation provides a reference to the `deleteUsersWorkflow`. It belongs
 
 This workflow deletes one or more users.
 
-<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1758bfb8d042fa9fc82f23c36ccd61e4a439448e/packages/core/core-flows/src/user/workflows/delete-users.ts#L15" />
+<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1b86c17b7293f3b810c062d78ec6ef563f968366/packages/core/core-flows/src/user/workflows/delete-users.ts#L15" />
 
 <CodeTabs group="workflow-exection">
     <CodeTab label="Another Workflow" value="another-workflow">
@@ -31,7 +31,7 @@ const myWorkflow = createWorkflow(
       .runAsStep({
         input: {
           "ids": [
-            "id_Q2WADYXHWo3"
+            "id_IIcBoQC1xkInGuNWT4"
           ]
         }
       })
@@ -57,7 +57,7 @@ export async function POST(
     .run({
       input: {
         "ids": [
-          "id_Q2WADYXHWo3"
+          "id_IIcBoQC1xkInGuNWT4"
         ]
       }
     })
@@ -84,7 +84,7 @@ export default async function handleOrderPlaced({
     .run({
       input: {
         "ids": [
-          "id_Q2WADYXHWo3"
+          "id_IIcBoQC1xkInGuNWT4"
         ]
       }
     })
@@ -111,7 +111,7 @@ export default async function myCustomJob(
     .run({
       input: {
         "ids": [
-          "id_Q2WADYXHWo3"
+          "id_IIcBoQC1xkInGuNWT4"
         ]
       }
     })

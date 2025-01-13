@@ -26,11 +26,11 @@ const myWorkflow = createWorkflow(
         "action_id": "{value}"
       },
       "orderClaim": {
-        "id": "id_ejfGPCgUt4v0IEhNE",
-        "type": "refund",
+        "id": "id_G9DpSEt9Wtt3O0oQ",
+        "type": "replace",
         "order_id": "{value}",
-        "order_version": 6,
-        "display_id": 32,
+        "order_version": 21,
+        "display_id": 19,
         "claim_items": [
           "{value}"
         ],
@@ -40,120 +40,120 @@ const myWorkflow = createWorkflow(
         "metadata": {}
       },
       "orderChange": {
-        "id": "id_d8ReOyOWo6mj",
-        "version": 4,
+        "id": "id_ep6pYZ5MNQZiFrtAhU",
+        "version": 11,
         "order_id": "{value}",
         "return_id": "{value}",
         "exchange_id": "{value}",
         "claim_id": "{value}",
         "order": {
-          "id": "id_WEuWYw7rSDacUoWf3",
-          "version": 34,
-          "display_id": 38,
-          "status": "canceled",
+          "id": "id_tnaYLr6c2OI7o",
+          "version": 31,
+          "display_id": 28,
+          "status": "draft",
           "currency_code": "{value}",
-          "created_at": "2025-09-10T09:20:46.341Z",
-          "updated_at": "2025-04-01T04:10:08.885Z",
+          "created_at": "2025-08-27T19:08:51.981Z",
+          "updated_at": "2025-05-10T07:22:56.038Z",
           "original_item_total": {
-            "numeric": 25
+            "numeric": 15
           },
           "original_item_subtotal": {
-            "numeric": 6
+            "numeric": 11
           },
           "original_item_tax_total": {
-            "numeric": 46
+            "numeric": 2
           },
           "item_total": {
-            "numeric": 43
+            "numeric": 4
           },
           "item_subtotal": {
-            "numeric": 8
+            "numeric": 47
           },
           "item_tax_total": {
             "numeric": 45
           },
           "original_total": {
-            "numeric": 5
+            "numeric": 33
           },
           "original_subtotal": {
-            "numeric": 35
+            "numeric": 31
           },
           "original_tax_total": {
             "numeric": 49
           },
           "total": {
-            "numeric": 33
-          },
-          "subtotal": {
-            "numeric": 1
-          },
-          "tax_total": {
-            "numeric": 12
-          },
-          "discount_subtotal": {
-            "numeric": 44
-          },
-          "discount_total": {
-            "numeric": 46
-          },
-          "discount_tax_total": {
-            "numeric": 46
-          },
-          "gift_card_total": {
-            "numeric": 22
-          },
-          "gift_card_tax_total": {
-            "numeric": 7
-          },
-          "shipping_total": {
-            "numeric": 49
-          },
-          "shipping_subtotal": {
-            "numeric": 22
-          },
-          "shipping_tax_total": {
-            "numeric": 14
-          },
-          "original_shipping_total": {
             "numeric": 47
           },
+          "subtotal": {
+            "numeric": 6
+          },
+          "tax_total": {
+            "numeric": 41
+          },
+          "discount_subtotal": {
+            "numeric": 22
+          },
+          "discount_total": {
+            "numeric": 30
+          },
+          "discount_tax_total": {
+            "numeric": 10
+          },
+          "gift_card_total": {
+            "numeric": 34
+          },
+          "gift_card_tax_total": {
+            "numeric": 4
+          },
+          "shipping_total": {
+            "numeric": 32
+          },
+          "shipping_subtotal": {
+            "numeric": 3
+          },
+          "shipping_tax_total": {
+            "numeric": 17
+          },
+          "original_shipping_total": {
+            "numeric": 46
+          },
           "original_shipping_subtotal": {
-            "numeric": 40
+            "numeric": 9
           },
           "original_shipping_tax_total": {
-            "numeric": 21
+            "numeric": 23
           }
         },
         "return_order": {
-          "id": "id_D35Tsth4BJS",
-          "status": "canceled",
+          "id": "id_7R4GSAMF9GME",
+          "status": "received",
           "order_id": "{value}",
           "items": [{
-            "id": "id_8Ozmgw4RCgZdv",
+            "id": "id_2In0yJkcwJc559n",
             "return_id": "{value}",
             "order_id": "{value}",
             "item_id": "{value}",
-            "quantity": 39
+            "quantity": 36
           }],
-          "display_id": 14,
+          "display_id": 18,
           "metadata": {}
         },
         "exchange": {
-          "id": "id_M7DAkPMpOWMl",
+          "id": "id_Fxn1vcbIcYy4akrs",
           "order_id": "{value}",
-          "order_version": 39,
-          "display_id": 0,
+          "order_version": 46,
+          "display_id": 3,
           "additional_items": [
             "{value}"
           ],
           "metadata": {}
         },
         "claim": {
-          "id": "id_QJCLZIHnn3kg8x6kjO",
-          "type": "replace",
+          "id": "id_MyZHIhTBIiGwXtS",
+          "type": "refund",
           "order_id": "{value}",
-          "order_version": 45,
-          "display_id": 39,
+          "order_version": 36,
+          "display_id": 20,
           "claim_items": [
             "{value}"
           ],
@@ -163,7 +163,7 @@ const myWorkflow = createWorkflow(
           "metadata": {}
         },
         "actions": [{
-          "id": "id_xWDGr4IOe16yga2Su",
+          "id": "id_Docb0TQBuKgI0xQXF",
           "order_change_id": {},
           "order_change": {},
           "order_id": {},
@@ -173,13 +173,13 @@ const myWorkflow = createWorkflow(
           "order": {},
           "reference": "{value}",
           "reference_id": "{value}",
-          "action": "WRITE_OFF_ITEM",
+          "action": "CREDIT_LINE_ADD",
           "details": {},
           "internal_note": {},
-          "created_at": "2025-02-22T13:58:52.485Z",
-          "updated_at": "2025-10-29T04:07:43.093Z"
+          "created_at": "2025-09-06T16:17:33.199Z",
+          "updated_at": "2025-05-28T06:00:27.859Z"
         }],
-        "status": "canceled",
+        "status": "confirmed",
         "requested_by": {},
         "requested_at": {},
         "confirmed_by": {},
@@ -190,8 +190,8 @@ const myWorkflow = createWorkflow(
         "declined_at": {},
         "canceled_by": {},
         "canceled_at": {},
-        "created_at": "2025-08-03T20:58:56.587Z",
-        "updated_at": "2025-05-24T11:31:05.246Z"
+        "created_at": "2025-10-31T18:53:46.584Z",
+        "updated_at": "2025-10-05T00:53:05.517Z"
       }
     })
   }

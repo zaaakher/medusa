@@ -15,7 +15,7 @@ This documentation provides a reference to the `updatePriceListPricesWorkflow`. 
 
 This workflow update price lists' prices.
 
-<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1758bfb8d042fa9fc82f23c36ccd61e4a439448e/packages/core/core-flows/src/price-list/workflows/update-price-list-prices.ts#L19" />
+<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1b86c17b7293f3b810c062d78ec6ef563f968366/packages/core/core-flows/src/price-list/workflows/update-price-list-prices.ts#L19" />
 
 <CodeTabs group="workflow-exection">
     <CodeTab label="Another Workflow" value="another-workflow">
@@ -31,9 +31,9 @@ const myWorkflow = createWorkflow(
       .runAsStep({
         input: {
           "data": [{
-            "id": "id_91PtQnIh7kze",
+            "id": "id_asRgp3soMfdb9",
             "prices": [{
-              "id": "id_K7yWvDnrLD9rM9T",
+              "id": "id_K6se4urv7eJI9l8uTjg",
               "variant_id": "{value}"
             }]
           }]
@@ -61,9 +61,9 @@ export async function POST(
     .run({
       input: {
         "data": [{
-          "id": "id_91PtQnIh7kze",
+          "id": "id_asRgp3soMfdb9",
           "prices": [{
-            "id": "id_K7yWvDnrLD9rM9T",
+            "id": "id_K6se4urv7eJI9l8uTjg",
             "variant_id": "{value}"
           }]
         }]
@@ -92,9 +92,9 @@ export default async function handleOrderPlaced({
     .run({
       input: {
         "data": [{
-          "id": "id_91PtQnIh7kze",
+          "id": "id_asRgp3soMfdb9",
           "prices": [{
-            "id": "id_K7yWvDnrLD9rM9T",
+            "id": "id_K6se4urv7eJI9l8uTjg",
             "variant_id": "{value}"
           }]
         }]
@@ -123,9 +123,9 @@ export default async function myCustomJob(
     .run({
       input: {
         "data": [{
-          "id": "id_91PtQnIh7kze",
+          "id": "id_asRgp3soMfdb9",
           "prices": [{
-            "id": "id_K7yWvDnrLD9rM9T",
+            "id": "id_K6se4urv7eJI9l8uTjg",
             "variant_id": "{value}"
           }]
         }]

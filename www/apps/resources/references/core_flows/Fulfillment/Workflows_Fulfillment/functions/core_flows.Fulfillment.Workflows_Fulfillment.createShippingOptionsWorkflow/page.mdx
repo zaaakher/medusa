@@ -15,7 +15,7 @@ This documentation provides a reference to the `createShippingOptionsWorkflow`. 
 
 This workflow creates one or more shipping options.
 
-<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1758bfb8d042fa9fc82f23c36ccd61e4a439448e/packages/core/core-flows/src/fulfillment/workflows/create-shipping-options.ts#L22" />
+<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1b86c17b7293f3b810c062d78ec6ef563f968366/packages/core/core-flows/src/fulfillment/workflows/create-shipping-options.ts#L22" />
 
 <CodeTabs group="workflow-exection">
     <CodeTab label="Another Workflow" value="another-workflow">
@@ -30,19 +30,19 @@ const myWorkflow = createWorkflow(
     const result = createShippingOptionsWorkflow
       .runAsStep({
         input: [{
-          "name": "Alec",
+          "name": "Earnest",
           "service_zone_id": "{value}",
           "shipping_profile_id": "{value}",
           "provider_id": "{value}",
           "type": {
             "label": "{value}",
-            "description": "Sponte caveo claudeo.",
+            "description": "Stips antea absens aperte capto solus vobis animi.",
             "code": "{value}"
           },
           "price_type": "{value}",
           "prices": [{
             "currency_code": "{value}",
-            "amount": 1,
+            "amount": 4,
             "region_id": "{value}"
           }]
         }]
@@ -68,19 +68,19 @@ export async function POST(
   const { result } = await createShippingOptionsWorkflow(req.scope)
     .run({
       input: [{
-        "name": "Alec",
+        "name": "Earnest",
         "service_zone_id": "{value}",
         "shipping_profile_id": "{value}",
         "provider_id": "{value}",
         "type": {
           "label": "{value}",
-          "description": "Sponte caveo claudeo.",
+          "description": "Stips antea absens aperte capto solus vobis animi.",
           "code": "{value}"
         },
         "price_type": "{value}",
         "prices": [{
           "currency_code": "{value}",
-          "amount": 1,
+          "amount": 4,
           "region_id": "{value}"
         }]
       }]
@@ -107,19 +107,19 @@ export default async function handleOrderPlaced({
   const { result } = await createShippingOptionsWorkflow(container)
     .run({
       input: [{
-        "name": "Alec",
+        "name": "Earnest",
         "service_zone_id": "{value}",
         "shipping_profile_id": "{value}",
         "provider_id": "{value}",
         "type": {
           "label": "{value}",
-          "description": "Sponte caveo claudeo.",
+          "description": "Stips antea absens aperte capto solus vobis animi.",
           "code": "{value}"
         },
         "price_type": "{value}",
         "prices": [{
           "currency_code": "{value}",
-          "amount": 1,
+          "amount": 4,
           "region_id": "{value}"
         }]
       }]
@@ -146,19 +146,19 @@ export default async function myCustomJob(
   const { result } = await createShippingOptionsWorkflow(container)
     .run({
       input: [{
-        "name": "Alec",
+        "name": "Earnest",
         "service_zone_id": "{value}",
         "shipping_profile_id": "{value}",
         "provider_id": "{value}",
         "type": {
           "label": "{value}",
-          "description": "Sponte caveo claudeo.",
+          "description": "Stips antea absens aperte capto solus vobis animi.",
           "code": "{value}"
         },
         "price_type": "{value}",
         "prices": [{
           "currency_code": "{value}",
-          "amount": 1,
+          "amount": 4,
           "region_id": "{value}"
         }]
       }]
@@ -182,7 +182,7 @@ export const config = {
 
 ## Input
 
-<TypeList types={[{"name":"CreateShippingOptionsWorkflowInput[]","type":"[CreateShippingOptionsWorkflowInput](../../../../../types/WorkflowTypes/FulfillmentWorkflow/types/types.WorkflowTypes.FulfillmentWorkflow.CreateShippingOptionsWorkflowInput/page.mdx)[]","optional":false,"defaultValue":"","description":"","expandable":false,"children":[{"name":"CreateShippingOptionsWorkflowInput","type":"[CreateShippingOptionsWorkflowInput](../../../../../types/WorkflowTypes/FulfillmentWorkflow/types/types.WorkflowTypes.FulfillmentWorkflow.CreateShippingOptionsWorkflowInput/page.mdx)","optional":false,"defaultValue":"","description":"","expandable":false,"children":[{"name":"CreateShippingOptionsWorkflowInput","type":"[CreateFlatRateShippingOptionInput](../../../../../types/types/types.CreateFlatRateShippingOptionInput/page.mdx) \\| [CreateCalculatedShippingOptionInput](../../../../../types/types/types.CreateCalculatedShippingOptionInput/page.mdx)","description":"","optional":false,"defaultValue":"","expandable":false,"children":[{"name":"name","type":"`string`","description":"","optional":false,"defaultValue":"","expandable":false,"children":[]},{"name":"service_zone_id","type":"`string`","description":"","optional":false,"defaultValue":"","expandable":false,"children":[]},{"name":"shipping_profile_id","type":"`string`","description":"","optional":false,"defaultValue":"","expandable":false,"children":[]},{"name":"provider_id","type":"`string`","description":"","optional":false,"defaultValue":"","expandable":false,"children":[]},{"name":"type","type":"`object`","description":"","optional":false,"defaultValue":"","expandable":false,"children":[]},{"name":"price_type","type":"`\"flat\"`","description":"","optional":false,"defaultValue":"","expandable":false,"children":[]},{"name":"prices","type":"[CreateFlatRateShippingOptionPriceRecord](../../../../../types/types/types.CreateFlatRateShippingOptionPriceRecord/page.mdx)[]","description":"","optional":false,"defaultValue":"","expandable":false,"children":[]},{"name":"name","type":"`string`","description":"","optional":false,"defaultValue":"","expandable":false,"children":[]},{"name":"service_zone_id","type":"`string`","description":"","optional":false,"defaultValue":"","expandable":false,"children":[]},{"name":"shipping_profile_id","type":"`string`","description":"","optional":false,"defaultValue":"","expandable":false,"children":[]},{"name":"provider_id","type":"`string`","description":"","optional":false,"defaultValue":"","expandable":false,"children":[]},{"name":"type","type":"`object`","description":"","optional":false,"defaultValue":"","expandable":false,"children":[]},{"name":"price_type","type":"`\"calculated\"`","description":"","optional":false,"defaultValue":"","expandable":false,"children":[]},{"name":"data","type":"`Record<string, unknown>`","description":"","optional":true,"defaultValue":"","expandable":false,"children":[]},{"name":"rules","type":"`object`[]","description":"","optional":true,"defaultValue":"","expandable":false,"children":[]},{"name":"data","type":"`Record<string, unknown>`","description":"","optional":true,"defaultValue":"","expandable":false,"children":[]},{"name":"rules","type":"`object`[]","description":"","optional":true,"defaultValue":"","expandable":false,"children":[]}]}]}]}]} expandUrl="https://docs.medusajs.com/learn/fundamentals/data-models/manage-relationships#retrieve-records-of-relation" openedLevel={1} sectionTitle="createShippingOptionsWorkflow"/>
+<TypeList types={[{"name":"CreateShippingOptionsWorkflowInput[]","type":"[CreateShippingOptionsWorkflowInput](../../../../../types/WorkflowTypes/FulfillmentWorkflow/types/types.WorkflowTypes.FulfillmentWorkflow.CreateShippingOptionsWorkflowInput/page.mdx)[]","optional":false,"defaultValue":"","description":"","expandable":false,"children":[{"name":"CreateShippingOptionsWorkflowInput","type":"[CreateShippingOptionsWorkflowInput](../../../../../types/WorkflowTypes/FulfillmentWorkflow/types/types.WorkflowTypes.FulfillmentWorkflow.CreateShippingOptionsWorkflowInput/page.mdx)","optional":false,"defaultValue":"","description":"","expandable":false,"children":[{"name":"CreateShippingOptionsWorkflowInput","type":"[CreateFlatRateShippingOptionInput](../../../../../types/types/types.CreateFlatRateShippingOptionInput/page.mdx) \\| [CreateCalculatedShippingOptionInput](../../../../../types/types/types.CreateCalculatedShippingOptionInput/page.mdx)","description":"","optional":false,"defaultValue":"","expandable":false,"children":[{"name":"name","type":"`string`","description":"","optional":false,"defaultValue":"","expandable":false,"children":[]},{"name":"service_zone_id","type":"`string`","description":"","optional":false,"defaultValue":"","expandable":false,"children":[]},{"name":"shipping_profile_id","type":"`string`","description":"","optional":false,"defaultValue":"","expandable":false,"children":[]},{"name":"provider_id","type":"`string`","description":"","optional":false,"defaultValue":"","expandable":false,"children":[]},{"name":"type","type":"`object`","description":"","optional":false,"defaultValue":"","expandable":false,"children":[]},{"name":"price_type","type":"`\"flat\"`","description":"","optional":false,"defaultValue":"","expandable":false,"children":[]},{"name":"prices","type":"[CreateFlatRateShippingOptionPriceRecord](../../../../../types/types/types.CreateFlatRateShippingOptionPriceRecord/page.mdx)[]","description":"","optional":false,"defaultValue":"","expandable":false,"children":[]},{"name":"data","type":"`Record<string, unknown>`","description":"","optional":true,"defaultValue":"","expandable":false,"children":[]},{"name":"rules","type":"`object`[]","description":"","optional":true,"defaultValue":"","expandable":false,"children":[]}]}]}]}]} expandUrl="https://docs.medusajs.com/learn/fundamentals/data-models/manage-relationships#retrieve-records-of-relation" openedLevel={1} sectionTitle="createShippingOptionsWorkflow"/>
 
 ## Output
 

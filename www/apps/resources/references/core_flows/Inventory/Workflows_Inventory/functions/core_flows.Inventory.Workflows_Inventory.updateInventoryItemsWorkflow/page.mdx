@@ -14,7 +14,7 @@ This documentation provides a reference to the `updateInventoryItemsWorkflow`. I
 
 This workflow updates one or more inventory items.
 
-<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1758bfb8d042fa9fc82f23c36ccd61e4a439448e/packages/core/core-flows/src/inventory/workflows/update-inventory-items.ts#L17" />
+<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1b86c17b7293f3b810c062d78ec6ef563f968366/packages/core/core-flows/src/inventory/workflows/update-inventory-items.ts#L17" />
 
 <CodeTabs group="workflow-exection">
     <CodeTab label="Another Workflow" value="another-workflow">
@@ -30,7 +30,7 @@ const myWorkflow = createWorkflow(
       .runAsStep({
         input: {
           "updates": [{
-            "id": "id_Mh5PSQ7YLG9HCiG"
+            "id": "id_wUY6hxl9WnPSZ"
           }]
         }
       })
@@ -56,7 +56,7 @@ export async function POST(
     .run({
       input: {
         "updates": [{
-          "id": "id_Mh5PSQ7YLG9HCiG"
+          "id": "id_wUY6hxl9WnPSZ"
         }]
       }
     })
@@ -83,7 +83,7 @@ export default async function handleOrderPlaced({
     .run({
       input: {
         "updates": [{
-          "id": "id_Mh5PSQ7YLG9HCiG"
+          "id": "id_wUY6hxl9WnPSZ"
         }]
       }
     })
@@ -110,7 +110,7 @@ export default async function myCustomJob(
     .run({
       input: {
         "updates": [{
-          "id": "id_Mh5PSQ7YLG9HCiG"
+          "id": "id_wUY6hxl9WnPSZ"
         }]
       }
     })

@@ -15,7 +15,7 @@ This documentation provides a reference to the `batchPriceListPricesWorkflow`. I
 
 This workflow manages price lists' prices by creating, updating, or removing them.
 
-<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1758bfb8d042fa9fc82f23c36ccd61e4a439448e/packages/core/core-flows/src/price-list/workflows/batch-price-list-prices.ts#L20" />
+<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1b86c17b7293f3b810c062d78ec6ef563f968366/packages/core/core-flows/src/price-list/workflows/batch-price-list-prices.ts#L20" />
 
 <CodeTabs group="workflow-exection">
     <CodeTab label="Another Workflow" value="another-workflow">
@@ -31,14 +31,14 @@ const myWorkflow = createWorkflow(
       .runAsStep({
         input: {
           "data": {
-            "id": "id_3pzCLIs7YADIB1hJO",
+            "id": "id_aAp3paTs1g1NfI23b8",
             "create": [{
-              "amount": 20,
+              "amount": 37,
               "currency_code": "{value}",
               "variant_id": "{value}"
             }],
             "update": [{
-              "id": "id_DOgPMaPpniTUoubKVMs",
+              "id": "id_q4lfsr9lMLr1lgl4",
               "variant_id": "{value}"
             }],
             "delete": [
@@ -69,14 +69,14 @@ export async function POST(
     .run({
       input: {
         "data": {
-          "id": "id_3pzCLIs7YADIB1hJO",
+          "id": "id_aAp3paTs1g1NfI23b8",
           "create": [{
-            "amount": 20,
+            "amount": 37,
             "currency_code": "{value}",
             "variant_id": "{value}"
           }],
           "update": [{
-            "id": "id_DOgPMaPpniTUoubKVMs",
+            "id": "id_q4lfsr9lMLr1lgl4",
             "variant_id": "{value}"
           }],
           "delete": [
@@ -108,14 +108,14 @@ export default async function handleOrderPlaced({
     .run({
       input: {
         "data": {
-          "id": "id_3pzCLIs7YADIB1hJO",
+          "id": "id_aAp3paTs1g1NfI23b8",
           "create": [{
-            "amount": 20,
+            "amount": 37,
             "currency_code": "{value}",
             "variant_id": "{value}"
           }],
           "update": [{
-            "id": "id_DOgPMaPpniTUoubKVMs",
+            "id": "id_q4lfsr9lMLr1lgl4",
             "variant_id": "{value}"
           }],
           "delete": [
@@ -147,14 +147,14 @@ export default async function myCustomJob(
     .run({
       input: {
         "data": {
-          "id": "id_3pzCLIs7YADIB1hJO",
+          "id": "id_aAp3paTs1g1NfI23b8",
           "create": [{
-            "amount": 20,
+            "amount": 37,
             "currency_code": "{value}",
             "variant_id": "{value}"
           }],
           "update": [{
-            "id": "id_DOgPMaPpniTUoubKVMs",
+            "id": "id_q4lfsr9lMLr1lgl4",
             "variant_id": "{value}"
           }],
           "delete": [

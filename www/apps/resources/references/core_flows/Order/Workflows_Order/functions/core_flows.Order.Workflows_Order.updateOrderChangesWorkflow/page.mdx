@@ -14,7 +14,7 @@ This documentation provides a reference to the `updateOrderChangesWorkflow`. It 
 
 This workflow updates one or more order changes.
 
-<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1758bfb8d042fa9fc82f23c36ccd61e4a439448e/packages/core/core-flows/src/order/workflows/update-order-changes.ts#L16" />
+<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1b86c17b7293f3b810c062d78ec6ef563f968366/packages/core/core-flows/src/order/workflows/update-order-changes.ts#L16" />
 
 <CodeTabs group="workflow-exection">
     <CodeTab label="Another Workflow" value="another-workflow">
@@ -29,7 +29,7 @@ const myWorkflow = createWorkflow(
     const result = updateOrderChangesWorkflow
       .runAsStep({
         input: [{
-          "id": "id_a3FPWmEJf3A8"
+          "id": "id_mvwaK24eQPJWmkckiU9"
         }]
       })
   }
@@ -53,7 +53,7 @@ export async function POST(
   const { result } = await updateOrderChangesWorkflow(req.scope)
     .run({
       input: [{
-        "id": "id_a3FPWmEJf3A8"
+        "id": "id_mvwaK24eQPJWmkckiU9"
       }]
     })
 
@@ -78,7 +78,7 @@ export default async function handleOrderPlaced({
   const { result } = await updateOrderChangesWorkflow(container)
     .run({
       input: [{
-        "id": "id_a3FPWmEJf3A8"
+        "id": "id_mvwaK24eQPJWmkckiU9"
       }]
     })
 
@@ -103,7 +103,7 @@ export default async function myCustomJob(
   const { result } = await updateOrderChangesWorkflow(container)
     .run({
       input: [{
-        "id": "id_a3FPWmEJf3A8"
+        "id": "id_mvwaK24eQPJWmkckiU9"
       }]
     })
 

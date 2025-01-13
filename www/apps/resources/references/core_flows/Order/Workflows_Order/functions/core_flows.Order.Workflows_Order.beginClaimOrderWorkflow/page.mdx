@@ -15,7 +15,7 @@ This documentation provides a reference to the `beginClaimOrderWorkflow`. It bel
 
 This workflow creates an order claim in requested state.
 
-<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1758bfb8d042fa9fc82f23c36ccd61e4a439448e/packages/core/core-flows/src/order/workflows/claim/begin-order-claim.ts#L32" />
+<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1b86c17b7293f3b810c062d78ec6ef563f968366/packages/core/core-flows/src/order/workflows/claim/begin-order-claim.ts#L32" />
 
 <CodeTabs group="workflow-exection">
     <CodeTab label="Another Workflow" value="another-workflow">
@@ -30,7 +30,7 @@ const myWorkflow = createWorkflow(
     const result = beginClaimOrderWorkflow
       .runAsStep({
         input: {
-          "type": "refund",
+          "type": "replace",
           "order_id": "{value}"
         }
       })
@@ -55,7 +55,7 @@ export async function POST(
   const { result } = await beginClaimOrderWorkflow(req.scope)
     .run({
       input: {
-        "type": "refund",
+        "type": "replace",
         "order_id": "{value}"
       }
     })
@@ -81,7 +81,7 @@ export default async function handleOrderPlaced({
   const { result } = await beginClaimOrderWorkflow(container)
     .run({
       input: {
-        "type": "refund",
+        "type": "replace",
         "order_id": "{value}"
       }
     })
@@ -107,7 +107,7 @@ export default async function myCustomJob(
   const { result } = await beginClaimOrderWorkflow(container)
     .run({
       input: {
-        "type": "refund",
+        "type": "replace",
         "order_id": "{value}"
       }
     })

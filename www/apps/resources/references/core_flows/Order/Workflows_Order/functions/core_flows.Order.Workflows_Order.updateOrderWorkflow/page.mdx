@@ -16,7 +16,7 @@ This documentation provides a reference to the `updateOrderWorkflow`. It belongs
 
 Update order workflow.
 
-<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1758bfb8d042fa9fc82f23c36ccd61e4a439448e/packages/core/core-flows/src/order/workflows/update-order.ts#L74" />
+<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1b86c17b7293f3b810c062d78ec6ef563f968366/packages/core/core-flows/src/order/workflows/update-order.ts#L74" />
 
 <CodeTabs group="workflow-exection">
     <CodeTab label="Another Workflow" value="another-workflow">
@@ -31,7 +31,7 @@ const myWorkflow = createWorkflow(
     const result = updateOrderWorkflow
       .runAsStep({
         input: {
-          "id": "id_8vDtr4Ttdsi0Ixo",
+          "id": "id_RYLo1vUgTzObLIh7Gq",
           "user_id": "{value}"
         }
       })
@@ -56,7 +56,7 @@ export async function POST(
   const { result } = await updateOrderWorkflow(req.scope)
     .run({
       input: {
-        "id": "id_8vDtr4Ttdsi0Ixo",
+        "id": "id_RYLo1vUgTzObLIh7Gq",
         "user_id": "{value}"
       }
     })
@@ -82,7 +82,7 @@ export default async function handleOrderPlaced({
   const { result } = await updateOrderWorkflow(container)
     .run({
       input: {
-        "id": "id_8vDtr4Ttdsi0Ixo",
+        "id": "id_RYLo1vUgTzObLIh7Gq",
         "user_id": "{value}"
       }
     })
@@ -108,7 +108,7 @@ export default async function myCustomJob(
   const { result } = await updateOrderWorkflow(container)
     .run({
       input: {
-        "id": "id_8vDtr4Ttdsi0Ixo",
+        "id": "id_RYLo1vUgTzObLIh7Gq",
         "user_id": "{value}"
       }
     })

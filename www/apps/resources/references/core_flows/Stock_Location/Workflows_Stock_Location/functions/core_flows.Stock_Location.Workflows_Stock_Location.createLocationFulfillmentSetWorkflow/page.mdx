@@ -14,7 +14,7 @@ This documentation provides a reference to the `createLocationFulfillmentSetWork
 
 This workflow creates links between location and fulfillment set records.
 
-<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1758bfb8d042fa9fc82f23c36ccd61e4a439448e/packages/core/core-flows/src/stock-location/workflows/create-location-fulfillment-set.ts#L15" />
+<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1b86c17b7293f3b810c062d78ec6ef563f968366/packages/core/core-flows/src/stock-location/workflows/create-location-fulfillment-set.ts#L15" />
 
 <CodeTabs group="workflow-exection">
     <CodeTab label="Another Workflow" value="another-workflow">
@@ -31,7 +31,7 @@ const myWorkflow = createWorkflow(
         input: {
           "location_id": "{value}",
           "fulfillment_set_data": {
-            "name": "Vincent",
+            "name": "Leora",
             "type": "{value}"
           }
         }
@@ -59,7 +59,7 @@ export async function POST(
       input: {
         "location_id": "{value}",
         "fulfillment_set_data": {
-          "name": "Vincent",
+          "name": "Leora",
           "type": "{value}"
         }
       }
@@ -88,7 +88,7 @@ export default async function handleOrderPlaced({
       input: {
         "location_id": "{value}",
         "fulfillment_set_data": {
-          "name": "Vincent",
+          "name": "Leora",
           "type": "{value}"
         }
       }
@@ -117,7 +117,7 @@ export default async function myCustomJob(
       input: {
         "location_id": "{value}",
         "fulfillment_set_data": {
-          "name": "Vincent",
+          "name": "Leora",
           "type": "{value}"
         }
       }

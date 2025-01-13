@@ -21,7 +21,7 @@ This documentation provides a reference to the `orderEditAddNewItemWorkflow`. It
 
 This workflow adds new items to an order edit.
 
-<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1758bfb8d042fa9fc82f23c36ccd61e4a439448e/packages/core/core-flows/src/order/workflows/order-edit/order-edit-add-new-item.ts#L46" />
+<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1b86c17b7293f3b810c062d78ec6ef563f968366/packages/core/core-flows/src/order/workflows/order-edit/order-edit-add-new-item.ts#L46" />
 
 <CodeTabs group="workflow-exection">
     <CodeTab label="Another Workflow" value="another-workflow">
@@ -39,7 +39,7 @@ const myWorkflow = createWorkflow(
           "order_id": "{value}",
           "items": [{
             "variant_id": "{value}",
-            "quantity": 45
+            "quantity": 31
           }]
         }
       })
@@ -67,7 +67,7 @@ export async function POST(
         "order_id": "{value}",
         "items": [{
           "variant_id": "{value}",
-          "quantity": 45
+          "quantity": 31
         }]
       }
     })
@@ -96,7 +96,7 @@ export default async function handleOrderPlaced({
         "order_id": "{value}",
         "items": [{
           "variant_id": "{value}",
-          "quantity": 45
+          "quantity": 31
         }]
       }
     })
@@ -125,7 +125,7 @@ export default async function myCustomJob(
         "order_id": "{value}",
         "items": [{
           "variant_id": "{value}",
-          "quantity": 45
+          "quantity": 31
         }]
       }
     })

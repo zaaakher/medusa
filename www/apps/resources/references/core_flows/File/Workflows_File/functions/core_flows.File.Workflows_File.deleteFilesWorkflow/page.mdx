@@ -14,7 +14,7 @@ This documentation provides a reference to the `deleteFilesWorkflow`. It belongs
 
 This workflow deletes one or more files.
 
-<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1758bfb8d042fa9fc82f23c36ccd61e4a439448e/packages/core/core-flows/src/file/workflows/delete-files.ts#L10" />
+<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1b86c17b7293f3b810c062d78ec6ef563f968366/packages/core/core-flows/src/file/workflows/delete-files.ts#L10" />
 
 <CodeTabs group="workflow-exection">
     <CodeTab label="Another Workflow" value="another-workflow">
@@ -30,7 +30,7 @@ const myWorkflow = createWorkflow(
       .runAsStep({
         input: {
           "ids": [
-            "id_D6joLaHhNXS1ZP"
+            "id_AuJEFglaDgHjQ1WY"
           ]
         }
       })
@@ -56,7 +56,7 @@ export async function POST(
     .run({
       input: {
         "ids": [
-          "id_D6joLaHhNXS1ZP"
+          "id_AuJEFglaDgHjQ1WY"
         ]
       }
     })
@@ -83,7 +83,7 @@ export default async function handleOrderPlaced({
     .run({
       input: {
         "ids": [
-          "id_D6joLaHhNXS1ZP"
+          "id_AuJEFglaDgHjQ1WY"
         ]
       }
     })
@@ -110,7 +110,7 @@ export default async function myCustomJob(
     .run({
       input: {
         "ids": [
-          "id_D6joLaHhNXS1ZP"
+          "id_AuJEFglaDgHjQ1WY"
         ]
       }
     })

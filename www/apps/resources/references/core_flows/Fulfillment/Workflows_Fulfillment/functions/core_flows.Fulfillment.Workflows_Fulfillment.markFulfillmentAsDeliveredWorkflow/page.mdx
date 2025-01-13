@@ -15,7 +15,7 @@ This documentation provides a reference to the `markFulfillmentAsDeliveredWorkfl
 
 This workflow marks fulfillment as delivered.
 
-<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1758bfb8d042fa9fc82f23c36ccd61e4a439448e/packages/core/core-flows/src/fulfillment/workflows/mark-fulfillment-as-delivered.ts#L45" />
+<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1b86c17b7293f3b810c062d78ec6ef563f968366/packages/core/core-flows/src/fulfillment/workflows/mark-fulfillment-as-delivered.ts#L45" />
 
 <CodeTabs group="workflow-exection">
     <CodeTab label="Another Workflow" value="another-workflow">
@@ -30,7 +30,7 @@ const myWorkflow = createWorkflow(
     const result = markFulfillmentAsDeliveredWorkflow
       .runAsStep({
         input: {
-          "id": "id_gobfQy7Y89MzK1gqGTx"
+          "id": "id_JeepOuXot0iLRX"
         }
       })
   }
@@ -54,7 +54,7 @@ export async function POST(
   const { result } = await markFulfillmentAsDeliveredWorkflow(req.scope)
     .run({
       input: {
-        "id": "id_gobfQy7Y89MzK1gqGTx"
+        "id": "id_JeepOuXot0iLRX"
       }
     })
 
@@ -79,7 +79,7 @@ export default async function handleOrderPlaced({
   const { result } = await markFulfillmentAsDeliveredWorkflow(container)
     .run({
       input: {
-        "id": "id_gobfQy7Y89MzK1gqGTx"
+        "id": "id_JeepOuXot0iLRX"
       }
     })
 
@@ -104,7 +104,7 @@ export default async function myCustomJob(
   const { result } = await markFulfillmentAsDeliveredWorkflow(container)
     .run({
       input: {
-        "id": "id_gobfQy7Y89MzK1gqGTx"
+        "id": "id_JeepOuXot0iLRX"
       }
     })
 

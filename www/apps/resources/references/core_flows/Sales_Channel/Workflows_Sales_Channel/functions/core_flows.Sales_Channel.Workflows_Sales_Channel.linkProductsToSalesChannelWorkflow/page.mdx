@@ -14,7 +14,7 @@ This documentation provides a reference to the `linkProductsToSalesChannelWorkfl
 
 This workflow creates or dismisses links between product and sales channel records.
 
-<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1758bfb8d042fa9fc82f23c36ccd61e4a439448e/packages/core/core-flows/src/sales-channel/workflows/link-products-to-sales-channel.ts#L12" />
+<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1b86c17b7293f3b810c062d78ec6ef563f968366/packages/core/core-flows/src/sales-channel/workflows/link-products-to-sales-channel.ts#L12" />
 
 <CodeTabs group="workflow-exection">
     <CodeTab label="Another Workflow" value="another-workflow">
@@ -29,7 +29,7 @@ const myWorkflow = createWorkflow(
     const result = linkProductsToSalesChannelWorkflow
       .runAsStep({
         input: {
-          "id": "id_AShhkYiLGxJTy7QLSo"
+          "id": "id_kNCVr3dcK9oNE"
         }
       })
   }
@@ -53,7 +53,7 @@ export async function POST(
   const { result } = await linkProductsToSalesChannelWorkflow(req.scope)
     .run({
       input: {
-        "id": "id_AShhkYiLGxJTy7QLSo"
+        "id": "id_kNCVr3dcK9oNE"
       }
     })
 
@@ -78,7 +78,7 @@ export default async function handleOrderPlaced({
   const { result } = await linkProductsToSalesChannelWorkflow(container)
     .run({
       input: {
-        "id": "id_AShhkYiLGxJTy7QLSo"
+        "id": "id_kNCVr3dcK9oNE"
       }
     })
 
@@ -103,7 +103,7 @@ export default async function myCustomJob(
   const { result } = await linkProductsToSalesChannelWorkflow(container)
     .run({
       input: {
-        "id": "id_AShhkYiLGxJTy7QLSo"
+        "id": "id_kNCVr3dcK9oNE"
       }
     })
 
