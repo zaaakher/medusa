@@ -105,7 +105,7 @@ export const createProductsWorkflowId = "create-products"
  * 
  * This workflow has a hook that allows you to perform custom actions on the created products. You can see an example in [this guide](https://docs.medusajs.com/resources/commerce-modules/product/extend).
  * 
- * You can also use this workflow within your own custom workflows, allowing you to wrap custom logic around product creation.
+ * You can also use this workflow within your customizations or your own custom workflows, allowing you to wrap custom logic around product creation.
  * 
  * @example
  * const { result } = await createProductsWorkflow(container)
