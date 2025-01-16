@@ -9,13 +9,6 @@ import { StepResponse, createStep } from "@medusajs/framework/workflows-sdk"
  * The details of the payment collections to create.
  */
 export type CreatePaymentCollectionCartStepInput = {
-  /**
-   * The ID of the region that the payment collection belongs to.
-   */
-  region_id: string
-  /**
-   * The payment collection's curency code.
-   */
   currency_code: string
   /**
    * The payment collection's amount.
@@ -30,10 +23,9 @@ export type CreatePaymentCollectionCartStepInput = {
 export const createPaymentCollectionsStepId = "create-payment-collections"
 /**
  * This step creates payment collections in a cart.
- * 
+ *
  * @example
  * const data = createPaymentCollectionsStep([{
- *   "region_id": "region_123",
  *   "currency_code": "usd",
  *   "amount": 40
  * }])

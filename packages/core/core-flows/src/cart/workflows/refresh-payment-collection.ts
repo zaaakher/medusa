@@ -108,7 +108,6 @@ export const refreshPaymentCollectionForCartWorkflow = createWorkflow(
           update: {
             amount: cart.total,
             currency_code: cart.currency_code,
-            region_id: cart.region_id,
           },
         }
       })

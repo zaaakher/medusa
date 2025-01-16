@@ -28,13 +28,13 @@ export type ValidateExistingPaymentCollectionStepInput = {
 /**
  * This step validates that a cart doesn't have a payment collection.
  * If the cart has a payment collection, the step throws an error.
- * 
+ *
  * :::tip
- * 
+ *
  * You can use the {@link retrieveCartStep} to retrieve a cart's details.
- * 
+ *
  * :::
- * 
+ *
  * @example
  * const data = validateExistingPaymentCollectionStep({
  *   cart: {
@@ -58,11 +58,11 @@ export const validateExistingPaymentCollectionStep = createStep(
 export const createPaymentCollectionForCartWorkflowId =
   "create-payment-collection-for-cart"
 /**
- * This workflow creates a payment collection for a cart. It's executed by the 
+ * This workflow creates a payment collection for a cart. It's executed by the
  * [Create Payment Collection Store API Route](https://docs.medusajs.com/api/store#payment-collections_postpaymentcollections).
- * 
+ *
  * You can use this workflow within your own custom workflows, allowing you to wrap custom logic around adding creating a payment collection for a cart.
- * 
+ *
  * @example
  * const { result } = await createPaymentCollectionForCartWorkflow(container)
  * .run({
@@ -73,9 +73,9 @@ export const createPaymentCollectionForCartWorkflowId =
  *     }
  *   }
  * })
- * 
+ *
  * @summary
- * 
+ *
  * Create payment collection for cart.
  */
 export const createPaymentCollectionForCartWorkflow = createWorkflow(
@@ -87,7 +87,6 @@ export const createPaymentCollectionForCartWorkflow = createWorkflow(
       entry_point: "cart",
       fields: [
         "id",
-        "region_id",
         "completed_at",
         "currency_code",
         "total",
@@ -106,10 +105,8 @@ export const createPaymentCollectionForCartWorkflow = createWorkflow(
 
     const paymentData = transform({ cart }, ({ cart }) => {
       return {
-        cart_id: cart.id,
         currency_code: cart.currency_code,
         amount: cart.raw_total,
-        region_id: cart.region_id,
       }
     })
 
