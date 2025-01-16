@@ -2243,6 +2243,7 @@
       "member": "Member"
     },
     "deleteUserWarning": "You are about to delete the user {{name}}. This action cannot be undone.",
+    "deleteUserSuccess": "User {{name}} deleted successfully",
     "invite": "Invite"
   },
   "store": {
