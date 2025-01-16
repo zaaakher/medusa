@@ -556,7 +556,6 @@ moduleIntegrationTestRunner<IPaymentModuleService>({
               data: {},
               context: {
                 extra: {},
-                resource_id: "test",
                 email: "test@test.com",
                 billing_address: {},
                 customer: {},
