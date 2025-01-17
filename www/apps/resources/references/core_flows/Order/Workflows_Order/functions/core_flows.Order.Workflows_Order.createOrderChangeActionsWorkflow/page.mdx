@@ -38,7 +38,7 @@ export async function POST(
   const { result } = await createOrderChangeActionsWorkflow(req.scope)
     .run({
       input: [{
-        "action": "SHIPPING_REMOVE"
+        "action": "SHIP_ITEM"
       }]
     })
 
@@ -63,7 +63,7 @@ export default async function handleOrderPlaced({
   const { result } = await createOrderChangeActionsWorkflow(container)
     .run({
       input: [{
-        "action": "SHIPPING_REMOVE"
+        "action": "SHIP_ITEM"
       }]
     })
 
@@ -88,7 +88,7 @@ export default async function myCustomJob(
   const { result } = await createOrderChangeActionsWorkflow(container)
     .run({
       input: [{
-        "action": "SHIPPING_REMOVE"
+        "action": "SHIP_ITEM"
       }]
     })
 
@@ -114,7 +114,7 @@ const myWorkflow = createWorkflow(
     const result = createOrderChangeActionsWorkflow
       .runAsStep({
         input: [{
-          "action": "SHIPPING_REMOVE"
+          "action": "SHIP_ITEM"
         }]
       })
   }

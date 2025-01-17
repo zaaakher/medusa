@@ -38,7 +38,7 @@ export async function POST(
   const { result } = await declineOrderChangeWorkflow(req.scope)
     .run({
       input: {
-        "id": "id_HwIngILchry"
+        "id": "id_yhBH3vWpkkXZ9"
       }
     })
 
@@ -63,7 +63,7 @@ export default async function handleOrderPlaced({
   const { result } = await declineOrderChangeWorkflow(container)
     .run({
       input: {
-        "id": "id_HwIngILchry"
+        "id": "id_yhBH3vWpkkXZ9"
       }
     })
 
@@ -88,7 +88,7 @@ export default async function myCustomJob(
   const { result } = await declineOrderChangeWorkflow(container)
     .run({
       input: {
-        "id": "id_HwIngILchry"
+        "id": "id_yhBH3vWpkkXZ9"
       }
     })
 
@@ -114,7 +114,7 @@ const myWorkflow = createWorkflow(
     const result = declineOrderChangeWorkflow
       .runAsStep({
         input: {
-          "id": "id_HwIngILchry"
+          "id": "id_yhBH3vWpkkXZ9"
         }
       })
   }
