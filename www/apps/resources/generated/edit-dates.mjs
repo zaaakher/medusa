@@ -591,7 +591,7 @@ export const generatedEditDates = {
   "references/types/NotificationTypes/interfaces/types.NotificationTypes.ProviderSendNotificationDTO/page.mdx": "2024-12-17T16:57:21.138Z",
   "references/types/interfaces/types.BaseProductCategory/page.mdx": "2024-12-23T13:57:05.885Z",
   "references/types/types.NotificationTypes/page.mdx": "2024-11-25T17:49:28.027Z",
-  "app/medusa-cli/commands/db/page.mdx": "2024-08-28T11:26:33.889Z",
+  "app/medusa-cli/commands/db/page.mdx": "2025-01-16T07:34:08.014Z",
   "app/medusa-cli/commands/develop/page.mdx": "2024-08-28T10:43:45.452Z",
   "app/medusa-cli/commands/exec/page.mdx": "2024-08-28T10:45:31.229Z",
   "app/medusa-cli/commands/new/page.mdx": "2024-08-28T10:43:34.110Z",
