@@ -7,6 +7,8 @@ tags:
   - inventory
   - locking
   - workflow
+  - payment
+  - link
 ---
 
 import { TypeList, WorkflowDiagram } from "docs-ui"
@@ -15,9 +17,13 @@ import { TypeList, WorkflowDiagram } from "docs-ui"
 
 This documentation provides a reference to the `confirmOrderEditRequestWorkflow`. It belongs to the `@medusajs/medusa/core-flows` package.
 
-This workflow confirms an order edit request.
+This workflow confirms an order edit request. It's used by the
+[Confirm Order Edit Admin API Route](https://docs.medusajs.com/api/admin#order-edits\_postordereditsidconfirm).
 
-<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1b86c17b7293f3b810c062d78ec6ef563f968366/packages/core/core-flows/src/order/workflows/order-edit/confirm-order-edit-request.ts#L56" />
+You can use this workflow within your customizations or your own custom workflows, allowing you to confirm an order edit
+in your custom flow.
+
+<SourceCodeLink link="https://github.com/medusajs/medusa/blob/e3d5457b5c990bb230daebe316ee2486913c27f6/packages/core/core-flows/src/order/workflows/order-edit/confirm-order-edit-request.ts#L112" />
 
 ## Examples
 
@@ -38,7 +44,7 @@ export async function POST(
   const { result } = await confirmOrderEditRequestWorkflow(req.scope)
     .run({
       input: {
-        "order_id": "{value}"
+        order_id: "order_123",
       }
     })
 
@@ -63,7 +69,7 @@ export default async function handleOrderPlaced({
   const { result } = await confirmOrderEditRequestWorkflow(container)
     .run({
       input: {
-        "order_id": "{value}"
+        order_id: "order_123",
       }
     })
 
@@ -88,7 +94,7 @@ export default async function myCustomJob(
   const { result } = await confirmOrderEditRequestWorkflow(container)
     .run({
       input: {
-        "order_id": "{value}"
+        order_id: "order_123",
       }
     })
 
@@ -114,7 +120,7 @@ const myWorkflow = createWorkflow(
     const result = confirmOrderEditRequestWorkflow
       .runAsStep({
         input: {
-          "order_id": "{value}"
+          order_id: "order_123",
         }
       })
   }
@@ -126,11 +132,11 @@ const myWorkflow = createWorkflow(
 
 ## Steps
 
-<WorkflowDiagram workflow={{"name":"confirmOrderEditRequestWorkflow","steps":[{"type":"step","name":"useRemoteQueryStep","description":"This step fetches data across modules using the remote query.\n\nLearn more in the [Remote Query documentation](https://docs.medusajs.com/learn/fundamentals/module-links/query).\n\n:::note\n\nThis step is deprecated. Use [useQueryGraphStep](../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.useQueryGraphStep/page.mdx) instead.\n\n:::\n\n","link":"../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.useRemoteQueryStep/page.mdx","depth":1},{"type":"step","name":"useRemoteQueryStep","description":"This step fetches data across modules using the remote query.\n\nLearn more in the [Remote Query documentation](https://docs.medusajs.com/learn/fundamentals/module-links/query).\n\n:::note\n\nThis step is deprecated. Use [useQueryGraphStep](../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.useQueryGraphStep/page.mdx) instead.\n\n:::\n\n","link":"../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.useRemoteQueryStep/page.mdx","depth":2},{"type":"step","name":"confirmOrderEditRequestValidationStep","description":"This step validates that a requested order edit can be confirmed.\n\n","link":"../core_flows.Order.Workflows_Order.confirmOrderEditRequestValidationStep/page.mdx","depth":3},{"type":"step","name":"previewOrderChangeStep","description":"This step retrieves a preview of an order change.\n\n","link":"../../../Steps_Order/functions/core_flows.Order.Steps_Order.previewOrderChangeStep/page.mdx","depth":4},{"type":"step","name":"useRemoteQueryStep","description":"This step fetches data across modules using the remote query.\n\nLearn more in the [Remote Query documentation](https://docs.medusajs.com/learn/fundamentals/module-links/query).\n\n:::note\n\nThis step is deprecated. Use [useQueryGraphStep](../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.useQueryGraphStep/page.mdx) instead.\n\n:::\n\n","link":"../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.useRemoteQueryStep/page.mdx","depth":5},{"type":"step","name":"deleteReservationsByLineItemsStep","description":"This step deletes reservations by their associated line items.\n\n","link":"../../../../Reservation/Steps_Reservation/functions/core_flows.Reservation.Steps_Reservation.deleteReservationsByLineItemsStep/page.mdx","depth":6},{"type":"step","name":"reserveInventoryStep","description":"This step reserves the quantity of line items from the associated\nvariant's inventory.\n\n","link":"../../../../Cart/Steps_Cart/functions/core_flows.Cart.Steps_Cart.reserveInventoryStep/page.mdx","depth":7}]}} />
+<WorkflowDiagram workflow={{"name":"confirmOrderEditRequestWorkflow","steps":[{"type":"step","name":"useRemoteQueryStep","description":"This step fetches data across modules using the remote query.\n\nLearn more in the [Remote Query documentation](https://docs.medusajs.com/learn/fundamentals/module-links/query).\n\n:::note\n\nThis step is deprecated. Use [useQueryGraphStep](../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.useQueryGraphStep/page.mdx) instead.\n\n:::","link":"../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.useRemoteQueryStep/page.mdx","depth":1},{"type":"step","name":"useRemoteQueryStep","description":"This step fetches data across modules using the remote query.\n\nLearn more in the [Remote Query documentation](https://docs.medusajs.com/learn/fundamentals/module-links/query).\n\n:::note\n\nThis step is deprecated. Use [useQueryGraphStep](../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.useQueryGraphStep/page.mdx) instead.\n\n:::","link":"../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.useRemoteQueryStep/page.mdx","depth":2},{"type":"step","name":"confirmOrderEditRequestValidationStep","description":"This step validates that a requested order edit can be confirmed.\nIf the order is canceled or the order change is not active, the step will throw an error.\n\n:::note\n\nYou can retrieve an order and order change details using [Query](https://docs.medusajs.com/learn/fundamentals/module-links/query),\nor [useQueryGraphStep](https://docs.medusajs.com/resources/references/medusa-workflows/steps/useQueryGraphStep).\n\n:::","link":"../core_flows.Order.Workflows_Order.confirmOrderEditRequestValidationStep/page.mdx","depth":3},{"type":"step","name":"previewOrderChangeStep","description":"This step retrieves a preview of an order change.","link":"../../../Steps_Order/functions/core_flows.Order.Steps_Order.previewOrderChangeStep/page.mdx","depth":4},{"type":"step","name":"useRemoteQueryStep","description":"This step fetches data across modules using the remote query.\n\nLearn more in the [Remote Query documentation](https://docs.medusajs.com/learn/fundamentals/module-links/query).\n\n:::note\n\nThis step is deprecated. Use [useQueryGraphStep](../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.useQueryGraphStep/page.mdx) instead.\n\n:::","link":"../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.useRemoteQueryStep/page.mdx","depth":5},{"type":"step","name":"deleteReservationsByLineItemsStep","description":"This step deletes reservations by their associated line items.","link":"../../../../Reservation/Steps_Reservation/functions/core_flows.Reservation.Steps_Reservation.deleteReservationsByLineItemsStep/page.mdx","depth":6},{"type":"step","name":"reserveInventoryStep","description":"This step reserves the quantity of line items from the associated\nvariant's inventory.","link":"../../../../Cart/Steps_Cart/functions/core_flows.Cart.Steps_Cart.reserveInventoryStep/page.mdx","depth":7},{"type":"workflow","name":"createOrUpdateOrderPaymentCollectionWorkflow","description":"This workflow creates or updates payment collection for an order. It's used by other order-related workflows,\nsuch as [createOrderPaymentCollectionWorkflow](../core_flows.Order.Workflows_Order.createOrderPaymentCollectionWorkflow/page.mdx) to update an order's payment collections based on changes made to the order.\n\nYou can use this workflow within your customizations or your own custom workflows, allowing you to wrap custom logic around\ncreating or updating payment collections for an order.","link":"../core_flows.Order.Workflows_Order.createOrUpdateOrderPaymentCollectionWorkflow/page.mdx","depth":8}]}} />
 
 ## Input
 
-<TypeList types={[{"name":"ConfirmOrderEditRequestWorkflowInput","type":"[ConfirmOrderEditRequestWorkflowInput](../../../../types/core_flows.ConfirmOrderEditRequestWorkflowInput/page.mdx)","optional":false,"defaultValue":"","description":"","expandable":false,"children":[{"name":"order_id","type":"`string`","description":"","optional":false,"defaultValue":"","expandable":false,"children":[]},{"name":"confirmed_by","type":"`string`","description":"","optional":true,"defaultValue":"","expandable":false,"children":[]}]}]} expandUrl="https://docs.medusajs.com/learn/fundamentals/data-models/manage-relationships#retrieve-records-of-relation" openedLevel={1} sectionTitle="confirmOrderEditRequestWorkflow"/>
+<TypeList types={[{"name":"ConfirmOrderEditRequestWorkflowInput","type":"[ConfirmOrderEditRequestWorkflowInput](../../../../types/core_flows.ConfirmOrderEditRequestWorkflowInput/page.mdx)","optional":false,"defaultValue":"","description":"The data to confirm an order edit request.","expandable":false,"children":[{"name":"order_id","type":"`string`","description":"The ID of the order to confirm the edit for.","optional":false,"defaultValue":"","expandable":false,"children":[]},{"name":"confirmed_by","type":"`string`","description":"The ID of the user confirming the edit.","optional":true,"defaultValue":"","expandable":false,"children":[]}]}]} expandUrl="https://docs.medusajs.com/learn/fundamentals/data-models/manage-relationships#retrieve-records-of-relation" openedLevel={1} sectionTitle="confirmOrderEditRequestWorkflow"/>
 
 ## Output
 

@@ -13,9 +13,13 @@ import { TypeList, WorkflowDiagram } from "docs-ui"
 
 This documentation provides a reference to the `updateReturnWorkflow`. It belongs to the `@medusajs/medusa/core-flows` package.
 
-This workflow updates a return.
+This workflow updates a return's details. It's used by the
+[Update Return Admin API Route](https://docs.medusajs.com/api/admin#returns\_postreturnsid).
 
-<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1b86c17b7293f3b810c062d78ec6ef563f968366/packages/core/core-flows/src/order/workflows/return/update-return.ts#L44" />
+You can use this workflow within your customizations or your own custom workflows, allowing you
+to update a return in your custom flow.
+
+<SourceCodeLink link="https://github.com/medusajs/medusa/blob/e3d5457b5c990bb230daebe316ee2486913c27f6/packages/core/core-flows/src/order/workflows/return/update-return.ts#L92" />
 
 ## Examples
 
@@ -36,7 +40,8 @@ export async function POST(
   const { result } = await updateReturnWorkflow(req.scope)
     .run({
       input: {
-        "return_id": "{value}"
+        return_id: "return_123",
+        no_notification: true
       }
     })
 
@@ -61,7 +66,8 @@ export default async function handleOrderPlaced({
   const { result } = await updateReturnWorkflow(container)
     .run({
       input: {
-        "return_id": "{value}"
+        return_id: "return_123",
+        no_notification: true
       }
     })
 
@@ -86,7 +92,8 @@ export default async function myCustomJob(
   const { result } = await updateReturnWorkflow(container)
     .run({
       input: {
-        "return_id": "{value}"
+        return_id: "return_123",
+        no_notification: true
       }
     })
 
@@ -112,7 +119,8 @@ const myWorkflow = createWorkflow(
     const result = updateReturnWorkflow
       .runAsStep({
         input: {
-          "return_id": "{value}"
+          return_id: "return_123",
+          no_notification: true
         }
       })
   }
@@ -124,7 +132,7 @@ const myWorkflow = createWorkflow(
 
 ## Steps
 
-<WorkflowDiagram workflow={{"name":"updateReturnWorkflow","steps":[{"type":"step","name":"useRemoteQueryStep","description":"This step fetches data across modules using the remote query.\n\nLearn more in the [Remote Query documentation](https://docs.medusajs.com/learn/fundamentals/module-links/query).\n\n:::note\n\nThis step is deprecated. Use [useQueryGraphStep](../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.useQueryGraphStep/page.mdx) instead.\n\n:::\n\n","link":"../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.useRemoteQueryStep/page.mdx","depth":1},{"type":"step","name":"useRemoteQueryStep","description":"This step fetches data across modules using the remote query.\n\nLearn more in the [Remote Query documentation](https://docs.medusajs.com/learn/fundamentals/module-links/query).\n\n:::note\n\nThis step is deprecated. Use [useQueryGraphStep](../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.useQueryGraphStep/page.mdx) instead.\n\n:::\n\n","link":"../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.useRemoteQueryStep/page.mdx","depth":2},{"type":"step","name":"updateReturnValidationStep","description":"This step validates that a return can be updated\n\n","link":"../core_flows.Order.Workflows_Order.updateReturnValidationStep/page.mdx","depth":3},{"type":"step","name":"updateReturnsStep","description":"This step updates one or more returns.\n\n","link":"../../../Steps_Order/functions/core_flows.Order.Steps_Order.updateReturnsStep/page.mdx","depth":4},{"type":"step","name":"previewOrderChangeStep","description":"This step retrieves a preview of an order change.\n\n","link":"../../../Steps_Order/functions/core_flows.Order.Steps_Order.previewOrderChangeStep/page.mdx","depth":5}]}} />
+<WorkflowDiagram workflow={{"name":"updateReturnWorkflow","steps":[{"type":"step","name":"useRemoteQueryStep","description":"This step fetches data across modules using the remote query.\n\nLearn more in the [Remote Query documentation](https://docs.medusajs.com/learn/fundamentals/module-links/query).\n\n:::note\n\nThis step is deprecated. Use [useQueryGraphStep](../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.useQueryGraphStep/page.mdx) instead.\n\n:::","link":"../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.useRemoteQueryStep/page.mdx","depth":1},{"type":"step","name":"useRemoteQueryStep","description":"This step fetches data across modules using the remote query.\n\nLearn more in the [Remote Query documentation](https://docs.medusajs.com/learn/fundamentals/module-links/query).\n\n:::note\n\nThis step is deprecated. Use [useQueryGraphStep](../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.useQueryGraphStep/page.mdx) instead.\n\n:::","link":"../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.useRemoteQueryStep/page.mdx","depth":2},{"type":"step","name":"updateReturnValidationStep","description":"This step validates that a return can be updated.\nIf the return is canceled or the order change is not active, the step will throw an error.\n\n:::note\n\nYou can retrieve a return and order change details using [Query](https://docs.medusajs.com/learn/fundamentals/module-links/query),\nor [useQueryGraphStep](https://docs.medusajs.com/resources/references/medusa-workflows/steps/useQueryGraphStep).\n\n:::","link":"../core_flows.Order.Workflows_Order.updateReturnValidationStep/page.mdx","depth":3},{"type":"step","name":"updateReturnsStep","description":"This step updates one or more returns.","link":"../../../Steps_Order/functions/core_flows.Order.Steps_Order.updateReturnsStep/page.mdx","depth":4},{"type":"step","name":"previewOrderChangeStep","description":"This step retrieves a preview of an order change.","link":"../../../Steps_Order/functions/core_flows.Order.Steps_Order.previewOrderChangeStep/page.mdx","depth":5}]}} />
 
 ## Input
 

@@ -12,9 +12,13 @@ import { TypeList, WorkflowDiagram } from "docs-ui"
 
 This documentation provides a reference to the `deletePromotionRulesWorkflow`. It belongs to the `@medusajs/medusa/core-flows` package.
 
-This workflow deletes one or more promotion rules.
+This workflow deletes one or more promotion rules. It's used by other workflows,
+such as [batchPromotionRulesWorkflow](../core_flows.Promotion.Workflows_Promotion.batchPromotionRulesWorkflow/page.mdx) that manages the rules of a promotion.
 
-<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1b86c17b7293f3b810c062d78ec6ef563f968366/packages/core/core-flows/src/promotion/workflows/delete-promotion-rules.ts#L9" />
+You can use this workflow within your own customizations or custom workflows, allowing you to
+delete promotion rules within your custom flows.
+
+<SourceCodeLink link="https://github.com/medusajs/medusa/blob/e3d5457b5c990bb230daebe316ee2486913c27f6/packages/core/core-flows/src/promotion/workflows/delete-promotion-rules.ts#L29" />
 
 ## Examples
 
@@ -35,12 +39,10 @@ export async function POST(
   const { result } = await deletePromotionRulesWorkflow(req.scope)
     .run({
       input: {
-        "rule_type": "{value}",
-        "data": {
-          "id": "id_Mh1PFA8giy1m",
-          "rule_ids": [
-            "{value}"
-          ]
+        rule_type: RuleType.RULES,
+        data: {
+          id: "promo_123",
+          rule_ids: ["prule_123"]
         }
       }
     })
@@ -66,12 +68,10 @@ export default async function handleOrderPlaced({
   const { result } = await deletePromotionRulesWorkflow(container)
     .run({
       input: {
-        "rule_type": "{value}",
-        "data": {
-          "id": "id_Mh1PFA8giy1m",
-          "rule_ids": [
-            "{value}"
-          ]
+        rule_type: RuleType.RULES,
+        data: {
+          id: "promo_123",
+          rule_ids: ["prule_123"]
         }
       }
     })
@@ -97,12 +97,10 @@ export default async function myCustomJob(
   const { result } = await deletePromotionRulesWorkflow(container)
     .run({
       input: {
-        "rule_type": "{value}",
-        "data": {
-          "id": "id_Mh1PFA8giy1m",
-          "rule_ids": [
-            "{value}"
-          ]
+        rule_type: RuleType.RULES,
+        data: {
+          id: "promo_123",
+          rule_ids: ["prule_123"]
         }
       }
     })
@@ -129,12 +127,10 @@ const myWorkflow = createWorkflow(
     const result = deletePromotionRulesWorkflow
       .runAsStep({
         input: {
-          "rule_type": "{value}",
-          "data": {
-            "id": "id_Mh1PFA8giy1m",
-            "rule_ids": [
-              "{value}"
-            ]
+          rule_type: RuleType.RULES,
+          data: {
+            id: "promo_123",
+            rule_ids: ["prule_123"]
           }
         }
       })
@@ -147,7 +143,7 @@ const myWorkflow = createWorkflow(
 
 ## Steps
 
-<WorkflowDiagram workflow={{"name":"deletePromotionRulesWorkflow","steps":[{"type":"step","name":"removeRulesFromPromotionsStep","description":"This step removes rules from a promotion.\n\n","link":"../../../Steps_Promotion/functions/core_flows.Promotion.Steps_Promotion.removeRulesFromPromotionsStep/page.mdx","depth":1}]}} />
+<WorkflowDiagram workflow={{"name":"deletePromotionRulesWorkflow","steps":[{"type":"step","name":"removeRulesFromPromotionsStep","description":"This step removes rules from a promotion.","link":"../../../Steps_Promotion/functions/core_flows.Promotion.Steps_Promotion.removeRulesFromPromotionsStep/page.mdx","depth":1}]}} />
 
 ## Input
 

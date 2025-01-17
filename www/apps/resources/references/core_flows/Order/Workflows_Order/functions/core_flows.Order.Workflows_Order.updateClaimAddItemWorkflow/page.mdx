@@ -13,9 +13,13 @@ import { TypeList, WorkflowDiagram } from "docs-ui"
 
 This documentation provides a reference to the `updateClaimAddItemWorkflow`. It belongs to the `@medusajs/medusa/core-flows` package.
 
-This workflow updates a claim's new item.
+This workflow updates a claim's new or outbound item. It's used by the
+[Update Outbound Item API Route](https://docs.medusajs.com/api/admin#claims\_postclaimsidoutbounditemsaction\_id).
 
-<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1b86c17b7293f3b810c062d78ec6ef563f968366/packages/core/core-flows/src/order/workflows/claim/update-claim-add-item.ts#L68" />
+You can use this workflow within your customizations or your own custom workflows, allowing you to update a claim's new or outbound item
+in your custom flows.
+
+<SourceCodeLink link="https://github.com/medusajs/medusa/blob/e3d5457b5c990bb230daebe316ee2486913c27f6/packages/core/core-flows/src/order/workflows/claim/update-claim-add-item.ts#L137" />
 
 ## Examples
 
@@ -36,9 +40,11 @@ export async function POST(
   const { result } = await updateClaimAddItemWorkflow(req.scope)
     .run({
       input: {
-        "claim_id": "{value}",
-        "action_id": "{value}",
-        "data": {}
+        claim_id: "claim_123",
+        action_id: "orchact_123",
+        data: {
+          quantity: 1,
+        }
       }
     })
 
@@ -63,9 +69,11 @@ export default async function handleOrderPlaced({
   const { result } = await updateClaimAddItemWorkflow(container)
     .run({
       input: {
-        "claim_id": "{value}",
-        "action_id": "{value}",
-        "data": {}
+        claim_id: "claim_123",
+        action_id: "orchact_123",
+        data: {
+          quantity: 1,
+        }
       }
     })
 
@@ -90,9 +98,11 @@ export default async function myCustomJob(
   const { result } = await updateClaimAddItemWorkflow(container)
     .run({
       input: {
-        "claim_id": "{value}",
-        "action_id": "{value}",
-        "data": {}
+        claim_id: "claim_123",
+        action_id: "orchact_123",
+        data: {
+          quantity: 1,
+        }
       }
     })
 
@@ -118,9 +128,11 @@ const myWorkflow = createWorkflow(
     const result = updateClaimAddItemWorkflow
       .runAsStep({
         input: {
-          "claim_id": "{value}",
-          "action_id": "{value}",
-          "data": {}
+          claim_id: "claim_123",
+          action_id: "orchact_123",
+          data: {
+            quantity: 1,
+          }
         }
       })
   }
@@ -132,7 +144,7 @@ const myWorkflow = createWorkflow(
 
 ## Steps
 
-<WorkflowDiagram workflow={{"name":"updateClaimAddItemWorkflow","steps":[{"type":"step","name":"useRemoteQueryStep","description":"This step fetches data across modules using the remote query.\n\nLearn more in the [Remote Query documentation](https://docs.medusajs.com/learn/fundamentals/module-links/query).\n\n:::note\n\nThis step is deprecated. Use [useQueryGraphStep](../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.useQueryGraphStep/page.mdx) instead.\n\n:::\n\n","link":"../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.useRemoteQueryStep/page.mdx","depth":1},{"type":"step","name":"useRemoteQueryStep","description":"This step fetches data across modules using the remote query.\n\nLearn more in the [Remote Query documentation](https://docs.medusajs.com/learn/fundamentals/module-links/query).\n\n:::note\n\nThis step is deprecated. Use [useQueryGraphStep](../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.useQueryGraphStep/page.mdx) instead.\n\n:::\n\n","link":"../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.useRemoteQueryStep/page.mdx","depth":2},{"type":"step","name":"useRemoteQueryStep","description":"This step fetches data across modules using the remote query.\n\nLearn more in the [Remote Query documentation](https://docs.medusajs.com/learn/fundamentals/module-links/query).\n\n:::note\n\nThis step is deprecated. Use [useQueryGraphStep](../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.useQueryGraphStep/page.mdx) instead.\n\n:::\n\n","link":"../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.useRemoteQueryStep/page.mdx","depth":3},{"type":"step","name":"updateClaimAddItemValidationStep","description":"This step validates that a claim's new item can be updated.\n\n","link":"../core_flows.Order.Workflows_Order.updateClaimAddItemValidationStep/page.mdx","depth":4},{"type":"step","name":"updateOrderChangeActionsStep","description":"This step updates order change actions.\n\n","link":"../../../Steps_Order/functions/core_flows.Order.Steps_Order.updateOrderChangeActionsStep/page.mdx","depth":5},{"type":"step","name":"previewOrderChangeStep","description":"This step retrieves a preview of an order change.\n\n","link":"../../../Steps_Order/functions/core_flows.Order.Steps_Order.previewOrderChangeStep/page.mdx","depth":6}]}} />
+<WorkflowDiagram workflow={{"name":"updateClaimAddItemWorkflow","steps":[{"type":"step","name":"useRemoteQueryStep","description":"This step fetches data across modules using the remote query.\n\nLearn more in the [Remote Query documentation](https://docs.medusajs.com/learn/fundamentals/module-links/query).\n\n:::note\n\nThis step is deprecated. Use [useQueryGraphStep](../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.useQueryGraphStep/page.mdx) instead.\n\n:::","link":"../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.useRemoteQueryStep/page.mdx","depth":1},{"type":"step","name":"useRemoteQueryStep","description":"This step fetches data across modules using the remote query.\n\nLearn more in the [Remote Query documentation](https://docs.medusajs.com/learn/fundamentals/module-links/query).\n\n:::note\n\nThis step is deprecated. Use [useQueryGraphStep](../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.useQueryGraphStep/page.mdx) instead.\n\n:::","link":"../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.useRemoteQueryStep/page.mdx","depth":2},{"type":"step","name":"useRemoteQueryStep","description":"This step fetches data across modules using the remote query.\n\nLearn more in the [Remote Query documentation](https://docs.medusajs.com/learn/fundamentals/module-links/query).\n\n:::note\n\nThis step is deprecated. Use [useQueryGraphStep](../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.useQueryGraphStep/page.mdx) instead.\n\n:::","link":"../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.useRemoteQueryStep/page.mdx","depth":3},{"type":"step","name":"updateClaimAddItemValidationStep","description":"This step validates that a claim's new or outbound item can be updated.\nIf the order, claim, or order change is canceled, no action is adding the item,\n or the action is not adding an outbound item, the step will throw an error.\n\n:::note\n\nYou can retrieve an order, order claim, and order change details using [Query](https://docs.medusajs.com/learn/fundamentals/module-links/query),\nor [useQueryGraphStep](https://docs.medusajs.com/resources/references/medusa-workflows/steps/useQueryGraphStep).\n\n:::","link":"../core_flows.Order.Workflows_Order.updateClaimAddItemValidationStep/page.mdx","depth":4},{"type":"step","name":"updateOrderChangeActionsStep","description":"This step updates order change actions.","link":"../../../Steps_Order/functions/core_flows.Order.Steps_Order.updateOrderChangeActionsStep/page.mdx","depth":5},{"type":"step","name":"previewOrderChangeStep","description":"This step retrieves a preview of an order change.","link":"../../../Steps_Order/functions/core_flows.Order.Steps_Order.previewOrderChangeStep/page.mdx","depth":6}]}} />
 
 ## Input
 

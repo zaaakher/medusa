@@ -12,9 +12,13 @@ import { TypeList, WorkflowDiagram } from "docs-ui"
 
 This documentation provides a reference to the `updateReservationsWorkflow`. It belongs to the `@medusajs/medusa/core-flows` package.
 
-This workflow updates one or more reservations.
+This workflow updates one or more reservations. It's used by the 
+[Update Reservations Admin API Route](https://docs.medusajs.com/api/admin#reservations\_postreservationsid).
 
-<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1b86c17b7293f3b810c062d78ec6ef563f968366/packages/core/core-flows/src/reservation/workflows/update-reservations.ts#L14" />
+You can use this workflow within your own customizations or custom workflows, allowing you
+to update reservations in your custom flows.
+
+<SourceCodeLink link="https://github.com/medusajs/medusa/blob/e3d5457b5c990bb230daebe316ee2486913c27f6/packages/core/core-flows/src/reservation/workflows/update-reservations.ts#L35" />
 
 ## Examples
 
@@ -35,8 +39,9 @@ export async function POST(
   const { result } = await updateReservationsWorkflow(req.scope)
     .run({
       input: {
-        "updates": [{
-          "id": "id_CM0xNtYFVGsndigtxzs"
+        updates: [{
+          id: "res_123",
+          quantity: 1,
         }]
       }
     })
@@ -62,8 +67,9 @@ export default async function handleOrderPlaced({
   const { result } = await updateReservationsWorkflow(container)
     .run({
       input: {
-        "updates": [{
-          "id": "id_CM0xNtYFVGsndigtxzs"
+        updates: [{
+          id: "res_123",
+          quantity: 1,
         }]
       }
     })
@@ -89,8 +95,9 @@ export default async function myCustomJob(
   const { result } = await updateReservationsWorkflow(container)
     .run({
       input: {
-        "updates": [{
-          "id": "id_CM0xNtYFVGsndigtxzs"
+        updates: [{
+          id: "res_123",
+          quantity: 1,
         }]
       }
     })
@@ -117,8 +124,9 @@ const myWorkflow = createWorkflow(
     const result = updateReservationsWorkflow
       .runAsStep({
         input: {
-          "updates": [{
-            "id": "id_CM0xNtYFVGsndigtxzs"
+          updates: [{
+            id: "res_123",
+            quantity: 1,
           }]
         }
       })
@@ -131,7 +139,7 @@ const myWorkflow = createWorkflow(
 
 ## Steps
 
-<WorkflowDiagram workflow={{"name":"updateReservationsWorkflow","steps":[{"type":"step","name":"updateReservationsStep","description":"This step updates one or more reservations.\n\n","link":"../../../Steps_Reservation/functions/core_flows.Reservation.Steps_Reservation.updateReservationsStep/page.mdx","depth":1}]}} />
+<WorkflowDiagram workflow={{"name":"updateReservationsWorkflow","steps":[{"type":"step","name":"updateReservationsStep","description":"This step updates one or more reservations.","link":"../../../Steps_Reservation/functions/core_flows.Reservation.Steps_Reservation.updateReservationsStep/page.mdx","depth":1}]}} />
 
 ## Input
 

@@ -14,7 +14,10 @@ This documentation provides a reference to the `receiveAndCompleteReturnOrderWor
 
 This workflow marks a return as received and completes it.
 
-<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1b86c17b7293f3b810c062d78ec6ef563f968366/packages/core/core-flows/src/order/workflows/return/receive-complete-return.ts#L41" />
+You can use this workflow within your customizations or your own custom workflows, allowing you
+to receive and complete a return.
+
+<SourceCodeLink link="https://github.com/medusajs/medusa/blob/e3d5457b5c990bb230daebe316ee2486913c27f6/packages/core/core-flows/src/order/workflows/return/receive-complete-return.ts#L98" />
 
 ## Examples
 
@@ -35,10 +38,10 @@ export async function POST(
   const { result } = await receiveAndCompleteReturnOrderWorkflow(req.scope)
     .run({
       input: {
-        "return_id": "{value}",
-        "items": [{
-          "id": "id_e8cO7BTPhnTaliE8w",
-          "quantity": 38
+        return_id: "return_123",
+        items: [{
+          id: "orli_123",
+          quantity: 1,
         }]
       }
     })
@@ -64,10 +67,10 @@ export default async function handleOrderPlaced({
   const { result } = await receiveAndCompleteReturnOrderWorkflow(container)
     .run({
       input: {
-        "return_id": "{value}",
-        "items": [{
-          "id": "id_e8cO7BTPhnTaliE8w",
-          "quantity": 38
+        return_id: "return_123",
+        items: [{
+          id: "orli_123",
+          quantity: 1,
         }]
       }
     })
@@ -93,10 +96,10 @@ export default async function myCustomJob(
   const { result } = await receiveAndCompleteReturnOrderWorkflow(container)
     .run({
       input: {
-        "return_id": "{value}",
-        "items": [{
-          "id": "id_e8cO7BTPhnTaliE8w",
-          "quantity": 38
+        return_id: "return_123",
+        items: [{
+          id: "orli_123",
+          quantity: 1,
         }]
       }
     })
@@ -123,10 +126,10 @@ const myWorkflow = createWorkflow(
     const result = receiveAndCompleteReturnOrderWorkflow
       .runAsStep({
         input: {
-          "return_id": "{value}",
-          "items": [{
-            "id": "id_e8cO7BTPhnTaliE8w",
-            "quantity": 38
+          return_id: "return_123",
+          items: [{
+            id: "orli_123",
+            quantity: 1,
           }]
         }
       })
@@ -139,7 +142,7 @@ const myWorkflow = createWorkflow(
 
 ## Steps
 
-<WorkflowDiagram workflow={{"name":"receiveAndCompleteReturnOrderWorkflow","steps":[{"type":"step","name":"useRemoteQueryStep","description":"This step fetches data across modules using the remote query.\n\nLearn more in the [Remote Query documentation](https://docs.medusajs.com/learn/fundamentals/module-links/query).\n\n:::note\n\nThis step is deprecated. Use [useQueryGraphStep](../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.useQueryGraphStep/page.mdx) instead.\n\n:::\n\n","link":"../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.useRemoteQueryStep/page.mdx","depth":1},{"type":"step","name":"receiveCompleteReturnValidationStep","description":"This step validates that a return can be received and completed.\n\n","link":"../core_flows.Order.Workflows_Order.receiveCompleteReturnValidationStep/page.mdx","depth":2}]}} />
+<WorkflowDiagram workflow={{"name":"receiveAndCompleteReturnOrderWorkflow","steps":[{"type":"step","name":"useRemoteQueryStep","description":"This step fetches data across modules using the remote query.\n\nLearn more in the [Remote Query documentation](https://docs.medusajs.com/learn/fundamentals/module-links/query).\n\n:::note\n\nThis step is deprecated. Use [useQueryGraphStep](../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.useQueryGraphStep/page.mdx) instead.\n\n:::","link":"../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.useRemoteQueryStep/page.mdx","depth":1},{"type":"step","name":"receiveCompleteReturnValidationStep","description":"This step validates that a return can be received and completed.\nIf the return is canceled or the items do not exist in the return, the step will throw an error.\n\n:::note\n\nYou can retrieve a return details using [Query](https://docs.medusajs.com/learn/fundamentals/module-links/query),\nor [useQueryGraphStep](https://docs.medusajs.com/resources/references/medusa-workflows/steps/useQueryGraphStep).\n\n:::","link":"../core_flows.Order.Workflows_Order.receiveCompleteReturnValidationStep/page.mdx","depth":2}]}} />
 
 ## Input
 

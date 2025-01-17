@@ -12,9 +12,13 @@ import { TypeList, WorkflowDiagram } from "docs-ui"
 
 This documentation provides a reference to the `updatePriceListsWorkflow`. It belongs to the `@medusajs/medusa/core-flows` package.
 
-This workflow updates one or more price lists.
+This workflow updates one or more price lists. It's used by the
+[Update Price List Admin API Route](https://docs.medusajs.com/api/admin#price-lists\_postpricelistsid).
 
-<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1b86c17b7293f3b810c062d78ec6ef563f968366/packages/core/core-flows/src/price-list/workflows/update-price-lists.ts#L9" />
+You can use this workflow within your customizations or your own custom workflows, allowing you to
+update price lists in your custom flows.
+
+<SourceCodeLink link="https://github.com/medusajs/medusa/blob/e3d5457b5c990bb230daebe316ee2486913c27f6/packages/core/core-flows/src/price-list/workflows/update-price-lists.ts#L40" />
 
 ## Examples
 
@@ -35,8 +39,9 @@ export async function POST(
   const { result } = await updatePriceListsWorkflow(req.scope)
     .run({
       input: {
-        "price_lists_data": [{
-          "id": "id_DmfYTffz5doptrEWLOeR"
+        price_lists_data: [{
+          id: "plist_123",
+          title: "Test Price List",
         }]
       }
     })
@@ -62,8 +67,9 @@ export default async function handleOrderPlaced({
   const { result } = await updatePriceListsWorkflow(container)
     .run({
       input: {
-        "price_lists_data": [{
-          "id": "id_DmfYTffz5doptrEWLOeR"
+        price_lists_data: [{
+          id: "plist_123",
+          title: "Test Price List",
         }]
       }
     })
@@ -89,8 +95,9 @@ export default async function myCustomJob(
   const { result } = await updatePriceListsWorkflow(container)
     .run({
       input: {
-        "price_lists_data": [{
-          "id": "id_DmfYTffz5doptrEWLOeR"
+        price_lists_data: [{
+          id: "plist_123",
+          title: "Test Price List",
         }]
       }
     })
@@ -117,8 +124,9 @@ const myWorkflow = createWorkflow(
     const result = updatePriceListsWorkflow
       .runAsStep({
         input: {
-          "price_lists_data": [{
-            "id": "id_DmfYTffz5doptrEWLOeR"
+          price_lists_data: [{
+            id: "plist_123",
+            title: "Test Price List",
           }]
         }
       })
@@ -131,7 +139,7 @@ const myWorkflow = createWorkflow(
 
 ## Steps
 
-<WorkflowDiagram workflow={{"name":"updatePriceListsWorkflow","steps":[{"type":"step","name":"validatePriceListsStep","description":"This step validates that the specified price lists exist.\n\n","link":"../../../Steps_Price_List/functions/core_flows.Price_List.Steps_Price_List.validatePriceListsStep/page.mdx","depth":1},{"type":"step","name":"updatePriceListsStep","description":"This step updates one or more price lists.\n\n","link":"../../../Steps_Price_List/functions/core_flows.Price_List.Steps_Price_List.updatePriceListsStep/page.mdx","depth":2}]}} />
+<WorkflowDiagram workflow={{"name":"updatePriceListsWorkflow","steps":[{"type":"step","name":"validatePriceListsStep","description":"This step validates that the specified price lists exist.\nIf not valid, the step throws an error.","link":"../../../Steps_Price_List/functions/core_flows.Price_List.Steps_Price_List.validatePriceListsStep/page.mdx","depth":1},{"type":"step","name":"updatePriceListsStep","description":"This step updates one or more price lists.","link":"../../../Steps_Price_List/functions/core_flows.Price_List.Steps_Price_List.updatePriceListsStep/page.mdx","depth":2}]}} />
 
 ## Input
 

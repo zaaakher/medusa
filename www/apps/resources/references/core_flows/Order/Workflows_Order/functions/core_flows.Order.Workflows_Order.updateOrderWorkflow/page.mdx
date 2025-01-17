@@ -14,9 +14,13 @@ import { TypeList, WorkflowDiagram } from "docs-ui"
 
 This documentation provides a reference to the `updateOrderWorkflow`. It belongs to the `@medusajs/medusa/core-flows` package.
 
-Update order workflow.
+This workflow updates an order's general details, such as its email or addresses. It's used by the 
+[Update Order Admin API Route](https://docs.medusajs.com/api/admin#orders\_postordersid).
 
-<SourceCodeLink link="https://github.com/medusajs/medusa/blob/1b86c17b7293f3b810c062d78ec6ef563f968366/packages/core/core-flows/src/order/workflows/update-order.ts#L74" />
+You can use this workflow within your customizations or your own custom workflows, allowing you to update an
+order's details in your custom flows.
+
+<SourceCodeLink link="https://github.com/medusajs/medusa/blob/e3d5457b5c990bb230daebe316ee2486913c27f6/packages/core/core-flows/src/order/workflows/update-order.ts#L123" />
 
 ## Examples
 
@@ -37,8 +41,9 @@ export async function POST(
   const { result } = await updateOrderWorkflow(req.scope)
     .run({
       input: {
-        "id": "id_2MmlXYBnn0",
-        "user_id": "{value}"
+        id: "order_123",
+        user_id: "user_123",
+        email: "example@gmail.com",
       }
     })
 
@@ -63,8 +68,9 @@ export default async function handleOrderPlaced({
   const { result } = await updateOrderWorkflow(container)
     .run({
       input: {
-        "id": "id_2MmlXYBnn0",
-        "user_id": "{value}"
+        id: "order_123",
+        user_id: "user_123",
+        email: "example@gmail.com",
       }
     })
 
@@ -89,8 +95,9 @@ export default async function myCustomJob(
   const { result } = await updateOrderWorkflow(container)
     .run({
       input: {
-        "id": "id_2MmlXYBnn0",
-        "user_id": "{value}"
+        id: "order_123",
+        user_id: "user_123",
+        email: "example@gmail.com",
       }
     })
 
@@ -116,8 +123,9 @@ const myWorkflow = createWorkflow(
     const result = updateOrderWorkflow
       .runAsStep({
         input: {
-          "id": "id_2MmlXYBnn0",
-          "user_id": "{value}"
+          id: "order_123",
+          user_id: "user_123",
+          email: "example@gmail.com",
         }
       })
   }
@@ -129,7 +137,7 @@ const myWorkflow = createWorkflow(
 
 ## Steps
 
-<WorkflowDiagram workflow={{"name":"updateOrderWorkflow","steps":[{"type":"step","name":"useQueryGraphStep","description":"This step fetches data across modules using the Query.\n\nLearn more in the [Query documentation](https://docs.medusajs.com/learn/fundamentals/module-links/query).\n\n","link":"../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.useQueryGraphStep/page.mdx","depth":1},{"type":"step","name":"updateOrderValidationStep","description":"This step validates that an order can be updated with provided input.\n\n","link":"../core_flows.Order.Workflows_Order.updateOrderValidationStep/page.mdx","depth":2},{"type":"step","name":"updateOrdersStep","description":"This step updates orders matching the specified filters.\n\n","link":"../../../Steps_Order/functions/core_flows.Order.Steps_Order.updateOrdersStep/page.mdx","depth":3},{"type":"step","name":"registerOrderChangesStep","description":"This step registers an order changes.\n\n","link":"../../../Steps_Order/functions/core_flows.Order.Steps_Order.registerOrderChangesStep/page.mdx","depth":4},{"type":"step","name":"emitEventStep","description":"Emit an event.\n\n","link":"../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.emitEventStep/page.mdx","depth":5},{"type":"step","name":"previewOrderChangeStep","description":"This step retrieves a preview of an order change.\n\n","link":"../../../Steps_Order/functions/core_flows.Order.Steps_Order.previewOrderChangeStep/page.mdx","depth":6}]}} />
+<WorkflowDiagram workflow={{"name":"updateOrderWorkflow","steps":[{"type":"step","name":"useQueryGraphStep","description":"This step fetches data across modules using the Query.\n\nLearn more in the [Query documentation](https://docs.medusajs.com/learn/fundamentals/module-links/query).","link":"../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.useQueryGraphStep/page.mdx","depth":1},{"type":"step","name":"updateOrderValidationStep","description":"This step validates that an order can be updated with provided input. If the order is cancelled,\nthe email is invalid, or the country code is being changed in the shipping or billing addresses, the step will throw an error.\n\n:::note\n\nYou can retrieve an order's details using [Query](https://docs.medusajs.com/learn/fundamentals/module-links/query),\nor [useQueryGraphStep](https://docs.medusajs.com/resources/references/medusa-workflows/steps/useQueryGraphStep).\n\n:::","link":"../core_flows.Order.Workflows_Order.updateOrderValidationStep/page.mdx","depth":2},{"type":"step","name":"updateOrdersStep","description":"This step updates orders matching the specified filters.","link":"../../../Steps_Order/functions/core_flows.Order.Steps_Order.updateOrdersStep/page.mdx","depth":3},{"type":"step","name":"registerOrderChangesStep","description":"This step registers an order changes.","link":"../../../Steps_Order/functions/core_flows.Order.Steps_Order.registerOrderChangesStep/page.mdx","depth":4},{"type":"step","name":"emitEventStep","description":"Emit an event.","link":"../../../../Common/Steps_Common/functions/core_flows.Common.Steps_Common.emitEventStep/page.mdx","depth":5},{"type":"step","name":"previewOrderChangeStep","description":"This step retrieves a preview of an order change.","link":"../../../Steps_Order/functions/core_flows.Order.Steps_Order.previewOrderChangeStep/page.mdx","depth":6}]}} />
 
 ## Input
 

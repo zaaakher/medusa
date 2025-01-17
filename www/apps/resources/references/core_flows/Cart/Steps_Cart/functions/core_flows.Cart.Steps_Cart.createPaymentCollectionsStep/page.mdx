@@ -14,26 +14,18 @@ This documentation provides a reference to the `createPaymentCollectionsStep`. I
 
 This step creates payment collections in a cart.
 
-```ts title="src/workflows/my-workflow.ts"
-import { createWorkflow } from "@medusajs/framework/workflows-sdk"
-import { createPaymentCollectionsStep } from "@medusajs/medusa/core-flows"
+## Example
 
-const myWorkflow = createWorkflow(
-  "my-workflow",
-  () => {
-    const data = createPaymentCollectionsStep([{
-      "region_id": "{value}",
-      "currency_code": "{value}",
-      "amount": 39
-    }])
-  }
-)
+```ts
+const data = createPaymentCollectionsStep([{
+  "currency_code": "usd",
+  "amount": 40
+}])
 ```
-  
 
 ## Input
 
-<TypeList types={[{"name":"CreatePaymentCollectionCartStepInput[]","type":"[CreatePaymentCollectionCartStepInput](../../../../types/core_flows.CreatePaymentCollectionCartStepInput/page.mdx)[]","optional":false,"defaultValue":"","description":"","expandable":false,"children":[{"name":"CreatePaymentCollectionCartStepInput","type":"[CreatePaymentCollectionCartStepInput](../../../../types/core_flows.CreatePaymentCollectionCartStepInput/page.mdx)","optional":false,"defaultValue":"","description":"","expandable":false,"children":[{"name":"region_id","type":"`string`","description":"","optional":false,"defaultValue":"","expandable":false,"children":[]},{"name":"currency_code","type":"`string`","description":"","optional":false,"defaultValue":"","expandable":false,"children":[]},{"name":"amount","type":"[BigNumberInput](../../../../../types/types/types.BigNumberInput/page.mdx)","description":"","optional":false,"defaultValue":"","expandable":false,"children":[{"name":"value","type":"`string` \\| `number`","description":"","optional":false,"defaultValue":"","expandable":false,"children":[]},{"name":"numeric","type":"`number`","description":"","optional":false,"defaultValue":"","expandable":false,"children":[]},{"name":"raw","type":"[BigNumberRawValue](../../../../../types/types/types.BigNumberRawValue/page.mdx)","description":"","optional":true,"defaultValue":"","expandable":false,"children":[]},{"name":"bigNumber","type":"`BigNumber`","description":"","optional":true,"defaultValue":"","expandable":false,"children":[]}]},{"name":"metadata","type":"`Record<string, unknown>`","description":"","optional":true,"defaultValue":"","expandable":false,"children":[]}]}]}]} expandUrl="https://docs.medusajs.com/learn/fundamentals/data-models/manage-relationships#retrieve-records-of-relation" openedLevel={1} sectionTitle="createPaymentCollectionsStep"/>
+<TypeList types={[{"name":"CreatePaymentCollectionCartStepInput","type":"[CreatePaymentCollectionCartStepInput](../../../../types/core_flows.CreatePaymentCollectionCartStepInput/page.mdx)","optional":false,"defaultValue":"","description":"","expandable":false,"children":[{"name":"currency_code","type":"`string`","description":"","optional":false,"defaultValue":"","expandable":false,"children":[]},{"name":"amount","type":"[BigNumberInput](../../../../../types/types/types.BigNumberInput/page.mdx)","description":"The payment collection's amount.","optional":false,"defaultValue":"","expandable":false,"children":[{"name":"value","type":"`string` \\| `number`","description":"","optional":false,"defaultValue":"","expandable":false,"children":[]},{"name":"numeric","type":"`number`","description":"","optional":false,"defaultValue":"","expandable":false,"children":[]},{"name":"raw","type":"[BigNumberRawValue](../../../../../types/types/types.BigNumberRawValue/page.mdx)","description":"","optional":true,"defaultValue":"","expandable":false,"children":[{"name":"value","type":"`string` \\| `number`","description":"","optional":false,"defaultValue":"","expandable":false,"children":[]}]},{"name":"bigNumber","type":"`BigNumber`","description":"","optional":true,"defaultValue":"","expandable":false,"children":[]}]},{"name":"metadata","type":"`Record<string, unknown>`","description":"Custom key-value pairs to store in the payment collection.","optional":true,"defaultValue":"","expandable":false,"children":[]}]}]} expandUrl="https://docs.medusajs.com/learn/fundamentals/data-models/manage-relationships#retrieve-records-of-relation" openedLevel={1} sectionTitle="createPaymentCollectionsStep"/>
 
 ## Output
 

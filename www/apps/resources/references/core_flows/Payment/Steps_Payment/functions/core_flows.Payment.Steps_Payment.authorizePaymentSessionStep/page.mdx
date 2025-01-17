@@ -15,25 +15,18 @@ This documentation provides a reference to the `authorizePaymentSessionStep`. It
 
 This step authorizes a payment session.
 
-```ts title="src/workflows/my-workflow.ts"
-import { createWorkflow } from "@medusajs/framework/workflows-sdk"
-import { authorizePaymentSessionStep } from "@medusajs/medusa/core-flows"
+## Example
 
-const myWorkflow = createWorkflow(
-  "my-workflow",
-  () => {
-    const data = authorizePaymentSessionStep({
-      "id": "id_mblMkAPH6xCKNTKdmeW",
-      "context": "{value}"
-    })
-  }
-)
+```ts
+const data = authorizePaymentSessionStep({
+  id: "payses_123",
+  context: {}
+})
 ```
-  
 
 ## Input
 
-<TypeList types={[{"name":"AuthorizePaymentSessionStepInput","type":"[AuthorizePaymentSessionStepInput](../../../../types/core_flows.AuthorizePaymentSessionStepInput/page.mdx)","optional":false,"defaultValue":"","description":"","expandable":false,"children":[{"name":"id","type":"`string`","description":"","optional":false,"defaultValue":"","expandable":false,"children":[]},{"name":"context","type":"`Record<string, unknown>`","description":"","optional":false,"defaultValue":"","expandable":false,"children":[]}]}]} expandUrl="https://docs.medusajs.com/learn/fundamentals/data-models/manage-relationships#retrieve-records-of-relation" openedLevel={1} sectionTitle="authorizePaymentSessionStep"/>
+<TypeList types={[{"name":"AuthorizePaymentSessionStepInput","type":"[AuthorizePaymentSessionStepInput](../../../../types/core_flows.AuthorizePaymentSessionStepInput/page.mdx)","optional":false,"defaultValue":"","description":"","expandable":false,"children":[{"name":"id","type":"`string`","description":"The ID of the payment session to authorize.","optional":false,"defaultValue":"","expandable":false,"children":[]},{"name":"context","type":"`Record<string, unknown>`","description":"The context to authorize the payment session with.\nThis context is passed to the payment provider associated with the payment session.","optional":false,"defaultValue":"","expandable":false,"children":[]}]}]} expandUrl="https://docs.medusajs.com/learn/fundamentals/data-models/manage-relationships#retrieve-records-of-relation" openedLevel={1} sectionTitle="authorizePaymentSessionStep"/>
 
 ## Output
 
