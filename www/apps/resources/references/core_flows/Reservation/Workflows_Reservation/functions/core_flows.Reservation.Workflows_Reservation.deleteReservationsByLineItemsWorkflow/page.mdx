@@ -14,7 +14,7 @@ This documentation provides a reference to the `deleteReservationsByLineItemsWor
 
 This workflow deletes reservations by their associated line items.
 
-<SourceCodeLink link="https://github.com/medusajs/medusa/blob/e3d5457b5c990bb230daebe316ee2486913c27f6/packages/core/core-flows/src/reservation/workflows/delete-reservations-by-line-items.ts#L12" />
+<SourceCodeLink link="https://github.com/medusajs/medusa/blob/2f7ec55f2e37df2696c8c1d639f727fcdfd8d9e6/packages/core/core-flows/src/reservation/workflows/delete-reservations-by-line-items.ts#L12" />
 
 ## Examples
 
@@ -36,7 +36,7 @@ export async function POST(
     .run({
       input: {
         "ids": [
-          "id_AVZ6ebWrJN8"
+          "id_Z52shmeQVtAbH0Nr"
         ]
       }
     })
@@ -63,7 +63,7 @@ export default async function handleOrderPlaced({
     .run({
       input: {
         "ids": [
-          "id_AVZ6ebWrJN8"
+          "id_Z52shmeQVtAbH0Nr"
         ]
       }
     })
@@ -90,7 +90,7 @@ export default async function myCustomJob(
     .run({
       input: {
         "ids": [
-          "id_AVZ6ebWrJN8"
+          "id_Z52shmeQVtAbH0Nr"
         ]
       }
     })
@@ -118,7 +118,7 @@ const myWorkflow = createWorkflow(
       .runAsStep({
         input: {
           "ids": [
-            "id_AVZ6ebWrJN8"
+            "id_Z52shmeQVtAbH0Nr"
           ]
         }
       })
