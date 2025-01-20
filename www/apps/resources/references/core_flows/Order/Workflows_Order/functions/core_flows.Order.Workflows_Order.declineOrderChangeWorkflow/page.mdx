@@ -1,6 +1,7 @@
 ---
 slug: /references/medusa-workflows/declineOrderChangeWorkflow
 sidebar_label: declineOrderChangeWorkflow
+sidebar_description: Decline an order change.
 tags:
   - order
   - workflow
@@ -38,7 +39,7 @@ export async function POST(
   const { result } = await declineOrderChangeWorkflow(req.scope)
     .run({
       input: {
-        "id": "id_BzEWZbuP9GXM8g5"
+        "id": "id_Gun1Q6coL3"
       }
     })
 
@@ -63,7 +64,7 @@ export default async function handleOrderPlaced({
   const { result } = await declineOrderChangeWorkflow(container)
     .run({
       input: {
-        "id": "id_BzEWZbuP9GXM8g5"
+        "id": "id_Gun1Q6coL3"
       }
     })
 
@@ -88,7 +89,7 @@ export default async function myCustomJob(
   const { result } = await declineOrderChangeWorkflow(container)
     .run({
       input: {
-        "id": "id_BzEWZbuP9GXM8g5"
+        "id": "id_Gun1Q6coL3"
       }
     })
 
@@ -114,7 +115,7 @@ const myWorkflow = createWorkflow(
     const result = declineOrderChangeWorkflow
       .runAsStep({
         input: {
-          "id": "id_BzEWZbuP9GXM8g5"
+          "id": "id_Gun1Q6coL3"
         }
       })
   }

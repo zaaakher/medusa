@@ -1,6 +1,7 @@
 ---
 slug: /references/medusa-workflows/createOrderChangeActionsWorkflow
 sidebar_label: createOrderChangeActionsWorkflow
+sidebar_description: Create an order change action.
 tags:
   - workflow
 ---
@@ -38,7 +39,7 @@ export async function POST(
   const { result } = await createOrderChangeActionsWorkflow(req.scope)
     .run({
       input: [{
-        "action": "ITEM_UPDATE"
+        "action": "FULFILL_ITEM"
       }]
     })
 
@@ -63,7 +64,7 @@ export default async function handleOrderPlaced({
   const { result } = await createOrderChangeActionsWorkflow(container)
     .run({
       input: [{
-        "action": "ITEM_UPDATE"
+        "action": "FULFILL_ITEM"
       }]
     })
 
@@ -88,7 +89,7 @@ export default async function myCustomJob(
   const { result } = await createOrderChangeActionsWorkflow(container)
     .run({
       input: [{
-        "action": "ITEM_UPDATE"
+        "action": "FULFILL_ITEM"
       }]
     })
 
@@ -114,7 +115,7 @@ const myWorkflow = createWorkflow(
     const result = createOrderChangeActionsWorkflow
       .runAsStep({
         input: [{
-          "action": "ITEM_UPDATE"
+          "action": "FULFILL_ITEM"
         }]
       })
   }

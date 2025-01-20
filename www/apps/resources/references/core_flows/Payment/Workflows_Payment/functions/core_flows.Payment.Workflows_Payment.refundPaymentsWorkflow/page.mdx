@@ -1,6 +1,7 @@
 ---
 slug: /references/medusa-workflows/refundPaymentsWorkflow
 sidebar_label: refundPaymentsWorkflow
+sidebar_description: ""
 tags:
   - query
   - logger
@@ -39,7 +40,7 @@ export async function POST(
     .run({
       input: {
         "payment_id": "{value}",
-        "amount": 30
+        "amount": 36
       }
     })
 
@@ -65,7 +66,7 @@ export default async function handleOrderPlaced({
     .run({
       input: {
         "payment_id": "{value}",
-        "amount": 30
+        "amount": 36
       }
     })
 
@@ -91,7 +92,7 @@ export default async function myCustomJob(
     .run({
       input: {
         "payment_id": "{value}",
-        "amount": 30
+        "amount": 36
       }
     })
 
@@ -118,7 +119,7 @@ const myWorkflow = createWorkflow(
       .runAsStep({
         input: {
           "payment_id": "{value}",
-          "amount": 30
+          "amount": 36
         }
       })
   }

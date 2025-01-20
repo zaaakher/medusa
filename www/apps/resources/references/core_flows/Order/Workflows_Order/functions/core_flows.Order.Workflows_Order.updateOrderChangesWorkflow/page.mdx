@@ -1,6 +1,7 @@
 ---
 slug: /references/medusa-workflows/updateOrderChangesWorkflow
 sidebar_label: updateOrderChangesWorkflow
+sidebar_description: Update one or more order changes.
 tags:
   - order
   - workflow
@@ -38,7 +39,7 @@ export async function POST(
   const { result } = await updateOrderChangesWorkflow(req.scope)
     .run({
       input: [{
-        "id": "id_3lt8ssOzNZxx7XcGo4eo"
+        "id": "id_lMo1H8z6sT"
       }]
     })
 
@@ -63,7 +64,7 @@ export default async function handleOrderPlaced({
   const { result } = await updateOrderChangesWorkflow(container)
     .run({
       input: [{
-        "id": "id_3lt8ssOzNZxx7XcGo4eo"
+        "id": "id_lMo1H8z6sT"
       }]
     })
 
@@ -88,7 +89,7 @@ export default async function myCustomJob(
   const { result } = await updateOrderChangesWorkflow(container)
     .run({
       input: [{
-        "id": "id_3lt8ssOzNZxx7XcGo4eo"
+        "id": "id_lMo1H8z6sT"
       }]
     })
 
@@ -114,7 +115,7 @@ const myWorkflow = createWorkflow(
     const result = updateOrderChangesWorkflow
       .runAsStep({
         input: [{
-          "id": "id_3lt8ssOzNZxx7XcGo4eo"
+          "id": "id_lMo1H8z6sT"
         }]
       })
   }

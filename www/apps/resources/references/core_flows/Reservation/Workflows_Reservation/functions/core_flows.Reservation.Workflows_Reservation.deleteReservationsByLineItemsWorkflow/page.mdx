@@ -1,6 +1,7 @@
 ---
 slug: /references/medusa-workflows/deleteReservationsByLineItemsWorkflow
 sidebar_label: deleteReservationsByLineItemsWorkflow
+sidebar_description: ""
 tags:
   - inventory
   - workflow
@@ -36,7 +37,7 @@ export async function POST(
     .run({
       input: {
         "ids": [
-          "id_Z52shmeQVtAbH0Nr"
+          "id_myFm0SvUPUd1fEkePH"
         ]
       }
     })
@@ -63,7 +64,7 @@ export default async function handleOrderPlaced({
     .run({
       input: {
         "ids": [
-          "id_Z52shmeQVtAbH0Nr"
+          "id_myFm0SvUPUd1fEkePH"
         ]
       }
     })
@@ -90,7 +91,7 @@ export default async function myCustomJob(
     .run({
       input: {
         "ids": [
-          "id_Z52shmeQVtAbH0Nr"
+          "id_myFm0SvUPUd1fEkePH"
         ]
       }
     })
@@ -118,7 +119,7 @@ const myWorkflow = createWorkflow(
       .runAsStep({
         input: {
           "ids": [
-            "id_Z52shmeQVtAbH0Nr"
+            "id_myFm0SvUPUd1fEkePH"
           ]
         }
       })

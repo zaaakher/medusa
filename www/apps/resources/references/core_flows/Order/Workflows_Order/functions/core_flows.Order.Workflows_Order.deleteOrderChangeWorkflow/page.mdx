@@ -1,6 +1,7 @@
 ---
 slug: /references/medusa-workflows/deleteOrderChangeWorkflow
 sidebar_label: deleteOrderChangeWorkflow
+sidebar_description: Delete one or more order changes.
 tags:
   - order
   - workflow
@@ -39,7 +40,7 @@ export async function POST(
     .run({
       input: {
         "ids": [
-          "id_0Yj9frWFoRFRtsHB"
+          "id_cP13zQq5N64O9vI52"
         ]
       }
     })
@@ -66,7 +67,7 @@ export default async function handleOrderPlaced({
     .run({
       input: {
         "ids": [
-          "id_0Yj9frWFoRFRtsHB"
+          "id_cP13zQq5N64O9vI52"
         ]
       }
     })
@@ -93,7 +94,7 @@ export default async function myCustomJob(
     .run({
       input: {
         "ids": [
-          "id_0Yj9frWFoRFRtsHB"
+          "id_cP13zQq5N64O9vI52"
         ]
       }
     })
@@ -121,7 +122,7 @@ const myWorkflow = createWorkflow(
       .runAsStep({
         input: {
           "ids": [
-            "id_0Yj9frWFoRFRtsHB"
+            "id_cP13zQq5N64O9vI52"
           ]
         }
       })
