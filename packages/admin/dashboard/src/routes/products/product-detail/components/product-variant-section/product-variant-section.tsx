@@ -64,7 +64,7 @@ export const ProductVariantSection = ({
     product.id,
     {
       q,
-      order,
+      order: order ? order : "variant_rank",
       offset: offset ? parseInt(offset) : undefined,
       limit: PAGE_SIZE,
       allow_backorder: allow_backorder
