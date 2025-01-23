@@ -14,9 +14,9 @@ import {
   mk,
   mn,
   ar,
-  zhCN
+  zhCN,
+  faIR,
 } from "date-fns/locale"
-
 import { Language } from "./types"
 
 export const languages: Language[] = [
@@ -115,5 +115,11 @@ export const languages: Language[] = [
     display_name: "简体中文",
     ltr: true,
     date_locale: zhCN,
+  },
+  {
+    code: "fa",
+    display_name: "فارسی",
+    ltr: false,
+    date_locale: faIR,
   },
 ]
