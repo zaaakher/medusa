@@ -5766,6 +5766,7 @@ __metadata:
     "@types/express": ^4.17.17
     "@types/jsonwebtoken": ^8.5.9
     awilix: ^8.0.1
+    chokidar: ^3.4.2
     compression: 1.7.4
     connect-redis: 5.2.0
     cookie-parser: ^1.4.6
