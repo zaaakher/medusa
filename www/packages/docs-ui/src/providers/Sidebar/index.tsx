@@ -107,7 +107,11 @@ export const isSidebarItemLink = (
   )
 }
 
-const areItemsEqual = (itemA: SidebarItem, itemB: SidebarItem): boolean => {
+const areItemsEqual = (
+  itemA: SidebarItem,
+  itemB: SidebarItem,
+  compareTitles = true
+): boolean => {
   if (
     itemA.type === "separator" ||
     itemB.type === "separator" ||
@@ -115,7 +119,7 @@ const areItemsEqual = (itemA: SidebarItem, itemB: SidebarItem): boolean => {
   ) {
     return false
   }
-  const hasSameTitle = itemA.title === itemB.title
+  const hasSameTitle = !compareTitles || itemA.title === itemB.title
   const hasSamePath =
     !isSidebarItemLink(itemA) ||
     !isSidebarItemLink(itemB) ||
@@ -127,17 +131,18 @@ const areItemsEqual = (itemA: SidebarItem, itemB: SidebarItem): boolean => {
 const findItem = (
   section: SidebarItem[],
   item: Partial<SidebarItem>,
-  checkChildren = true
+  checkChildren = true,
+  compareTitles = true
 ): SidebarItemLinkWithParent | undefined => {
   let foundItem: SidebarItemLinkWithParent | undefined
   section.some((i) => {
     if (i.type === "separator") {
       return false
     }
-    if (areItemsEqual(item as SidebarItem, i)) {
+    if (areItemsEqual(item as SidebarItem, i, compareTitles)) {
       foundItem = i as SidebarItemLink
     } else if (checkChildren && i.children) {
-      foundItem = findItem(i.children, item)
+      foundItem = findItem(i.children, item, checkChildren, compareTitles)
       if (foundItem && !foundItem.parentItem) {
         foundItem.parentItem = i
       }
@@ -428,10 +433,15 @@ export const SidebarProvider = ({
         const childSidebar =
           getCurrentSidebar(item.children) ||
           (activePath
-            ? findItem(item.children, {
-                path: activePath,
-                type: "link",
-              })
+            ? findItem(
+                item.children,
+                {
+                  path: activePath,
+                  type: "link",
+                },
+                true,
+                false
+              )
             : undefined)
 
         currentSidebar = childSidebar
