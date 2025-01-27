@@ -1,5 +1,5 @@
 {
-  "description": "This component renders the table in a data table, supporting advanced features.\nIt's useful to create tables similar to those in the Medusa Admin dashboard.",
+  "description": "This component renders the table in a data table, supporting advanced features.",
   "methods": [],
   "displayName": "DataTable.Table",
   "props": {
