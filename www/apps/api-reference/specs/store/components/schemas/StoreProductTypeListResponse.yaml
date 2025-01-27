@@ -23,4 +23,4 @@ properties:
     type: array
     description: The list of product types.
     items:
-      $ref: ./StoreProduct.yaml
+      $ref: ./StoreProductType.yaml

@@ -111,6 +111,8 @@ tags:
     x-associatedSchema:
       $ref: "#/components/schemas/StoreProductTag"
   - name: Product Types
+    x-associatedSchema:
+      $ref: "#/components/schemas/StoreProductType"
   - name: Products
     description: >
       Customers browse products for their purchase.

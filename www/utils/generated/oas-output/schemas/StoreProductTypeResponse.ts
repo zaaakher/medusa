@@ -7,7 +7,7 @@
  *   - product_type
  * properties:
  *   product_type:
- *     $ref: "#/components/schemas/StoreProduct"
+ *     $ref: "#/components/schemas/StoreProductType"
  * 
 */
 

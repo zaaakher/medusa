@@ -25,7 +25,7 @@
  *     type: array
  *     description: The list of product types.
  *     items:
- *       $ref: "#/components/schemas/StoreProduct"
+ *       $ref: "#/components/schemas/StoreProductType"
  * 
 */
 

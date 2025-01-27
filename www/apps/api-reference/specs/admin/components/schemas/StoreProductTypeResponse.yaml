@@ -5,4 +5,4 @@ required:
   - product_type
 properties:
   product_type:
-    $ref: ./StoreProduct.yaml
+    $ref: ./StoreProductType.yaml

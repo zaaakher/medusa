@@ -126,6 +126,8 @@ tags:
     x-associatedSchema:
       $ref: ./components/schemas/StoreProductTag.yaml
   - name: Product Types
+    x-associatedSchema:
+      $ref: ./components/schemas/StoreProductType.yaml
   - name: Products
     description: >
       Customers browse products for their purchase.
