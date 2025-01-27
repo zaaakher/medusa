@@ -8025,7 +8025,7 @@ export const generatedSidebar = [
                     "type": "category",
                     "title": "Data Models",
                     "hasTitleStyling": true,
-                    "autogenerate_path": "/references/order_models/classes",
+                    "autogenerate_path": "/references/order_models/variables",
                     "children": [
                       {
                         "loaded": true,
@@ -8996,6 +8996,15 @@ export const generatedSidebar = [
                         "loaded": true,
                         "isPathHref": true,
                         "type": "link",
+                        "path": "/references/payment/listAndCountPaymentMethods",
+                        "title": "listAndCountPaymentMethods",
+                        "description": "",
+                        "children": []
+                      },
+                      {
+                        "loaded": true,
+                        "isPathHref": true,
+                        "type": "link",
                         "path": "/references/payment/listAndCountPaymentProviders",
                         "title": "listAndCountPaymentProviders",
                         "description": "",
@@ -9016,6 +9025,15 @@ export const generatedSidebar = [
                         "type": "link",
                         "path": "/references/payment/listPaymentCollections",
                         "title": "listPaymentCollections",
+                        "description": "",
+                        "children": []
+                      },
+                      {
+                        "loaded": true,
+                        "isPathHref": true,
+                        "type": "link",
+                        "path": "/references/payment/listPaymentMethods",
+                        "title": "listPaymentMethods",
                         "description": "",
                         "children": []
                       },
@@ -21025,15 +21043,6 @@ export const generatedSidebar = [
                     "type": "link",
                     "path": "/references/medusa-workflows/steps/updateOrderChangesStep",
                     "title": "updateOrderChangesStep",
-                    "description": "",
-                    "children": []
-                  },
-                  {
-                    "loaded": true,
-                    "isPathHref": true,
-                    "type": "link",
-                    "path": "/references/medusa-workflows/steps/updateOrderExchangesStep",
-                    "title": "updateOrderExchangesStep",
                     "description": "",
                     "children": []
                   },
