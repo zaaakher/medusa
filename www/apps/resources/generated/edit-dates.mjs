@@ -2125,7 +2125,7 @@ export const generatedEditDates = {
   "app/admin-components/components/header/page.mdx": "2024-10-07T11:16:47.407Z",
   "app/admin-components/components/json-view-section/page.mdx": "2024-10-07T11:15:58.833Z",
   "app/admin-components/components/section-row/page.mdx": "2024-10-07T11:15:58.832Z",
-  "app/admin-components/components/table/page.mdx": "2024-12-16T15:28:59.428Z",
+  "app/admin-components/components/table/page.mdx": "2025-01-22T16:00:56.772Z",
   "app/admin-components/page.mdx": "2024-10-07T11:09:49.493Z",
   "app/admin-components/layouts/single-column/page.mdx": "2024-10-07T11:16:06.435Z",
   "app/admin-components/layouts/two-column/page.mdx": "2024-10-07T11:16:10.092Z",
@@ -5886,5 +5886,6 @@ export const generatedEditDates = {
   "references/core_flows/interfaces/core_flows.ValidateProductInputStepInput/page.mdx": "2025-01-17T16:43:26.173Z",
   "references/core_flows/types/core_flows.ThrowUnlessPaymentCollectionNotePaidInput/page.mdx": "2025-01-17T16:43:25.819Z",
   "references/core_flows/types/core_flows.ValidatePaymentsRefundStepInput/page.mdx": "2025-01-17T16:43:26.128Z",
-  "references/core_flows/types/core_flows.ValidateRefundStepInput/page.mdx": "2025-01-17T16:43:26.124Z"
+  "references/core_flows/types/core_flows.ValidateRefundStepInput/page.mdx": "2025-01-17T16:43:26.124Z",
+  "app/admin-components/components/data-table/page.mdx": "2025-01-22T16:01:01.279Z"
 }

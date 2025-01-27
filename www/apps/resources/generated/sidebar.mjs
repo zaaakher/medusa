@@ -17381,6 +17381,15 @@ export const generatedSidebar = [
                 "loaded": true,
                 "isPathHref": true,
                 "type": "link",
+                "path": "/admin-components/components/data-table",
+                "title": "Data Table",
+                "description": "",
+                "children": []
+              },
+              {
+                "loaded": true,
+                "isPathHref": true,
+                "type": "link",
                 "path": "/admin-components/components/forms",
                 "title": "Forms",
                 "description": "",
