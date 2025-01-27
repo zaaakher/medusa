@@ -555,6 +555,12 @@ export const sidebar = sidebarAttachHrefCommonOptions([
   },
   {
     type: "link",
+    path: "/learn/update",
+    title: "Updating Medusa",
+    chapterTitle: "Updates",
+  },
+  {
+    type: "link",
     path: "/learn/more-resources",
     title: "More Resources",
   },
