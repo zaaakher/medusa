@@ -185,10 +185,19 @@ export const generatedSidebar = [
         "loaded": true,
         "isPathHref": true,
         "type": "link",
+        "title": "Re-Use Customizations",
+        "path": "/learn/customization/reuse-customizations",
+        "children": [],
+        "chapterTitle": "2.5. Re-Use Customizations"
+      },
+      {
+        "loaded": true,
+        "isPathHref": true,
+        "type": "link",
         "title": "Next Steps",
         "path": "/learn/customization/next-steps",
         "children": [],
-        "chapterTitle": "2.5. Next Steps"
+        "chapterTitle": "2.6. Next Steps"
       }
     ],
     "chapterTitle": "2. Customize"
@@ -796,6 +805,25 @@ export const generatedSidebar = [
         "loaded": true,
         "isPathHref": true,
         "type": "link",
+        "path": "/learn/fundamentals/plugins",
+        "title": "Plugins",
+        "children": [
+          {
+            "loaded": true,
+            "isPathHref": true,
+            "type": "link",
+            "path": "/learn/fundamentals/plugins/create",
+            "title": "Create Plugin",
+            "children": [],
+            "chapterTitle": "3.10.1. Create Plugin"
+          }
+        ],
+        "chapterTitle": "3.10. Plugins"
+      },
+      {
+        "loaded": true,
+        "isPathHref": true,
+        "type": "link",
         "path": "/learn/fundamentals/custom-cli-scripts",
         "title": "Custom CLI Scripts",
         "children": [
@@ -806,10 +834,10 @@ export const generatedSidebar = [
             "path": "/learn/fundamentals/custom-cli-scripts/seed-data",
             "title": "Seed Data",
             "children": [],
-            "chapterTitle": "3.10.1. Seed Data"
+            "chapterTitle": "3.11.1. Seed Data"
           }
         ],
-        "chapterTitle": "3.10. Custom CLI Scripts"
+        "chapterTitle": "3.11. Custom CLI Scripts"
       },
       {
         "loaded": true,
@@ -818,7 +846,7 @@ export const generatedSidebar = [
         "title": "Environment Variables",
         "path": "/learn/fundamentals/environment-variables",
         "children": [],
-        "chapterTitle": "3.11. Environment Variables"
+        "chapterTitle": "3.12. Environment Variables"
       }
     ],
     "chapterTitle": "3. Fundamentals"

@@ -108,6 +108,11 @@ export const sidebar = sidebarAttachHrefCommonOptions([
       },
       {
         type: "link",
+        title: "Re-Use Customizations",
+        path: "/learn/customization/reuse-customizations",
+      },
+      {
+        type: "link",
         title: "Next Steps",
         path: "/learn/customization/next-steps",
       },
@@ -455,6 +460,18 @@ export const sidebar = sidebarAttachHrefCommonOptions([
             type: "link",
             path: "/learn/fundamentals/admin/tips",
             title: "Tips",
+          },
+        ],
+      },
+      {
+        type: "link",
+        path: "/learn/fundamentals/plugins",
+        title: "Plugins",
+        children: [
+          {
+            type: "link",
+            path: "/learn/fundamentals/plugins/create",
+            title: "Create Plugin",
           },
         ],
       },
